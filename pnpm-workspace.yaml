@@ -1,4 +1,8 @@
 packages:
-  - packages/impoexpo-client
-  - packages/impoexpo-server
-  - packages/impoexpo-types
+  - packages/**
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@heroui/shared-utils'
+  - '@swc/core'
+ignoredBuiltDependencies:
+  - esbuild

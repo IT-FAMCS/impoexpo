@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: Inter, sans-serif;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    /* fix for Chrome */
+}
+
+@supports (font-variation-settings: normal) {
+    :root {
+        font-family: InterVariable, sans-serif;
+    }
+}
+
+:root {
+    --bg-size: 25px;
+    --dot-color: #cccccc40;
+
+    background-image: radial-gradient(var(--dot-color) 15%, transparent 10%),
+        radial-gradient(var(--dot-color) 10%, transparent 10%);
+    background-color: #fff;
+    background-position: 0 0, var(--bg-size) var(--bg-size);
+    background-size: var(--bg-size) var(--bg-size);
+}
