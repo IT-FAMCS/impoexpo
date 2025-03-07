@@ -1,0 +1,23 @@
+{
+  "name": "impoexpo-server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start-live": "nodemon src/index.ts",
+    "start": "ts-node-dev src/index.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/express": "5.0.0",
+    "@types/node": "22.13.9",
+    "nodemon": "^3.1.9",
+    "pino-pretty": "^13.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "5.8.2"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pino": "^9.6.0"
+  }
+}
