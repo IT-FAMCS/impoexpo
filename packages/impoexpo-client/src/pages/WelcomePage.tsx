@@ -27,7 +27,7 @@ export default function WelcomePage() {
 			</Card>
 			<div className="flex flex-row gap-2">
 				<Button
-					onPress={() => navigate("/new")}
+					onPress={() => navigate("/wizard")}
 					startContent={
 						<Icon
 							fontSize={24}
@@ -49,14 +49,12 @@ export default function WelcomePage() {
 					<ModalContent>
 						{(onClose) => (
 							<>
-								<ModalHeader>
-									о проекте
-								</ModalHeader>
-								<ModalBody>
-									траляля
-								</ModalBody>
+								<ModalHeader>о проекте</ModalHeader>
+								<ModalBody>траляля</ModalBody>
 								<ModalFooter>
-									<Button color="primary" onPress={onClose}>ОК</Button>
+									<Button color="primary" onPress={onClose}>
+										ОК
+									</Button>
 								</ModalFooter>
 							</>
 						)}

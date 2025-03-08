@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router";
 import WelcomePage from "./pages/WelcomePage";
-import NewTransferPage from "./pages/NewTransferPage";
+import TransferWizardPage from "./pages/TransferWizardPage";
 
 function App() {
-  return (
-    <Routes>
-      <Route index element={<WelcomePage/>}/>
-      <Route path="/new" element={<NewTransferPage/>}/>
-    </Routes>
-  );
+	return (
+		<Routes>
+			<Route index element={<WelcomePage />} />
+			<Route path="/wizard" element={<TransferWizardPage />} />
+		</Routes>
+	);
 }
 
 export default App;

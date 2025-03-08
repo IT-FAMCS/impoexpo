@@ -34,15 +34,21 @@ importers:
       '@react-aria/visually-hidden':
         specifier: 3.8.19
         version: 3.8.19(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-types/shared':
-        specifier: 3.27.0
-        version: 3.27.0(react@19.0.0)
+      '@react-stately/utils':
+        specifier: ^3.10.5
+        version: 3.10.5(react@19.0.0)
+      '@types/gsi':
+        specifier: ^0.0.5
+        version: 0.0.5
       clsx:
         specifier: 2.1.1
         version: 2.1.1
       framer-motion:
         specifier: 11.15.0
         version: 11.15.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      gapi:
+        specifier: ^0.0.3
+        version: 0.0.3
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -58,6 +64,9 @@ importers:
       tailwindcss:
         specifier: 3.4.16
         version: 3.4.16(ts-node@10.9.2(@swc/core@1.11.7(@swc/helpers@0.5.15))(@types/node@20.5.7)(typescript@5.6.3))
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/react@18.3.3)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -65,6 +74,15 @@ importers:
       '@iconify/react':
         specifier: ^5.2.0
         version: 5.2.0(react@19.0.0)
+      '@react-types/shared':
+        specifier: 3.27.0
+        version: 3.27.0(react@19.0.0)
+      '@types/gapi':
+        specifier: ^0.0.47
+        version: 0.0.47
+      '@types/gapi.auth2':
+        specifier: ^0.0.61
+        version: 0.0.61
       '@types/node':
         specifier: 20.5.7
         version: 20.5.7
@@ -1813,6 +1831,15 @@ packages:
   '@types/express@5.0.0':
     resolution: {integrity: sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==}
 
+  '@types/gapi.auth2@0.0.61':
+    resolution: {integrity: sha512-cn+omiRoE/LTxZncnVl1QhcLggOT0sJ8Yz9RXIsw5R2zLyRf+0o6kaZzJ/Gr3Sxz6i7J/+PbXAF8yeZipCaiWw==}
+
+  '@types/gapi@0.0.47':
+    resolution: {integrity: sha512-/ZsLuq6BffMgbKMtZyDZ8vwQvTyKhKQ1G2K6VyWCgtHHhfSSXbk4+4JwImZiTjWNXfI2q1ZStAwFFHSkNoTkHA==}
+
+  '@types/gsi@0.0.5':
+    resolution: {integrity: sha512-3fnFkV2TybcPSiWD1ATD9Q2siJ30TmOOUujZy11ZJMkNkdui0bAs+rqIaBguSE/bZrHj86CdGZlClWQFvFp+fg==}
+
   '@types/http-errors@2.0.4':
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
 
@@ -1970,6 +1997,12 @@ packages:
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
+
+  coffee-script@1.12.7:
+    resolution: {integrity: sha512-fLeEhqwymYat/MpTPUjSKHVYYl0ec2mOyALEMLmzr5i1isuG+6jfI2j2d5oBO3VIzgUXgBVIcOT9uH1TFxBckw==}
+    engines: {node: '>=0.8.0'}
+    deprecated: CoffeeScript on NPM has moved to "coffeescript" (no hyphen)
+    hasBin: true
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -2210,6 +2243,10 @@ packages:
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
+
+  gapi@0.0.3:
+    resolution: {integrity: sha512-09nvJdQex78sxmMyOUnpr941fdWMJQjhFZi7vsW91zM3RYoCfkKU83UoJckn/GBEMmvYNZ4vL47eZ6lv/Bnavw==}
+    engines: {node: '>= 0.4.0'}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -2996,6 +3033,24 @@ packages:
   yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
+
+  zustand@5.0.3:
+    resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -5538,6 +5593,14 @@ snapshots:
       '@types/qs': 6.9.18
       '@types/serve-static': 1.15.7
 
+  '@types/gapi.auth2@0.0.61':
+    dependencies:
+      '@types/gapi': 0.0.47
+
+  '@types/gapi@0.0.47': {}
+
+  '@types/gsi@0.0.5': {}
+
   '@types/http-errors@2.0.4': {}
 
   '@types/lodash.debounce@4.0.9':
@@ -5709,6 +5772,8 @@ snapshots:
   clsx@1.2.1: {}
 
   clsx@2.1.1: {}
+
+  coffee-script@1.12.7: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -5948,6 +6013,10 @@ snapshots:
     optional: true
 
   function-bind@1.1.2: {}
+
+  gapi@0.0.3:
+    dependencies:
+      coffee-script: 1.12.7
 
   gensync@1.0.0-beta.2: {}
 
@@ -6726,3 +6795,9 @@ snapshots:
   yaml@2.7.0: {}
 
   yn@3.1.1: {}
+
+  zustand@5.0.3(@types/react@18.3.3)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)):
+    optionalDependencies:
+      '@types/react': 18.3.3
+      react: 19.0.0
+      use-sync-external-store: 1.4.0(react@19.0.0)

@@ -8,11 +8,11 @@ import "@/styles/globals.css";
 
 // biome-ignore lint/style/noNonNullAssertion: boilerplate react code
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Provider>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  </React.StrictMode>,
+	<React.StrictMode>
+		<BrowserRouter>
+			<Provider>
+				<App />
+			</Provider>
+		</BrowserRouter>
+	</React.StrictMode>,
 );
