@@ -5,50 +5,11 @@ import {
 	writeIntegrations,
 } from "@/integrations/integrations";
 import { useEffect, useState } from "react";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { create } from "zustand";
-import type { Integration } from "@/types/Integration";
-import { AnimateChangeInHeight } from "../external/AnimateChangeInHeight";
-
-enum SourceCardState {
-	SELECT_READ_SOURCE = 0,
-	AUTHENTICATE_READ_SOURCE = 1,
-	SELECT_WRITE_SOURCE = 2,
-	AUTHENTICATE_WRITE_SOURCE = 3,
-}
-
-type SourceCardStore = {
-	state: SourceCardState;
-	readIntegration?: Integration;
-	writeIntegration?: Integration;
-
-	setReadIntegration: (integration: Integration) => void;
-	setWriteIntegration: (integration: Integration) => void;
-	reset: () => void;
-};
-
-export const useSourceCardStore = create<SourceCardStore>((set) => ({
-	state: SourceCardState.SELECT_READ_SOURCE,
-	reset: () =>
-		set(() => ({
-			readIntegration: undefined,
-			writeIntegration: undefined,
-			state: SourceCardState.SELECT_READ_SOURCE,
-		})),
-
-	setReadIntegration: (integration: Integration) =>
-		set((state) => ({
-			...state,
-			readIntegration: integration,
-			state: SourceCardState.AUTHENTICATE_READ_SOURCE,
-		})),
-	setWriteIntegration: (integration: Integration) =>
-		set((state) => ({
-			...state,
-			readIntegration: integration,
-			state: SourceCardState.AUTHENTICATE_WRITE_SOURCE,
-		})),
-}));
+import AnimateChangeInSize from "../external/AnimateChangeInSize";
+import {
+	SourceCardState,
+	useSourceCardStore,
+} from "@/stores/select-source-card";
 
 export default function SelectSourceCard() {
 	const { state } = useSourceCardStore();
@@ -71,9 +32,9 @@ export default function SelectSourceCard() {
 			<CardHeader className="text-large">
 				откуда будем читать данные?
 			</CardHeader>
-			<AnimateChangeInHeight>
+			<AnimateChangeInSize height>
 				<CardBody>{renderer()}</CardBody>
-			</AnimateChangeInHeight>
+			</AnimateChangeInSize>
 		</Card>
 	);
 }
@@ -124,6 +85,7 @@ function SourceAuthenticator(props: { type: "read" | "write" }) {
 	return (
 		<div className="flex w-full justify-center items-center">
 			{isLoading && <CircularProgress />}
+			{!isLoading && !isAuthenticated && readIntegration?.authenticator()}
 		</div>
 	);
 }

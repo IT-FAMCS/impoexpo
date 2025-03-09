@@ -1,5 +1,5 @@
 import type { Integration } from "@/types/Integration";
-import { GoogleFormsIntegration } from "./google-forms/GoogleFormsIntegration";
+import { GoogleFormsIntegration } from "./google/google-forms/GoogleFormsIntegration";
 
 export const allIntegrations: Integration[] = [GoogleFormsIntegration];
 export const readIntegrations: Integration[] = allIntegrations.filter(

@@ -1,7 +1,6 @@
 import ColumnSteps from "@/components/external/ColumnStep";
-import SelectSourceCard, {
-	useSourceCardStore,
-} from "@/components/wizard/SelectSourceCard";
+import SelectSourceCard from "@/components/wizard/SelectSourceCard";
+import { useSourceCardStore } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";

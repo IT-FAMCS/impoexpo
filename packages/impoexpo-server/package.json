@@ -1,23 +1,29 @@
 {
-  "name": "impoexpo-server",
-  "version": "1.0.0",
-  "private": true,
-  "main": "dist/index.js",
-  "scripts": {
-    "start-live": "nodemon src/index.ts",
-    "start": "ts-node-dev src/index.ts"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@types/express": "5.0.0",
-    "@types/node": "22.13.9",
-    "nodemon": "^3.1.9",
-    "pino-pretty": "^13.0.0",
-    "ts-node": "^10.9.2",
-    "typescript": "5.8.2"
-  },
-  "dependencies": {
-    "express": "^4.21.2",
-    "pino": "^9.6.0"
-  }
+	"name": "impoexpo-server",
+	"version": "1.0.0",
+	"private": true,
+	"main": "dist/index.js",
+	"scripts": {
+		"start-live": "nodemon src/index.ts",
+		"start": "ts-node-dev src/index.ts"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/cors": "^2.8.17",
+		"@types/express": "5.0.0",
+		"@types/node": "22.13.9",
+		"nodemon": "^3.1.9",
+		"pino-pretty": "^13.0.0",
+		"ts-node": "^10.9.2",
+		"typescript": "5.8.2"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.7",
+		"express": "^4.21.2",
+		"express-validator": "^7.2.1",
+		"googleapis": "^146.0.0",
+		"pino": "^9.6.0",
+		"pino-http": "^10.4.0"
+	}
 }

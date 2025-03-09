@@ -3,16 +3,16 @@ import { motion } from "framer-motion";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
-interface AnimateChangeInHeightProps {
+interface AnimateChangeInSizeProps {
 	children: React.ReactNode;
 	className?: string;
+	width?: boolean;
+	height?: boolean;
 }
 
-export const AnimateChangeInHeight: React.FC<AnimateChangeInHeightProps> = ({
-	children,
-	className,
-}) => {
+export default function AnimateChangeInSize(props: AnimateChangeInSizeProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
+	const [width, setWidth] = useState<number | "auto">("auto");
 	const [height, setHeight] = useState<number | "auto">("auto");
 
 	useEffect(() => {
@@ -20,7 +20,9 @@ export const AnimateChangeInHeight: React.FC<AnimateChangeInHeightProps> = ({
 			const resizeObserver = new ResizeObserver((entries) => {
 				// We only have one entry, so we can use entries[0].
 				const observedHeight = entries[0].contentRect.height;
-				setHeight(observedHeight);
+				const observedWidth = entries[0].contentRect.width;
+				if (props.height ?? false) setHeight(observedHeight);
+				if (props.width ?? false) setWidth(observedWidth);
 			});
 
 			resizeObserver.observe(containerRef.current);
@@ -30,15 +32,15 @@ export const AnimateChangeInHeight: React.FC<AnimateChangeInHeightProps> = ({
 				resizeObserver.disconnect();
 			};
 		}
-	}, []);
+	}, [props.width, props.height]);
 
 	return (
 		<motion.div
-			className={cn(className, "overflow-hidden")}
-			style={{ height }}
-			animate={{ height }}
+			className={cn(props.className, "overflow-hidden")}
+			style={{ height, width }}
+			animate={{ height, width }}
 		>
-			<div ref={containerRef}>{children}</div>
+			<div ref={containerRef}>{props.children}</div>
 		</motion.div>
 	);
-};
+}
