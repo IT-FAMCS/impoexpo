@@ -1,4 +1,7 @@
+import { useAuthStore } from "@/stores/auth";
+
 export const GOOGLE_AUTH_KEY = "google_auth";
+export const GOOGLE_EXCHANGE_ROUTE = "/integration/google/exchange";
 
 export const checkGoogleAuthentication = async () => {
 	if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
@@ -7,14 +10,6 @@ export const checkGoogleAuthentication = async () => {
 		);
 	}
 
-	if (localStorage.getItem(GOOGLE_AUTH_KEY) === null) return false;
-	try {
-		// biome-ignore lint/style/noNonNullAssertion: already checked before
-		const auth = JSON.parse(localStorage.getItem(GOOGLE_AUTH_KEY)!);
-		console.log(auth);
-		return true;
-	} catch (err) {
-		console.error(err);
-		return false;
-	}
+	useAuthStore.getState().load();
+	return useAuthStore.getState().google !== undefined;
 };

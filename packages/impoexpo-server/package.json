@@ -1,5 +1,5 @@
 {
-	"name": "impoexpo-server",
+	"name": "@impoexpo/server",
 	"version": "1.0.0",
 	"private": true,
 	"main": "dist/index.js",
@@ -18,12 +18,14 @@
 		"typescript": "5.8.2"
 	},
 	"dependencies": {
+		"@impoexpo/shared": "workspace:^",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
 		"express-validator": "^7.2.1",
 		"googleapis": "^146.0.0",
 		"pino": "^9.6.0",
-		"pino-http": "^10.4.0"
+		"pino-http": "^10.4.0",
+		"valibot": "1.0.0-rc.3"
 	}
 }

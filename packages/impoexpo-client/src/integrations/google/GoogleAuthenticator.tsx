@@ -1,11 +1,17 @@
-import { route } from "@/api/common";
-import { Button, CircularProgress, Code } from "@heroui/react";
+import { postWithSchema } from "@/api/common";
+import { Button, Card, CircularProgress, Code, User } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
+
+import { GOOGLE_EXCHANGE_ROUTE } from "./common";
+import { GoogleExchangeResponseSchema } from "@impoexpo/shared";
+import { useAuthStore } from "@/stores/auth";
 
 export default function GoogleAuthenticator(props: {
 	scopes: string[];
 }) {
+	const { google: auth, setGoogleAuth, save } = useAuthStore();
+
 	const [client, setClient] = useState<
 		google.accounts.oauth2.CodeClient | undefined
 	>(undefined);
@@ -21,6 +27,7 @@ export default function GoogleAuthenticator(props: {
 		setErrorMessage(message);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: the function "error" doesn't change
 	useEffect(() => {
 		if (client !== undefined) return;
 		setClient(
@@ -39,29 +46,29 @@ export default function GoogleAuthenticator(props: {
 						error("не все права были предоставлены!");
 					} else if (response.code) {
 						setLoadingState("просим сервер обменяться токенами...");
-						fetch(
-							route("/integration/google/exchange", { code: response.code }),
-							{ method: "POST" },
-						).then((response) => {
-							if (response.status !== 200) {
+
+						postWithSchema(
+							GOOGLE_EXCHANGE_ROUTE,
+							GoogleExchangeResponseSchema,
+							{ query: { code: response.code } },
+						)
+							.then(async (data) => {
+								// TODO: make this one function call
+								setGoogleAuth(data);
+								save();
+							})
+							.catch((err) => {
 								console.error(
-									`failed to exchange tokens with the backend (${response.status}): ${response.body}`,
+									`couldn't exchange tokens with the backend: ${err}`,
 								);
 								error(
-									`от сервера был получен неуспешный HTTP код (${response.status})`,
+									"не удалось обменяться токенами с сервером (проверьте консоль)",
 								);
-								return;
-							}
-
-							response.json().then((jsonResponse) => {
-								console.log(jsonResponse); // TODO
 							});
-						});
 					}
 				},
-				error_callback(error) {
-					setErrorMessage(error.message);
-					setLoadingState(undefined);
+				error_callback(err) {
+					error(err.message);
 				},
 			}),
 		);
@@ -73,30 +80,62 @@ export default function GoogleAuthenticator(props: {
 		client?.requestCode();
 	};
 
-	return loadingState === undefined ? (
-		<div className="w-full flex flex-col gap-2">
-			чтобы продолжить, необходимо войти в ваш аккаунт google.
-			{client !== undefined && (
-				<Button
-					onPress={prompt}
-					variant="flat"
-					color="primary"
-					startContent={<Icon icon="flat-color-icons:google" width={24} />}
-				>
-					войти в свой google аккаунт
-				</Button>
-			)}
-			{errorMessage !== undefined && (
-				<div className="flex flex-row gap-2 justify-center items-center text-small text-danger">
-					во время входа произошла ошибка:
-					<br />
-					<Code size="sm" color="danger">
-						{errorMessage}
-					</Code>
+	if (auth) {
+		return (
+			<div className="flex flex-col gap-3 justify-center items-center">
+				будем знакомы?
+				<Card className="p-4">
+					<User
+						avatarProps={{
+							showFallback: true,
+							isBordered: true,
+							size: "md",
+							src: auth.profilePicture,
+						}}
+						name={auth.username}
+						description={auth.email}
+					/>
+				</Card>
+				<div className="flex flex-row gap-2 justify-center items-center">
+					<Button color="success" variant="flat" endContent>
+						далее
+					</Button>
+					<Button color="danger" variant="flat">
+						что-то не так
+					</Button>
 				</div>
-			)}
-		</div>
-	) : (
+			</div>
+		);
+	}
+
+	if (loadingState === undefined) {
+		return (
+			<div className="w-full flex flex-col gap-2">
+				чтобы продолжить, необходимо войти в ваш аккаунт google.
+				{client !== undefined && (
+					<Button
+						onPress={prompt}
+						variant="flat"
+						color="primary"
+						startContent={<Icon icon="flat-color-icons:google" width={24} />}
+					>
+						войти в свой google аккаунт
+					</Button>
+				)}
+				{errorMessage !== undefined && (
+					<div className="flex flex-row gap-2 justify-center items-center text-small text-danger">
+						во время входа произошла ошибка:
+						<br />
+						<Code size="sm" color="danger">
+							{errorMessage}
+						</Code>
+					</div>
+				)}
+			</div>
+		);
+	}
+
+	return (
 		<div className="w-full flex flex-col gap-2 justify-center items-center">
 			<CircularProgress />
 			<p className="text-foreground-500">{loadingState}</p>

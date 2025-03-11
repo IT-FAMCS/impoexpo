@@ -1,6 +1,26 @@
 {
-	"name": "impoexpo-shared",
+	"name": "@impoexpo/shared",
 	"version": "1.0.0",
-	"private": "true",
-	"scripts": {}
+	"private": true,
+	"main": "dist",
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc --watch"
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"development": "./src/index.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"dependencies": {
+		"valibot": "1.0.0-rc.3"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.2"
+	}
 }

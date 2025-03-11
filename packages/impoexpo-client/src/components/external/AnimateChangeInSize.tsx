@@ -10,6 +10,7 @@ interface AnimateChangeInSizeProps {
 	height?: boolean;
 }
 
+// width is broken and will probably forever be broken
 export default function AnimateChangeInSize(props: AnimateChangeInSizeProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const [width, setWidth] = useState<number | "auto">("auto");
@@ -37,8 +38,8 @@ export default function AnimateChangeInSize(props: AnimateChangeInSizeProps) {
 	return (
 		<motion.div
 			className={cn(props.className, "overflow-hidden")}
-			style={{ height, width }}
-			animate={{ height, width }}
+			style={{ height }}
+			animate={{ height }}
 		>
 			<div ref={containerRef}>{props.children}</div>
 		</motion.div>
