@@ -1,6 +1,9 @@
 import * as v from "valibot";
+import { QueryClient } from "@tanstack/react-query";
 
 export const BACKEND_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+
+export const queryClient = new QueryClient();
 
 export const route = (path: string, query?: Record<string, string>) => {
 	const current = new URL(`${BACKEND_URL_BASE}${path}`);
@@ -32,7 +35,15 @@ const requestWithSchema = async <const TSchema extends BaseSchema>(
 	schema: TSchema,
 	other?: OtherRequestData,
 ): Promise<v.InferOutput<TSchema>> => {
-	const response = await fetch(route(path, other?.query), { method: method });
+	const response = await fetch(route(path, other?.query), {
+		method: method,
+		headers: {
+			Authorization:
+				other?.authorization === undefined
+					? ""
+					: `Bearer ${other.authorization}`,
+		},
+	});
 	if (!response.ok) {
 		throw new Error(`server returned unsuccessful status code (${response})`);
 	}
@@ -44,7 +55,15 @@ const request = async (
 	path: string,
 	other?: OtherRequestData,
 ): Promise<Response> => {
-	const response = await fetch(route(path, other?.query), { method: method });
+	const response = await fetch(route(path, other?.query), {
+		method: method,
+		headers: {
+			Authorization:
+				other?.authorization === undefined
+					? ""
+					: `Bearer ${other.authorization}`,
+		},
+	});
 	if (!response.ok) {
 		throw new Error(`server returned unsuccessful status code (${response})`);
 	}
@@ -52,5 +71,8 @@ const request = async (
 };
 
 type BaseSchema = v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
-type OtherRequestData = { query?: Record<string, string> };
+type OtherRequestData = {
+	query?: Record<string, string>;
+	authorization?: string;
+};
 type RequestMethod = "GET" | "POST";

@@ -1,5 +1,6 @@
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/components/wizard/SelectSourceCard";
+import { useAuthStore } from "@/stores/auth";
 import { useSourceCardStore } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
@@ -11,8 +12,13 @@ const AnimatedCard = motion.create(Card);
 
 export default function TransferWizardPage() {
 	const navigate = useNavigate();
-	const { stage, setStage } = useTransferWizardStore();
-	const { reset: resetSourceCardStore } = useSourceCardStore();
+	const { stage, setStage, reset: resetWizard } = useTransferWizardStore();
+	const { reset: resetSourceCard } = useSourceCardStore();
+
+	const resetAll = () => {
+		resetWizard();
+		resetSourceCard();
+	};
 
 	const getStageWidget = () => {
 		switch (stage) {
@@ -22,17 +28,17 @@ export default function TransferWizardPage() {
 	};
 
 	return (
-		<div className="flex flex-row gap-2 w-screen h-screen items-center justify-start p-6">
+		<div className="flex flex-row items-center justify-start w-screen h-screen gap-2 p-6">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}
 				className="h-full flex-[1] p-2"
 			>
-				<CardHeader className="text-large font-medium flex flex-row gap-3 pl-4">
+				<CardHeader className="flex flex-row gap-3 pl-4 font-medium text-large">
 					<Button
 						onPress={() => {
-							resetSourceCardStore();
+							resetAll();
 							navigate("/");
 						}}
 						variant="faded"

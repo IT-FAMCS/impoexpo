@@ -3,6 +3,7 @@ import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../logger";
 import { google } from "googleapis";
 import type { GoogleExchangeResponse } from "@impoexpo/shared";
+import { registerGoogleFormsEndpoints } from "./forms/endpoints";
 
 export const registerGoogleEndpoints = (app: Express) => {
 	if (
@@ -14,6 +15,9 @@ export const registerGoogleEndpoints = (app: Express) => {
 			"cannot register google endpoints without GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and GOOGLE_CLIENT_REDIRECT_URL in the .env file",
 		);
 	}
+
+	logger.info("	-> registering google endpoints");
+	registerGoogleFormsEndpoints(app);
 
 	app.post(
 		"/integration/google/exchange",
@@ -78,6 +82,4 @@ export const registerGoogleEndpoints = (app: Express) => {
 			}
 		},
 	);
-
-	logger.info("   -> successfully registered google endpoints");
 };

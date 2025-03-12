@@ -14,22 +14,32 @@ import {
 export default function SelectSourceCard() {
 	const { state } = useSourceCardStore();
 
+	console.log(SourceCardState[state]);
+
 	const renderer = () => {
 		switch (state) {
 			case SourceCardState.SELECT_READ_SOURCE:
 				return <SourceSelector type="read" />;
 			case SourceCardState.AUTHENTICATE_READ_SOURCE:
 				return <SourceAuthenticator type="read" />;
+			case SourceCardState.VERIFY_READ_SOURCE:
+				return <SourceVerificator type="read" />;
+			case SourceCardState.HYDRATE_READ_SOURCE:
+				return <SourceHydrator type="read" />;
 			case SourceCardState.SELECT_WRITE_SOURCE:
 				return <SourceSelector type="write" />;
 			case SourceCardState.AUTHENTICATE_WRITE_SOURCE:
 				return <SourceAuthenticator type="write" />;
+			case SourceCardState.VERIFY_WRITE_SOURCE:
+				return <SourceVerificator type="write" />;
+			case SourceCardState.HYDRATE_WRITE_SOURCE:
+				return <SourceHydrator type="write" />;
 		}
 	};
 
 	return (
 		<Card className="p-2">
-			<CardHeader className="text-large">
+			<CardHeader className="justify-center text-large">
 				откуда будем читать данные?
 			</CardHeader>
 			<AnimateChangeInSize height>
@@ -43,7 +53,7 @@ function SourceSelector(props: { type: "read" | "write" }) {
 	const { setReadIntegration, setWriteIntegration } = useSourceCardStore();
 
 	return (
-		<div className="flex flex-col justify-center items-center">
+		<div className="flex flex-col items-center justify-center">
 			{(props.type === "read" ? readIntegrations : writeIntegrations).map(
 				(integration, idx) => {
 					return (
@@ -53,11 +63,57 @@ function SourceSelector(props: { type: "read" | "write" }) {
 									? setReadIntegration(integration)
 									: setWriteIntegration(integration)
 							}
-							className="p-0 w-full"
+							className="w-full p-0"
 							key={idx}
 							icon={integration.icon}
 							title={integration.title}
 						/>
+					);
+				},
+			)}
+		</div>
+	);
+}
+
+function SourceHydrator(props: { type: "read" | "write" }) {
+	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
+
+	return (
+		<div className="flex items-center justify-center w-full">
+			{(props.type === "read" ? readIntegration : writeIntegration)?.hydrator(
+				() => {
+					setState(
+						props.type === "read"
+							? SourceCardState.SELECT_WRITE_SOURCE
+							: SourceCardState.DONE,
+					);
+				},
+			)}
+		</div>
+	);
+}
+
+function SourceVerificator(props: { type: "read" | "write" }) {
+	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
+
+	return (
+		<div className="flex items-center justify-center w-full">
+			{(props.type === "read"
+				? readIntegration
+				: writeIntegration
+			)?.verificator(
+				() => {
+					setState(
+						props.type === "read"
+							? SourceCardState.HYDRATE_READ_SOURCE
+							: SourceCardState.HYDRATE_WRITE_SOURCE,
+					);
+				},
+				() => {
+					setState(
+						props.type === "read"
+							? SourceCardState.AUTHENTICATE_READ_SOURCE
+							: SourceCardState.AUTHENTICATE_WRITE_SOURCE,
 					);
 				},
 			)}
@@ -70,22 +126,38 @@ function SourceAuthenticator(props: { type: "read" | "write" }) {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
 		undefined,
 	);
-	const { readIntegration } = useSourceCardStore();
+	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
 
 	useEffect(() => {
-		readIntegration
+		(props.type === "read" ? readIntegration : writeIntegration)
 			?.checkAuthenticated()
 			.then((value) => setIsAuthenticated(value));
 	});
 	useEffect(() => {
 		if (isAuthenticated === undefined) return;
+		if (isAuthenticated) {
+			continueFlow();
+			return;
+		}
 		setIsLoading(false);
 	}, [isAuthenticated]);
 
+	const continueFlow = () =>
+		setState(
+			props.type === "read"
+				? SourceCardState.VERIFY_READ_SOURCE
+				: SourceCardState.VERIFY_WRITE_SOURCE,
+		);
+
 	return (
-		<div className="flex w-full justify-center items-center">
+		<div className="flex items-center justify-center w-full">
 			{isLoading && <CircularProgress />}
-			{!isLoading && !isAuthenticated && readIntegration?.authenticator()}
+			{!isLoading &&
+				!isAuthenticated &&
+				(props.type === "read"
+					? readIntegration
+					: writeIntegration
+				)?.authenticator(continueFlow)}
 		</div>
 	);
 }

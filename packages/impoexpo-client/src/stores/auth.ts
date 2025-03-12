@@ -1,40 +1,88 @@
 import {
-	GoogleExchangeResponse,
+	type GoogleExchangeResponse,
 	GoogleExchangeResponseSchema,
 } from "@impoexpo/shared";
 import { create } from "zustand";
-import { BaseSchema, BaseIssue, InferOutput, parse } from "valibot";
+import {
+	type BaseSchema,
+	type BaseIssue,
+	type InferOutput,
+	parse,
+} from "valibot";
 
 const STORAGE_PREFIX: string = "impoexpo/auth/";
+export const storageKeyForIntegration = (name: string) => STORAGE_PREFIX + name;
 
 export type AuthStore = {
 	google?: GoogleExchangeResponse;
+	ready: boolean;
+};
+
+export type AuthStoreActions = {
 	setGoogleAuth: (auth: GoogleExchangeResponse) => void;
+	resetGoogleAuth: () => void;
 
 	load: () => void;
 	save: () => void;
+	reset: () => void;
 };
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+const initialState: AuthStore = {
 	google: undefined,
-	setGoogleAuth: (auth) => set(() => ({ google: auth })),
+	ready: false,
+};
 
-	load: () => {
-		// god forgive me
-		set({ google: loadEntry("google", GoogleExchangeResponseSchema) });
-	},
-	save: () => {
-		saveEntry("google", get().google);
-	},
-}));
+export const useAuthStore = create<AuthStore & AuthStoreActions>(
+	(set, get) => ({
+		google: undefined,
+		setGoogleAuth: (auth) => set(() => ({ google: auth })),
+		resetGoogleAuth: () =>
+			set(() => {
+				clearEntries("google");
+				return { google: undefined };
+			}),
 
-const saveEntry = <T>(name: string, value: T) =>
-	localStorage.setItem(STORAGE_PREFIX + name, JSON.stringify(value));
+		ready: false,
+		load: () => {
+			// god forgive me
+			if (get().ready) return;
+			set({
+				google: loadEntry("google", GoogleExchangeResponseSchema),
+				ready: true,
+			});
+		},
+		save: () => {
+			saveEntry("google", get().google);
+		},
+		reset: () => {
+			clearEntries("google");
+			set(initialState);
+		},
+	}),
+);
+
+// automagically save to storage when any auth method updates
+useAuthStore.subscribe((curr, prev) => {
+	if (curr !== prev && curr.ready && prev.ready) {
+		curr.save();
+	}
+});
+
+const clearEntries = (...names: string[]) => {
+	for (const name of names)
+		localStorage.removeItem(storageKeyForIntegration(name));
+};
+
+const saveEntry = <T>(name: string, value?: T) => {
+	if (value === undefined) return;
+	localStorage.setItem(storageKeyForIntegration(name), JSON.stringify(value));
+};
+
 const loadEntry = <TSchema extends Schema>(
 	name: string,
 	schema: TSchema,
 ): InferOutput<TSchema> | undefined => {
-	const raw = localStorage.getItem(STORAGE_PREFIX + name);
+	const raw = localStorage.getItem(storageKeyForIntegration(name));
 	if (raw === null) return undefined;
 
 	let json: Record<string, unknown>;

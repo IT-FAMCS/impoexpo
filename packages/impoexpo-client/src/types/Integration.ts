@@ -4,6 +4,13 @@ export type Integration = {
 	icon: React.ReactNode;
 	read: boolean;
 	write: boolean;
+
 	checkAuthenticated: () => Promise<boolean>;
-	authenticator: () => React.ReactNode;
+
+	verificator: (
+		successCallback: () => void,
+		resetCallback: () => void,
+	) => React.ReactNode;
+	authenticator: (callback: () => void) => React.ReactNode;
+	hydrator: (callback: () => void) => React.ReactNode;
 };

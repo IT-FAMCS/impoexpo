@@ -9,8 +9,9 @@ import { useAuthStore } from "@/stores/auth";
 
 export default function GoogleAuthenticator(props: {
 	scopes: string[];
+	onSuccess: () => void;
 }) {
-	const { google: auth, setGoogleAuth, save } = useAuthStore();
+	const { setGoogleAuth } = useAuthStore();
 
 	const [client, setClient] = useState<
 		google.accounts.oauth2.CodeClient | undefined
@@ -55,7 +56,7 @@ export default function GoogleAuthenticator(props: {
 							.then(async (data) => {
 								// TODO: make this one function call
 								setGoogleAuth(data);
-								save();
+								props.onSuccess();
 							})
 							.catch((err) => {
 								console.error(
@@ -80,37 +81,9 @@ export default function GoogleAuthenticator(props: {
 		client?.requestCode();
 	};
 
-	if (auth) {
-		return (
-			<div className="flex flex-col gap-3 justify-center items-center">
-				будем знакомы?
-				<Card className="p-4">
-					<User
-						avatarProps={{
-							showFallback: true,
-							isBordered: true,
-							size: "md",
-							src: auth.profilePicture,
-						}}
-						name={auth.username}
-						description={auth.email}
-					/>
-				</Card>
-				<div className="flex flex-row gap-2 justify-center items-center">
-					<Button color="success" variant="flat" endContent>
-						далее
-					</Button>
-					<Button color="danger" variant="flat">
-						что-то не так
-					</Button>
-				</div>
-			</div>
-		);
-	}
-
 	if (loadingState === undefined) {
 		return (
-			<div className="w-full flex flex-col gap-2">
+			<div className="flex flex-col w-full gap-2">
 				чтобы продолжить, необходимо войти в ваш аккаунт google.
 				{client !== undefined && (
 					<Button
@@ -123,7 +96,7 @@ export default function GoogleAuthenticator(props: {
 					</Button>
 				)}
 				{errorMessage !== undefined && (
-					<div className="flex flex-row gap-2 justify-center items-center text-small text-danger">
+					<div className="flex flex-row items-center justify-center gap-2 text-small text-danger">
 						во время входа произошла ошибка:
 						<br />
 						<Code size="sm" color="danger">
@@ -136,7 +109,7 @@ export default function GoogleAuthenticator(props: {
 	}
 
 	return (
-		<div className="w-full flex flex-col gap-2 justify-center items-center">
+		<div className="flex flex-col items-center justify-center w-full gap-2">
 			<CircularProgress />
 			<p className="text-foreground-500">{loadingState}</p>
 		</div>
