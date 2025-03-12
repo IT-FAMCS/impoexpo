@@ -2,8 +2,12 @@ import type { Express } from "express";
 import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../logger";
 import { google } from "googleapis";
-import type { GoogleExchangeResponse } from "@impoexpo/shared";
+import type {
+	DatabaseGoogleUser,
+	GoogleExchangeResponse,
+} from "@impoexpo/shared";
 import { registerGoogleFormsEndpoints } from "./forms/endpoints";
+import { saveUserInformation } from "./db";
 
 export const registerGoogleEndpoints = (app: Express) => {
 	if (
@@ -57,18 +61,40 @@ export const registerGoogleEndpoints = (app: Express) => {
 				if (!info.data.name) throw new Error("received null instead of name");
 				if (!tokens.access_token)
 					throw new Error("received null instead of access_token");
+				if (!tokens.refresh_token)
+					throw new Error("received null instead of refresh_token");
 				if (!tokens.expiry_date)
 					throw new Error("received null instead of token expiry timestamp");
 				if (!tokens.token_type) throw new Error("received null instead of ");
 
-				const response: GoogleExchangeResponse = {
+				const DATABASE_USER_LIFETIME: number = 60 * 24 * 60 * 60 * 1000; // 2 months
+				const user: DatabaseGoogleUser = {
 					email: info.data.email,
 					profilePicture: info.data.picture,
-					username: info.data.name,
-
+					name: info.data.name,
 					accessToken: tokens.access_token,
-					expiryTimestamp: tokens.expiry_date,
+					refreshToken: tokens.refresh_token,
 					tokenType: tokens.token_type,
+					expiryTimestamp: tokens.expiry_date,
+					removalTimestamp: Date.now() + DATABASE_USER_LIFETIME,
+				};
+				try {
+					saveUserInformation(user);
+				} catch (err) {
+					res
+						.status(500)
+						.send(`failed to save user information to the database: ${err}`);
+				}
+
+				const response: GoogleExchangeResponse = {
+					email: user.email,
+					profilePicture: user.profilePicture,
+					username: user.name,
+
+					accessToken: user.accessToken,
+					expiryTimestamp: user.expiryTimestamp,
+					removalTimestamp: user.removalTimestamp,
+					tokenType: user.tokenType,
 				};
 
 				res.send(response);

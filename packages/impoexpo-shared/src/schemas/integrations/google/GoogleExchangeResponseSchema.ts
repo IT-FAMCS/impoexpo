@@ -8,6 +8,7 @@ const GoogleExchangeResponseSchema = v.required(
 
 		accessToken: v.string(),
 		expiryTimestamp: v.number(),
+		removalTimestamp: v.number(),
 		tokenType: v.string(),
 	}),
 );

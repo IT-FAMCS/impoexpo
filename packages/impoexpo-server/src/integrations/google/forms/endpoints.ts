@@ -3,6 +3,7 @@ import { header, query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
 import { ListGoogleFormsResponse } from "@impoexpo/shared";
+import { getByAccessToken } from "../db";
 
 export const registerGoogleFormsEndpoints = (app: Express) => {
 	logger.info("       -> registering google forms endpoints");
@@ -19,21 +20,19 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 
 			// biome-ignore lint/style/noNonNullAssertion: validated by express-validator
 			const token = req.headers.authorization!;
+			getByAccessToken(token);
 
-			const formClient = google.forms({
-				version: "v1",
-				auth: token,
+			/* const client = new google.auth.OAuth2({
 			});
 
-			const driveClient = google.drive({
-				version: "v3",
-				auth: token,
-			});
+			const formClient = google.forms('v1');
+			const driveClient = google.drive('v3');
 
 			const files = await driveClient.files.list({
 				q: "mimeType='application/vnd.google-apps.form'",
+				access_token: token
 			});
-			console.log(files);
+			console.log(files); */
 
 			res.send([]);
 

@@ -9,6 +9,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@types/better-sqlite3": "^7.6.12",
 		"@types/cors": "^2.8.17",
 		"@types/express": "5.0.0",
 		"@types/node": "22.13.9",
@@ -18,12 +19,16 @@
 		"typescript": "5.8.2"
 	},
 	"dependencies": {
+		"@blackglory/better-sqlite3-migrations": "^0.1.19",
 		"@impoexpo/shared": "workspace:^",
+		"better-sqlite3": "^11.8.1",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
 		"express-validator": "^7.2.1",
+		"extra-promise": "^7.0.0",
 		"googleapis": "^146.0.0",
+		"migration-files": "^0.4.3",
 		"pino": "^9.6.0",
 		"pino-http": "^10.4.0",
 		"valibot": "1.0.0-rc.3"
