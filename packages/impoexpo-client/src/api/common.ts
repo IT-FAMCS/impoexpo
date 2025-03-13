@@ -46,7 +46,10 @@ const requestWithSchema = async <const TSchema extends BaseSchema>(
 		},
 	});
 	if (!response.ok) {
-		throw new Error(`server returned unsuccessful status code (${response})`);
+		const body = await response.text();
+		throw new Error(
+			`server returned unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
+		);
 	}
 	return v.parse(schema, await response.json());
 };

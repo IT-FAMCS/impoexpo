@@ -1,10 +1,9 @@
 import type { Express, Request, Response } from "express";
-import { header, query, validationResult } from "express-validator";
+import { validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
-import { ListGoogleFormsResponse } from "@impoexpo/shared";
+import type { ListGoogleFormsResponseInstance } from "@impoexpo/shared";
 import {
-	extractGoogleAuth,
 	getAuthenticatedGoogleClient,
 	googleAuthValidations,
 } from "../middlewares";
@@ -22,22 +21,47 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 				return;
 			}
 
-			const client = getAuthenticatedGoogleClient(req);
-			const driveClient = google.drive({
-				version: "v3",
-				auth: client,
-			});
+			try {
+				const client = getAuthenticatedGoogleClient(req);
+				const driveClient = google.drive({
+					version: "v3",
+					auth: client,
+				});
 
-			const files = await driveClient.files.list({
-				q: "mimeType='application/vnd.google-apps.form'",
-			});
-			res.send(
-				files.data.files?.map((file) => ({
-					id: file.id,
-					name: file.name,
-					description: file.description,
-				})) ?? ([] as ListGoogleFormsResponse),
-			);
+				const filesResponse = await driveClient.files.list({
+					q: "mimeType='application/vnd.google-apps.form'",
+				});
+				if (
+					filesResponse.status !== 200 ||
+					filesResponse.data.files === undefined
+				) {
+					throw new Error(
+						`google drive API returned invalid data (status code ${filesResponse.status})`,
+					);
+				}
+
+				const response = filesResponse.data.files?.map((file) => {
+					if (!file.id)
+						throw new Error(
+							"google drive API response contained no ID for one of the files",
+						);
+					if (!file.name)
+						throw new Error(
+							"google drive API response contained no filename for one of the files",
+						);
+
+					return {
+						id: file.id,
+						name: file.name,
+						description: file.description ?? undefined,
+					} satisfies ListGoogleFormsResponseInstance;
+				});
+
+				res.send(response);
+			} catch (err) {
+				res.status(500).send(`failed to list forms: ${err}`);
+				childLogger("integration/google/forms").error(err);
+			}
 		},
 	);
 };
