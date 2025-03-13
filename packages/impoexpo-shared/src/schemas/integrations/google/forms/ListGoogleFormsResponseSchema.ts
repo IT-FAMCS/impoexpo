@@ -3,10 +3,11 @@ import * as v from "valibot";
 const ListGoogleFormsResponseSchema = v.array(
 	v.required(
 		v.object({
-			name: v.string(),
+			id: v.pipe(v.string(), v.nonEmpty()),
+			name: v.pipe(v.string(), v.nonEmpty()),
 			description: v.string(),
 		}),
-		["name"],
+		["name", "id"],
 	),
 );
 

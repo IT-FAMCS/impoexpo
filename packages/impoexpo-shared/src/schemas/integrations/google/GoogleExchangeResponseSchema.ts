@@ -2,14 +2,14 @@ import * as v from "valibot";
 
 const GoogleExchangeResponseSchema = v.required(
 	v.object({
-		email: v.pipe(v.string(), v.email()),
-		profilePicture: v.pipe(v.string(), v.url()),
-		username: v.string(),
+		email: v.pipe(v.string(), v.email(), v.nonEmpty()),
+		profilePicture: v.pipe(v.string(), v.url(), v.nonEmpty()),
+		username: v.pipe(v.string(), v.nonEmpty()),
 
-		accessToken: v.string(),
+		accessToken: v.pipe(v.string(), v.nonEmpty()),
+		refreshToken: v.pipe(v.string(), v.nonEmpty()),
 		expiryTimestamp: v.number(),
-		removalTimestamp: v.number(),
-		tokenType: v.string(),
+		tokenType: v.pipe(v.string(), v.nonEmpty()),
 	}),
 );
 

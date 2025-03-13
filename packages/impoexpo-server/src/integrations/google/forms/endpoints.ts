@@ -1,45 +1,43 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { header, query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
 import { ListGoogleFormsResponse } from "@impoexpo/shared";
-import { getByAccessToken } from "../db";
+import {
+	extractGoogleAuth,
+	getAuthenticatedGoogleClient,
+	googleAuthValidations,
+} from "../middlewares";
 
 export const registerGoogleFormsEndpoints = (app: Express) => {
 	logger.info("       -> registering google forms endpoints");
 
 	app.get(
 		"/integration/google/forms/list",
-		header("Authorization", "missing authorization header"),
-		async (req, res) => {
+		...googleAuthValidations,
+		async (req: Request, res: Response) => {
 			const result = validationResult(req);
 			if (!result.isEmpty()) {
-				res.status(401).send({ errors: result.array() });
+				res.status(400).send({ errors: result.array() });
 				return;
 			}
 
-			// biome-ignore lint/style/noNonNullAssertion: validated by express-validator
-			const token = req.headers.authorization!;
-			getByAccessToken(token);
-
-			/* const client = new google.auth.OAuth2({
+			const client = getAuthenticatedGoogleClient(req);
+			const driveClient = google.drive({
+				version: "v3",
+				auth: client,
 			});
-
-			const formClient = google.forms('v1');
-			const driveClient = google.drive('v3');
 
 			const files = await driveClient.files.list({
 				q: "mimeType='application/vnd.google-apps.form'",
-				access_token: token
 			});
-			console.log(files); */
-
-			res.send([]);
-
-			//const forms = await client.forms.get();
-			//const response: ListGoogleFormsResponse = [];
-
-			//for(const form of forms.data)
+			res.send(
+				files.data.files?.map((file) => ({
+					id: file.id,
+					name: file.name,
+					description: file.description,
+				})) ?? ([] as ListGoogleFormsResponse),
+			);
 		},
 	);
 };

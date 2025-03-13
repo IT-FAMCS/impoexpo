@@ -4,7 +4,6 @@ import { logger } from "./logger";
 import pino from "pino-http";
 import cors from "cors";
 import { registerGoogleEndpoints } from "./integrations/google/endpoints";
-import "./db";
 
 dotenv.config();
 if (!process.env.PORT) {

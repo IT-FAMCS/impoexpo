@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { GOOGLE_FORMS_LIST_ROUTE } from "./endpoints";
 import { ListGoogleFormsResponseSchema } from "@impoexpo/shared";
 import { useAuthStore } from "@/stores/auth";
+import { getGoogleAuthHeaders } from "../common";
 
 export function GoogleFormsHydrator() {
 	const { google: auth } = useAuthStore();
@@ -12,7 +13,7 @@ export function GoogleFormsHydrator() {
 		queryKey: ["receive-google-form-names"],
 		queryFn: () =>
 			getWithSchema(GOOGLE_FORMS_LIST_ROUTE, ListGoogleFormsResponseSchema, {
-				authorization: auth?.accessToken,
+				headers: getGoogleAuthHeaders(),
 			}),
 	});
 

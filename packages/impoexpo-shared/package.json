@@ -2,7 +2,7 @@
 	"name": "@impoexpo/shared",
 	"version": "1.0.0",
 	"private": true,
-	"main": "dist",
+	"main": "dist/index.js",
 	"type": "module",
 	"scripts": {
 		"build": "tsc",

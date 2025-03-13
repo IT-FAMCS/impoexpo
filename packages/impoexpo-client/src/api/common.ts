@@ -42,6 +42,7 @@ const requestWithSchema = async <const TSchema extends BaseSchema>(
 				other?.authorization === undefined
 					? ""
 					: `Bearer ${other.authorization}`,
+			...other?.headers,
 		},
 	});
 	if (!response.ok) {
@@ -62,6 +63,7 @@ const request = async (
 				other?.authorization === undefined
 					? ""
 					: `Bearer ${other.authorization}`,
+			...other?.headers,
 		},
 	});
 	if (!response.ok) {
@@ -74,5 +76,6 @@ type BaseSchema = v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
 type OtherRequestData = {
 	query?: Record<string, string>;
 	authorization?: string;
+	headers?: Record<string, string>;
 };
 type RequestMethod = "GET" | "POST";
