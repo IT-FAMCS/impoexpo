@@ -1,8 +1,8 @@
 import * as v from "valibot";
 import { QueryClient } from "@tanstack/react-query";
+import { RatelimitHitError } from "./errors";
 
 export const BACKEND_URL_BASE = import.meta.env.VITE_BACKEND_URL;
-
 export const queryClient = new QueryClient();
 
 export const route = (path: string, query?: Record<string, string>) => {
@@ -37,18 +37,14 @@ const requestWithSchema = async <const TSchema extends BaseSchema>(
 ): Promise<v.InferOutput<TSchema>> => {
 	const response = await fetch(route(path, other?.query), {
 		method: method,
-		headers: {
-			Authorization:
-				other?.authorization === undefined
-					? ""
-					: `Bearer ${other.authorization}`,
-			...other?.headers,
-		},
+		headers: getHeaders(other),
 	});
 	if (!response.ok) {
+		if (response.status === 429) throw new RatelimitHitError(response);
+
 		const body = await response.text();
 		throw new Error(
-			`server returned unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
+			`server returned an unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
 		);
 	}
 	return v.parse(schema, await response.json());
@@ -61,24 +57,31 @@ const request = async (
 ): Promise<Response> => {
 	const response = await fetch(route(path, other?.query), {
 		method: method,
-		headers: {
-			Authorization:
-				other?.authorization === undefined
-					? ""
-					: `Bearer ${other.authorization}`,
-			...other?.headers,
-		},
+		headers: getHeaders(other),
 	});
 	if (!response.ok) {
-		throw new Error(`server returned unsuccessful status code (${response})`);
+		if (response.status === 429) throw new RatelimitHitError(response);
+
+		const body = await response.text();
+		throw new Error(
+			`server returned an unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
+		);
 	}
 	return response;
 };
+
+const getHeaders = (other?: OtherRequestData): HeadersInit => ({
+	Authorization:
+		other?.authorization === undefined ? "" : `Bearer ${other.authorization}`,
+	"Cache-Control": other?.bypassCache ? "no-cache" : "",
+	...other?.headers,
+});
 
 type BaseSchema = v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
 type OtherRequestData = {
 	query?: Record<string, string>;
 	authorization?: string;
 	headers?: Record<string, string>;
+	bypassCache?: boolean;
 };
 type RequestMethod = "GET" | "POST";

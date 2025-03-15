@@ -1,4 +1,10 @@
-import { Card, CardBody, CardHeader, CircularProgress } from "@heroui/react";
+import {
+	Card,
+	CardBody,
+	CardHeader,
+	CircularProgress,
+	Divider,
+} from "@heroui/react";
 import ActionCard from "../external/ActionCard";
 import {
 	readIntegrations,
@@ -42,6 +48,7 @@ export default function SelectSourceCard() {
 			<CardHeader className="justify-center text-large">
 				откуда будем читать данные?
 			</CardHeader>
+			<Divider />
 			<AnimateChangeInSize height>
 				<CardBody>{renderer()}</CardBody>
 			</AnimateChangeInSize>

@@ -2,25 +2,29 @@ import type { Express, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
-import type { ListGoogleFormsResponseInstance } from "@impoexpo/shared";
+import {
+	GOOGLE_FORMS_LIST_ROUTE,
+	type ListGoogleFormsResponseInstance,
+} from "@impoexpo/shared";
 import {
 	getAuthenticatedGoogleClient,
-	googleAuthValidations,
+	requireGoogleAuth,
 } from "../middlewares";
+import {
+	defaultCache,
+	cacheOnlyIfSuccessful,
+	defaultRatelimiter,
+} from "../../../common";
 
 export const registerGoogleFormsEndpoints = (app: Express) => {
 	logger.info("       -> registering google forms endpoints");
 
 	app.get(
-		"/integration/google/forms/list",
-		...googleAuthValidations,
+		GOOGLE_FORMS_LIST_ROUTE,
+		requireGoogleAuth,
+		defaultRatelimiter("1 hour", 10),
+		defaultCache("1 day", cacheOnlyIfSuccessful),
 		async (req: Request, res: Response) => {
-			const result = validationResult(req);
-			if (!result.isEmpty()) {
-				res.status(400).send({ errors: result.array() });
-				return;
-			}
-
 			try {
 				const client = getAuthenticatedGoogleClient(req);
 				const driveClient = google.drive({
@@ -57,7 +61,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 					} satisfies ListGoogleFormsResponseInstance;
 				});
 
-				res.send(response);
+				res.json(response);
 			} catch (err) {
 				res.status(500).send(`failed to list forms: ${err}`);
 				childLogger("integration/google/forms").error(err);

@@ -2,7 +2,10 @@ import type { Express } from "express";
 import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../logger";
 import { google } from "googleapis";
-import type { GoogleExchangeResponse } from "@impoexpo/shared";
+import {
+	GOOGLE_EXCHANGE_ROUTE,
+	type GoogleExchangeResponse,
+} from "@impoexpo/shared";
 import { registerGoogleFormsEndpoints } from "./forms/endpoints";
 import { getGoogleClient } from "./helpers";
 
@@ -21,7 +24,7 @@ export const registerGoogleEndpoints = (app: Express) => {
 	registerGoogleFormsEndpoints(app);
 
 	app.post(
-		"/integration/google/exchange",
+		GOOGLE_EXCHANGE_ROUTE,
 		query("code").notEmpty(),
 		async (req, res) => {
 			const result = validationResult(req);
@@ -71,7 +74,7 @@ export const registerGoogleEndpoints = (app: Express) => {
 					expiryTimestamp: tokens.expiry_date,
 				};
 
-				res.send(response);
+				res.json(response);
 			} catch (err) {
 				res
 					.status(500)

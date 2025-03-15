@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-const ListGoogleFormsResponseInstanceSchema = v.required(
+export const ListGoogleFormsResponseInstanceSchema = v.required(
 	v.object({
 		id: v.pipe(v.string(), v.nonEmpty()),
 		name: v.pipe(v.string(), v.nonEmpty()),
@@ -9,21 +9,14 @@ const ListGoogleFormsResponseInstanceSchema = v.required(
 	["name", "id"],
 );
 
-const ListGoogleFormsResponseSchema = v.array(
+export const ListGoogleFormsResponseSchema = v.array(
 	ListGoogleFormsResponseInstanceSchema,
 );
 
-type ListGoogleFormsResponse = v.InferOutput<
+export type ListGoogleFormsResponse = v.InferOutput<
 	typeof ListGoogleFormsResponseSchema
 >;
 
-type ListGoogleFormsResponseInstance = v.InferOutput<
+export type ListGoogleFormsResponseInstance = v.InferOutput<
 	typeof ListGoogleFormsResponseInstanceSchema
 >;
-
-export {
-	type ListGoogleFormsResponse,
-	type ListGoogleFormsResponseInstance,
-	ListGoogleFormsResponseInstanceSchema,
-	ListGoogleFormsResponseSchema,
-};

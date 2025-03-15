@@ -3,8 +3,10 @@ import { Button, Card, CircularProgress, Code, User } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import { GOOGLE_EXCHANGE_ROUTE } from "./common";
-import { GoogleExchangeResponseSchema } from "@impoexpo/shared";
+import {
+	GOOGLE_EXCHANGE_ROUTE,
+	GoogleExchangeResponseSchema,
+} from "@impoexpo/shared";
 import { useAuthStore } from "@/stores/auth";
 
 export default function GoogleAuthenticator(props: {
@@ -54,7 +56,6 @@ export default function GoogleAuthenticator(props: {
 							{ query: { code: response.code } },
 						)
 							.then(async (data) => {
-								// TODO: make this one function call
 								setGoogleAuth(data);
 								props.onSuccess();
 							})

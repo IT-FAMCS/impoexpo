@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { header } from "express-validator";
 import { getGoogleClient } from "./helpers";
 import {
@@ -7,20 +7,34 @@ import {
 	GOOGLE_REFRESH_TOKEN_HEADER_NAME,
 } from "@impoexpo/shared";
 
-export const googleAuthValidations = [
-	header(
-		GOOGLE_ACCESS_TOKEN_HEADER_NAME,
-		"missing google access token header",
-	).notEmpty(),
-	header(
-		GOOGLE_REFRESH_TOKEN_HEADER_NAME,
-		"missing google refresh token header",
-	).notEmpty(),
-	header(
-		GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
-		"missing google expiry timestamp header",
-	).isNumeric(),
-];
+export const requireGoogleAuth = async (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
+	for (const validation of [
+		header(
+			GOOGLE_ACCESS_TOKEN_HEADER_NAME,
+			"missing google access token header",
+		).notEmpty(),
+		header(
+			GOOGLE_REFRESH_TOKEN_HEADER_NAME,
+			"missing google refresh token header",
+		).notEmpty(),
+		header(
+			GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
+			"missing google expiry timestamp header",
+		).isNumeric(),
+	]) {
+		const result = await validation.run(req);
+		if (!result.isEmpty()) {
+			res.status(400).json(result.array({ onlyFirstError: true })[0].msg);
+			return;
+		}
+	}
+
+	next();
+};
 
 export const extractGoogleAuth = (
 	req: Request,

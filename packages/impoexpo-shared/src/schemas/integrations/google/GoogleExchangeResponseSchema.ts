@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-const GoogleExchangeResponseSchema = v.required(
+export const GoogleExchangeResponseSchema = v.required(
 	v.object({
 		email: v.pipe(v.string(), v.email(), v.nonEmpty()),
 		profilePicture: v.pipe(v.string(), v.url(), v.nonEmpty()),
@@ -13,8 +13,6 @@ const GoogleExchangeResponseSchema = v.required(
 	}),
 );
 
-type GoogleExchangeResponse = v.InferOutput<
+export type GoogleExchangeResponse = v.InferOutput<
 	typeof GoogleExchangeResponseSchema
 >;
-
-export { GoogleExchangeResponseSchema, type GoogleExchangeResponse };

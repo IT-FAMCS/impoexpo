@@ -6,7 +6,6 @@ import {
 } from "@impoexpo/shared";
 
 export const GOOGLE_AUTH_KEY = "google_auth";
-export const GOOGLE_EXCHANGE_ROUTE = "/integration/google/exchange";
 
 export const checkGoogleAuthentication = async () => {
 	if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
