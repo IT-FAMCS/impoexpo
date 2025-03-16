@@ -9,6 +9,8 @@ import {
 	ModalBody,
 	ModalFooter,
 	useDisclosure,
+	Link,
+	Code,
 } from "@heroui/react";
 import { useNavigate } from "react-router";
 
@@ -50,16 +52,41 @@ export default function WelcomePage() {
 						{(onClose) => (
 							<>
 								<ModalHeader>о проекте</ModalHeader>
-								<ModalBody>траляля</ModalBody>
+								<ModalBody>
+									<p>
+										impoexpo стремится упростить жизнь пользователей, которые
+										часто взаимодействуют с большим объёмом данных, используя
+										при этом различные сервисы.
+									</p>
+									<p>
+										исходный код impoexpo открыт и может быть найден{" "}
+										<Link
+											isExternal
+											showAnchorIcon
+											href="https://github.com/nedoxff/impoexpo"
+										>
+											здесь
+										</Link>
+										.
+									</p>
+								</ModalBody>
 								<ModalFooter>
 									<Button color="primary" onPress={onClose}>
-										ОК
+										OK
 									</Button>
 								</ModalFooter>
 							</>
 						)}
 					</ModalContent>
 				</Modal>
+			</div>
+
+			<div className="absolute flex flex-row gap-2 bottom-3">
+				<Code className="flex flex-row justify-center items-center gap-2">
+					v{import.meta.env.VITE_APP_VERSION}{" "}
+					<Icon icon="mdi:circle" width={4} />
+					{import.meta.env.VITE_APP_HASH}
+				</Code>
 			</div>
 		</div>
 	);

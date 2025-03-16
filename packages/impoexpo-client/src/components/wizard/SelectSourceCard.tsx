@@ -24,22 +24,14 @@ export default function SelectSourceCard() {
 
 	const renderer = () => {
 		switch (state) {
-			case SourceCardState.SELECT_READ_SOURCE:
-				return <SourceSelector type="read" />;
-			case SourceCardState.AUTHENTICATE_READ_SOURCE:
-				return <SourceAuthenticator type="read" />;
-			case SourceCardState.VERIFY_READ_SOURCE:
-				return <SourceVerificator type="read" />;
-			case SourceCardState.HYDRATE_READ_SOURCE:
-				return <SourceHydrator type="read" />;
-			case SourceCardState.SELECT_WRITE_SOURCE:
-				return <SourceSelector type="write" />;
-			case SourceCardState.AUTHENTICATE_WRITE_SOURCE:
-				return <SourceAuthenticator type="write" />;
-			case SourceCardState.VERIFY_WRITE_SOURCE:
-				return <SourceVerificator type="write" />;
-			case SourceCardState.HYDRATE_WRITE_SOURCE:
-				return <SourceHydrator type="write" />;
+			case SourceCardState.SELECT_SOURCE:
+				return <SourceSelector />;
+			case SourceCardState.AUTHENTICATE_SOURCE:
+				return <SourceAuthenticator />;
+			case SourceCardState.VERIFY_SOURCE:
+				return <SourceVerificator />;
+			case SourceCardState.HYDRATE_SOURCE:
+				return <SourceHydrator />;
 		}
 	};
 
@@ -56,21 +48,28 @@ export default function SelectSourceCard() {
 	);
 }
 
-function SourceSelector(props: { type: "read" | "write" }) {
-	const { setReadIntegration, setWriteIntegration } = useSourceCardStore();
+function SourceSelector() {
+	const { integrationType, setCurrentIntegration, setState } =
+		useSourceCardStore();
 
 	return (
 		<div className="flex flex-col items-center justify-center">
-			{(props.type === "read" ? readIntegrations : writeIntegrations).map(
+			{(integrationType === "read" ? readIntegrations : writeIntegrations).map(
 				(integration, idx) => {
 					return (
 						<ActionCard
-							onPress={() =>
-								props.type === "read"
+							onPress={() => {
+								/*
+								integration === "read"
 									? setReadIntegration(integration)
 									: setWriteIntegration(integration)
-							}
+								*/
+								// TODO: hydrate project state when it's implemented
+								setCurrentIntegration(integration);
+								setState(SourceCardState.AUTHENTICATE_SOURCE);
+							}}
 							className="w-full p-0"
+							// biome-ignore lint/suspicious/noArrayIndexKey: doesn't update, no rerenders will happen
 							key={idx}
 							icon={integration.icon}
 							title={integration.title}
@@ -82,61 +81,50 @@ function SourceSelector(props: { type: "read" | "write" }) {
 	);
 }
 
-function SourceHydrator(props: { type: "read" | "write" }) {
-	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
+function SourceHydrator() {
+	const { currentIntegration, integrationType, setIntegrationType, setState } =
+		useSourceCardStore();
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{(props.type === "read" ? readIntegration : writeIntegration)?.hydrator(
+			{currentIntegration?.hydrator(() => {
+				if (integrationType === "read") setIntegrationType("write");
+				setState(
+					integrationType === "read"
+						? SourceCardState.SELECT_SOURCE
+						: SourceCardState.DONE,
+				);
+			})}
+		</div>
+	);
+}
+
+function SourceVerificator() {
+	const { currentIntegration, setState } = useSourceCardStore();
+
+	return (
+		<div className="flex items-center justify-center w-full">
+			{currentIntegration?.verificator(
 				() => {
-					setState(
-						props.type === "read"
-							? SourceCardState.SELECT_WRITE_SOURCE
-							: SourceCardState.DONE,
-					);
+					setState(SourceCardState.HYDRATE_SOURCE);
+				},
+				() => {
+					setState(SourceCardState.AUTHENTICATE_SOURCE);
 				},
 			)}
 		</div>
 	);
 }
 
-function SourceVerificator(props: { type: "read" | "write" }) {
-	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
-
-	return (
-		<div className="flex items-center justify-center w-full">
-			{(props.type === "read"
-				? readIntegration
-				: writeIntegration
-			)?.verificator(
-				() => {
-					setState(
-						props.type === "read"
-							? SourceCardState.HYDRATE_READ_SOURCE
-							: SourceCardState.HYDRATE_WRITE_SOURCE,
-					);
-				},
-				() => {
-					setState(
-						props.type === "read"
-							? SourceCardState.AUTHENTICATE_READ_SOURCE
-							: SourceCardState.AUTHENTICATE_WRITE_SOURCE,
-					);
-				},
-			)}
-		</div>
-	);
-}
-
-function SourceAuthenticator(props: { type: "read" | "write" }) {
+function SourceAuthenticator() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
 		undefined,
 	);
-	const { readIntegration, writeIntegration, setState } = useSourceCardStore();
+	const { currentIntegration, setState } = useSourceCardStore();
 
 	useEffect(() => {
-		(props.type === "read" ? readIntegration : writeIntegration)
+		currentIntegration
 			?.checkAuthenticated()
 			.then((value) => setIsAuthenticated(value));
 	});
@@ -149,22 +137,14 @@ function SourceAuthenticator(props: { type: "read" | "write" }) {
 		setIsLoading(false);
 	}, [isAuthenticated]);
 
-	const continueFlow = () =>
-		setState(
-			props.type === "read"
-				? SourceCardState.VERIFY_READ_SOURCE
-				: SourceCardState.VERIFY_WRITE_SOURCE,
-		);
+	const continueFlow = () => setState(SourceCardState.VERIFY_SOURCE);
 
 	return (
 		<div className="flex items-center justify-center w-full">
 			{isLoading && <CircularProgress />}
 			{!isLoading &&
 				!isAuthenticated &&
-				(props.type === "read"
-					? readIntegration
-					: writeIntegration
-				)?.authenticator(continueFlow)}
+				currentIntegration?.authenticator(continueFlow)}
 		</div>
 	);
 }

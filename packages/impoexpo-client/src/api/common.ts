@@ -34,21 +34,8 @@ const requestWithSchema = async <const TSchema extends BaseSchema>(
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> => {
-	const response = await fetch(route(path, other?.query), {
-		method: method,
-		headers: getHeaders(other),
-	});
-	if (!response.ok) {
-		if (response.status === 429) throw new RatelimitHitError(response);
-
-		const body = await response.text();
-		throw new Error(
-			`server returned an unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
-		);
-	}
-	return v.parse(schema, await response.json());
-};
+): Promise<v.InferOutput<TSchema>> =>
+	v.parse(schema, await (await request(method, path, other)).json());
 
 const request = async (
 	method: RequestMethod,

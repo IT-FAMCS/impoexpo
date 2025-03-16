@@ -34,7 +34,8 @@ const initialState: AuthStore = {
 
 export const useAuthStore = create<AuthStore & AuthStoreActions>(
 	(set, get) => ({
-		google: undefined,
+		...initialState,
+
 		setGoogleAuth: (auth) => set(() => ({ google: auth })),
 		resetGoogleAuth: () =>
 			set(() => {
@@ -42,7 +43,6 @@ export const useAuthStore = create<AuthStore & AuthStoreActions>(
 				return { google: undefined };
 			}),
 
-		ready: false,
 		load: () => {
 			// god forgive me
 			if (get().ready) return;

@@ -23,7 +23,7 @@ const initialState: TransferWizardStore = {
 export const useTransferWizardStore = create<
 	TransferWizardStore & TransferWizardStoreActions
 >((set) => ({
-	stage: TransferWizardStage.SELECT_SOURCE,
+	...initialState,
 
 	setStage: (newStage: TransferWizardStage) => set(() => ({ stage: newStage })),
 	reset: () => set(initialState),

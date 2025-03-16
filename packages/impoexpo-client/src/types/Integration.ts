@@ -6,7 +6,6 @@ export type Integration = {
 	write: boolean;
 
 	checkAuthenticated: () => Promise<boolean>;
-
 	verificator: (
 		successCallback: () => void,
 		resetCallback: () => void,

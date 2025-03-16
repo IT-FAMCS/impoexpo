@@ -12,8 +12,8 @@ export class RatelimitHitError extends Error {
 			throw new Error(
 				"RatelimitHitError expected to have the RateLimit-Reset header in the response",
 			);
-		// biome-ignore lint/style/noNonNullAssertion: already checked before
 		this.resetSeconds = Number.parseInt(
+			// biome-ignore lint/style/noNonNullAssertion: already checked before
 			response.headers.get("Ratelimit-Reset")!,
 		);
 
