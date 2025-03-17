@@ -2,6 +2,7 @@ import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { header } from "express-validator";
 import { getGoogleClient } from "./helpers";
 import {
+	type FaultyAction,
 	GOOGLE_ACCESS_TOKEN_HEADER_NAME,
 	GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
 	GOOGLE_REFRESH_TOKEN_HEADER_NAME,
@@ -28,7 +29,11 @@ export const requireGoogleAuth = async (
 	]) {
 		const result = await validation.run(req);
 		if (!result.isEmpty()) {
-			res.status(400).json(result.array({ onlyFirstError: true })[0].msg);
+			res.status(400).send({
+				ok: false,
+				internal: false,
+				error: result.array({ onlyFirstError: true })[0].msg,
+			} satisfies FaultyAction);
 			return;
 		}
 	}

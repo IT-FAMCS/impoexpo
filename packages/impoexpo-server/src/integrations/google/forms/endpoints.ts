@@ -1,9 +1,11 @@
 import type { Express, Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
 import {
+	type FaultyAction,
 	GOOGLE_FORMS_LIST_ROUTE,
+	GOOGLE_FORMS_VERIFY_ROUTE,
 	type ListGoogleFormsResponseInstance,
 } from "@impoexpo/shared";
 import {
@@ -18,6 +20,52 @@ import {
 
 export const registerGoogleFormsEndpoints = (app: Express) => {
 	logger.info("       -> registering google forms endpoints");
+
+	app.get(
+		GOOGLE_FORMS_VERIFY_ROUTE,
+		requireGoogleAuth,
+		query("id").notEmpty(),
+		defaultRatelimiter("1 hour", 10, { skipFailedRequests: false }),
+		async (req: Request, res: Response) => {
+			const result = validationResult(req);
+			if (!result.isEmpty()) {
+				res.status(400).send({
+					ok: false,
+					internal: false,
+					error: result.array({ onlyFirstError: true })[0].msg,
+				} satisfies FaultyAction);
+				return;
+			}
+
+			try {
+				const client = getAuthenticatedGoogleClient(req);
+				const formsClient = google.forms({
+					version: "v1",
+					auth: client,
+				});
+
+				const response = await formsClient.forms.responses.list({
+					pageSize: 1,
+				});
+				if (response.status !== 200) {
+					res.status(502).send({
+						ok: false,
+						internal: false,
+						error: `google api returned an unsuccessful http code (${response.status}): ${response.statusText}`,
+					} satisfies FaultyAction);
+				}
+
+				res.send({ ok: true } satisfies FaultyAction);
+			} catch (err) {
+				res.status(500).send({
+					ok: false,
+					internal: true,
+					error: `${err}`,
+				} satisfies FaultyAction);
+				childLogger("integration/google/forms").error(err);
+			}
+		},
+	);
 
 	app.get(
 		GOOGLE_FORMS_LIST_ROUTE,
@@ -61,9 +109,13 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 					} satisfies ListGoogleFormsResponseInstance;
 				});
 
-				res.json(response);
+				res.send(response);
 			} catch (err) {
-				res.status(500).send(`failed to list forms: ${err}`);
+				res.status(500).send({
+					ok: false,
+					internal: true,
+					error: `failed to list forms: ${err}`,
+				} satisfies FaultyAction);
 				childLogger("integration/google/forms").error(err);
 			}
 		},

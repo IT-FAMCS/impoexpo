@@ -3,6 +3,7 @@ import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../logger";
 import { google } from "googleapis";
 import {
+	type FaultyAction,
 	GOOGLE_EXCHANGE_ROUTE,
 	type GoogleExchangeResponse,
 } from "@impoexpo/shared";
@@ -29,7 +30,11 @@ export const registerGoogleEndpoints = (app: Express) => {
 		async (req, res) => {
 			const result = validationResult(req);
 			if (!result.isEmpty()) {
-				res.status(400).send({ errors: result.array() });
+				res.status(400).send({
+					ok: false,
+					internal: false,
+					error: result.array({ onlyFirstError: true })[0].msg,
+				} satisfies FaultyAction);
 				return;
 			}
 
@@ -38,14 +43,14 @@ export const registerGoogleEndpoints = (app: Express) => {
 				const { tokens } = await client.getToken(req.query?.code);
 				client.setCredentials(tokens);
 
-				const auth = await google.oauth2({
+				const auth = google.oauth2({
 					version: "v2",
 					auth: client,
 				});
 				const info = await auth.userinfo.get();
 				if (info.status !== 200) {
 					throw new Error(
-						"failed to GET personal information (email, profile picture, etc.)",
+						"couldn't GET personal information (email, profile picture, etc.)",
 					);
 				}
 
@@ -74,13 +79,13 @@ export const registerGoogleEndpoints = (app: Express) => {
 					expiryTimestamp: tokens.expiry_date,
 				};
 
-				res.json(response);
+				res.send(response);
 			} catch (err) {
-				res
-					.status(500)
-					.send(
-						`failed to receive user information from the provided code: ${err}`,
-					);
+				res.status(500).send({
+					ok: false,
+					internal: true,
+					error: `failed to receive user information from the provided code: ${err}`,
+				} satisfies FaultyAction);
 				childLogger("integration/google").error(err);
 			}
 		},

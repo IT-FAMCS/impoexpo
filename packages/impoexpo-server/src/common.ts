@@ -9,13 +9,17 @@ export const defaultCache = apicache.options({
 export const cacheOnlyIfSuccessful = (req: Request, res: Response) =>
 	res.statusCode === 200;
 
-export const defaultRatelimiter = (window: Duration, limit: number) =>
+export const defaultRatelimiter = (
+	window: Duration,
+	limit: number,
+	options?: RatelimiterOptions,
+) =>
 	rateLimit({
 		windowMs: parseDuration(window),
 		limit: limit,
 		standardHeaders: true,
 		legacyHeaders: false,
-		skipFailedRequests: true,
+		skipFailedRequests: options?.skipFailedRequests ?? true,
 		skip: (req, res) => req.headers["cache-control"] !== "no-cache", // do not count cached requests into the ratelimit
 		handler: (req, res, next, options) => {
 			res
@@ -27,3 +31,7 @@ export const defaultRatelimiter = (window: Duration, limit: number) =>
 				.end();
 		},
 	});
+
+export type RatelimiterOptions = Partial<{
+	skipFailedRequests: boolean;
+}>;

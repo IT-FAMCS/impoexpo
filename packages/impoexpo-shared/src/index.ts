@@ -1,3 +1,4 @@
+export * from "./schemas/generic/FaultyActionSchema";
 export * from "./schemas/integrations/google/GoogleExchangeResponseSchema";
 export * from "./schemas/integrations/google/endpoints";
 export * from "./schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
