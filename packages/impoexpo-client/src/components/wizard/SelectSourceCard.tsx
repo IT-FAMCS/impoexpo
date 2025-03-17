@@ -1,26 +1,34 @@
 import {
+	Button,
 	Card,
 	CardBody,
 	CardHeader,
 	CircularProgress,
 	Divider,
+	Listbox,
 } from "@heroui/react";
 import ActionCard from "../external/ActionCard";
 import {
 	readIntegrations,
 	writeIntegrations,
 } from "@/integrations/integrations";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AnimateChangeInSize from "../external/AnimateChangeInSize";
 import {
 	SourceCardState,
 	useSourceCardStore,
 } from "@/stores/select-source-card";
+import { Icon } from "@iconify/react";
 
 export default function SelectSourceCard() {
-	const { state } = useSourceCardStore();
+	const { state, integrationType } = useSourceCardStore();
 
-	console.log(SourceCardState[state]);
+	const title = useMemo(() => {
+		if (state === SourceCardState.CHECK_ADDED_SOURCES) return "что-нибудь ещё?";
+		return integrationType === "read"
+			? "откуда будем читать данные?"
+			: "куда будем записывать данные?";
+	}, [state, integrationType]);
 
 	const renderer = () => {
 		switch (state) {
@@ -32,19 +40,64 @@ export default function SelectSourceCard() {
 				return <SourceVerificator />;
 			case SourceCardState.HYDRATE_SOURCE:
 				return <SourceHydrator />;
+			case SourceCardState.CHECK_ADDED_SOURCES:
+				return <SourceChecker />;
 		}
 	};
 
 	return (
 		<Card className="p-2">
-			<CardHeader className="justify-center text-large">
-				откуда будем читать данные?
-			</CardHeader>
+			<CardHeader className="justify-center text-large">{title}</CardHeader>
 			<Divider />
 			<AnimateChangeInSize height>
 				<CardBody>{renderer()}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
+	);
+}
+
+function SourceChecker() {
+	const { integrationType, setIntegrationType, setState } =
+		useSourceCardStore();
+
+	const items = (
+		integrationType === "read" ? readIntegrations : writeIntegrations
+	).flatMap((integration) => integration.selectedItemsRenderer());
+
+	return (
+		<div className="flex flex-col gap-2">
+			<Listbox
+				className="border-small rounded-small border-default"
+				selectionMode="none"
+			>
+				{/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
+				<>{...items}</>
+			</Listbox>
+			<div className="flex flex-row gap-2 justify-center items-center">
+				<Button
+					onPress={() => setState(SourceCardState.SELECT_SOURCE)}
+					variant="light"
+					color="success"
+					startContent={<Icon width={18} icon="mdi:plus" />}
+				>
+					добавить ещё
+				</Button>
+				<Button
+					onPress={() => {
+						setState(
+							integrationType === "read"
+								? SourceCardState.SELECT_SOURCE
+								: SourceCardState.DONE,
+						);
+						if (integrationType === "read") setIntegrationType("write");
+					}}
+					color="primary"
+					endContent={<Icon width={18} icon="mdi:arrow-right" />}
+				>
+					далее
+				</Button>
+			</div>
+		</div>
 	);
 }
 
@@ -82,19 +135,13 @@ function SourceSelector() {
 }
 
 function SourceHydrator() {
-	const { currentIntegration, integrationType, setIntegrationType, setState } =
-		useSourceCardStore();
+	const { currentIntegration, setState } = useSourceCardStore();
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{currentIntegration?.hydrator(() => {
-				if (integrationType === "read") setIntegrationType("write");
-				setState(
-					integrationType === "read"
-						? SourceCardState.SELECT_SOURCE
-						: SourceCardState.DONE,
-				);
-			})}
+			{currentIntegration?.hydrator(() =>
+				setState(SourceCardState.CHECK_ADDED_SOURCES),
+			)}
 		</div>
 	);
 }

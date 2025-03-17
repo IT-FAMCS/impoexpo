@@ -54,6 +54,7 @@ export const useAuthStore = create<AuthStore & AuthStoreActions>(
 		save: () => {
 			saveEntry("google", get().google);
 		},
+
 		reset: () => {
 			clearEntries("google");
 			set(initialState);

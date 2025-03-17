@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createResettable, WIZARD_STORE_CATEGORY } from "./resettable";
 
 export enum TransferWizardStage {
 	SELECT_SOURCE = 0,
@@ -9,22 +9,12 @@ export enum TransferWizardStage {
 
 export type TransferWizardStore = {
 	stage: TransferWizardStage;
-};
-
-export type TransferWizardStoreActions = {
 	setStage: (newStage: TransferWizardStage) => void;
-	reset: () => void;
 };
 
-const initialState: TransferWizardStore = {
+export const useTransferWizardStore = createResettable<TransferWizardStore>(
+	WIZARD_STORE_CATEGORY,
+)((set) => ({
 	stage: TransferWizardStage.SELECT_SOURCE,
-};
-
-export const useTransferWizardStore = create<
-	TransferWizardStore & TransferWizardStoreActions
->((set) => ({
-	...initialState,
-
 	setStage: (newStage: TransferWizardStage) => set(() => ({ stage: newStage })),
-	reset: () => set(initialState),
 }));

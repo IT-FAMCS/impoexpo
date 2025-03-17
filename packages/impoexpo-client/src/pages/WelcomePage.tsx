@@ -47,7 +47,7 @@ export default function WelcomePage() {
 				>
 					о проекте
 				</Button>
-				<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+				<Modal isOpen={isOpen} size="lg" onOpenChange={onOpenChange}>
 					<ModalContent>
 						{(onClose) => (
 							<>
@@ -66,6 +66,15 @@ export default function WelcomePage() {
 											href="https://github.com/nedoxff/impoexpo"
 										>
 											здесь
+										</Link>
+										. основной разработчик &mdash;{" "}
+										<Link
+											isExternal
+											showAnchorIcon
+											className="inline-flex gap-1 w-min"
+											href="https://github.com/nedoxff"
+										>
+											<Code>@nedoxff</Code>
 										</Link>
 										.
 									</p>

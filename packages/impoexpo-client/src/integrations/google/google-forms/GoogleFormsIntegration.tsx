@@ -4,6 +4,8 @@ import { checkGoogleAuthentication } from "../common";
 import GoogleAuthenticator from "../GoogleAuthenticator";
 import GoogleVerificator from "../GoogleVerificator";
 import { GoogleFormsHydrator } from "./GoogleFormsHydrator";
+import { useGoogleFormsHydratorStore } from "./store";
+import { ListboxItem } from "@heroui/react";
 
 export const GoogleFormsIntegration: Integration = {
 	id: "google-forms",
@@ -28,5 +30,16 @@ export const GoogleFormsIntegration: Integration = {
 	verificator: (success, reset) => (
 		<GoogleVerificator onSuccess={success} onReset={reset} />
 	),
-	hydrator: (callback) => <GoogleFormsHydrator />,
+	hydrator: (callback) => <GoogleFormsHydrator callback={callback} />,
+	selectedItemsRenderer: () =>
+		Array.from(useGoogleFormsHydratorStore.getState().usedForms).map((form) => (
+			<ListboxItem
+				className="p-3"
+				startContent={<Icon icon="simple-icons:googleforms" />}
+				description="Google Forms"
+				key={form.id}
+			>
+				{form.name}
+			</ListboxItem>
+		)),
 };

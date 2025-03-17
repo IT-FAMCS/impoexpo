@@ -7,6 +7,7 @@ export default function NetworkErrorCard(props: {
 	title: string;
 	error: Error;
 	retry: () => void;
+	retryButtonText?: string;
 }) {
 	if (props.error instanceof RatelimitHitError) {
 		return (
@@ -34,7 +35,7 @@ export default function NetworkErrorCard(props: {
 				<Code>{props.error.message}</Code>
 			</p>
 			<Button onPress={props.retry} color="primary">
-				попробовать снова
+				{props.retryButtonText ?? "попробовать снова"}
 			</Button>
 		</div>
 	);

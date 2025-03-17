@@ -1,6 +1,7 @@
 import * as v from "valibot";
 import { QueryClient } from "@tanstack/react-query";
 import { RatelimitHitError } from "./errors";
+import { FaultyActionSchema } from "@impoexpo/shared";
 
 export const BACKEND_URL_BASE = import.meta.env.VITE_BACKEND_URL;
 export const queryClient = new QueryClient();
@@ -50,9 +51,20 @@ const request = async (
 		if (response.status === 429) throw new RatelimitHitError(response);
 
 		const body = await response.text();
-		throw new Error(
-			`server returned an unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
-		);
+		let error: Error | undefined;
+		try {
+			const json = JSON.parse(body);
+			if (v.is(FaultyActionSchema, json)) {
+				error = new Error(v.parse(FaultyActionSchema, json).error);
+			}
+		} finally {
+			if (!error)
+				error = new Error(
+					`server returned an unsuccessful status code (${response.status}): ${body.length === 0 ? "body was empty" : body}`,
+				);
+		}
+
+		throw error;
 	}
 	return response;
 };

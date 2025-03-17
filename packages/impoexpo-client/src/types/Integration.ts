@@ -12,4 +12,5 @@ export type Integration = {
 	) => React.ReactNode;
 	authenticator: (callback: () => void) => React.ReactNode;
 	hydrator: (callback: () => void) => React.ReactNode;
+	selectedItemsRenderer: () => React.ReactNode[];
 };

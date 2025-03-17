@@ -25,7 +25,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 		GOOGLE_FORMS_VERIFY_ROUTE,
 		requireGoogleAuth,
 		query("id").notEmpty(),
-		defaultRatelimiter("1 hour", 10, { skipFailedRequests: false }),
+		defaultRatelimiter("1 minute", 10, { skipFailedRequests: false }),
 		async (req: Request, res: Response) => {
 			const result = validationResult(req);
 			if (!result.isEmpty()) {
@@ -46,6 +46,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 
 				const response = await formsClient.forms.responses.list({
 					pageSize: 1,
+					formId: req.query?.id as string,
 				});
 				if (response.status !== 200) {
 					res.status(502).send({

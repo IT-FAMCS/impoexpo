@@ -1,6 +1,7 @@
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/components/wizard/SelectSourceCard";
 import { useAuthStore } from "@/stores/auth";
+import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 import { useSourceCardStore } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
@@ -12,13 +13,7 @@ const AnimatedCard = motion.create(Card);
 
 export default function TransferWizardPage() {
 	const navigate = useNavigate();
-	const { stage, setStage, reset: resetWizard } = useTransferWizardStore();
-	const { reset: resetSourceCard } = useSourceCardStore();
-
-	const resetAll = () => {
-		resetWizard();
-		resetSourceCard();
-	};
+	const { stage } = useTransferWizardStore();
 
 	const getStageWidget = () => {
 		switch (stage) {
@@ -38,7 +33,7 @@ export default function TransferWizardPage() {
 				<CardHeader className="flex flex-row gap-3 pl-4 font-medium text-large">
 					<Button
 						onPress={() => {
-							resetAll();
+							resetStores(WIZARD_STORE_CATEGORY);
 							navigate("/");
 						}}
 						variant="faded"
