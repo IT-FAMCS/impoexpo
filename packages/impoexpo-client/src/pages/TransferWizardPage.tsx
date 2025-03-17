@@ -19,6 +19,12 @@ export default function TransferWizardPage() {
 		switch (stage) {
 			case TransferWizardStage.SELECT_SOURCE:
 				return <SelectSourceCard />;
+			case TransferWizardStage.FORMAT:
+				return (
+					<Card className="w-full h-full flex justify-center items-center">
+						meow
+					</Card>
+				);
 		}
 	};
 
@@ -44,6 +50,7 @@ export default function TransferWizardPage() {
 				</CardHeader>
 				<CardBody>
 					<ColumnSteps
+						currentStep={stage}
 						steps={[
 							{
 								title: "выбор источников",

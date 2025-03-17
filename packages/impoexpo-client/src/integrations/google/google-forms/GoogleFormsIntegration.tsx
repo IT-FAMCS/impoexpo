@@ -1,5 +1,5 @@
 import type { Integration } from "@/types/Integration";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 import { checkGoogleAuthentication } from "../common";
 import GoogleAuthenticator from "../GoogleAuthenticator";
 import GoogleVerificator from "../GoogleVerificator";

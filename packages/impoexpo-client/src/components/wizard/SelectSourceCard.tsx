@@ -19,6 +19,8 @@ import {
 	useSourceCardStore,
 } from "@/stores/select-source-card";
 import { Icon } from "@iconify/react";
+import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
+import { motion } from "framer-motion";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -45,7 +47,9 @@ export default function SelectSourceCard() {
 		}
 	};
 
-	return (
+	return state === SourceCardState.DONE ? (
+		<AnimatedTransitionCard />
+	) : (
 		<Card className="p-2">
 			<CardHeader className="justify-center text-large">{title}</CardHeader>
 			<Divider />
@@ -53,6 +57,22 @@ export default function SelectSourceCard() {
 				<CardBody>{renderer()}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
+	);
+}
+
+const AnimatedCard = motion.create(Card);
+function AnimatedTransitionCard() {
+	const { setStage } = useTransferWizardStore();
+	return (
+		<AnimatedCard
+			transition={{ delay: 0.5, duration: 1.0, ease: "easeInOut" }}
+			initial={{ width: "2rem", height: "2rem" }}
+			animate={{
+				width: "100%",
+				height: "100%",
+			}}
+			onAnimationComplete={() => setStage(TransferWizardStage.FORMAT)}
+		/>
 	);
 }
 
