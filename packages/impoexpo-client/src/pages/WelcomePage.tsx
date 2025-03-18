@@ -67,15 +67,6 @@ export default function WelcomePage() {
 										>
 											здесь
 										</Link>
-										. основной разработчик &mdash;{" "}
-										<Link
-											isExternal
-											showAnchorIcon
-											className="inline-flex gap-1 w-min"
-											href="https://github.com/nedoxff"
-										>
-											<Code>@nedoxff</Code>
-										</Link>
 										.
 									</p>
 								</ModalBody>

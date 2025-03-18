@@ -65,12 +65,13 @@ function AnimatedTransitionCard() {
 	const { setStage } = useTransferWizardStore();
 	return (
 		<AnimatedCard
-			transition={{ delay: 0.5, duration: 1.0, ease: [0.83, 0, 0.17, 1] }}
-			initial={{ width: "2rem", height: "2rem" }}
-			animate={{
-				width: "100%",
-				height: "100%",
+			transition={{
+				times: [0, 0.4, 1],
+				duration: 1.5,
+				ease: [0.83, 0, 0.17, 1],
 			}}
+			initial={{ width: "0px", height: "0px" }}
+			animate={{ width: ["2rem", "100%"], height: ["2rem", "100%"] }}
 			onAnimationComplete={() => setStage(TransferWizardStage.FORMAT)}
 		/>
 	);

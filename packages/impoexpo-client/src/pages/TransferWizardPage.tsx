@@ -1,5 +1,6 @@
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/components/wizard/SelectSourceCard";
+import FormatEditor from "@/features/format-editor/FormatEditor";
 import { useAuthStore } from "@/stores/auth";
 import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 import { useSourceCardStore } from "@/stores/select-source-card";
@@ -7,6 +8,7 @@ import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 const AnimatedCard = motion.create(Card);
@@ -14,6 +16,9 @@ const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
 	const navigate = useNavigate();
 	const { stage } = useTransferWizardStore();
+	// biome-ignore lint/style/noNonNullAssertion: required here
+	const [showBlockerContainer, setShowBlockerContainer] =
+		useState<boolean>(true);
 
 	const getStageWidget = () => {
 		switch (stage) {
@@ -21,8 +26,22 @@ export default function TransferWizardPage() {
 				return <SelectSourceCard />;
 			case TransferWizardStage.FORMAT:
 				return (
-					<Card className="flex items-center justify-center w-full h-full">
-						meow
+					<Card className="flex items-center justify-center w-full h-full relative">
+						<FormatEditor />
+						{/* TODO: refactor this later */}
+						{showBlockerContainer && (
+							<motion.div
+								transition={{
+									delay: 0.25,
+									ease: [0.83, 0, 0.17, 1],
+									duration: 0.5,
+								}}
+								initial={{ opacity: 1 }}
+								animate={{ opacity: 0 }}
+								onAnimationComplete={() => setShowBlockerContainer(false)}
+								className="absolute w-full h-full bg-background"
+							/>
+						)}
 					</Card>
 				);
 		}
