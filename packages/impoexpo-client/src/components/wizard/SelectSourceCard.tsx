@@ -65,7 +65,7 @@ function AnimatedTransitionCard() {
 	const { setStage } = useTransferWizardStore();
 	return (
 		<AnimatedCard
-			transition={{ delay: 0.5, duration: 1.0, ease: "easeInOut" }}
+			transition={{ delay: 0.5, duration: 1.0, ease: [0.83, 0, 0.17, 1] }}
 			initial={{ width: "2rem", height: "2rem" }}
 			animate={{
 				width: "100%",
@@ -93,7 +93,7 @@ function SourceChecker() {
 				{/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
 				<>{...items}</>
 			</Listbox>
-			<div className="flex flex-row gap-2 justify-center items-center">
+			<div className="flex flex-row items-center justify-center gap-2">
 				<Button
 					onPress={() => setState(SourceCardState.SELECT_SOURCE)}
 					variant="light"

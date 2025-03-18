@@ -21,7 +21,7 @@ export default function TransferWizardPage() {
 				return <SelectSourceCard />;
 			case TransferWizardStage.FORMAT:
 				return (
-					<Card className="w-full h-full flex justify-center items-center">
+					<Card className="flex items-center justify-center w-full h-full">
 						meow
 					</Card>
 				);
@@ -29,7 +29,7 @@ export default function TransferWizardPage() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-screen h-screen gap-2 p-6">
+		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4 p-6">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
