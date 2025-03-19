@@ -1,12 +1,9 @@
-import * as v from "valibot";
+import { type } from "arktype";
 
-export const FaultyActionSchema = v.required(
-	v.object({
-		ok: v.boolean(),
-		internal: v.optional(v.boolean()),
-		error: v.optional(v.string()),
-	}),
-	["ok"],
-);
+export const FaultyActionSchema = type({
+	ok: "boolean",
+	"internal?": "boolean",
+	"error?": "string",
+});
 
-export type FaultyAction = v.InferOutput<typeof FaultyActionSchema>;
+export type FaultyAction = typeof FaultyActionSchema.infer;

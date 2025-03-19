@@ -1,18 +1,14 @@
-import * as v from "valibot";
+import { type } from "arktype";
 
-export const GoogleExchangeResponseSchema = v.required(
-	v.object({
-		email: v.pipe(v.string(), v.email(), v.nonEmpty()),
-		profilePicture: v.pipe(v.string(), v.url(), v.nonEmpty()),
-		username: v.pipe(v.string(), v.nonEmpty()),
+export const GoogleExchangeResponseSchema = type({
+	email: "string.email > 0",
+	profilePicture: "string.url > 0",
+	username: "string > 0",
 
-		accessToken: v.pipe(v.string(), v.nonEmpty()),
-		refreshToken: v.pipe(v.string(), v.nonEmpty()),
-		expiryTimestamp: v.number(),
-		tokenType: v.pipe(v.string(), v.nonEmpty()),
-	}),
-);
+	accessToken: "string > 0",
+	refreshToken: "string > 0",
+	expiryTimestamp: "number",
+	tokenType: "string > 0",
+});
 
-export type GoogleExchangeResponse = v.InferOutput<
-	typeof GoogleExchangeResponseSchema
->;
+export type GoogleExchangeResponse = typeof GoogleExchangeResponseSchema.infer;

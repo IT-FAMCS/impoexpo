@@ -1,4 +1,4 @@
-import * as v from "valibot";
+import type { Type } from "arktype";
 import { QueryClient } from "@tanstack/react-query";
 import { RatelimitHitError } from "./errors";
 import { FaultyActionSchema } from "@impoexpo/shared";
@@ -12,31 +12,29 @@ export const route = (path: string, query?: Record<string, string>) => {
 	return current;
 };
 
-export const getWithSchema = async <const TSchema extends BaseSchema>(
+export const getWithSchema = async <const TSchema extends Type<unknown>>(
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> =>
-	requestWithSchema("GET", path, schema, other);
-export const postWithSchema = async <const TSchema extends BaseSchema>(
+): Promise<TSchema["infer"]> => requestWithSchema("GET", path, schema, other);
+export const postWithSchema = async <const TSchema extends Type<unknown>>(
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> =>
-	requestWithSchema("POST", path, schema, other);
+): Promise<TSchema["infer"]> => requestWithSchema("POST", path, schema, other);
 
 export const get = async (path: string, other?: OtherRequestData) =>
 	request("GET", path, other);
 export const post = async (path: string, other?: OtherRequestData) =>
 	request("POST", path, other);
 
-const requestWithSchema = async <const TSchema extends BaseSchema>(
+const requestWithSchema = async <const TSchema extends Type<unknown>>(
 	method: RequestMethod,
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> =>
-	v.parse(schema, await (await request(method, path, other)).json());
+): Promise<TSchema["infer"]> =>
+	schema.assert(await (await request(method, path, other)).json());
 
 const request = async (
 	method: RequestMethod,
@@ -54,8 +52,8 @@ const request = async (
 		let error: Error | undefined;
 		try {
 			const json = JSON.parse(body);
-			if (v.is(FaultyActionSchema, json)) {
-				error = new Error(v.parse(FaultyActionSchema, json).error);
+			if (FaultyActionSchema.allows(json)) {
+				error = new Error(FaultyActionSchema.assert(json).error);
 			}
 		} finally {
 			if (!error)
@@ -76,7 +74,6 @@ const getHeaders = (other?: OtherRequestData): HeadersInit => ({
 	...other?.headers,
 });
 
-type BaseSchema = v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
 type OtherRequestData = {
 	query?: Record<string, string>;
 	authorization?: string;

@@ -1,6 +1,7 @@
 import { Background, Controls, ReactFlow } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
+import "./nodes/console";
 
 export default function FormatEditor() {
 	return (
