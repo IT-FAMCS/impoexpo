@@ -2,6 +2,7 @@ import type { Integration } from "@/types/Integration";
 import { Icon } from "@iconify/react";
 import { ListboxItem } from "@heroui/react";
 import { useConsoleIntegrationStore } from "./store";
+import { useEffect } from "react";
 
 export const ConsoleIntegration: Integration = {
 	id: "console",
@@ -12,16 +13,16 @@ export const ConsoleIntegration: Integration = {
 	checkAuthenticated: () => Promise.resolve(true),
 
 	authenticator: (callback) => {
-		callback();
+		useEffect(callback, []);
 		return <></>;
 	},
 	verificator: (callback) => {
-		callback();
+		useEffect(callback, []);
 		return <></>;
 	},
 	hydrator: (callback) => {
 		useConsoleIntegrationStore.setState({ enabled: true });
-		callback();
+		useEffect(callback, []);
 		return <></>;
 	},
 	selectedItemsRenderer: () =>

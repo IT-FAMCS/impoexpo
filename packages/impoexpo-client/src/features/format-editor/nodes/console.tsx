@@ -7,7 +7,7 @@ import { Icon } from "@iconify/react";
 
 nodesScope(() => {
 	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE, {
-		title: "вывод в косноль",
+		title: "вывод в консоль",
 		properties: {
 			text: "текст",
 		},

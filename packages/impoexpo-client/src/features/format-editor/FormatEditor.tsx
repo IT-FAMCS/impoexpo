@@ -14,17 +14,20 @@ import {
 
 import "@xyflow/react/dist/style.css";
 import "./nodes/console";
+import { useShallow } from "zustand/react/shallow";
 import { useCallback, useState } from "react";
 import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 
 const initialNodes: Node[] = [
-	{ id: "meow", data: {}, position: { x: 0, y: 0 }, type: "console-write" },
+	{ id: "meow", data: {}, position: { x: 50, y: 50 }, type: "console-write" },
 ];
 
 export default function FormatEditor() {
 	const [nodes, setNodes] = useState<Node[]>(initialNodes);
 	const [edges, setEdges] = useState<Edge[]>([]);
-	const { nodeRenderers } = useRenderableNodesStore();
+	const nodeRenderers = useRenderableNodesStore(
+		useShallow((state) => state.nodeRenderers),
+	);
 
 	const onNodesChange: OnNodesChange = useCallback(
 		(changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
