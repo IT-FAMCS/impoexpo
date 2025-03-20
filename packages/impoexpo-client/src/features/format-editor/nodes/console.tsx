@@ -6,6 +6,11 @@ import {
 import { Icon } from "@iconify/react";
 
 nodesScope(() => {
-	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE);
+	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE, {
+		title: "вывод в косноль",
+		properties: {
+			text: "текст",
+		},
+	});
 	registerCategoryIconRenderer("console", <Icon icon="mdi:console" />);
 });

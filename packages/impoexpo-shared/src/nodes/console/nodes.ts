@@ -1,4 +1,4 @@
-import { nonEmpty, object, optional, pipe, string } from "valibot";
+import { object, string } from "valibot";
 import { nodesScope, registerBaseNodes } from "../node-utils";
 import { BaseNode } from "../node-types";
 
@@ -8,8 +8,6 @@ export namespace nodes.base.console {
 		category: "console",
 		inputSchema: object({
 			text: string(),
-			optionalText: optional(string(), "meow!"),
-			meow: optional(pipe(string(), nonEmpty())),
 		}),
 	});
 

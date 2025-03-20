@@ -15,7 +15,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import "./nodes/console";
 import { useCallback, useState } from "react";
-import { nodeRenderers } from "./nodes/renderable-node-types";
+import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 
 const initialNodes: Node[] = [
 	{ id: "meow", data: {}, position: { x: 0, y: 0 }, type: "console-write" },
@@ -24,6 +24,7 @@ const initialNodes: Node[] = [
 export default function FormatEditor() {
 	const [nodes, setNodes] = useState<Node[]>(initialNodes);
 	const [edges, setEdges] = useState<Edge[]>([]);
+	const { nodeRenderers } = useRenderableNodesStore();
 
 	const onNodesChange: OnNodesChange = useCallback(
 		(changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
