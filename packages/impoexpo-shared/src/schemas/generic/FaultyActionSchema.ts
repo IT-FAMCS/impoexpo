@@ -1,9 +1,20 @@
-import { type } from "arktype";
+import {
+	object,
+	pipe,
+	string,
+	nonEmpty,
+	email,
+	url,
+	number,
+	type InferOutput,
+	boolean,
+	optional,
+} from "valibot";
 
-export const FaultyActionSchema = type({
-	ok: "boolean",
-	"internal?": "boolean",
-	"error?": "string",
+export const FaultyActionSchema = object({
+	ok: boolean(),
+	internal: optional(boolean(), true),
+	error: optional(pipe(string(), nonEmpty())),
 });
 
-export type FaultyAction = typeof FaultyActionSchema.infer;
+export type FaultyAction = InferOutput<typeof FaultyActionSchema>;

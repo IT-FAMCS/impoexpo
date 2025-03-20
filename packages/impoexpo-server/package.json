@@ -24,7 +24,6 @@
 	"dependencies": {
 		"@impoexpo/shared": "workspace:^",
 		"apicache": "^1.6.3",
-		"arktype": "^2.1.10",
 		"compression": "^1.8.0",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.7",
@@ -35,6 +34,7 @@
 		"googleapis": "^146.0.0",
 		"migration-files": "^0.4.3",
 		"pino": "^9.6.0",
-		"pino-http": "^10.4.0"
+		"pino-http": "^10.4.0",
+		"valibot": "^1.0.0"
 	}
 }

@@ -7,8 +7,9 @@ import { useSourceCardStore } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { initializeNodes } from "@impoexpo/shared";
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 const AnimatedCard = motion.create(Card);
@@ -16,9 +17,15 @@ const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
 	const navigate = useNavigate();
 	const { stage } = useTransferWizardStore();
-	// biome-ignore lint/style/noNonNullAssertion: required here
 	const [showBlockerContainer, setShowBlockerContainer] =
 		useState<boolean>(true);
+
+	useEffect(() => {
+		if (stage === TransferWizardStage.FORMAT) {
+			console.log("initializing nodes");
+			initializeNodes();
+		}
+	}, [stage]);
 
 	const getStageWidget = () => {
 		switch (stage) {
@@ -26,7 +33,7 @@ export default function TransferWizardPage() {
 				return <SelectSourceCard />;
 			case TransferWizardStage.FORMAT:
 				return (
-					<Card className="flex items-center justify-center w-full h-full relative">
+					<Card className="relative flex items-center justify-center w-full h-full">
 						<FormatEditor />
 						{/* TODO: refactor this later */}
 						{showBlockerContainer && (

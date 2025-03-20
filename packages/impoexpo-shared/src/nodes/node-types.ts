@@ -1,29 +1,31 @@
-import { type, type Type } from "arktype";
+// this is probably some of the worst typescript code i have ever written
+import type * as v from "valibot";
 
-const defaultSchema = type("undefined");
-export type DefaultSchemaType = typeof defaultSchema.infer;
-export type AllowedSchemaType = Record<string, unknown> | undefined;
+export type AllowedObjectEntry =
+	| v.GenericSchema
+	| v.SchemaWithFallback<v.GenericSchema, unknown>
+	| v.ExactOptionalSchema<v.GenericSchema, unknown>
+	| v.NullishSchema<v.GenericSchema, unknown>
+	| v.OptionalSchema<v.GenericSchema, unknown>;
 
 export class BaseNode<
 	TName extends string,
 	TCategory extends string,
-	TIn extends AllowedSchemaType = DefaultSchemaType,
-	TOut extends AllowedSchemaType = DefaultSchemaType,
+	TIn extends v.ObjectEntries = Record<string, AllowedObjectEntry>,
+	TOut extends v.ObjectEntries = Record<string, AllowedObjectEntry>,
+	TInMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
+	TOutMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 > {
 	public name!: TName;
 	public category!: TCategory;
 
-	public inputSchema!: Type<TIn>;
-	public outputSchema!: Type<TOut>;
+	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
+	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
 	constructor(
 		init: Partial<BaseNode<TName, TCategory, TIn, TOut>> &
 			Pick<BaseNode<TName, TCategory, TIn, TOut>, "name" | "category">,
 	) {
 		Object.assign(this, init);
-		if (this.inputSchema === undefined)
-			this.inputSchema = defaultSchema as Type<TIn>;
-		if (this.outputSchema === undefined)
-			this.outputSchema = defaultSchema as Type<TOut>;
 	}
 }

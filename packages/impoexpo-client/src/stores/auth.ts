@@ -3,7 +3,7 @@ import {
 	GoogleExchangeResponseSchema,
 } from "@impoexpo/shared";
 import { create } from "zustand";
-import type { Type } from "arktype";
+import * as v from "valibot";
 
 const STORAGE_PREFIX: string = "impoexpo/auth/";
 export const storageKeyForIntegration = (name: string) => STORAGE_PREFIX + name;
@@ -73,10 +73,10 @@ const saveEntry = <T>(name: string, value?: T) => {
 	localStorage.setItem(storageKeyForIntegration(name), JSON.stringify(value));
 };
 
-const loadEntry = <const TSchema extends Type<unknown>>(
+const loadEntry = <const TSchema extends v.GenericSchema>(
 	name: string,
 	schema: TSchema,
-): TSchema["infer"] | undefined => {
+): v.InferOutput<TSchema> | undefined => {
 	const raw = localStorage.getItem(storageKeyForIntegration(name));
 	if (raw === null) return undefined;
 
@@ -88,7 +88,7 @@ const loadEntry = <const TSchema extends Type<unknown>>(
 	}
 
 	try {
-		return schema.assert(json);
+		return v.parse(schema, json);
 	} catch (err) {
 		throw new Error(
 			`object with key ${name} contained JSON which didn't satisfy the schema: ${err}`,

@@ -1,13 +1,26 @@
-import { type } from "arktype";
+import {
+	object,
+	pipe,
+	string,
+	nonEmpty,
+	email,
+	url,
+	number,
+	type InferOutput,
+	required,
+	optional,
+	array,
+} from "valibot";
 
-export const ListGoogleFormSchema = type({
-	id: "string > 0",
-	name: "string > 0",
-	"description?": "string > 0",
+export const ListGoogleFormSchema = object({
+	id: pipe(string(), nonEmpty()),
+	name: pipe(string(), nonEmpty()),
+	description: optional(pipe(string(), nonEmpty())),
 });
 
-export const ListGoogleFormsResponseSchema = ListGoogleFormSchema.array();
+export const ListGoogleFormsResponseSchema = array(ListGoogleFormSchema);
 
-export type ListGoogleForm = typeof ListGoogleFormSchema.infer;
-export type ListGoogleFormsResponse =
-	typeof ListGoogleFormsResponseSchema.infer;
+export type ListGoogleForm = InferOutput<typeof ListGoogleFormSchema>;
+export type ListGoogleFormsResponse = InferOutput<
+	typeof ListGoogleFormsResponseSchema
+>;

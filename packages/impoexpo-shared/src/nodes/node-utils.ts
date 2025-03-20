@@ -1,19 +1,11 @@
-import { type, type Type } from "arktype";
+import type { GenericSchema } from "valibot";
 import { nodesDatabase, baseNodesMap } from "./node-database";
-import type { AllowedSchemaType, BaseNode } from "./node-types";
+import type { BaseNode } from "./node-types";
 import { insert } from "@orama/orama";
-
-export type RegisterNodeOptions = {
-	category: string;
-	task: string;
-	inputs?: Type<unknown>;
-	outputs?: Type<unknown>;
-	searchable: boolean;
-};
 
 export const registerBaseNodes = (
 	searchable = true,
-	...nodes: BaseNode<string, string, AllowedSchemaType, AllowedSchemaType>[]
+	...nodes: BaseNode<string, string>[]
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
@@ -29,3 +21,15 @@ export const registerBaseNodes = (
 		}
 	}
 };
+
+const nodeInitializers: Array<() => void> = new Array();
+let nodesInitialized = false;
+
+export const initializeNodes = () => {
+	if (nodesInitialized) return;
+	for (const initializer of nodeInitializers) initializer();
+	nodesInitialized = true;
+};
+
+export const nodesScope = (initializer: () => void) =>
+	nodeInitializers.push(initializer);

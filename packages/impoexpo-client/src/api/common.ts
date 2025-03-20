@@ -1,4 +1,4 @@
-import type { Type } from "arktype";
+import * as v from "valibot";
 import { QueryClient } from "@tanstack/react-query";
 import { RatelimitHitError } from "./errors";
 import { FaultyActionSchema } from "@impoexpo/shared";
@@ -12,29 +12,31 @@ export const route = (path: string, query?: Record<string, string>) => {
 	return current;
 };
 
-export const getWithSchema = async <const TSchema extends Type<unknown>>(
+export const getWithSchema = async <const TSchema extends v.GenericSchema>(
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<TSchema["infer"]> => requestWithSchema("GET", path, schema, other);
-export const postWithSchema = async <const TSchema extends Type<unknown>>(
+): Promise<v.InferOutput<TSchema>> =>
+	requestWithSchema("GET", path, schema, other);
+export const postWithSchema = async <const TSchema extends v.GenericSchema>(
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<TSchema["infer"]> => requestWithSchema("POST", path, schema, other);
+): Promise<v.InferOutput<TSchema>> =>
+	requestWithSchema("POST", path, schema, other);
 
 export const get = async (path: string, other?: OtherRequestData) =>
 	request("GET", path, other);
 export const post = async (path: string, other?: OtherRequestData) =>
 	request("POST", path, other);
 
-const requestWithSchema = async <const TSchema extends Type<unknown>>(
+const requestWithSchema = async <const TSchema extends v.GenericSchema>(
 	method: RequestMethod,
 	path: string,
 	schema: TSchema,
 	other?: OtherRequestData,
-): Promise<TSchema["infer"]> =>
-	schema.assert(await (await request(method, path, other)).json());
+): Promise<v.InferOutput<TSchema>> =>
+	v.parse(schema, await (await request(method, path, other)).json());
 
 const request = async (
 	method: RequestMethod,
@@ -52,8 +54,8 @@ const request = async (
 		let error: Error | undefined;
 		try {
 			const json = JSON.parse(body);
-			if (FaultyActionSchema.allows(json)) {
-				error = new Error(FaultyActionSchema.assert(json).error);
+			if (v.is(FaultyActionSchema, json)) {
+				error = new Error(v.parse(FaultyActionSchema, json).error);
 			}
 		} finally {
 			if (!error)
