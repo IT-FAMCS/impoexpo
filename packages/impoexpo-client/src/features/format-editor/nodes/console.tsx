@@ -9,11 +9,26 @@ nodesScope(() => {
 	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE, {
 		title: "вывод в консоль",
 		properties: {
-			text: "текст",
+			text: { title: "текст" },
 		},
 	});
 	registerWithDefaultRenderer(nodes.base.console.TESTING_NODE, {
 		title: "тестинг",
+		properties: {
+			choice: {
+				options: {
+					test: { title: "тест1", description: "след. будет без описания" },
+					test2: { title: "без описания" },
+					test3: { title: "тест3", description: "снова с описанием" },
+				},
+			},
+			choiceEnum: {
+				options: {
+					meow: { title: "мяу", description: "котик" },
+					bark: { title: "гав", description: "собакин" },
+				},
+			},
+		},
 	});
 
 	registerCategoryIconRenderer("console", <Icon icon="mdi:console" />);

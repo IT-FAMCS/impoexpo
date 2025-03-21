@@ -1,4 +1,3 @@
-// this is probably some of the worst typescript code i have ever written
 import type * as v from "valibot";
 
 export type AllowedObjectEntry =
@@ -21,6 +20,9 @@ export class BaseNode<
 
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
+
+	public flowConnectable = true;
+	public independentInputs: Array<keyof TIn> = [];
 
 	constructor(
 		init: Partial<BaseNode<TName, TCategory, TIn, TOut>> &

@@ -1,36 +1,68 @@
+// this is probably some of the worst typescript code i have ever written
+// sorry
+
 import type { AllowedObjectEntry, BaseNode } from "@impoexpo/shared";
 import DefaultNodeRenderer from "../DefaultNodeRenderer";
 import type { NodeTypes } from "@xyflow/react";
 import type React from "react";
 import { create } from "zustand";
 import { persistStoreOnReload } from "@/stores/hot-reload";
+import type { EnumSchema, OptionalSchema, PicklistSchema } from "valibot";
 
 export type RenderableNodesStore = {
 	nodeRenderers: NodeTypes;
-	nodeRenderOptionsMap: Map<string, NodeRenderOptions<unknown>>;
+	nodeRenderOptionsMap: Map<
+		string,
+		NodeRenderOptions<Record<string, AllowedObjectEntry>>
+	>;
 	categoryIconRenderers: Map<string, React.ReactNode>;
 };
 
-export const useRenderableNodesStore = create<RenderableNodesStore>(() => ({
-	nodeRenderers: {},
-	categoryIconRenderers: new Map(),
-	nodeRenderOptionsMap: new Map(),
-}));
-
 export type NodeRenderOptions<
-	TSInput extends Record<string, AllowedObjectEntry> | unknown,
+	TSInput extends Record<string, AllowedObjectEntry>,
 > = Partial<{
 	categoryIcon: React.ReactNode;
 	title: string;
-	properties: Partial<
-		Record<
-			TSInput extends Record<string, AllowedObjectEntry>
-				? keyof TSInput
-				: string,
-			string
-		>
-	>;
+	properties: Partial<{
+		[key in keyof TSInput]: NodePropertyMetadata<TSInput[key]>;
+	}>;
 }>;
+
+type PropertyOptions<TProperty extends AllowedObjectEntry> =
+	TProperty extends OptionalSchema<
+		infer TWrappedSchema extends AllowedObjectEntry,
+		unknown
+	>
+		? PropertyOptions<TWrappedSchema>
+		: TProperty extends PicklistSchema<infer TOptions, undefined>
+			? TOptions[number]
+			: TProperty extends EnumSchema<
+						infer TOptions extends Record<string, string | number>,
+						undefined
+					>
+				? keyof TOptions
+				: never;
+
+export type NodePropertyMetadata<TProperty extends AllowedObjectEntry> =
+	Partial<
+		{
+			title: string;
+		} & (PropertyOptions<TProperty> extends never
+			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
+				{}
+			: {
+					optionsPlaceholder: string;
+					options: Partial<
+						Record<
+							Exclude<PropertyOptions<TProperty>, bigint>,
+							Partial<{
+								title: string;
+								description: string;
+							}>
+						>
+					>;
+				})
+	>;
 
 export const registerWithDefaultRenderer = <
 	TName extends string,
@@ -42,14 +74,11 @@ export const registerWithDefaultRenderer = <
 	options?: NodeRenderOptions<TSInput>,
 ) =>
 	useRenderableNodesStore.setState((state) => {
-		type NodeInputs = TSInput extends unknown
-			? Record<string, unknown>
-			: TSInput;
 		type NodeType = `${(typeof node)["category"]}-${(typeof node)["name"]}`;
 		const type = `${node.category}-${node.name}`;
 		return {
 			nodeRenderers: Object.assign(state.nodeRenderers, {
-				[type]: DefaultNodeRenderer<NodeInputs, NodeType>,
+				[type]: DefaultNodeRenderer<Record<string, unknown>, NodeType>,
 			}),
 			nodeRenderOptionsMap: new Map(state.nodeRenderOptionsMap).set(
 				type,
@@ -57,6 +86,12 @@ export const registerWithDefaultRenderer = <
 			),
 		};
 	});
+
+export const useRenderableNodesStore = create<RenderableNodesStore>(() => ({
+	nodeRenderers: {},
+	categoryIconRenderers: new Map(),
+	nodeRenderOptionsMap: new Map(),
+}));
 
 export const registerCategoryIconRenderer = (
 	name: string,

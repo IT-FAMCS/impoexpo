@@ -16,7 +16,9 @@ export namespace nodes.base.console {
 		category: "console",
 		inputSchema: object({
 			choice: optional(picklist(["test", "test2", "test3"] as const), "test"),
+			choiceEnum: enum_({ meow: "MEOW", bark: "BARK" } as const),
 		}),
+		independentInputs: ["choice"],
 	});
 
 	nodesScope(() => {
