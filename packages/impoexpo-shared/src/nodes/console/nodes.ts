@@ -1,4 +1,4 @@
-import { object, string } from "valibot";
+import { object, string, enum_, picklist, optional } from "valibot";
 import { nodesScope, registerBaseNodes } from "../node-utils";
 import { BaseNode } from "../node-types";
 
@@ -11,7 +11,16 @@ export namespace nodes.base.console {
 		}),
 	});
 
+	export const TESTING_NODE = new BaseNode({
+		name: "test",
+		category: "console",
+		inputSchema: object({
+			choice: optional(picklist(["test", "test2", "test3"] as const), "test"),
+		}),
+	});
+
 	nodesScope(() => {
 		registerBaseNodes(true, CONSOLE_WRITE_NODE);
+		registerBaseNodes(false, TESTING_NODE);
 	});
 }

@@ -21,6 +21,7 @@ export default function DefaultNodeRenderer<
 		]),
 	);
 
+	console.log(nodeData);
 	if (nodeRenderOptions === undefined) return <>meow</>;
 
 	return (

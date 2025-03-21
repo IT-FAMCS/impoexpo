@@ -12,5 +12,9 @@ nodesScope(() => {
 			text: "текст",
 		},
 	});
+	registerWithDefaultRenderer(nodes.base.console.TESTING_NODE, {
+		title: "тестинг",
+	});
+
 	registerCategoryIconRenderer("console", <Icon icon="mdi:console" />);
 });

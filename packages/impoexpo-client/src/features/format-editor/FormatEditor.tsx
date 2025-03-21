@@ -19,7 +19,7 @@ import { useCallback, useState } from "react";
 import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 
 const initialNodes: Node[] = [
-	{ id: "meow", data: {}, position: { x: 50, y: 50 }, type: "console-write" },
+	{ id: "meow", data: {}, position: { x: 50, y: 50 }, type: "console-test" },
 ];
 
 export default function FormatEditor() {
