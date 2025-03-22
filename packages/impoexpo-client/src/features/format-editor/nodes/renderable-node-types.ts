@@ -28,12 +28,12 @@ export type NodeRenderOptions<
 	}>;
 }>;
 
-type PropertyOptions<TProperty extends AllowedObjectEntry> =
+export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
 	TProperty extends OptionalSchema<
 		infer TWrappedSchema extends AllowedObjectEntry,
 		unknown
 	>
-		? PropertyOptions<TWrappedSchema>
+		? NodePropertyOptions<TWrappedSchema>
 		: TProperty extends PicklistSchema<infer TOptions, undefined>
 			? TOptions[number]
 			: TProperty extends EnumSchema<
@@ -44,25 +44,29 @@ type PropertyOptions<TProperty extends AllowedObjectEntry> =
 				: never;
 
 export type NodePropertyMetadata<TProperty extends AllowedObjectEntry> =
-	Partial<
-		{
-			title: string;
-		} & (PropertyOptions<TProperty> extends never
+	NodePropertyGenericMetadata &
+		(NodePropertyOptions<TProperty> extends never
 			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
 				{}
 			: {
-					optionsPlaceholder: string;
 					options: Partial<
 						Record<
-							Exclude<PropertyOptions<TProperty>, bigint>,
-							Partial<{
-								title: string;
-								description: string;
-							}>
+							Exclude<NodePropertyOptions<TProperty>, bigint>,
+							NodePropertyOptionsMetadata
 						>
 					>;
-				})
-	>;
+				});
+
+export type NodePropertyGenericMetadata = Partial<{
+	title: string;
+	placeholder: string;
+}>;
+
+export type NodePropertyOptionsMetadata = Partial<{
+	key: string;
+	title: string;
+	description: string;
+}>;
 
 export const registerWithDefaultRenderer = <
 	TName extends string,

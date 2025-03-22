@@ -1,4 +1,12 @@
-import { object, string, enum_, picklist, optional } from "valibot";
+import {
+	object,
+	string,
+	enum_,
+	picklist,
+	optional,
+	pipe,
+	minLength,
+} from "valibot";
 import { nodesScope, registerBaseNodes } from "../node-utils";
 import { BaseNode } from "../node-types";
 
@@ -17,6 +25,7 @@ export namespace nodes.base.console {
 		inputSchema: object({
 			choice: optional(picklist(["test", "test2", "test3"] as const), "test"),
 			choiceEnum: enum_({ meow: "MEOW", bark: "BARK" } as const),
+			str: pipe(string(), minLength(5)),
 		}),
 		independentInputs: ["choice"],
 	});

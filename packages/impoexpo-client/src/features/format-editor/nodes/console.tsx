@@ -12,6 +12,7 @@ nodesScope(() => {
 			text: { title: "текст" },
 		},
 	});
+
 	registerWithDefaultRenderer(nodes.base.console.TESTING_NODE, {
 		title: "тестинг",
 		properties: {
@@ -27,6 +28,10 @@ nodesScope(() => {
 					meow: { title: "мяу", description: "котик" },
 					bark: { title: "гав", description: "собакин" },
 				},
+			},
+			str: {
+				title: "строка",
+				placeholder: "введите строку (минимум 5 символов)",
 			},
 		},
 	});

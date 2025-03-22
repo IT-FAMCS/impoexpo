@@ -3,18 +3,25 @@ import {
 	CardBody,
 	CardHeader,
 	Divider,
+	Input,
 	Select,
 	SelectItem,
 } from "@heroui/react";
 import { type AllowedObjectEntry, baseNodesMap } from "@impoexpo/shared";
 import { type NodeProps, type Node, Position, Handle } from "@xyflow/react";
-import { useMemo } from "react";
-import {
-	NodePropertyMetadata,
-	useRenderableNodesStore,
-} from "./nodes/renderable-node-types";
+import { useEffect, useMemo, useState } from "react";
+import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 import { useShallow } from "zustand/react/shallow";
-import { OptionalSchema, PicklistSchema } from "valibot";
+import {
+	extractOptionMetadata,
+	extractPropertyPlaceholder,
+	extractPropertyTitle,
+	isEnum,
+	isPicklist,
+	type ValidatorFunction,
+} from "./nodes/node-schema-helpers";
+import "@valibot/i18n/ru";
+import type { BaseIssue } from "valibot";
 
 export default function DefaultNodeRenderer<
 	TIn extends Record<string, unknown>,
@@ -76,65 +83,69 @@ function NodePropertyRenderer(props: {
 		if ("options" in entry) return true;
 	};
 
-	const getEntryComponent = <T,>(
+	const getEntryComponent = <TDefault,>(
 		entry: AllowedObjectEntry,
-		defaultValue?: T,
+		defaultValue?: TDefault,
+		validator?: ValidatorFunction,
 	) => {
 		if ("default" in entry) {
 			return getEntryComponent(entry.wrapped, entry.default);
 		}
+		if ("pipe" in entry && Array.isArray(entry.pipe) && entry.pipe.length > 0) {
+			return getEntryComponent(
+				entry.pipe[0] as AllowedObjectEntry,
+				undefined,
+				entry["~run"],
+			);
+		}
 
-		if (
-			"options" in entry &&
-			(entry.type === "picklist" || entry.type === "enum") &&
-			Array.isArray(entry.options)
-		) {
-			// TODO: refactor this
-			// @ts-ignore
-			const items = (
-				entry.type === "picklist" ? entry.options : Object.keys(entry.enum)
-			).map((key) => {
-				if (
-					nodeData.inputSchema === undefined ||
-					nodeRenderOptions.properties === undefined ||
-					!(props.name in nodeRenderOptions.properties)
-				)
-					return null;
-				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist
-				const property = nodeRenderOptions.properties[props.name]!;
-				if (!("options" in property)) return null;
-				const options = property.options as Record<
-					string,
-					Partial<{ title: string; description: string }>
-				>;
-				if (!(key in options)) return null;
+		if (entry.type === "string") {
+			return (
+				<NodePropertyStringInput
+					name={props.name}
+					type={props.type}
+					default={defaultValue as string | undefined}
+					validator={validator}
+				/>
+			);
+		}
 
-				// biome-ignore lint/style/noNonNullAssertion: checked above
-				const data = options[key]!;
-				const keyString = key.toString();
-				return {
-					key: keyString,
-					label: data.title ?? keyString,
-					description: data.description ?? null,
-				};
-			});
+		if (entry.type === "picklist" || entry.type === "enum") {
+			const options = isPicklist(entry)
+				? entry.options
+				: isEnum(entry)
+					? Object.keys(entry.enum)
+					: [];
+			const items = options.map((key) =>
+				extractOptionMetadata(props.type, props.name, key),
+			);
 
 			return (
 				<Select
 					size="sm"
 					style={{ minWidth: "10rem" }}
 					classNames={{ popoverContent: "w-max" }}
+					aria-label={extractPropertyPlaceholder(props.type, props.name)}
+					placeholder={extractPropertyPlaceholder(props.type, props.name)}
 					defaultSelectedKeys={
 						defaultValue === undefined
 							? undefined
-							: // biome-ignore lint/style/noNonNullAssertion: meow
-								new Set(defaultValue!.toString())
+							: new Set<string>().add(
+									typeof defaultValue === "string"
+										? defaultValue
+										: // biome-ignore lint/style/noNonNullAssertion: meow
+											defaultValue!.toString(),
+								)
 					}
-					items={items.filter((i) => i !== null)}
+					items={items.filter((i) => i !== undefined)}
 				>
 					{(data) => (
-						<SelectItem description={data.description} key={data.key}>
-							{data.label}
+						<SelectItem
+							aria-label={data.description ?? data.title ?? data.key}
+							description={data.description}
+							key={data.key}
+						>
+							{data.title}
 						</SelectItem>
 					)}
 				</Select>
@@ -146,12 +157,7 @@ function NodePropertyRenderer(props: {
 	return (
 		<div key={props.name} className="relative flex flex-row gap-4 px-4 py-2">
 			{!shouldHideLabel(props.property) && (
-				<p>
-					{Object.keys(nodeRenderOptions.properties ?? {}).includes(props.name)
-						? // biome-ignore lint/style/noNonNullAssertion: verified above
-							nodeRenderOptions.properties![props.name]?.title
-						: props.name}
-				</p>
+				<p>{extractPropertyTitle(props.type, props.name)}</p>
 			)}
 			{getEntryComponent(props.property)}
 
@@ -163,5 +169,48 @@ function NodePropertyRenderer(props: {
 				/>
 			)}
 		</div>
+	);
+}
+
+function NodePropertyStringInput(props: {
+	type: string;
+	name: string;
+	default?: string;
+	validator?: ValidatorFunction;
+}) {
+	const [value, setValue] = useState<string>(props.default ?? "");
+	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: props.validator does not change
+	useEffect(() => {
+		if (props.validator === undefined) return;
+		if (value === "") {
+			setIssues([]);
+			return;
+		}
+
+		const validationResult = props.validator({ value: value }, { lang: "ru" });
+		setIssues(
+			validationResult.issues === undefined ? [] : validationResult.issues,
+		);
+	}, [value]);
+
+	return (
+		<Input
+			aria-label={extractPropertyPlaceholder(props.type, props.name)}
+			placeholder={extractPropertyPlaceholder(props.type, props.name)}
+			value={value}
+			onValueChange={setValue}
+			errorMessage={() => (
+				<div className="flex flex-col gap-1">
+					{issues.map((issue, idx) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: no other property to use as key
+						<p key={idx}>{issue.message}</p>
+					))}
+				</div>
+			)}
+			isInvalid={issues.length > 0}
+			size="sm"
+		/>
 	);
 }
