@@ -12,6 +12,7 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
+	safelist: [{ pattern: /([a-zA-Z]+)-./ }],
 	darkMode: "class",
 	plugins: [heroui()],
 };

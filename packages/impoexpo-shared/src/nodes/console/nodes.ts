@@ -6,6 +6,9 @@ import {
 	optional,
 	pipe,
 	minLength,
+	minValue,
+	maxValue,
+	number,
 } from "valibot";
 import { nodesScope, registerBaseNodes } from "../node-utils";
 import { BaseNode } from "../node-types";
@@ -23,11 +26,12 @@ export namespace nodes.base.console {
 		name: "test",
 		category: "console",
 		inputSchema: object({
-			choice: optional(picklist(["test", "test2", "test3"] as const), "test"),
-			choiceEnum: enum_({ meow: "MEOW", bark: "BARK" } as const),
+			choice: optional(picklist(["test", "test2", "test3"]), "test"),
+			choiceEnum: enum_({ meow: "MEOW", bark: "BARK" }),
 			str: pipe(string(), minLength(5)),
+			num: optional(pipe(number(), minValue(50), maxValue(300)), 100),
 		}),
-		independentInputs: ["choice"],
+		independentInputs: ["choice", "choiceEnum"],
 	});
 
 	nodesScope(() => {

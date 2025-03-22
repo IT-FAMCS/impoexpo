@@ -14,24 +14,31 @@ nodesScope(() => {
 	});
 
 	registerWithDefaultRenderer(nodes.base.console.TESTING_NODE, {
-		title: "тестинг",
+		title: "testing node",
 		properties: {
 			choice: {
 				options: {
-					test: { title: "тест1", description: "след. будет без описания" },
-					test2: { title: "без описания" },
-					test3: { title: "тест3", description: "снова с описанием" },
+					test: {
+						title: "test1",
+						description: "next option won't have a description",
+					},
+					test2: { title: "no description!" },
+					test3: { title: "test3", description: "the description is back!" },
 				},
 			},
 			choiceEnum: {
 				options: {
-					meow: { title: "мяу", description: "котик" },
-					bark: { title: "гав", description: "собакин" },
+					meow: { title: "meow", description: "kitty" },
+					bark: { title: "bark", description: "doggy" },
 				},
 			},
 			str: {
-				title: "строка",
-				placeholder: "введите строку (минимум 5 символов)",
+				title: "string",
+				placeholder: "enter a string (at least 5 characters)",
+			},
+			num: {
+				title: "number",
+				placeholder: "input a number",
 			},
 		},
 	});

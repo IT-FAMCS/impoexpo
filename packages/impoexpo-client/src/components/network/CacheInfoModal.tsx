@@ -8,7 +8,6 @@ import {
 	useDisclosure,
 	Alert,
 } from "@heroui/react";
-import { Icon } from "@iconify/react";
 
 export default function CacheInfoModal(props: {
 	onRefresh: () => void;

@@ -4,6 +4,9 @@ import {
 	CardHeader,
 	Divider,
 	Input,
+	InputProps,
+	NumberInput,
+	NumberInputProps,
 	Select,
 	SelectItem,
 } from "@heroui/react";
@@ -43,9 +46,37 @@ export default function DefaultNodeRenderer<
 
 	return (
 		<Card classNames={{ body: "p-0", base: "overflow-visible" }}>
-			<CardHeader className="flex flex-row gap-2">
+			<CardHeader className="pl-4 flex flex-row gap-2 relative">
+				{nodeData.flowConnectable && (
+					<Handle
+						type="target"
+						id="FLOW_IN"
+						position={Position.Left}
+						style={{
+							borderRadius: 0,
+							clipPath: "polygon(0 50%, 100% 0, 100% 100%)",
+							left: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
 				{categoryIcon}
 				<p>{nodeRenderOptions.title ?? nodeData.name}</p>
+				{nodeData.flowConnectable && (
+					<Handle
+						type="source"
+						id="FLOW_OUT"
+						position={Position.Right}
+						style={{
+							borderRadius: 0,
+							clipPath: "polygon(0 0, 100% 50%, 0 100%)",
+							right: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
 			</CardHeader>
 			<Divider />
 			<CardBody className="flex flex-col py-2 overflow-visible">
@@ -94,17 +125,28 @@ function NodePropertyRenderer(props: {
 		if ("pipe" in entry && Array.isArray(entry.pipe) && entry.pipe.length > 0) {
 			return getEntryComponent(
 				entry.pipe[0] as AllowedObjectEntry,
-				undefined,
+				defaultValue,
 				entry["~run"],
 			);
 		}
 
 		if (entry.type === "string") {
 			return (
-				<NodePropertyStringInput
+				<NodePropertyGenericInput
 					name={props.name}
 					type={props.type}
-					default={defaultValue as string | undefined}
+					default={(defaultValue as string | undefined) ?? ""}
+					validator={validator}
+				/>
+			);
+		}
+
+		if (entry.type === "number") {
+			return (
+				<NodePropertyGenericInput
+					name={props.name}
+					type={props.type}
+					default={(defaultValue as number | undefined) ?? 0}
 					validator={validator}
 				/>
 			);
@@ -122,9 +164,8 @@ function NodePropertyRenderer(props: {
 
 			return (
 				<Select
-					size="sm"
 					style={{ minWidth: "10rem" }}
-					classNames={{ popoverContent: "w-max" }}
+					popoverProps={{ triggerScaleOnOpen: true }}
 					aria-label={extractPropertyPlaceholder(props.type, props.name)}
 					placeholder={extractPropertyPlaceholder(props.type, props.name)}
 					defaultSelectedKeys={
@@ -155,62 +196,92 @@ function NodePropertyRenderer(props: {
 	};
 
 	return (
-		<div key={props.name} className="relative flex flex-row gap-4 px-4 py-2">
-			{!shouldHideLabel(props.property) && (
-				<p>{extractPropertyTitle(props.type, props.name)}</p>
-			)}
+		<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
+			<div className="relative flex flex-row gap-4 items-start">
+				{!shouldHideLabel(props.property) && (
+					<p className="pl-4">{extractPropertyTitle(props.type, props.name)}</p>
+				)}
+				{!nodeData.independentInputs.includes(props.name) && (
+					<Handle
+						type="target"
+						id={props.name}
+						position={Position.Left}
+						style={{
+							top: 0,
+							transform: "translate(-50%, 75%)",
+							left: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
+			</div>
 			{getEntryComponent(props.property)}
-
-			{!nodeData.independentInputs.includes(props.name) && (
-				<Handle
-					type="target"
-					position={Position.Left}
-					style={{ left: 0, width: 10, height: 10 }}
-				/>
-			)}
 		</div>
 	);
 }
 
-function NodePropertyStringInput(props: {
+function NodePropertyGenericInput<T extends string | number>(props: {
 	type: string;
 	name: string;
-	default?: string;
+	default: T;
 	validator?: ValidatorFunction;
 }) {
-	const [value, setValue] = useState<string>(props.default ?? "");
+	const [value, setValue] = useState<T | undefined>(props.default);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: props.validator does not change
 	useEffect(() => {
-		if (props.validator === undefined) return;
-		if (value === "") {
-			setIssues([]);
-			return;
-		}
+		if (props.validator === undefined || value === undefined) return;
 
-		const validationResult = props.validator({ value: value }, { lang: "ru" });
+		const validationResult = props.validator({ value: value }, { lang: "en" });
 		setIssues(
 			validationResult.issues === undefined ? [] : validationResult.issues,
 		);
-	}, [value]);
+	}, [props.validator, value]);
 
-	return (
-		<Input
-			aria-label={extractPropertyPlaceholder(props.type, props.name)}
-			placeholder={extractPropertyPlaceholder(props.type, props.name)}
-			value={value}
-			onValueChange={setValue}
-			errorMessage={() => (
-				<div className="flex flex-col gap-1">
-					{issues.map((issue, idx) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: no other property to use as key
-						<p key={idx}>{issue.message}</p>
-					))}
-				</div>
-			)}
-			isInvalid={issues.length > 0}
-			size="sm"
-		/>
-	);
+	if (typeof props.default === "string") {
+		return (
+			<Input
+				aria-label={extractPropertyPlaceholder(props.type, props.name)}
+				placeholder={extractPropertyPlaceholder(props.type, props.name)}
+				value={value as string | undefined}
+				onValueChange={(v: string) => (setValue as React.Dispatch<string>)(v)}
+				errorMessage={() => (
+					<div className="flex flex-col gap-1">
+						{issues.map((issue, idx) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: no other property to use as key
+							<p key={idx}>{issue.message}</p>
+						))}
+					</div>
+				)}
+				isInvalid={issues.length > 0}
+			/>
+		);
+	}
+
+	if (typeof props.default === "number") {
+		return (
+			<NumberInput
+				aria-label={extractPropertyPlaceholder(props.type, props.name)}
+				placeholder={extractPropertyPlaceholder(props.type, props.name)}
+				value={value as number | undefined}
+				onValueChange={(v: number) => (setValue as React.Dispatch<number>)(v)}
+				errorMessage={() => (
+					<div className="flex flex-col gap-1">
+						{issues.map((issue, idx) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: no other property to use as key
+							<p key={idx}>{issue.message}</p>
+						))}
+					</div>
+				)}
+				isInvalid={issues.length > 0}
+				/* TODO: for some reason just doing size="md" doesn't work for now */
+				classNames={{
+					inputWrapper: "h-10 min-h-10 rounded-medium",
+					input: "text-small",
+					clearButton: "text-large",
+				}}
+			/>
+		);
+	}
 }
