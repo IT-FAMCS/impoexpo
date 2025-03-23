@@ -12,7 +12,7 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
-	safelist: [{ pattern: /([a-zA-Z]+)-./ }],
+	safelist: ["pr-4", "pl-4", "ml-2"],
 	darkMode: "class",
 	plugins: [heroui()],
 };
