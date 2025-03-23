@@ -8,8 +8,10 @@ import {
 	type NodePropertyOptionsMetadata,
 	useRenderableNodesStore,
 	type NodePropertyOptions,
+	FLOW_HANDLE_MARKER,
 } from "./renderable-node-types";
 import type * as v from "valibot";
+import type { Connection, Edge, Node } from "@xyflow/react";
 
 export const isPicklist = (
 	schema: AllowedObjectEntry,
@@ -140,13 +142,46 @@ export const unwrapIfNeeded = (
 		: node;
 };
 
-export const areNodesConnectable = (
-	source: DefaultBaseNode,
-	target: DefaultBaseNode,
-	sourceHandle: string,
-	targetHandle: string,
+export const nodeSchemasCompatible = (
+	connection: Connection | Edge,
+	getNodes: () => Node[],
 ): boolean => {
-	const sourceSchema = unwrapIfNeeded(getHandleSchema(source, sourceHandle));
-	const targetSchema = unwrapIfNeeded(getHandleSchema(target, targetHandle));
+	if (!connection.sourceHandle || !connection.targetHandle) return false;
+
+	const sourceIsFlow = connection.sourceHandle.startsWith(FLOW_HANDLE_MARKER);
+	const targetIsFlow = connection.targetHandle.startsWith(FLOW_HANDLE_MARKER);
+
+	if (sourceIsFlow || targetIsFlow) {
+		if (sourceIsFlow && targetIsFlow && connection.source === connection.target)
+			return false;
+
+		if (
+			sourceIsFlow &&
+			(!targetIsFlow || connection.sourceHandle === connection.targetHandle)
+		)
+			return false;
+		if (
+			targetIsFlow &&
+			(!sourceIsFlow || connection.sourceHandle === connection.targetHandle)
+		)
+			return false;
+
+		return true;
+	}
+
+	const sourceType = getNodes().find((n) => n.id === connection.source)?.type;
+	const targetType = getNodes().find((n) => n.id === connection.target)?.type;
+	if (!sourceType || !targetType) return false;
+
+	const source = baseNodesMap.get(sourceType);
+	const target = baseNodesMap.get(targetType);
+	if (!source || !target) return false;
+
+	const sourceSchema = unwrapIfNeeded(
+		getHandleSchema(source, connection.sourceHandle),
+	);
+	const targetSchema = unwrapIfNeeded(
+		getHandleSchema(target, connection.targetHandle),
+	);
 	return sourceSchema.expects === targetSchema.expects;
 };

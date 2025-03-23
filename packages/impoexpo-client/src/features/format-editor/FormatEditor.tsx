@@ -4,24 +4,24 @@ import {
 	Controls,
 	ReactFlow,
 	type Edge,
-	type OnNodesChange,
 	addEdge,
-	applyEdgeChanges,
-	applyNodeChanges,
 	type OnConnect,
-	type OnEdgesChange,
+	type Connection,
+	getOutgoers,
+	useNodesState,
+	useEdgesState,
+	useReactFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "./nodes/console";
 import { useShallow } from "zustand/react/shallow";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import {
 	FLOW_HANDLE_MARKER,
 	useRenderableNodesStore,
 } from "./nodes/renderable-node-types";
-import { baseNodesMap } from "@impoexpo/shared";
-import { areNodesConnectable } from "./nodes/node-schema-helpers";
+import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
 
 const initialNodes: Node[] = [
 	{
@@ -31,31 +31,72 @@ const initialNodes: Node[] = [
 		type: "console-test-in",
 	},
 	{
+		id: "meow22",
+		data: {},
+		position: { x: 500, y: 100 },
+		type: "console-test-in",
+	},
+	{
 		id: "meow2",
 		data: {},
 		position: { x: 50, y: 200 },
 		type: "console-test-out",
 	},
 ];
+const initialEdges: Edge[] = [];
+
+const connectionHasCycles = (
+	connection: Connection | Edge,
+	getNodes: () => Node[],
+	getEdges: () => Edge[],
+): boolean => {
+	const target = getNodes().find((node) => node.id === connection.target);
+	if (!target) return false;
+	const hasCycle = (node: Node, visited = new Set()) => {
+		if (visited.has(node.id)) return false;
+
+		visited.add(node.id);
+
+		for (const outgoer of getOutgoers(node, getNodes(), getEdges())) {
+			if (outgoer.id === connection.source) return true;
+			if (hasCycle(outgoer, visited)) return true;
+		}
+
+		return false;
+	};
+
+	if (target.id === connection.source) return false;
+	return hasCycle(target);
+};
 
 export default function FormatEditor() {
-	const [nodes, setNodes] = useState<Node[]>(initialNodes);
-	const [edges, setEdges] = useState<Edge[]>([]);
+	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+	const { getNodes, getEdges } = useReactFlow();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
-
-	const onNodesChange: OnNodesChange = useCallback(
-		(changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-		[],
-	);
-	const onEdgesChange: OnEdgesChange = useCallback(
-		(changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-		[],
-	);
 	const onConnect: OnConnect = useCallback(
-		(connection) => setEdges((eds) => addEdge(connection, eds)),
-		[],
+		(connection) =>
+			setEdges((eds) => animateNeededEdges(addEdge(connection, eds))),
+		[setEdges],
+	);
+
+	const animateNeededEdges = (edges: Edge[]) =>
+		edges.map((edge) => {
+			edge.animated =
+				(edge.sourceHandle ?? "").startsWith(FLOW_HANDLE_MARKER) ||
+				(edge.targetHandle ?? "").startsWith(FLOW_HANDLE_MARKER);
+			return edge;
+		});
+
+	const isValidConnection = useCallback(
+		(connection: Connection | Edge) => {
+			if (!nodeSchemasCompatible(connection, getNodes)) return false;
+			return !connectionHasCycles(connection, getNodes, getEdges);
+		},
+		[getNodes, getEdges],
 	);
 
 	return (
@@ -67,48 +108,7 @@ export default function FormatEditor() {
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
-				isValidConnection={(connection) => {
-					if (!connection.sourceHandle || !connection.targetHandle)
-						return false;
-					if (
-						connection.sourceHandle.startsWith(FLOW_HANDLE_MARKER) &&
-						connection.targetHandle.startsWith(FLOW_HANDLE_MARKER) &&
-						connection.source === connection.target
-					)
-						return false;
-
-					if (
-						connection.sourceHandle.startsWith(FLOW_HANDLE_MARKER) &&
-						(!connection.targetHandle.startsWith(FLOW_HANDLE_MARKER) ||
-							connection.sourceHandle === connection.targetHandle)
-					)
-						return false;
-					if (
-						connection.targetHandle.startsWith(FLOW_HANDLE_MARKER) &&
-						(!connection.sourceHandle.startsWith(FLOW_HANDLE_MARKER) ||
-							connection.sourceHandle === connection.targetHandle)
-					)
-						return false;
-
-					const sourceType = nodes.find(
-						(n) => n.id === connection.source,
-					)?.type;
-					const targetType = nodes.find(
-						(n) => n.id === connection.target,
-					)?.type;
-					if (!sourceType || !targetType) return false;
-
-					const source = baseNodesMap.get(sourceType);
-					const target = baseNodesMap.get(targetType);
-					if (!source || !target) return false;
-
-					return areNodesConnectable(
-						source,
-						target,
-						connection.sourceHandle,
-						connection.targetHandle,
-					);
-				}}
+				isValidConnection={isValidConnection}
 				proOptions={{ hideAttribution: true }}
 			>
 				<Controls showFitView={false} />

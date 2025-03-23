@@ -8,6 +8,7 @@ import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { initializeNodes } from "@impoexpo/shared";
+import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -34,8 +35,9 @@ export default function TransferWizardPage() {
 			case TransferWizardStage.FORMAT:
 				return (
 					<Card className="relative flex items-center justify-center w-full h-full">
-						<FormatEditor />
-						{/* TODO: refactor this later */}
+						<ReactFlowProvider>
+							<FormatEditor />
+						</ReactFlowProvider>
 						{showBlockerContainer && (
 							<motion.div
 								transition={{
