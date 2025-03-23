@@ -1,16 +1,15 @@
+import { ThemeSwitcher } from "@/components/buttons/ThemeSwitcher";
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/components/wizard/SelectSourceCard";
 import FormatEditor from "@/features/format-editor/FormatEditor";
-import { useAuthStore } from "@/stores/auth";
 import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
-import { useSourceCardStore } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
-import { Button, Card, CardBody, CardHeader } from "@heroui/react";
+import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { initializeNodes } from "@impoexpo/shared";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 const AnimatedCard = motion.create(Card);
@@ -48,7 +47,7 @@ export default function TransferWizardPage() {
 								initial={{ opacity: 1 }}
 								animate={{ opacity: 0 }}
 								onAnimationComplete={() => setShowBlockerContainer(false)}
-								className="absolute w-full h-full bg-background"
+								className="absolute w-full h-full bg-content1"
 							/>
 						)}
 					</Card>
@@ -90,6 +89,9 @@ export default function TransferWizardPage() {
 						]}
 					/>
 				</CardBody>
+				<CardFooter>
+					<ThemeSwitcher />
+				</CardFooter>
 			</AnimatedCard>
 			<motion.div
 				initial={{ opacity: 0, y: 5 }}

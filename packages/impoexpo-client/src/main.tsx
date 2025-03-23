@@ -16,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 			<Provider>
 				<HeroUIProvider>
 					<QueryClientProvider client={queryClient}>
-						<App />
+						<main className="text-foreground bg-background/*  */">
+							<App />
+						</main>
 					</QueryClientProvider>
 				</HeroUIProvider>
 			</Provider>

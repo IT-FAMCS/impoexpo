@@ -14,5 +14,15 @@ module.exports = {
 	},
 	safelist: ["pr-4", "pl-4", "ml-2"],
 	darkMode: "class",
-	plugins: [heroui()],
+	plugins: [
+		heroui({
+			themes: {
+				dark: {
+					colors: {
+						background: "#101010",
+					},
+				},
+			},
+		}),
+	],
 };

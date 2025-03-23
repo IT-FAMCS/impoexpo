@@ -13,6 +13,7 @@ import {
 	Code,
 } from "@heroui/react";
 import { useNavigate } from "react-router";
+import { ThemeSwitcher } from "@/components/buttons/ThemeSwitcher";
 
 export default function WelcomePage() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -81,12 +82,14 @@ export default function WelcomePage() {
 				</Modal>
 			</div>
 
-			<div className="absolute flex flex-row gap-2 bottom-3">
+			<div className="absolute flex flex-row gap-2 bottom-3 items-center justify-center">
 				<Code className="flex flex-row justify-center items-center gap-2">
 					v{import.meta.env.VITE_APP_VERSION}{" "}
 					<Icon icon="mdi:circle" width={4} />
 					{import.meta.env.VITE_APP_HASH}
 				</Code>
+				<Icon icon="mdi:circle" width={6} />
+				<ThemeSwitcher />
 			</div>
 		</div>
 	);
