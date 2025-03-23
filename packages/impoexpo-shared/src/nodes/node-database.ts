@@ -1,5 +1,5 @@
 import { create } from "@orama/orama";
-import type { BaseNode } from "./node-types";
+import type { AllowedObjectEntry, BaseNode } from "./node-types";
 import type { GenericSchema } from "valibot";
 
 export const nodesDatabase = create({
@@ -9,4 +9,12 @@ export const nodesDatabase = create({
 	},
 });
 
-export const baseNodesMap: Map<string, BaseNode<string, string>> = new Map();
+export const baseNodesMap: Map<
+	string,
+	BaseNode<
+		string,
+		string,
+		Record<string, AllowedObjectEntry>,
+		Record<string, AllowedObjectEntry>
+	>
+> = new Map();

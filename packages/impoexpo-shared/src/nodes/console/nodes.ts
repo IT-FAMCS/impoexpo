@@ -22,8 +22,8 @@ export namespace nodes.base.console {
 		}),
 	});
 
-	export const TESTING_NODE = new BaseNode({
-		name: "test",
+	export const TESTING_INPUT_NODE = new BaseNode({
+		name: "test-in",
 		category: "console",
 		inputSchema: object({
 			choice: optional(picklist(["test", "test2", "test3"]), "test"),
@@ -34,8 +34,18 @@ export namespace nodes.base.console {
 		independentInputs: ["choice", "choiceEnum"],
 	});
 
+	export const TESTING_OUTPUT_NODE = new BaseNode({
+		name: "test-out",
+		category: "console",
+		outputSchema: object({
+			strOut: string(),
+			numOut: number(),
+		}),
+		flowConnectable: false,
+	});
+
 	nodesScope(() => {
 		registerBaseNodes(true, CONSOLE_WRITE_NODE);
-		registerBaseNodes(false, TESTING_NODE);
+		registerBaseNodes(false, TESTING_INPUT_NODE, TESTING_OUTPUT_NODE);
 	});
 }

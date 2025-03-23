@@ -8,14 +8,14 @@ import { Icon } from "@iconify/react";
 nodesScope(() => {
 	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE, {
 		title: "вывод в консоль",
-		properties: {
+		inputs: {
 			text: { title: "текст" },
 		},
 	});
 
-	registerWithDefaultRenderer(nodes.base.console.TESTING_NODE, {
-		title: "testing node",
-		properties: {
+	registerWithDefaultRenderer(nodes.base.console.TESTING_INPUT_NODE, {
+		title: "testing input node",
+		inputs: {
 			choice: {
 				options: {
 					test: {
@@ -40,6 +40,14 @@ nodesScope(() => {
 				title: "number",
 				placeholder: "input a number",
 			},
+		},
+	});
+
+	registerWithDefaultRenderer(nodes.base.console.TESTING_OUTPUT_NODE, {
+		title: "testing output node",
+		outputs: {
+			numOut: { description: "yeah" },
+			strOut: { description: "hell yeah!" },
 		},
 	});
 

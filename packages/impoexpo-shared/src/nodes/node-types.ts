@@ -10,8 +10,10 @@ export type AllowedObjectEntry =
 export class BaseNode<
 	TName extends string,
 	TCategory extends string,
-	TIn extends v.ObjectEntries = Record<string, AllowedObjectEntry>,
-	TOut extends v.ObjectEntries = Record<string, AllowedObjectEntry>,
+	// biome-ignore lint/complexity/noBannedTypes: empty type required here
+	TIn extends v.ObjectEntries = {},
+	// biome-ignore lint/complexity/noBannedTypes: empty type required here
+	TOut extends v.ObjectEntries = {},
 	TInMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 	TOutMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 > {

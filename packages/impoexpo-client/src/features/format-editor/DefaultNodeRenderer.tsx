@@ -4,16 +4,18 @@ import {
 	CardHeader,
 	Divider,
 	Input,
-	InputProps,
 	NumberInput,
-	NumberInputProps,
 	Select,
 	SelectItem,
 } from "@heroui/react";
 import { type AllowedObjectEntry, baseNodesMap } from "@impoexpo/shared";
 import { type NodeProps, type Node, Position, Handle } from "@xyflow/react";
 import { useEffect, useMemo, useState } from "react";
-import { useRenderableNodesStore } from "./nodes/renderable-node-types";
+import {
+	FLOW_IN_HANDLE_ID,
+	FLOW_OUT_HANDLE_ID,
+	useRenderableNodesStore,
+} from "./nodes/renderable-node-types";
 import { useShallow } from "zustand/react/shallow";
 import {
 	extractOptionMetadata,
@@ -50,7 +52,7 @@ export default function DefaultNodeRenderer<
 				{nodeData.flowConnectable && (
 					<Handle
 						type="target"
-						id="FLOW_IN"
+						id={FLOW_IN_HANDLE_ID}
 						position={Position.Left}
 						style={{
 							borderRadius: 0,
@@ -66,7 +68,7 @@ export default function DefaultNodeRenderer<
 				{nodeData.flowConnectable && (
 					<Handle
 						type="source"
-						id="FLOW_OUT"
+						id={FLOW_OUT_HANDLE_ID}
 						position={Position.Right}
 						style={{
 							borderRadius: 0,
@@ -88,6 +90,17 @@ export default function DefaultNodeRenderer<
 							name={pair[0]}
 							property={pair[1]}
 							input={true}
+						/>
+					))}
+
+				{nodeData.outputSchema &&
+					Object.entries(nodeData.outputSchema.entries).map((pair) => (
+						<NodePropertyRenderer
+							key={pair[0]}
+							type={type}
+							name={pair[0]}
+							property={pair[1]}
+							input={false}
 						/>
 					))}
 			</CardBody>
@@ -195,7 +208,7 @@ function NodePropertyRenderer(props: {
 		return <></>;
 	};
 
-	return (
+	return props.input ? (
 		<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
 			<div className="relative flex flex-row gap-4 items-start">
 				{!shouldHideLabel(props.property) && (
@@ -217,6 +230,28 @@ function NodePropertyRenderer(props: {
 				)}
 			</div>
 			{getEntryComponent(props.property)}
+		</div>
+	) : (
+		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
+			<div className="relative flex flex-row gap-4 items-start">
+				{!shouldHideLabel(props.property) && (
+					<p className="pr-4">{extractPropertyTitle(props.type, props.name)}</p>
+				)}
+				{!nodeData.independentInputs.includes(props.name) && (
+					<Handle
+						type="source"
+						id={props.name}
+						position={Position.Right}
+						style={{
+							top: 0,
+							transform: "translate(50%, 75%)",
+							right: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
+			</div>
 		</div>
 	);
 }

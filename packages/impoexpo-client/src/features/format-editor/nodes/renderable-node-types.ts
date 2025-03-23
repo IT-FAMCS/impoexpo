@@ -13,20 +13,37 @@ export type RenderableNodesStore = {
 	nodeRenderers: NodeTypes;
 	nodeRenderOptionsMap: Map<
 		string,
-		NodeRenderOptions<Record<string, AllowedObjectEntry>>
+		NodeRenderOptions<
+			Record<string, AllowedObjectEntry>,
+			Record<string, AllowedObjectEntry>
+		>
 	>;
 	categoryIconRenderers: Map<string, React.ReactNode>;
 };
 
 export type NodeRenderOptions<
 	TSInput extends Record<string, AllowedObjectEntry>,
+	TSOutput extends Record<string, AllowedObjectEntry>,
 > = Partial<{
 	categoryIcon: React.ReactNode;
 	title: string;
-	properties: Partial<{
-		[key in keyof TSInput]: NodePropertyMetadata<TSInput[key]>;
-	}>;
-}>;
+}> &
+	(keyof TSInput extends never
+		? // biome-ignore lint/complexity/noBannedTypes: empty type required here
+			{}
+		: Partial<{
+				inputs: Partial<{
+					[key in keyof TSInput]: NodePropertyMetadata<TSInput[key], true>;
+				}>;
+			}>) &
+	(keyof TSOutput extends never
+		? // biome-ignore lint/complexity/noBannedTypes: empty type required here
+			{}
+		: Partial<{
+				outputs: Partial<{
+					[key in keyof TSOutput]: NodePropertyMetadata<TSOutput[key], false>;
+				}>;
+			}>);
 
 export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
 	TProperty extends OptionalSchema<
@@ -43,8 +60,15 @@ export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
 				? keyof TOptions
 				: never;
 
-export type NodePropertyMetadata<TProperty extends AllowedObjectEntry> =
-	NodePropertyGenericMetadata &
+export type NodePropertyMetadata<
+	TProperty extends AllowedObjectEntry,
+	TIncludePlaceholder extends boolean,
+> = Partial<
+	{
+		title: string;
+		description: string;
+		// biome-ignore lint/complexity/noBannedTypes: empty type required here
+	} & (TIncludePlaceholder extends true ? { placeholder: string } : {}) &
 		(NodePropertyOptions<TProperty> extends never
 			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
 				{}
@@ -55,12 +79,8 @@ export type NodePropertyMetadata<TProperty extends AllowedObjectEntry> =
 							NodePropertyOptionsMetadata
 						>
 					>;
-				});
-
-export type NodePropertyGenericMetadata = Partial<{
-	title: string;
-	placeholder: string;
-}>;
+				})
+>;
 
 export type NodePropertyOptionsMetadata = Partial<{
 	key: string;
@@ -75,7 +95,7 @@ export const registerWithDefaultRenderer = <
 	TSOutput extends Record<string, AllowedObjectEntry>,
 >(
 	node: BaseNode<TName, TCategory, TSInput, TSOutput>,
-	options?: NodeRenderOptions<TSInput>,
+	options?: NodeRenderOptions<TSInput, TSOutput>,
 ) =>
 	useRenderableNodesStore.setState((state) => {
 		type NodeType = `${(typeof node)["category"]}-${(typeof node)["name"]}`;
@@ -111,3 +131,7 @@ export const registerCategoryIconRenderer = (
 	});
 
 persistStoreOnReload("renderableNodes", useRenderableNodesStore);
+
+export const FLOW_HANDLE_MARKER: string = "FLOW";
+export const FLOW_IN_HANDLE_ID: string = `${FLOW_HANDLE_MARKER}_IN`;
+export const FLOW_OUT_HANDLE_ID: string = `${FLOW_HANDLE_MARKER}_OUT`;

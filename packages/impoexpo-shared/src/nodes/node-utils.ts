@@ -1,11 +1,16 @@
 import type { GenericSchema } from "valibot";
 import { nodesDatabase, baseNodesMap } from "./node-database";
-import type { BaseNode } from "./node-types";
+import type { AllowedObjectEntry, BaseNode } from "./node-types";
 import { insert } from "@orama/orama";
 
 export const registerBaseNodes = (
 	searchable = true,
-	...nodes: BaseNode<string, string>[]
+	...nodes: BaseNode<
+		string,
+		string,
+		Record<string, AllowedObjectEntry>,
+		Record<string, AllowedObjectEntry>
+	>[]
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
