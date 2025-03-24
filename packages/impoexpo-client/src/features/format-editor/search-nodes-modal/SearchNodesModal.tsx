@@ -1,4 +1,10 @@
-import { Modal, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import {
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+} from "@heroui/react";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -7,13 +13,24 @@ export default function SearchNodesModal(props: {
 }) {
 	return (
 		<Modal
+			backdrop="blur"
+			classNames={{
+				backdrop: "w-full h-full absolute",
+				wrapper: "w-full h-full absolute",
+			}}
 			portalContainer={props.portal.current}
 			isOpen={props.isOpen}
 			onOpenChange={props.onOpenChange}
 		>
-			<ModalHeader>uhm</ModalHeader>
-			<ModalContent>meow</ModalContent>
-			<ModalFooter>kldf</ModalFooter>
+			<ModalContent>
+				{(onClose) => (
+					<>
+						<ModalHeader>meow?</ModalHeader>
+						<ModalBody>meow!</ModalBody>
+						<ModalFooter>uhm</ModalFooter>
+					</>
+				)}
+			</ModalContent>
 		</Modal>
 	);
 }

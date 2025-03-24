@@ -2,6 +2,7 @@ import {
 	type BaseNode,
 	baseNodesMap,
 	type AllowedObjectEntry,
+	unwrapNodeIfNeeded,
 } from "@impoexpo/shared";
 import type { EnumSchema, PicklistSchema } from "valibot";
 import {
@@ -132,16 +133,6 @@ const getHandleSchema = (
 	);
 };
 
-export const unwrapIfNeeded = (
-	node: AllowedObjectEntry,
-): AllowedObjectEntry => {
-	return node.type === "optional"
-		? unwrapIfNeeded(
-				(node as v.OptionalSchema<AllowedObjectEntry, unknown>).wrapped,
-			)
-		: node;
-};
-
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
 	getNodes: () => Node[],
@@ -177,10 +168,10 @@ export const nodeSchemasCompatible = (
 	const target = baseNodesMap.get(targetType);
 	if (!source || !target) return false;
 
-	const sourceSchema = unwrapIfNeeded(
+	const sourceSchema = unwrapNodeIfNeeded(
 		getHandleSchema(source, connection.sourceHandle),
 	);
-	const targetSchema = unwrapIfNeeded(
+	const targetSchema = unwrapNodeIfNeeded(
 		getHandleSchema(target, connection.targetHandle),
 	);
 	return sourceSchema.expects === targetSchema.expects;

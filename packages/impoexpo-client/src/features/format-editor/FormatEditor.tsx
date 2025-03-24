@@ -133,7 +133,7 @@ export default function FormatEditor() {
 	);
 
 	return (
-		<div ref={containerRef} className="w-full h-full">
+		<div ref={containerRef} className="w-full h-full relative">
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeRenderers}
