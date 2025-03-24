@@ -11,17 +11,20 @@ import {
 	useNodesState,
 	useEdgesState,
 	useReactFlow,
+	type FinalConnectionState,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "./nodes/console";
 import { useShallow } from "zustand/react/shallow";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import {
 	FLOW_HANDLE_MARKER,
 	useRenderableNodesStore,
 } from "./nodes/renderable-node-types";
 import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
+import { useDisclosure } from "@heroui/react";
+import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 
 const initialNodes: Node[] = [
 	{
@@ -72,8 +75,15 @@ const connectionHasCycles = (
 export default function FormatEditor() {
 	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+	const {
+		onOpen: openSearchModal,
+		isOpen: isSearchModalOpen,
+		onOpenChange: onSearchModalOpenChange,
+	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
+	// biome-ignore lint/style/noNonNullAssertion: required here
+	const containerRef = useRef<HTMLDivElement>(null!);
 
-	const { getNodes, getEdges } = useReactFlow();
+	const { getNodes, getEdges, screenToFlowPosition } = useReactFlow();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
@@ -99,8 +109,31 @@ export default function FormatEditor() {
 		[getNodes, getEdges],
 	);
 
+	const onConnectEnd = useCallback(
+		(event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
+			if (!connectionState.isValid) {
+				openSearchModal();
+
+				/* const id = getId();
+				const { clientX, clientY } =
+					"changedTouches" in event ? event.changedTouches[0] : event; */
+				/* const newNode = {
+				id,
+				position: screenToFlowPosition({
+					x: clientX,
+					y: clientY,
+				}),
+				data: { label: `Node ${id}` },
+				origin: [0.5, 0.0],
+			}; */
+				/*  */
+			}
+		},
+		[openSearchModal],
+	);
+
 	return (
-		<div className="w-full h-full">
+		<div ref={containerRef} className="w-full h-full">
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeRenderers}
@@ -108,12 +141,18 @@ export default function FormatEditor() {
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
+				onConnectEnd={onConnectEnd}
 				isValidConnection={isValidConnection}
 				proOptions={{ hideAttribution: true }}
 			>
 				<Controls showFitView={false} />
 				<Background size={2} />
 			</ReactFlow>
+			<SearchNodesModal
+				portal={containerRef}
+				isOpen={isSearchModalOpen}
+				onOpenChange={onSearchModalOpenChange}
+			/>
 		</div>
 	);
 }
