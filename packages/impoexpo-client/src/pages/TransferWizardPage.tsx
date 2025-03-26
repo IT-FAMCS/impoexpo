@@ -6,7 +6,7 @@ import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { initializeNodes } from "@impoexpo/shared";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-utils";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";

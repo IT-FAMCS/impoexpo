@@ -3,11 +3,7 @@ import {
 	pipe,
 	string,
 	nonEmpty,
-	email,
-	url,
-	number,
 	type InferOutput,
-	required,
 	optional,
 	array,
 } from "valibot";

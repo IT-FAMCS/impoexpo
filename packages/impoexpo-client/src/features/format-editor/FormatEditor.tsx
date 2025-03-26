@@ -15,18 +15,23 @@ import {
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
-import "./nodes/console";
+import "./nodes/builtin/console";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback, useRef } from "react";
 import {
 	FLOW_HANDLE_MARKER,
 	useRenderableNodesStore,
 } from "./nodes/renderable-node-types";
-import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
+import {
+	getHandleSchema,
+	getHandleType,
+	nodeSchemasCompatible,
+} from "./nodes/node-schema-helpers";
 import { useDisclosure } from "@heroui/react";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
-import { baseNodesMap, unwrapNodeIfNeeded } from "@impoexpo/shared";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 
 const initialNodes: Node[] = [
 	{
@@ -116,14 +121,16 @@ export default function FormatEditor() {
 		(event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
 			if (
 				!connectionState.isValid &&
-				connectionState.fromNode &&
-				connectionState.fromHandle
+				connectionState.fromNode?.type &&
+				connectionState.fromHandle?.id
 			) {
-				const node = baseNodesMap.get(connectionState.fromNode.type ?? "")
-					?.inputSchema?.entries[connectionState.fromHandle.id ?? ""];
-				if (!node) return;
-				const unwrapped = unwrapNodeIfNeeded(node);
-				setFilters([`accepts:${unwrapped.expects}`]);
+				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
+				const node = baseNodesMap.get(connectionState.fromNode.type)!;
+				const handleId = connectionState.fromHandle.id;
+				const handle = unwrapNodeIfNeeded(getHandleSchema(node, handleId));
+				setFilters([
+					`${getHandleType(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
+				]);
 				openSearchModal();
 
 				/* const id = getId();

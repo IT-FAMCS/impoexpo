@@ -1,7 +1,7 @@
 import {
 	type GoogleExchangeResponse,
 	GoogleExchangeResponseSchema,
-} from "@impoexpo/shared";
+} from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { create } from "zustand";
 import * as v from "valibot";
 

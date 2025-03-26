@@ -2,13 +2,13 @@ import type { Express, Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../../logger";
 import { google } from "googleapis";
+
+import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import {
-	type FaultyAction,
 	GOOGLE_FORMS_LIST_ROUTE,
 	GOOGLE_FORMS_VERIFY_ROUTE,
-	type ListGoogleFormsResponseInstance,
-} from "@impoexpo/shared";
-
+} from "@impoexpo/shared/schemas/integrations/google/forms/endpoints";
+import type { ListGoogleForm } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
 
 import {
 	getAuthenticatedGoogleClient,
@@ -58,7 +58,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 					} satisfies FaultyAction);
 				}
 
-				res.send({ ok: true } satisfies FaultyAction);
+				res.send({ ok: true, internal: false } satisfies FaultyAction);
 			} catch (err) {
 				res.status(500).send({
 					ok: false,
@@ -109,7 +109,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 						id: file.id,
 						name: file.name,
 						description: file.description ?? undefined,
-					} satisfies ListGoogleFormsResponseInstance;
+					} satisfies ListGoogleForm;
 				});
 
 				res.send(response);

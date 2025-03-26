@@ -44,6 +44,9 @@ export const TESTING_OUTPUT_NODE = new BaseNode({
 });
 
 nodesScope(() => {
-	registerBaseNodes(true, CONSOLE_WRITE_NODE);
-	registerBaseNodes(false, TESTING_INPUT_NODE, TESTING_OUTPUT_NODE);
+	registerBaseNodes(
+		CONSOLE_WRITE_NODE,
+		TESTING_INPUT_NODE,
+		TESTING_OUTPUT_NODE,
+	);
 });

@@ -7,12 +7,12 @@ import {
 	ScrollShadow,
 } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
+import { FaultyActionSchema } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import {
-	FaultyActionSchema,
 	GOOGLE_FORMS_LIST_ROUTE,
 	GOOGLE_FORMS_VERIFY_ROUTE,
-	ListGoogleFormsResponseSchema,
-} from "@impoexpo/shared";
+} from "@impoexpo/shared/schemas/integrations/google/forms/endpoints";
+import { ListGoogleFormsResponseSchema } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
 import { getGoogleAuthHeaders } from "../common";
 import { Icon } from "@iconify/react";
 import CacheInfoModal from "@/components/network/CacheInfoModal";

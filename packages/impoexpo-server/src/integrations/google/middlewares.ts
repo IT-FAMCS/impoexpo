@@ -1,12 +1,12 @@
-import type { NextFunction, Request, RequestHandler, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { header } from "express-validator";
 import { getGoogleClient } from "./helpers";
+import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import {
-	type FaultyAction,
 	GOOGLE_ACCESS_TOKEN_HEADER_NAME,
 	GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
 	GOOGLE_REFRESH_TOKEN_HEADER_NAME,
-} from "@impoexpo/shared";
+} from "@impoexpo/shared/schemas/integrations/google/static";
 
 export const requireGoogleAuth = async (
 	req: Request,

@@ -4,10 +4,7 @@
 	"private": true,
 	"main": "dist/index.js",
 	"type": "module",
-	"scripts": {
-		"build": "tsc",
-		"watch": "tsc --watch"
-	},
+	"scripts": {},
 	"exports": {
 		".": {
 			"import": {

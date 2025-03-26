@@ -2,6 +2,8 @@ import {
 	Chip,
 	Divider,
 	Input,
+	Listbox,
+	ListboxItem,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -10,8 +12,11 @@ import { Icon } from "@iconify/react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useSearchNodesModalStore } from "./store";
-import {search} from '@orama/orama';
-import { nodesDatabase } from "@impoexpo/shared";
+import { search } from "@orama/orama";
+import { nodesDatabase } from "../nodes/node-database";
+import { useRenderableNodesStore } from "../nodes/renderable-node-types";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import AnimateChangeInSize from "@/components/external/AnimateChangeInSize";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -19,19 +24,45 @@ export default function SearchNodesModal(props: {
 	portal: React.MutableRefObject<HTMLDivElement>;
 }) {
 	const { setFilters, filters } = useSearchNodesModalStore();
+	const { nodeRenderOptions, categoryRenderOptions } =
+		useRenderableNodesStore();
 	const [query, setQuery] = useState("");
+	const [searchResults, setSearchResults] = useState<
+		{
+			id: string;
+			score: number;
+		}[]
+	>([]);
 	// biome-ignore lint/style/noNonNullAssertion: required here
 	const inputRef = useRef<HTMLInputElement>(null!);
 	useEffect(() => {
-		if (inputRef.current && props.isOpen) inputRef.current.focus();
+		if (props.isOpen) {
+			if (inputRef.current) inputRef.current.focus();
+			setQuery("");
+		}
 	}, [props.isOpen]);
 
 	useEffect(() => {
-		const searchResults = search(nodesDatabase, {
-			term: query
-		});
-		console.log(searchResults);
-	}, [query]);
+		const searchResults = search(
+			nodesDatabase,
+			{
+				term: query,
+				where: filters.length === 0 ? {} : { tags: filters },
+			},
+			"russian",
+		); // TODO
+		if (searchResults instanceof Promise) return;
+
+		console.log(searchResults.hits);
+		setSearchResults(
+			searchResults.hits
+				.filter((hit) => hit.score !== 0)
+				.map((hit) => ({
+					id: hit.document.id,
+					score: hit.score,
+				})),
+		);
+	}, [query, filters]);
 
 	return (
 		<Modal
@@ -48,36 +79,67 @@ export default function SearchNodesModal(props: {
 			<ModalContent>
 				{(onClose) => (
 					<>
-						<ModalBody className="flex flex-col p-0">
-							<div className="flex flex-col">
-								<Input
-									size="lg"
-									ref={inputRef}
-									value={query}
-									onValueChange={setQuery}
-									startContent={
-										<div className="flex flex-row items-center justify-center gap-2">
-											<Icon width={18} icon="mdi:search" />
-											{filters.map((filter) => (
-												<Chip
-													onClose={() => setFilters(filters.filter(tag => filter !== tag))}
-													key={filter}
-													color="primary"
-													variant="solid"
+						<AnimateChangeInSize height>
+							<ModalBody className="flex flex-col p-0">
+								<div className="flex flex-col">
+									<Input
+										size="lg"
+										ref={inputRef}
+										value={query}
+										onValueChange={setQuery}
+										startContent={
+											<div className="flex flex-row items-center justify-center gap-2">
+												<Icon width={18} icon="mdi:search" />
+												{filters.map((filter) => (
+													<Chip
+														onClose={() =>
+															setFilters(
+																filters.filter((tag) => filter !== tag),
+															)
+														}
+														key={filter}
+														color="primary"
+														variant="solid"
+													>
+														{filter}
+													</Chip>
+												))}
+											</div>
+										}
+										classNames={{ inputWrapper: "rounded-none" }}
+										className="w-full ring-0"
+										placeholder="введите название, категорию или тэг нужного графа..."
+									/>
+									<Divider />
+									<Listbox items={searchResults} className="w-full">
+										{(item) => {
+											const renderOptions = nodeRenderOptions.get(item.id);
+											const nodeData = baseNodesMap.get(item.id);
+											if (!renderOptions || !nodeData) return null;
+											const categoryOptions = categoryRenderOptions.get(
+												nodeData.category,
+											);
+											if (!categoryOptions) return null;
+
+											return (
+												<ListboxItem
+													startContent={(
+														renderOptions.categoryIcon ?? categoryOptions.icon
+													)(24)}
+													description={item.id}
 												>
-													{filter}
-												</Chip>
-											))}
-										</div>
-									}
-									classNames={{ inputWrapper: "rounded-none" }}
-									className="w-full ring-0"
-									placeholder="введите название, категорию или тэг нужного графа..."
-								/>
-								<Divider />
-							</div>
-							<div className="p-4 h-14" />
-						</ModalBody>
+													<div className="flex flex-row justify-center items-center gap-1">
+														{categoryOptions.name}{" "}
+														<Icon icon="mdi:arrow-right" />{" "}
+														{renderOptions.title ?? item.id}
+													</div>
+												</ListboxItem>
+											);
+										}}
+									</Listbox>
+								</div>
+							</ModalBody>
+						</AnimateChangeInSize>
 					</>
 				)}
 			</ModalContent>

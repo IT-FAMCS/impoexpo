@@ -28,7 +28,6 @@ export const ERROR_NOTIFICATION_NODE = new BaseNode({
 
 nodesScope(() => {
 	registerBaseNodes(
-		true,
 		INFORMATION_NOTIFICATION_NODE,
 		WARNING_NOTIFICATION_NODE,
 		ERROR_NOTIFICATION_NODE,

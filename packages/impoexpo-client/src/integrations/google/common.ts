@@ -3,7 +3,7 @@ import {
 	GOOGLE_ACCESS_TOKEN_HEADER_NAME,
 	GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
 	GOOGLE_REFRESH_TOKEN_HEADER_NAME,
-} from "@impoexpo/shared";
+} from "@impoexpo/shared/schemas/integrations/google/static";
 
 export const GOOGLE_AUTH_KEY = "google_auth";
 

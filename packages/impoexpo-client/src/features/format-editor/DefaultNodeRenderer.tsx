@@ -8,7 +8,8 @@ import {
 	Select,
 	SelectItem,
 } from "@heroui/react";
-import { type AllowedObjectEntry, baseNodesMap } from "@impoexpo/shared";
+import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { type NodeProps, type Node, Position, Handle } from "@xyflow/react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -36,10 +37,10 @@ export default function DefaultNodeRenderer<
 	const nodeData = useMemo(() => baseNodesMap.get(type)!, [type]);
 	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
 		useShallow((state) => [
-			state.nodeRenderOptionsMap.get(type),
-			state.nodeRenderOptionsMap.get(type)?.categoryIcon ??
-				(state.categoryIconRenderers.has(nodeData.category)
-					? state.categoryIconRenderers.get(nodeData.category)
+			state.nodeRenderOptions.get(type),
+			state.nodeRenderOptions.get(type)?.categoryIcon ??
+				(state.categoryRenderOptions.has(nodeData.category)
+					? state.categoryRenderOptions.get(nodeData.category)?.icon
 					: null),
 		]),
 	);
@@ -63,7 +64,7 @@ export default function DefaultNodeRenderer<
 						}}
 					/>
 				)}
-				{categoryIcon}
+				{categoryIcon?.(16)}
 				<p>{nodeRenderOptions.title ?? nodeData.name}</p>
 				{nodeData.flowConnectable && (
 					<Handle
@@ -118,7 +119,7 @@ function NodePropertyRenderer(props: {
 	const nodeData = useMemo(() => baseNodesMap.get(props.type)!, [props.type]);
 	const [nodeRenderOptions] = useRenderableNodesStore(
 		// biome-ignore lint/style/noNonNullAssertion: only registered nodes get rendered
-		useShallow((state) => [state.nodeRenderOptionsMap.get(props.type)!]),
+		useShallow((state) => [state.nodeRenderOptions.get(props.type)!]),
 	);
 
 	const shouldHideLabel = (entry: AllowedObjectEntry) => {

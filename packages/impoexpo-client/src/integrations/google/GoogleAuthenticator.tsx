@@ -1,12 +1,10 @@
 import { postWithSchema } from "@/api/common";
-import { Button, Card, CircularProgress, Code, User } from "@heroui/react";
+import { Button, CircularProgress, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import {
-	GOOGLE_EXCHANGE_ROUTE,
-	GoogleExchangeResponseSchema,
-} from "@impoexpo/shared";
+import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
+import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { useAuthStore } from "@/stores/auth";
 
 export default function GoogleAuthenticator(props: {

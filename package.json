@@ -4,7 +4,7 @@
 	"private": true,
 	"workspaces": ["packages/*"],
 	"scripts": {
-		"dev": "concurrently --kill-others \"pnpm run --filter @impoexpo/shared watch\" \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\""
+		"dev": "concurrently --kill-others \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\""
 	},
 	"resolutions": {
 		"@react-aria/i18n": "3.10.2",

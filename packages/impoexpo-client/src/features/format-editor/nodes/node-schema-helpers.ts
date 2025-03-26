@@ -1,9 +1,3 @@
-import {
-	type BaseNode,
-	baseNodesMap,
-	type AllowedObjectEntry,
-	unwrapNodeIfNeeded,
-} from "@impoexpo/shared";
 import type { EnumSchema, PicklistSchema } from "valibot";
 import {
 	type NodePropertyOptionsMetadata,
@@ -13,6 +7,12 @@ import {
 } from "./renderable-node-types";
 import type * as v from "valibot";
 import type { Connection, Edge, Node } from "@xyflow/react";
+import type {
+	AllowedObjectEntry,
+	BaseNode,
+} from "@impoexpo/shared/nodes/node-types";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 
 export const isPicklist = (
 	schema: AllowedObjectEntry,
@@ -34,7 +34,7 @@ export const extractOptionMetadata = (
 	const nodeData = baseNodesMap.get(nodeType);
 	const renderOptions = useRenderableNodesStore
 		.getState()
-		.nodeRenderOptionsMap.get(nodeType);
+		.nodeRenderOptions.get(nodeType);
 	if (nodeData === undefined || renderOptions === undefined) {
 		throw new Error(
 			`attempted to extract options of a property from an invalid (unregistered?) node with type "${nodeType}"`,
@@ -70,7 +70,7 @@ export const extractOptionMetadata = (
 export const extractPropertyTitle = (type: string, propertyName: string) => {
 	const renderProperties = useRenderableNodesStore
 		.getState()
-		.nodeRenderOptionsMap.get(type);
+		.nodeRenderOptions.get(type);
 	if (renderProperties === undefined)
 		throw new Error(
 			`attempted to extract property title of an invalid node with type "${type}"`,
@@ -97,7 +97,7 @@ export const extractPropertyPlaceholder = (
 ) => {
 	const renderProperties = useRenderableNodesStore
 		.getState()
-		.nodeRenderOptionsMap.get(type);
+		.nodeRenderOptions.get(type);
 	if (renderProperties === undefined)
 		throw new Error(
 			`attempted to extract property input placeholder of an invalid node with type "${type}"`,
@@ -120,7 +120,8 @@ type DefaultBaseNode = BaseNode<
 	Record<string, AllowedObjectEntry>,
 	Record<string, AllowedObjectEntry>
 >;
-const getHandleSchema = (
+
+export const getHandleSchema = (
 	node: DefaultBaseNode,
 	handle: string,
 ): AllowedObjectEntry => {
@@ -128,6 +129,17 @@ const getHandleSchema = (
 		return node.inputSchema.entries[handle];
 	if (node.outputSchema && handle in node.outputSchema.entries)
 		return node.outputSchema.entries[handle];
+	throw new Error(
+		`couldn't get handle "${handle}" in node with type "${node.category}-${node.name}"`,
+	);
+};
+
+export const getHandleType = (
+	node: DefaultBaseNode,
+	handle: string,
+): "input" | "output" => {
+	if (node.inputSchema && handle in node.inputSchema.entries) return "input";
+	if (node.outputSchema && handle in node.outputSchema.entries) return "output";
 	throw new Error(
 		`couldn't get handle "${handle}" in node with type "${node.category}-${node.name}"`,
 	);

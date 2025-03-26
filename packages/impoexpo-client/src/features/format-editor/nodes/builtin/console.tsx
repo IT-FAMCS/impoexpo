@@ -1,12 +1,16 @@
 import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
-import * as consoleNodes from '@impoexpo/shared/nodes/builtin/console';
+import * as consoleNodes from "@impoexpo/shared/nodes/builtin/console";
 import {
-	registerCategoryIconRenderer,
+	registerCategory,
 	registerWithDefaultRenderer,
-} from "./renderable-node-types";
+} from "../renderable-node-types";
 import { Icon } from "@iconify/react";
 
 nodesScope(() => {
+	registerCategory("console", "консоль", (size) => (
+		<Icon width={size} icon="mdi:console" />
+	));
+
 	registerWithDefaultRenderer(consoleNodes.CONSOLE_WRITE_NODE, {
 		title: "вывод в консоль",
 		inputs: {
@@ -16,6 +20,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(consoleNodes.TESTING_INPUT_NODE, {
 		title: "testing input node",
+		searchable: false,
 		inputs: {
 			choice: {
 				options: {
@@ -46,11 +51,10 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(consoleNodes.TESTING_OUTPUT_NODE, {
 		title: "testing output node",
+		searchable: false,
 		outputs: {
 			numOut: { description: "yeah" },
 			strOut: { description: "hell yeah!" },
 		},
 	});
-
-	registerCategoryIconRenderer("console", <Icon icon="mdi:console" />);
 });
