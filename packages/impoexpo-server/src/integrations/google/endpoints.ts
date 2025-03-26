@@ -2,13 +2,15 @@ import type { Express } from "express";
 import { query, validationResult } from "express-validator";
 import { childLogger, logger } from "../../logger";
 import { google } from "googleapis";
-import {
-	type FaultyAction,
-	GOOGLE_EXCHANGE_ROUTE,
-	type GoogleExchangeResponse,
-} from "@impoexpo/shared";
 import { registerGoogleFormsEndpoints } from "./forms/endpoints";
 import { getGoogleClient } from "./helpers";
+
+import {
+	type GoogleExchangeResponse,
+	GoogleExchangeResponseSchema,
+} from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
+import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
+import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 
 export const registerGoogleEndpoints = (app: Express) => {
 	if (

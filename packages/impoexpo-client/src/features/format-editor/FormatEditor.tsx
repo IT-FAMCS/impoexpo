@@ -25,6 +25,8 @@ import {
 import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
 import { useDisclosure } from "@heroui/react";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
+import { useSearchNodesModalStore } from "./search-nodes-modal/store";
+import { baseNodesMap, unwrapNodeIfNeeded } from "@impoexpo/shared";
 
 const initialNodes: Node[] = [
 	{
@@ -80,6 +82,7 @@ export default function FormatEditor() {
 		isOpen: isSearchModalOpen,
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
+	const { setFilters } = useSearchNodesModalStore();
 	// biome-ignore lint/style/noNonNullAssertion: required here
 	const containerRef = useRef<HTMLDivElement>(null!);
 
@@ -111,7 +114,16 @@ export default function FormatEditor() {
 
 	const onConnectEnd = useCallback(
 		(event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
-			if (!connectionState.isValid) {
+			if (
+				!connectionState.isValid &&
+				connectionState.fromNode &&
+				connectionState.fromHandle
+			) {
+				const node = baseNodesMap.get(connectionState.fromNode.type ?? "")
+					?.inputSchema?.entries[connectionState.fromHandle.id ?? ""];
+				if (!node) return;
+				const unwrapped = unwrapNodeIfNeeded(node);
+				setFilters([`accepts:${unwrapped.expects}`]);
 				openSearchModal();
 
 				/* const id = getId();
@@ -129,11 +141,11 @@ export default function FormatEditor() {
 				/*  */
 			}
 		},
-		[openSearchModal],
+		[openSearchModal, setFilters],
 	);
 
 	return (
-		<div ref={containerRef} className="w-full h-full relative">
+		<div ref={containerRef} className="w-full h-full">
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeRenderers}

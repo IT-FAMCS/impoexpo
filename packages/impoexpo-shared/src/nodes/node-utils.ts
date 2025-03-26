@@ -35,7 +35,6 @@ export const registerBaseNodes = (
 		for (const entry of Object.values(node.outputSchema?.entries ?? [])) {
 			tags.add(`outputs:${unwrapNodeIfNeeded(entry).expects}`);
 		}
-		console.log(tags);
 
 		if (searchable) {
 			insert(nodesDatabase, {

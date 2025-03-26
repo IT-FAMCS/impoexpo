@@ -1,4 +1,5 @@
-import { nodes, nodesScope } from "@impoexpo/shared";
+import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
+import * as consoleNodes from '@impoexpo/shared/nodes/builtin/console';
 import {
 	registerCategoryIconRenderer,
 	registerWithDefaultRenderer,
@@ -6,14 +7,14 @@ import {
 import { Icon } from "@iconify/react";
 
 nodesScope(() => {
-	registerWithDefaultRenderer(nodes.base.console.CONSOLE_WRITE_NODE, {
+	registerWithDefaultRenderer(consoleNodes.CONSOLE_WRITE_NODE, {
 		title: "вывод в консоль",
 		inputs: {
 			text: { title: "текст" },
 		},
 	});
 
-	registerWithDefaultRenderer(nodes.base.console.TESTING_INPUT_NODE, {
+	registerWithDefaultRenderer(consoleNodes.TESTING_INPUT_NODE, {
 		title: "testing input node",
 		inputs: {
 			choice: {
@@ -43,7 +44,7 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(nodes.base.console.TESTING_OUTPUT_NODE, {
+	registerWithDefaultRenderer(consoleNodes.TESTING_OUTPUT_NODE, {
 		title: "testing output node",
 		outputs: {
 			numOut: { description: "yeah" },
