@@ -8,7 +8,6 @@ import "@/styles/globals.css";
 import { type Messages, i18n } from "@lingui/core";
 import {
 	detect,
-	fromNavigator,
 	fromStorage,
 	fromUrl,
 } from "@lingui/detect-locale";

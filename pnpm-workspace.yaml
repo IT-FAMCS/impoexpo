@@ -4,3 +4,4 @@ onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@heroui/shared-utils'
   - '@swc/core'
+  - lefthook

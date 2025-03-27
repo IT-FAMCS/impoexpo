@@ -6,4 +6,4 @@
 pre-commit:
   commands:
     check:
-      run: cd packages/impoexpo-client && npm run lint -- --no-errors-on-unmatched
+      run: cd packages/impoexpo-client && pnpm run lint -- --no-errors-on-unmatched
