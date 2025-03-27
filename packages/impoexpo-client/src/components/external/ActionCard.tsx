@@ -2,9 +2,9 @@
 
 import type { CardProps } from "@heroui/react";
 
-import React from "react";
 import { Card, CardBody } from "@heroui/react";
-import { Icon } from "@iconify/react";
+import React from "react";
+
 import { cn } from "@heroui/react";
 
 export type ActionCardProps = CardProps & {

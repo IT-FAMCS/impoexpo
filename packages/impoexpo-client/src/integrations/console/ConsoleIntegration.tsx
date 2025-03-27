@@ -1,9 +1,10 @@
 import type { Integration } from "@/types/Integration";
-import { Icon } from "@iconify/react";
 import { ListboxItem } from "@heroui/react";
-import { useConsoleIntegrationStore } from "./store";
-import { useEffect } from "react";
+import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
+import { useEffect } from "react";
+import { useConsoleIntegrationStore } from "./store";
+
 import { Trans } from "@lingui/react/macro";
 
 export const ConsoleIntegration: Integration = {

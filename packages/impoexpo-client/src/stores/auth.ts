@@ -2,8 +2,8 @@ import {
 	type GoogleExchangeResponse,
 	GoogleExchangeResponseSchema,
 } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
-import { create } from "zustand";
 import * as v from "valibot";
+import { create } from "zustand";
 
 const STORAGE_PREFIX: string = "impoexpo/auth/";
 export const storageKeyForIntegration = (name: string) => STORAGE_PREFIX + name;

@@ -1,10 +1,10 @@
 import { supportedLocales } from "@/locales/supportedLocales";
 import {
-	Dropdown,
-	DropdownTrigger,
 	Button,
-	DropdownMenu,
+	Dropdown,
 	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
 } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { useEffect, useMemo } from "react";
@@ -16,6 +16,7 @@ export default function LanguageSwitcher() {
 		() => supportedLocales.find((l) => l.id === i18n.locale)!,
 		[i18n.locale],
 	);
+
 	useEffect(() => localStorage.setItem("locale", i18n.locale), [i18n.locale]);
 
 	return (

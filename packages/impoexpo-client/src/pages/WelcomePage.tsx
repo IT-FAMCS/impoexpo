@@ -1,21 +1,21 @@
-import { Icon } from "@iconify/react";
+import LanguageSwitcher from "@/components/buttons/LanguageSwitcher";
+import ThemeSwitcher from "@/components/buttons/ThemeSwitcher";
 import {
+	Button,
 	Card,
 	CardBody,
-	Button,
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	useDisclosure,
-	Link,
 	Code,
+	Link,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
 } from "@heroui/react";
-import { useNavigate } from "react-router";
-import ThemeSwitcher from "@/components/buttons/ThemeSwitcher";
+import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import LanguageSwitcher from "@/components/buttons/LanguageSwitcher";
+import { useNavigate } from "react-router";
 
 export default function WelcomePage() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();

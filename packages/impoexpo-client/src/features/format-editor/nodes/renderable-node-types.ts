@@ -1,20 +1,20 @@
 // this is probably some of the worst typescript code i have ever written
 // sorry
 
+import { persistStoreOnReload } from "@/stores/hot-reload";
 import type {
 	AllowedObjectEntry,
 	BaseNode,
 } from "@impoexpo/shared/nodes/node-types";
-import DefaultNodeRenderer from "../DefaultNodeRenderer";
+import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
+import { type MessageDescriptor, i18n } from "@lingui/core";
+import { insert } from "@orama/orama";
 import type { NodeTypes } from "@xyflow/react";
 import type React from "react";
-import { create } from "zustand";
-import { persistStoreOnReload } from "@/stores/hot-reload";
 import type { EnumSchema, OptionalSchema, PicklistSchema } from "valibot";
-import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
-import { insert } from "@orama/orama";
+import { create } from "zustand";
+import DefaultNodeRenderer from "../DefaultNodeRenderer";
 import { nodesDatabase } from "./node-database";
-import { i18n, type MessageDescriptor } from "@lingui/core";
 
 export type IconRenderFunction = (size: number) => React.ReactNode;
 
@@ -83,10 +83,10 @@ export type NodePropertyMetadata<
 	{
 		title: MessageDescriptor;
 		description: MessageDescriptor;
-		// biome-ignore lint/complexity/noBannedTypes: empty type required here
 	} & (TIncludePlaceholder extends true
 		? { placeholder: MessageDescriptor }
-		: {}) &
+		: // biome-ignore lint/complexity/noBannedTypes: empty type required here
+			{}) &
 		(NodePropertyOptions<TProperty> extends never
 			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
 				{}

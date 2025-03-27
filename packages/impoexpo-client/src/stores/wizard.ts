@@ -1,4 +1,4 @@
-import { createResettable, WIZARD_STORE_CATEGORY } from "./resettable";
+import { WIZARD_STORE_CATEGORY, createResettable } from "./resettable";
 
 export enum TransferWizardStage {
 	SELECT_SOURCE = 0,

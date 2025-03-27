@@ -1,3 +1,4 @@
+import AnimateChangeInSize from "@/components/external/AnimateChangeInSize";
 import {
 	Chip,
 	Divider,
@@ -9,15 +10,14 @@ import {
 	ModalContent,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { useLingui } from "@lingui/react/macro";
+import { search } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useSearchNodesModalStore } from "./store";
-import { search } from "@orama/orama";
 import { nodesDatabase } from "../nodes/node-database";
 import { useRenderableNodesStore } from "../nodes/renderable-node-types";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import AnimateChangeInSize from "@/components/external/AnimateChangeInSize";
-import { useLingui } from "@lingui/react/macro";
+import { useSearchNodesModalStore } from "./store";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -35,8 +35,7 @@ export default function SearchNodesModal(props: {
 			score: number;
 		}[]
 	>([]);
-	// biome-ignore lint/style/noNonNullAssertion: required here
-	const inputRef = useRef<HTMLInputElement>(null!);
+	const inputRef = useRef<HTMLInputElement | null>(null);
 	useEffect(() => {
 		if (props.isOpen) {
 			if (inputRef.current) inputRef.current.focus();

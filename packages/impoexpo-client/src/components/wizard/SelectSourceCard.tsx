@@ -1,4 +1,8 @@
 import {
+	readIntegrations,
+	writeIntegrations,
+} from "@/integrations/integrations";
+import {
 	Button,
 	Card,
 	CardBody,
@@ -8,21 +12,18 @@ import {
 	Listbox,
 } from "@heroui/react";
 import ActionCard from "../external/ActionCard";
-import {
-	readIntegrations,
-	writeIntegrations,
-} from "@/integrations/integrations";
-import { useEffect, useMemo, useState } from "react";
-import AnimateChangeInSize from "../external/AnimateChangeInSize";
+
 import {
 	SourceCardState,
 	useSourceCardStore,
 } from "@/stores/select-source-card";
-import { Icon } from "@iconify/react";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
-import { motion } from "framer-motion";
+import { Icon } from "@iconify/react";
 import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import AnimateChangeInSize from "../external/AnimateChangeInSize";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -93,8 +94,8 @@ function SourceChecker() {
 				className="border-small rounded-small border-default"
 				selectionMode="none"
 			>
-				{/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-				<>{...items}</>
+				{/*biome-ignore lint/complexity/noUselessFragments: doesn't update, no rerenders will happen*/}
+				<>{items}</>
 			</Listbox>
 			<div className="flex flex-row items-center justify-center gap-2">
 				<Button

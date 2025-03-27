@@ -1,37 +1,37 @@
 import {
-	type Node,
 	Background,
-	Controls,
-	ReactFlow,
-	type Edge,
-	addEdge,
-	type OnConnect,
 	type Connection,
-	getOutgoers,
-	useNodesState,
-	useEdgesState,
-	useReactFlow,
+	Controls,
+	type Edge,
 	type FinalConnectionState,
+	type Node,
+	type OnConnect,
+	ReactFlow,
+	addEdge,
+	getOutgoers,
+	useEdgesState,
+	useNodesState,
+	useReactFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "./nodes/builtin/console";
-import { useShallow } from "zustand/react/shallow";
+import { useDisclosure } from "@heroui/react";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 import { useCallback, useRef } from "react";
-import {
-	FLOW_HANDLE_MARKER,
-	useRenderableNodesStore,
-} from "./nodes/renderable-node-types";
+import { useShallow } from "zustand/react/shallow";
 import {
 	getHandleSchema,
 	getHandleType,
 	nodeSchemasCompatible,
 } from "./nodes/node-schema-helpers";
-import { useDisclosure } from "@heroui/react";
+import {
+	FLOW_HANDLE_MARKER,
+	useRenderableNodesStore,
+} from "./nodes/renderable-node-types";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 
 const initialNodes: Node[] = [
 	{
