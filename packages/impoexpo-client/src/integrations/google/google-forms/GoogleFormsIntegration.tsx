@@ -1,13 +1,13 @@
 import type { Integration } from "@/types/Integration";
-import { Icon } from "@iconify/react";
-import { checkGoogleAuthentication } from "../common";
-import GoogleAuthenticator from "../GoogleAuthenticator";
-import GoogleVerificator from "../GoogleVerificator";
-import { GoogleFormsHydrator } from "./GoogleFormsHydrator";
-import { useGoogleFormsHydratorStore } from "./store";
 import { ListboxItem } from "@heroui/react";
+import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
+import GoogleAuthenticator from "../GoogleAuthenticator";
+import GoogleVerificator from "../GoogleVerificator";
+import { checkGoogleAuthentication } from "../common";
+import { GoogleFormsHydrator } from "./GoogleFormsHydrator";
+import { useGoogleFormsHydratorStore } from "./store";
 
 export const GoogleFormsIntegration: Integration = {
 	id: "google-forms",

@@ -1,21 +1,20 @@
+import { HeroUIProvider } from "@heroui/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router";
-
 import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
-import { HeroUIProvider } from "@heroui/react";
 import "@/styles/globals.css";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./api/common.ts";
-import { i18n, type Messages } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
+import { type Messages, i18n } from "@lingui/core";
 import {
 	detect,
 	fromNavigator,
 	fromStorage,
 	fromUrl,
 } from "@lingui/detect-locale";
+import { I18nProvider } from "@lingui/react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./api/common.ts";
 
 const locales = import.meta.glob("./locales/*.po");
 for (const key in locales) {

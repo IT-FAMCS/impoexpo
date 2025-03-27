@@ -1,12 +1,12 @@
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	Button,
-	useDisclosure,
 	Alert,
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
 } from "@heroui/react";
 import { Trans } from "@lingui/react/macro";
 

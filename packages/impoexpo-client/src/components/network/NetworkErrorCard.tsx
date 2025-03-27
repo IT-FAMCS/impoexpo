@@ -1,9 +1,9 @@
 import { RatelimitHitError } from "@/api/errors";
 import { Button, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import RatelimitCountdown from "./RatelimitCountdown";
-import { Trans } from "@lingui/react/macro";
 import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
+import RatelimitCountdown from "./RatelimitCountdown";
 
 export default function NetworkErrorCard(props: {
 	title: string;

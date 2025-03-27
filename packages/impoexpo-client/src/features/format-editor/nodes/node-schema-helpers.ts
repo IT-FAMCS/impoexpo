@@ -1,19 +1,19 @@
-import type { EnumSchema, PicklistSchema } from "valibot";
-import {
-	type NodePropertyOptionsMetadata,
-	useRenderableNodesStore,
-	type NodePropertyOptions,
-	FLOW_HANDLE_MARKER,
-} from "./renderable-node-types";
-import type * as v from "valibot";
-import type { Connection, Edge, Node } from "@xyflow/react";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import type {
 	AllowedObjectEntry,
 	BaseNode,
 } from "@impoexpo/shared/nodes/node-types";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
-import { i18n, type MessageDescriptor } from "@lingui/core";
+import { type MessageDescriptor, i18n } from "@lingui/core";
+import type { Connection, Edge, Node } from "@xyflow/react";
+import type { EnumSchema, PicklistSchema } from "valibot";
+import type * as v from "valibot";
+import {
+	FLOW_HANDLE_MARKER,
+	type NodePropertyOptions,
+	type NodePropertyOptionsMetadata,
+	useRenderableNodesStore,
+} from "./renderable-node-types";
 
 export const isPicklist = (
 	schema: AllowedObjectEntry,

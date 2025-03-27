@@ -3,9 +3,9 @@ import { Button, CircularProgress, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
-import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { useAuthStore } from "@/stores/auth";
+import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
+import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import { Trans, useLingui } from "@lingui/react/macro";
 
 export default function GoogleAuthenticator(props: {

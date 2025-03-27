@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useCountdown } from "usehooks-ts";
-import NumberFlow, { NumberFlowGroup, continuous } from "@number-flow/react";
+
 import { Code } from "@heroui/react";
+import NumberFlow, { NumberFlowGroup, continuous } from "@number-flow/react";
 
 export default function RatelimitCountdown(props: {
 	resetSeconds: number;

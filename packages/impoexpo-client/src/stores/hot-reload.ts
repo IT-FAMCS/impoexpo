@@ -1,8 +1,8 @@
 import type { UseBoundStore } from "zustand";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const persistStoreOnReload = (
 	name: string,
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	useStore: UseBoundStore<any>,
 ) => {
 	if (import.meta.hot) {

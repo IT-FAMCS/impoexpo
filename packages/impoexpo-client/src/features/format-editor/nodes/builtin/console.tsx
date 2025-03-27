@@ -1,11 +1,12 @@
-import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
 import * as consoleNodes from "@impoexpo/shared/nodes/builtin/console";
+import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
+
+import { Icon } from "@iconify/react";
+import { msg } from "@lingui/core/macro";
 import {
 	registerCategory,
 	registerWithDefaultRenderer,
 } from "../renderable-node-types";
-import { Icon } from "@iconify/react";
-import { msg } from "@lingui/core/macro";
 
 nodesScope(() => {
 	registerCategory("console", msg`console`, (size) => (

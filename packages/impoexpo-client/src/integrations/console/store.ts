@@ -1,4 +1,4 @@
-import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import { WIZARD_STORE_CATEGORY, createResettable } from "@/stores/resettable";
 
 export type ConsoleIntegrationStore = {
 	enabled: boolean;

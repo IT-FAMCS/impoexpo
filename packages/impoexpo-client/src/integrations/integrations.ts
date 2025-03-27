@@ -1,6 +1,6 @@
 import type { Integration } from "@/types/Integration";
-import { GoogleFormsIntegration } from "./google/google-forms/GoogleFormsIntegration";
 import { ConsoleIntegration } from "./console/ConsoleIntegration";
+import { GoogleFormsIntegration } from "./google/google-forms/GoogleFormsIntegration";
 
 export const allIntegrations: Integration[] = [
 	GoogleFormsIntegration,

@@ -8,27 +8,27 @@ import {
 	Select,
 	SelectItem,
 } from "@heroui/react";
-import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import { type NodeProps, type Node, Position, Handle } from "@xyflow/react";
+import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
 import { useEffect, useMemo, useState } from "react";
-import {
-	FLOW_IN_HANDLE_ID,
-	FLOW_OUT_HANDLE_ID,
-	useRenderableNodesStore,
-} from "./nodes/renderable-node-types";
 import { useShallow } from "zustand/react/shallow";
 import {
+	type ValidatorFunction,
 	extractOptionMetadata,
 	extractPropertyPlaceholder,
 	extractPropertyTitle,
 	isEnum,
 	isPicklist,
-	type ValidatorFunction,
 } from "./nodes/node-schema-helpers";
+import {
+	FLOW_IN_HANDLE_ID,
+	FLOW_OUT_HANDLE_ID,
+	useRenderableNodesStore,
+} from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
-import type { BaseIssue } from "valibot";
 import { useLingui } from "@lingui/react/macro";
+import type { BaseIssue } from "valibot";
 
 export default function DefaultNodeRenderer<
 	TIn extends Record<string, unknown>,

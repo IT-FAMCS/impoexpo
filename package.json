@@ -1,18 +1,23 @@
 {
-	"name": "impoexpo-monorepo",
-	"version": "0.0.0",
-	"private": true,
-	"workspaces": ["packages/*"],
-	"scripts": {
-		"dev": "concurrently --kill-others \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\""
-	},
-	"resolutions": {
-		"@react-aria/i18n": "3.10.2",
-		"@react-aria/selection": "3.23.0",
-		"@react-aria/utils": "3.28.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"concurrently": "^9.1.2"
-	}
+  "name": "impoexpo-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\"",
+    "update-git-hooks": "npx lefthook install",
+    "init": "pnpm install && npm run update-git-hooks"
+  },
+  "resolutions": {
+    "@react-aria/i18n": "3.10.2",
+    "@react-aria/selection": "3.23.0",
+    "@react-aria/utils": "3.28.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "concurrently": "^9.1.2",
+    "lefthook": "^1.11.5"
+  }
 }
