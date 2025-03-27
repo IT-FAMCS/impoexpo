@@ -28,11 +28,13 @@ import {
 } from "./nodes/node-schema-helpers";
 import "@valibot/i18n/ru";
 import type { BaseIssue } from "valibot";
+import { useLingui } from "@lingui/react/macro";
 
 export default function DefaultNodeRenderer<
 	TIn extends Record<string, unknown>,
 	TType extends string,
 >({ type }: NodeProps<Node<TIn, TType>>) {
+	const { t } = useLingui();
 	// biome-ignore lint/style/noNonNullAssertion: only registered nodes get renderered
 	const nodeData = useMemo(() => baseNodesMap.get(type)!, [type]);
 	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
@@ -65,7 +67,11 @@ export default function DefaultNodeRenderer<
 					/>
 				)}
 				{categoryIcon?.(16)}
-				<p>{nodeRenderOptions.title ?? nodeData.name}</p>
+				<p>
+					{nodeRenderOptions.title !== undefined
+						? t(nodeRenderOptions.title)
+						: nodeData.name}
+				</p>
 				{nodeData.flowConnectable && (
 					<Handle
 						type="source"

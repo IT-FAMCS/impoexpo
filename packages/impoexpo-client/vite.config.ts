@@ -1,14 +1,21 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
 import * as child from "node:child_process";
+import { lingui } from "@lingui/vite-plugin";
 
 const lastCommitHash = child
 	.execSync("git rev-parse --short HEAD")
 	.toString()
 	.trim();
 export default defineConfig({
-	plugins: [react(), tsconfigPaths()],
+	plugins: [
+		react({
+			plugins: [["@lingui/swc-plugin", {}]],
+		}),
+		tsconfigPaths(),
+		lingui(),
+	],
 	define: {
 		"import.meta.env.VITE_APP_HASH": JSON.stringify(lastCommitHash),
 		"import.meta.env.VITE_APP_VERSION": JSON.stringify(

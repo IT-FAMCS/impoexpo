@@ -13,6 +13,7 @@ import type {
 } from "@impoexpo/shared/nodes/node-types";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
+import { i18n, type MessageDescriptor } from "@lingui/core";
 
 export const isPicklist = (
 	schema: AllowedObjectEntry,
@@ -30,7 +31,7 @@ export const extractOptionMetadata = (
 	nodeType: string,
 	propertyName: string,
 	key: string,
-): NodePropertyOptionsMetadata | undefined => {
+): NodePropertyOptionsMetadata<string> | undefined => {
 	const nodeData = baseNodesMap.get(nodeType);
 	const renderOptions = useRenderableNodesStore
 		.getState()
@@ -52,7 +53,7 @@ export const extractOptionMetadata = (
 	if (!("options" in property)) return undefined;
 	const options = property.options as Record<
 		string,
-		Partial<{ title: string; description: string }>
+		Partial<{ title: MessageDescriptor; description: MessageDescriptor }>
 	>;
 
 	if (!(key in options)) return { title: key, key: key };
@@ -62,8 +63,9 @@ export const extractOptionMetadata = (
 	const keyString = key.toString();
 	return {
 		key: keyString,
-		title: data.title ?? keyString,
-		description: data.description ?? undefined,
+		title: data.title !== undefined ? i18n.t(data.title) : keyString,
+		description:
+			data.description !== undefined ? i18n.t(data.description) : undefined,
 	};
 };
 
@@ -76,18 +78,10 @@ export const extractPropertyTitle = (type: string, propertyName: string) => {
 			`attempted to extract property title of an invalid node with type "${type}"`,
 		);
 
-	if (
-		renderProperties.inputs !== undefined &&
-		propertyName in renderProperties.inputs
-	) {
-		return renderProperties.inputs[propertyName]?.title ?? propertyName;
-	}
-	if (
-		renderProperties.outputs !== undefined &&
-		propertyName in renderProperties.outputs
-	) {
-		return renderProperties.outputs[propertyName]?.title ?? propertyName;
-	}
+	if (renderProperties.inputs?.[propertyName]?.title !== undefined)
+		return i18n.t(renderProperties.inputs[propertyName].title);
+	if (renderProperties.outputs?.[propertyName]?.title !== undefined)
+		return i18n.t(renderProperties.outputs[propertyName].title);
 	return propertyName;
 };
 
@@ -103,9 +97,8 @@ export const extractPropertyPlaceholder = (
 			`attempted to extract property input placeholder of an invalid node with type "${type}"`,
 		);
 
-	return renderProperties.inputs !== undefined &&
-		propertyName in renderProperties.inputs
-		? (renderProperties.inputs[propertyName]?.placeholder ?? propertyName)
+	return renderProperties.inputs?.[propertyName]?.placeholder !== undefined
+		? i18n.t(renderProperties.inputs[propertyName]?.placeholder)
 		: propertyName;
 };
 

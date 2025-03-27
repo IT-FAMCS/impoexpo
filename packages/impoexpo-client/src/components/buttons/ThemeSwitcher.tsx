@@ -2,7 +2,7 @@ import { Button } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 import { Icon } from "@iconify/react";
 
-export const ThemeSwitcher = () => {
+export default function ThemeSwitcher() {
 	const { theme, setTheme } = useTheme();
 
 	return (
@@ -19,4 +19,4 @@ export const ThemeSwitcher = () => {
 			}
 		/>
 	);
-};
+}

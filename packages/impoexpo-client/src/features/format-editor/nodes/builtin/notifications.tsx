@@ -5,22 +5,23 @@ import {
 	registerWithDefaultRenderer,
 } from "../renderable-node-types";
 import { Icon } from "@iconify/react";
+import { msg } from "@lingui/core/macro";
 
 nodesScope(() => {
-	registerCategory("notifications", "уведомления", (size) => (
+	registerCategory("notifications", msg`notifications`, (size) => (
 		<Icon width={size} icon="mdi:message-badge" />
 	));
 
 	registerWithDefaultRenderer(notificationNodes.INFORMATION_NOTIFICATION_NODE, {
-		title: "информация",
+		title: msg`information`,
 		categoryIcon: (size) => <Icon width={size} icon="mdi:information" />,
 	});
 	registerWithDefaultRenderer(notificationNodes.WARNING_NOTIFICATION_NODE, {
-		title: "предупреждение",
+		title: msg`warning`,
 		categoryIcon: (size) => <Icon width={size} icon="mdi:warning" />,
 	});
 	registerWithDefaultRenderer(notificationNodes.ERROR_NOTIFICATION_NODE, {
-		title: "ошибка",
+		title: msg`error`,
 		categoryIcon: (size) => <Icon width={size} icon="mdi:error" />,
 	});
 });

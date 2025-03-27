@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { useAuthStore } from "@/stores/auth";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 export default function GoogleAuthenticator(props: {
 	scopes: string[];
 	onSuccess: () => void;
 }) {
+	const { t } = useLingui();
 	const { setGoogleAuth } = useAuthStore();
 
 	const [client, setClient] = useState<
@@ -44,9 +46,9 @@ export default function GoogleAuthenticator(props: {
 							(scope) => response.scope.split(" ").indexOf(scope) === -1,
 						)
 					) {
-						error("не все права были предоставлены!");
+						error(t`not all permissions have been provided!`);
 					} else if (response.code) {
-						setLoadingState("просим сервер обменяться токенами...");
+						setLoadingState(t`exchanging tokens with the server`);
 
 						postWithSchema(
 							GOOGLE_EXCHANGE_ROUTE,
@@ -59,10 +61,10 @@ export default function GoogleAuthenticator(props: {
 							})
 							.catch((err) => {
 								console.error(
-									`couldn't exchange tokens with the backend: ${err}`,
+									`couldn't exchange tokens with the server: ${err}`,
 								);
 								error(
-									"не удалось обменяться токенами с сервером (проверьте консоль)",
+									t`couldn't exchange tokens with the server (check the console)`,
 								);
 							});
 					}
@@ -76,14 +78,14 @@ export default function GoogleAuthenticator(props: {
 
 	const prompt = () => {
 		setErrorMessage(undefined);
-		setLoadingState("ожидаем завершения входа...");
+		setLoadingState(t`waiting for the login flow response`);
 		client?.requestCode();
 	};
 
 	if (loadingState === undefined) {
 		return (
 			<div className="flex flex-col w-full gap-2">
-				чтобы продолжить, необходимо войти в ваш аккаунт google.
+				<Trans>to continue, login with your google account.</Trans>
 				{client !== undefined && (
 					<Button
 						onPress={prompt}
@@ -91,12 +93,12 @@ export default function GoogleAuthenticator(props: {
 						color="primary"
 						startContent={<Icon icon="flat-color-icons:google" width={24} />}
 					>
-						войти в свой google аккаунт
+						<Trans>login via google</Trans>
 					</Button>
 				)}
 				{errorMessage !== undefined && (
 					<div className="flex flex-row items-center justify-center gap-2 text-small text-danger">
-						во время входа произошла ошибка:
+						<Trans>an error occurred during login:</Trans>
 						<br />
 						<Code size="sm" color="danger">
 							{errorMessage}

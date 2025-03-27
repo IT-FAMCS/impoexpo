@@ -8,6 +8,7 @@ import {
 	useDisclosure,
 	Alert,
 } from "@heroui/react";
+import { Trans } from "@lingui/react/macro";
 
 export default function CacheInfoModal(props: {
 	onRefresh: () => void;
@@ -23,33 +24,40 @@ export default function CacheInfoModal(props: {
 				size="sm"
 				onPress={onOpen}
 			>
-				данные не обновляются?
+				<Trans>the data is stale?</Trans>
 			</Button>
 			<Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader>почему данные не обновляются?</ModalHeader>
+							<ModalHeader>
+								<Trans>why doesn't the data refresh?</Trans>
+							</ModalHeader>
 							<ModalBody>
 								<p>
-									чтобы не нагружать сервер, мы кэшируем некоторые ресурсоёмкие
-									запросы (например, всё что связано с интеграциями).
-									<br />
-									если вы <b>абсолютно уверены</b>, что вы обновили информацию,
-									то нажмите на кнопку ниже.
+									<Trans>
+										in order to avoid overwhelming the server, we cache some
+										resource-intensive requests (i.e. anything related to
+										integrations).
+										<br />
+										if you're <b>absolutely sure</b> that you've updated the
+										data, click the button bellow.
+									</Trans>
 								</p>
 								<Alert color="danger">
 									<p>
-										учтите, что количество раз, сколько вы можете повторять этот
-										запрос <b>ограничено</b>.<br />
-										если вы будете делать это слишком часто, сервер даст вам
-										таймаут.
+										<Trans>
+											please note that the amount of times you can perform this
+											request is <b>limited</b>.<br />
+											if you'll do it too often, the server will give you a
+											timeout.
+										</Trans>
 									</p>
 								</Alert>
 							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" variant="light" onPress={onClose}>
-									закрыть
+									<Trans>close</Trans>
 								</Button>
 								<Button
 									color="primary"
@@ -58,7 +66,7 @@ export default function CacheInfoModal(props: {
 										props.onRefresh();
 									}}
 								>
-									обновить
+									<Trans>refresh</Trans>
 								</Button>
 							</ModalFooter>
 						</>

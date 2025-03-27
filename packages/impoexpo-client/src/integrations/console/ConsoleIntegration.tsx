@@ -3,10 +3,12 @@ import { Icon } from "@iconify/react";
 import { ListboxItem } from "@heroui/react";
 import { useConsoleIntegrationStore } from "./store";
 import { useEffect } from "react";
+import { msg } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 
 export const ConsoleIntegration: Integration = {
 	id: "console",
-	title: "Консоль",
+	title: msg`Console`,
 	icon: <Icon icon="mdi:console" />,
 	read: false,
 	write: true,
@@ -33,7 +35,7 @@ export const ConsoleIntegration: Integration = {
 						startContent={<Icon icon="mdi:console" />}
 						key="console"
 					>
-						Консоль
+						<Trans>Console</Trans>
 					</ListboxItem>,
 				]
 			: [],

@@ -60,7 +60,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 				shadow="sm"
 				{...props}
 			>
-				<CardBody className="flex h-full flex-row items-start gap-3">
+				<CardBody className="flex flex-row items-start h-full gap-3">
 					<div
 						className={cn(
 							"item-center flex rounded-medium border p-2",
@@ -68,9 +68,8 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 						)}
 					>
 						{icon}
-						{/* <Icon className={colors?.icon} icon={icon} width={24} /> */}
 					</div>
-					<div className="flex flex-col h-full justify-center items-start">
+					<div className="flex flex-col items-start justify-center h-full">
 						<p className="text-medium">{title}</p>
 						{(description || children) && (
 							<p className="text-small text-default-400">

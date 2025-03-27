@@ -43,7 +43,7 @@ const initialNodes: Node[] = [
 	{
 		id: "meow22",
 		data: {},
-		position: { x: 500, y: 100 },
+		position: { x: 800, y: 100 },
 		type: "console-test-in",
 	},
 	{

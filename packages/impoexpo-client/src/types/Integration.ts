@@ -1,6 +1,8 @@
+import type { MessageDescriptor } from "@lingui/core";
+
 export type Integration = {
 	id: string;
-	title: string;
+	title: MessageDescriptor;
 	icon: React.ReactNode;
 	read: boolean;
 	write: boolean;

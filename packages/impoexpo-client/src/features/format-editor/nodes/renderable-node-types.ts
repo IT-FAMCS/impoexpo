@@ -14,6 +14,7 @@ import type { EnumSchema, OptionalSchema, PicklistSchema } from "valibot";
 import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 import { insert } from "@orama/orama";
 import { nodesDatabase } from "./node-database";
+import { i18n, type MessageDescriptor } from "@lingui/core";
 
 export type IconRenderFunction = (size: number) => React.ReactNode;
 
@@ -30,7 +31,7 @@ export type RenderableNodesStore = {
 		string,
 		{
 			icon: IconRenderFunction;
-			name: string;
+			name: MessageDescriptor;
 		}
 	>;
 };
@@ -41,7 +42,7 @@ export type NodeRenderOptions<
 > = Partial<{
 	categoryIcon: IconRenderFunction;
 	searchable: boolean;
-	title: string;
+	title: MessageDescriptor;
 }> &
 	(keyof TSInput extends never
 		? // biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -80,10 +81,12 @@ export type NodePropertyMetadata<
 	TIncludePlaceholder extends boolean,
 > = Partial<
 	{
-		title: string;
-		description: string;
+		title: MessageDescriptor;
+		description: MessageDescriptor;
 		// biome-ignore lint/complexity/noBannedTypes: empty type required here
-	} & (TIncludePlaceholder extends true ? { placeholder: string } : {}) &
+	} & (TIncludePlaceholder extends true
+		? { placeholder: MessageDescriptor }
+		: {}) &
 		(NodePropertyOptions<TProperty> extends never
 			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
 				{}
@@ -91,16 +94,16 @@ export type NodePropertyMetadata<
 					options: Partial<
 						Record<
 							Exclude<NodePropertyOptions<TProperty>, bigint>,
-							NodePropertyOptionsMetadata
+							NodePropertyOptionsMetadata<MessageDescriptor>
 						>
 					>;
 				})
 >;
 
-export type NodePropertyOptionsMetadata = Partial<{
+export type NodePropertyOptionsMetadata<T> = Partial<{
 	key: string;
-	title: string;
-	description: string;
+	title: T;
+	description: T;
 }>;
 
 export const registerWithDefaultRenderer = <
@@ -139,9 +142,12 @@ export const registerWithDefaultRenderer = <
 			.getState()
 			.categoryRenderOptions.get(node.category);
 		insert(nodesDatabase, {
-			category: categoryRenderOptions?.name ?? node.category,
+			category:
+				categoryRenderOptions?.name !== undefined
+					? i18n.t(categoryRenderOptions?.name)
+					: node.category,
 			name: node.name,
-			title: options.title ?? "",
+			title: options.title !== undefined ? i18n.t(options.title) : "",
 			id: type,
 			tags: Array.from(tags),
 		});
@@ -156,7 +162,7 @@ export const useRenderableNodesStore = create<RenderableNodesStore>(() => ({
 
 export const registerCategory = (
 	id: string,
-	name: string,
+	name: MessageDescriptor,
 	icon: IconRenderFunction,
 ) =>
 	useRenderableNodesStore.setState((state) => {

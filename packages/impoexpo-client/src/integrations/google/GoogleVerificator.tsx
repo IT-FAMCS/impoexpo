@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/stores/auth";
 import { Button, Card, User } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { Trans } from "@lingui/react/macro";
 
 export default function GoogleVerificator(props: {
 	onSuccess: () => void;
@@ -12,7 +13,7 @@ export default function GoogleVerificator(props: {
 
 	return (
 		<div className="flex flex-col items-center justify-center gap-3">
-			всё верно?
+			<Trans>is this you?</Trans>
 			<Card className="p-4" shadow="sm">
 				<User
 					classNames={{ wrapper: "ml-2" }}
@@ -36,7 +37,7 @@ export default function GoogleVerificator(props: {
 					variant="flat"
 					startContent={<Icon width={18} icon="mdi:close" />}
 				>
-					перезайти
+					<Trans>relogin</Trans>
 				</Button>
 				<Button
 					onPress={props.onSuccess}
@@ -44,7 +45,7 @@ export default function GoogleVerificator(props: {
 					variant="flat"
 					endContent={<Icon width={18} icon="mdi:arrow-right" />}
 				>
-					далее
+					<Trans>next</Trans>
 				</Button>
 			</div>
 		</div>

@@ -17,12 +17,14 @@ import { nodesDatabase } from "../nodes/node-database";
 import { useRenderableNodesStore } from "../nodes/renderable-node-types";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import AnimateChangeInSize from "@/components/external/AnimateChangeInSize";
+import { useLingui } from "@lingui/react/macro";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
 	onOpenChange: () => void;
 	portal: React.MutableRefObject<HTMLDivElement>;
 }) {
+	const { t } = useLingui();
 	const { setFilters, filters } = useSearchNodesModalStore();
 	const { nodeRenderOptions, categoryRenderOptions } =
 		useRenderableNodesStore();
@@ -53,10 +55,10 @@ export default function SearchNodesModal(props: {
 		); // TODO
 		if (searchResults instanceof Promise) return;
 
-		console.log(searchResults.hits);
 		setSearchResults(
 			searchResults.hits
 				.filter((hit) => hit.score !== 0)
+				.sort((left, right) => (left.score > right.score ? -1 : 1))
 				.map((hit) => ({
 					id: hit.document.id,
 					score: hit.score,
@@ -108,7 +110,7 @@ export default function SearchNodesModal(props: {
 										}
 										classNames={{ inputWrapper: "rounded-none" }}
 										className="w-full ring-0"
-										placeholder="введите название, категорию или тэг нужного графа..."
+										placeholder={t`enter the name, category or tag of the needed node...`}
 									/>
 									<Divider />
 									<Listbox items={searchResults} className="w-full">
@@ -126,12 +128,14 @@ export default function SearchNodesModal(props: {
 													startContent={(
 														renderOptions.categoryIcon ?? categoryOptions.icon
 													)(24)}
-													description={item.id}
+													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
 												>
-													<div className="flex flex-row justify-center items-center gap-1">
-														{categoryOptions.name}{" "}
+													<div className="flex flex-row items-center justify-center gap-1">
+														{t(categoryOptions.name)}{" "}
 														<Icon icon="mdi:arrow-right" />{" "}
-														{renderOptions.title ?? item.id}
+														{renderOptions.title !== undefined
+															? t(renderOptions.title)
+															: item.id}
 													</div>
 												</ListboxItem>
 											);

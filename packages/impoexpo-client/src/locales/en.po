@@ -1,0 +1,320 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-03-27 14:34+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/WelcomePage.tsx:53
+#: src/pages/WelcomePage.tsx:60
+msgid "about the project"
+msgstr "about the project"
+
+#: src/components/wizard/SelectSourceCard.tsx:106
+msgid "add another"
+msgstr "add another"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:101
+msgid "an error occurred during login:"
+msgstr "an error occurred during login:"
+
+#: src/components/wizard/SelectSourceCard.tsx:31
+msgid "anything else?"
+msgstr "anything else?"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
+msgid "back to form selection"
+msgstr "back to form selection"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:185
+msgid "back to source selection"
+msgstr "back to source selection"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:42
+msgid "bark"
+msgstr "bark"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:67
+msgid "checking read permissions for the form"
+msgstr "checking read permissions for the form"
+
+#: src/components/network/CacheInfoModal.tsx:60
+msgid "close"
+msgstr "close"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:11
+msgid "console"
+msgstr "console"
+
+#: src/integrations/console/ConsoleIntegration.tsx:11
+#: src/integrations/console/ConsoleIntegration.tsx:38
+msgid "Console"
+msgstr "Console"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:67
+msgid "couldn't exchange tokens with the server (check the console)"
+msgstr "couldn't exchange tokens with the server (check the console)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:129
+msgid "couldn't receive a list of your forms"
+msgstr "couldn't receive a list of your forms"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
+msgid "couldn't verify read permissions for the form (or their lack of)"
+msgstr "couldn't verify read permissions for the form (or their lack of)"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:42
+msgid "doggy"
+msgstr "doggy"
+
+#: src/pages/TransferWizardPage.tsx:87
+msgid "done!"
+msgstr "done!"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:47
+msgid "enter a string (at least 5 characters)"
+msgstr "enter a string (at least 5 characters)"
+
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:113
+msgid "enter the name, category or tag of the needed node..."
+msgstr "enter the name, category or tag of the needed node..."
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:24
+msgid "error"
+msgstr "error"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:51
+msgid "exchanging tokens with the server"
+msgstr "exchanging tokens with the server"
+
+#: src/pages/TransferWizardPage.tsx:85
+msgid "formatting"
+msgstr "formatting"
+
+#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:14
+#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:41
+msgid "Google Forms"
+msgstr "Google Forms"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:61
+msgid "hell yeah!"
+msgstr "hell yeah!"
+
+#: src/pages/TransferWizardPage.tsx:85
+msgid "how should we transfer?"
+msgstr "how should we transfer?"
+
+#: src/pages/WelcomePage.tsx:71
+msgid "impoexpo is open-source and its code can be found <0>here</0>."
+msgstr "impoexpo is open-source and its code can be found <0>here</0>."
+
+#: src/pages/WelcomePage.tsx:64
+msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
+msgstr "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
+
+#: src/components/network/CacheInfoModal.tsx:38
+#~ msgid "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the bottom bellow."
+#~ msgstr "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the bottom bellow."
+
+#: src/components/network/CacheInfoModal.tsx:38
+msgid "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the button bellow."
+msgstr "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the button bellow."
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:16
+msgid "information"
+msgstr "information"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:51
+msgid "input a number"
+msgstr "input a number"
+
+#: src/integrations/google/GoogleVerificator.tsx:16
+msgid "is this you?"
+msgstr "is this you?"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:41
+msgid "kitty"
+msgstr "kitty"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:96
+msgid "login via google"
+msgstr "login via google"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:41
+msgid "meow"
+msgstr "meow"
+
+#: src/pages/WelcomePage.tsx:46
+#: src/pages/TransferWizardPage.tsx:75
+msgid "new data transfer"
+msgstr "new data transfer"
+
+#: src/integrations/google/GoogleVerificator.tsx:48
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+#: src/components/wizard/SelectSourceCard.tsx:120
+msgid "next"
+msgstr "next"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:30
+msgid "next option won't have a description"
+msgstr "next option won't have a description"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:32
+msgid "no description!"
+msgstr "no description!"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:49
+msgid "not all permissions have been provided!"
+msgstr "not all permissions have been provided!"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:11
+msgid "notifications"
+msgstr "notifications"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:50
+msgid "number"
+msgstr "number"
+
+#: src/components/network/CacheInfoModal.tsx:49
+msgid "please note that the amount of times you can perform this request is <0>limited</0>.<1/>if you'll do it too often, the server will give you a timeout."
+msgstr "please note that the amount of times you can perform this request is <0>limited</0>.<1/>if you'll do it too often, the server will give you a timeout."
+
+#: src/features/format-editor/nodes/builtin/console.tsx:16
+msgid "print to console"
+msgstr "print to console"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
+msgid "receiving a list of your forms"
+msgstr "receiving a list of your forms"
+
+#: src/components/network/CacheInfoModal.tsx:69
+msgid "refresh"
+msgstr "refresh"
+
+#: src/integrations/google/GoogleVerificator.tsx:40
+msgid "relogin"
+msgstr "relogin"
+
+#: src/components/network/NetworkErrorCard.tsx:42
+msgid "retry"
+msgstr "retry"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+msgid "select a form:"
+msgstr "select a form:"
+
+#: src/pages/TransferWizardPage.tsx:82
+msgid "select sources"
+msgstr "select sources"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:46
+msgid "string"
+msgstr "string"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:29
+msgid "test1"
+msgstr "test1"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:34
+msgid "test3"
+msgstr "test3"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:23
+msgid "testing input node"
+msgstr "testing input node"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:57
+msgid "testing output node"
+msgstr "testing output node"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:18
+msgid "text"
+msgstr "text"
+
+#: src/components/network/CacheInfoModal.tsx:27
+msgid "the data is stale?"
+msgstr "the data is stale?"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:35
+msgid "the description is back!"
+msgstr "the description is back!"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:88
+msgid "to continue, login with your google account."
+msgstr "to continue, login with your google account."
+
+#: src/pages/TransferWizardPage.tsx:86
+msgid "transfer"
+msgstr "transfer"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:81
+msgid "waiting for the login flow response"
+msgstr "waiting for the login flow response"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:20
+msgid "warning"
+msgstr "warning"
+
+#: src/pages/WelcomePage.tsx:29
+msgid "welcome to <0>impoexpo</0>!"
+msgstr "welcome to <0>impoexpo</0>!"
+
+#: src/components/wizard/SelectSourceCard.tsx:33
+msgid "what's the read source?"
+msgstr "what's the read source?"
+
+#: src/components/wizard/SelectSourceCard.tsx:34
+msgid "what's the write source?"
+msgstr "what's the write source?"
+
+#: src/pages/TransferWizardPage.tsx:83
+msgid "where should we read from and where should we write to?"
+msgstr "where should we read from and where should we write to?"
+
+#: src/pages/TransferWizardPage.tsx:86
+msgid "where the magic happens"
+msgstr "where the magic happens"
+
+#: src/components/network/CacheInfoModal.tsx:34
+msgid "why doesn't the data refresh?"
+msgstr "why doesn't the data refresh?"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:60
+msgid "yeah"
+msgstr "yeah"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:154
+msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
+msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
+
+#: src/components/network/NetworkErrorCard.tsx:19
+msgid "you're sending requests too often!<0/>you can try again in:"
+msgstr "you're sending requests too often!<0/>you can try again in:"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:16
+#~ msgid "информация"
+#~ msgstr "информация"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:24
+#~ msgid "ошибка"
+#~ msgstr "ошибка"
+
+#: src/components/network/NetworkErrorCard.tsx:42
+#~ msgid "попробовать снова"
+#~ msgstr "попробовать снова"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:20
+#~ msgid "предупреждение"
+#~ msgstr "предупреждение"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:11
+#~ msgid "уведомления"
+#~ msgstr "уведомления"

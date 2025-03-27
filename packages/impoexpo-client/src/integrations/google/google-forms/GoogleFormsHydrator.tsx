@@ -23,6 +23,7 @@ import {
 	SourceCardState,
 	useSourceCardStore,
 } from "@/stores/select-source-card";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 export function GoogleFormsHydrator(props: { callback: () => void }) {
 	const { state } = useGoogleFormsHydratorStore();
@@ -36,6 +37,7 @@ export function GoogleFormsHydrator(props: { callback: () => void }) {
 }
 
 function GoogleFormsVerificator(props: { successCallback: () => void }) {
+	const { t } = useLingui();
 	const { currentForm, setCurrentForm, addUsedForm, setState } =
 		useGoogleFormsHydratorStore();
 	const { isFetching, isError, data, error } = useQuery({
@@ -61,8 +63,8 @@ function GoogleFormsVerificator(props: { successCallback: () => void }) {
 
 	if (isFetching) {
 		return (
-			<div className="flex flex-col gap-2 justify-center items-center">
-				проверяем наличие прав на просмотр формы
+			<div className="flex flex-col items-center justify-center gap-2">
+				<Trans>checking read permissions for the form</Trans>
 				<CircularProgress />
 			</div>
 		);
@@ -71,9 +73,9 @@ function GoogleFormsVerificator(props: { successCallback: () => void }) {
 	if (isError) {
 		return (
 			<NetworkErrorCard
-				title="не удалось проверить права на чтение формы (либо прав нет)"
+				title={t`couldn't verify read permissions for the form (or their lack of)`}
 				retry={() => setState(GoogleFormsHydratorState.SELECT)}
-				retryButtonText="назад к выбору формы"
+				retryButtonText={t`back to form selection`}
 				error={error}
 			/>
 		);
@@ -84,6 +86,7 @@ function GoogleFormsSelector() {
 	const { currentForm, usedForms, hasForm, setCurrentForm, setState } =
 		useGoogleFormsHydratorStore();
 	const { setState: setSourceCardState } = useSourceCardStore();
+	const { t } = useLingui();
 
 	const [bypassCache, setBypassCache] = useState<boolean>(false);
 	const {
@@ -113,8 +116,8 @@ function GoogleFormsSelector() {
 
 	if (isFetching) {
 		return (
-			<div className="flex flex-col gap-2 justify-center items-center">
-				получаем список ваших форм
+			<div className="flex flex-col items-center justify-center gap-2">
+				<Trans>receiving a list of your forms</Trans>
 				<CircularProgress />
 			</div>
 		);
@@ -123,7 +126,7 @@ function GoogleFormsSelector() {
 	if (isError || isRefetchError) {
 		return (
 			<NetworkErrorCard
-				title="не удалось получить список ваших форм"
+				title={t`couldn't receive a list of your forms`}
 				retry={refetch}
 				error={error}
 			/>
@@ -132,8 +135,8 @@ function GoogleFormsSelector() {
 
 	if (isSuccess) {
 		return (
-			<div className="flex flex-col gap-2 justify-center items-center max-w-lg w-full">
-				выберите форму:
+			<div className="flex flex-col items-center justify-center w-full max-w-lg gap-2">
+				<Trans>select a form:</Trans>
 				<ScrollShadow
 					className="w-full"
 					style={{ maxHeight: "50vh", overflow: "scroll" }}
@@ -148,9 +151,12 @@ function GoogleFormsSelector() {
 						}}
 						emptyContent={
 							<p className="text-center">
-								вы уже выбрали все формы!
-								<br /> если вы создали новую форму, или получили доступ к другой
-								форме, нажмите на кнопку ниже.
+								<Trans>
+									you have already selected all forms!
+									<br />
+									if you've created a new form, or got access to one, click the
+									button below.
+								</Trans>
 							</p>
 						}
 					>
@@ -168,7 +174,7 @@ function GoogleFormsSelector() {
 						)}
 					</Listbox>
 				</ScrollShadow>
-				<div className="flex flex-row gap-2 justify-center items-center">
+				<div className="flex flex-row items-center justify-center gap-2">
 					{allFormsSelected && (
 						<Button
 							onPress={() => setSourceCardState(SourceCardState.SELECT_SOURCE)}
@@ -176,7 +182,7 @@ function GoogleFormsSelector() {
 							color="primary"
 							startContent={<Icon icon="mdi:arrow-left" />}
 						>
-							назад к выбору источников
+							<Trans>back to source selection</Trans>
 						</Button>
 					)}
 					<CacheInfoModal
@@ -197,7 +203,7 @@ function GoogleFormsSelector() {
 							color="primary"
 							endContent={<Icon icon="mdi:arrow-right" />}
 						>
-							далее
+							<Trans>next</Trans>
 						</Button>
 					)}
 				</div>

@@ -6,10 +6,12 @@ import GoogleVerificator from "../GoogleVerificator";
 import { GoogleFormsHydrator } from "./GoogleFormsHydrator";
 import { useGoogleFormsHydratorStore } from "./store";
 import { ListboxItem } from "@heroui/react";
+import { msg } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 
 export const GoogleFormsIntegration: Integration = {
 	id: "google-forms",
-	title: "Google Forms",
+	title: msg`Google Forms`,
 	icon: <Icon icon="simple-icons:googleforms" />,
 	read: true,
 	write: false,
@@ -36,7 +38,7 @@ export const GoogleFormsIntegration: Integration = {
 			<ListboxItem
 				className="p-3"
 				startContent={<Icon icon="simple-icons:googleforms" />}
-				description="Google Forms"
+				description={<Trans>Google Forms</Trans>}
 				key={form.id}
 			>
 				{form.name}

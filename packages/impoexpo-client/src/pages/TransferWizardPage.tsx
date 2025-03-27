@@ -1,4 +1,5 @@
-import { ThemeSwitcher } from "@/components/buttons/ThemeSwitcher";
+import LanguageSwitcher from "@/components/buttons/LanguageSwitcher";
+import ThemeSwitcher from "@/components/buttons/ThemeSwitcher";
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/components/wizard/SelectSourceCard";
 import FormatEditor from "@/features/format-editor/FormatEditor";
@@ -7,6 +8,7 @@ import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-utils";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -16,15 +18,13 @@ const AnimatedCard = motion.create(Card);
 
 export default function TransferWizardPage() {
 	const navigate = useNavigate();
+	const { t } = useLingui();
 	const { stage } = useTransferWizardStore();
 	const [showBlockerContainer, setShowBlockerContainer] =
 		useState<boolean>(true);
 
 	useEffect(() => {
-		if (stage === TransferWizardStage.FORMAT) {
-			console.log("initializing nodes");
-			initializeNodes();
-		}
+		if (stage === TransferWizardStage.FORMAT) initializeNodes();
 	}, [stage]);
 
 	const getStageWidget = () => {
@@ -73,24 +73,26 @@ export default function TransferWizardPage() {
 						isIconOnly
 						startContent={<Icon icon="mdi:arrow-left" />}
 					/>
-					новый перенос данных
+					<Trans>new data transfer</Trans>
 				</CardHeader>
 				<CardBody>
 					<ColumnSteps
 						currentStep={stage}
 						steps={[
 							{
-								title: "выбор источников",
-								description: "откуда и куда переносим",
+								title: t`select sources`,
+								description: t`where should we read from and where should we write to?`,
 							},
-							{ title: "форматирование", description: "как переносим?" },
-							{ title: "перенесение", description: "where the magic happens" },
-							{ title: "готово!" },
+							{ title: t`formatting`, description: t`how should we transfer?` },
+							{ title: t`transfer`, description: t`where the magic happens` },
+							{ title: t`done!` },
 						]}
 					/>
 				</CardBody>
-				<CardFooter>
+				<CardFooter className="flex flex-row items-center gap-2">
 					<ThemeSwitcher />
+					<Icon icon="mdi:circle" width={6} />
+					<LanguageSwitcher />
 				</CardFooter>
 			</AnimatedCard>
 			<motion.div

@@ -21,15 +21,17 @@ import {
 import { Icon } from "@iconify/react";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { motion } from "framer-motion";
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
 
 	const title = useMemo(() => {
-		if (state === SourceCardState.CHECK_ADDED_SOURCES) return "что-нибудь ещё?";
+		if (state === SourceCardState.CHECK_ADDED_SOURCES) return t`anything else?`;
 		return integrationType === "read"
-			? "откуда будем читать данные?"
-			: "куда будем записывать данные?";
+			? t`what's the read source?`
+			: t`what's the write source?`;
 	}, [state, integrationType]);
 
 	const renderer = () => {
@@ -101,7 +103,7 @@ function SourceChecker() {
 					color="success"
 					startContent={<Icon width={18} icon="mdi:plus" />}
 				>
-					добавить ещё
+					<Trans>add another</Trans>
 				</Button>
 				<Button
 					onPress={() => {
@@ -115,7 +117,7 @@ function SourceChecker() {
 					color="primary"
 					endContent={<Icon width={18} icon="mdi:arrow-right" />}
 				>
-					далее
+					<Trans>next</Trans>
 				</Button>
 			</div>
 		</div>
@@ -123,6 +125,7 @@ function SourceChecker() {
 }
 
 function SourceSelector() {
+	const { t } = useLingui();
 	const { integrationType, setCurrentIntegration, setState } =
 		useSourceCardStore();
 
@@ -146,7 +149,7 @@ function SourceSelector() {
 							// biome-ignore lint/suspicious/noArrayIndexKey: doesn't update, no rerenders will happen
 							key={idx}
 							icon={integration.icon}
-							title={integration.title}
+							title={t(integration.title)}
 						/>
 					);
 				},

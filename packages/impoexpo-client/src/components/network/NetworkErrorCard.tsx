@@ -2,6 +2,8 @@ import { RatelimitHitError } from "@/api/errors";
 import { Button, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import RatelimitCountdown from "./RatelimitCountdown";
+import { Trans } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 
 export default function NetworkErrorCard(props: {
 	title: string;
@@ -11,12 +13,14 @@ export default function NetworkErrorCard(props: {
 }) {
 	if (props.error instanceof RatelimitHitError) {
 		return (
-			<div className="flex flex-col gap-1 justify-center items-center">
+			<div className="flex flex-col items-center justify-center gap-1">
 				<Icon className="text-danger" width={48} icon="mdi:error-outline" />
 				<p className="text-center">
-					вы слишком часто отправляете запросы!
-					<br />
-					попробовать снова можно будет через:
+					<Trans>
+						you're sending requests too often!
+						<br />
+						you can try again in:
+					</Trans>
 				</p>
 				<RatelimitCountdown
 					retry={props.retry}
@@ -27,7 +31,7 @@ export default function NetworkErrorCard(props: {
 	}
 
 	return (
-		<div className="flex flex-col gap-2 justify-center items-center">
+		<div className="flex flex-col items-center justify-center gap-2">
 			<Icon className="text-danger" width={48} icon="mdi:error-outline" />
 			<p className="text-center">
 				{props.title}
@@ -35,7 +39,7 @@ export default function NetworkErrorCard(props: {
 				<Code>{props.error.message}</Code>
 			</p>
 			<Button onPress={props.retry} color="primary">
-				{props.retryButtonText ?? "попробовать снова"}
+				{props.retryButtonText ?? t`retry`}
 			</Button>
 		</div>
 	);

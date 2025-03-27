@@ -17,10 +17,9 @@ export default function RatelimitCountdown(props: {
 	const ss = useMemo(() => count % 60, [count]);
 
 	useEffect(startCountdown, []);
-	// biome-ignore lint/correctness/useExhaustiveDependencies: props.refresh is not a dependency
 	useEffect(() => {
 		if (count === 0) props.retry();
-	}, [count]);
+	}, [count, props.retry]);
 
 	return (
 		<NumberFlowGroup>
@@ -31,7 +30,7 @@ export default function RatelimitCountdown(props: {
 						"--number-flow-char-height": "0.8em",
 					} as React.CSSProperties
 				}
-				className="text-3xl font-mono flex items-baseline font-semibold overflow-hidden"
+				className="flex items-baseline overflow-hidden font-mono text-3xl font-semibold"
 			>
 				<NumberFlow
 					plugins={[continuous]}
