@@ -7,7 +7,7 @@
 		"dev": "concurrently --kill-others \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\"",
 		"update-git-hooks": "pnpm lefthook install",
 		"init": "pnpm install && pnpm run update-git-hooks",
-		"format": "pnpm biome format . --write --config-path ./packages/impoexpo-shared/biome.json"
+		"format": "biome format . --write --config-path ./packages/impoexpo-shared/biome.json"
 	},
 	"resolutions": {
 		"@react-aria/i18n": "3.10.2",

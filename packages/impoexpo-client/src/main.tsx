@@ -6,11 +6,7 @@ import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
 import "@/styles/globals.css";
 import { type Messages, i18n } from "@lingui/core";
-import {
-	detect,
-	fromStorage,
-	fromUrl,
-} from "@lingui/detect-locale";
+import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
 import { I18nProvider } from "@lingui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/common.ts";

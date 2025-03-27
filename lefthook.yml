@@ -6,4 +6,5 @@
 pre-commit:
   commands:
     check:
-      run: cd packages/impoexpo-client && pnpm run lint -- --no-errors-on-unmatched
+      run: cd packages/impoexpo-client && pnpm biome check --write --no-errors-on-unmatched --colors=off {staged_files}
+      stage_fixed: true

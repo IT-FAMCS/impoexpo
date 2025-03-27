@@ -19,7 +19,6 @@ import {
 } from "@/stores/select-source-card";
 import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
 import { Icon } from "@iconify/react";
-import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
@@ -27,13 +26,14 @@ import AnimateChangeInSize from "../external/AnimateChangeInSize";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
+	const { t } = useLingui();
 
 	const title = useMemo(() => {
 		if (state === SourceCardState.CHECK_ADDED_SOURCES) return t`anything else?`;
 		return integrationType === "read"
 			? t`what's the read source?`
 			: t`what's the write source?`;
-	}, [state, integrationType]);
+	}, [state, integrationType, t]);
 
 	const renderer = () => {
 		switch (state) {

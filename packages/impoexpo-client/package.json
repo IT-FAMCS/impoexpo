@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"analyze-bundle": "pnpm dlx vite-bundle-visualizer",
-		"lint": "pnpm biome check"
+		"lint": "biome check"
 	},
 	"dependencies": {
 		"@heroui/react": "^2.7.4",
