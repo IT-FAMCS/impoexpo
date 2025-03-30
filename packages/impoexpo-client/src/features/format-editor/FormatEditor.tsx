@@ -1,16 +1,13 @@
 import {
 	Background,
+	type ColorMode,
 	type Connection,
 	Controls,
 	type Edge,
 	type FinalConnectionState,
 	type Node,
-	type OnConnect,
 	ReactFlow,
-	addEdge,
 	getOutgoers,
-	useEdgesState,
-	useNodesState,
 	useReactFlow,
 } from "@xyflow/react";
 
@@ -19,7 +16,7 @@ import "./nodes/builtin/console";
 import { useDisclosure } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	getHandleSchema,
@@ -32,28 +29,8 @@ import {
 } from "./nodes/renderable-node-types";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
-
-const initialNodes: Node[] = [
-	{
-		id: "meow",
-		data: {},
-		position: { x: 300, y: 100 },
-		type: "console-test-in",
-	},
-	{
-		id: "meow22",
-		data: {},
-		position: { x: 800, y: 100 },
-		type: "console-test-in",
-	},
-	{
-		id: "meow2",
-		data: {},
-		position: { x: 50, y: 200 },
-		type: "console-test-out",
-	},
-];
-const initialEdges: Edge[] = [];
+import { ThemeProps } from "@heroui/use-theme";
+import { useFormatEditorStore } from "./store";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -80,34 +57,38 @@ const connectionHasCycles = (
 };
 
 export default function FormatEditor() {
-	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+	const {
+		edges,
+		nodes,
+		onConnect,
+		onEdgesChange,
+		onNodesChange,
+		onReconnect,
+		onReconnectStart,
+		onReconnectEnd,
+	} = useFormatEditorStore();
 	const {
 		onOpen: openSearchModal,
 		isOpen: isSearchModalOpen,
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
 	const { setFilters } = useSearchNodesModalStore();
-	// biome-ignore lint/style/noNonNullAssertion: required here
-	const containerRef = useRef<HTMLDivElement>(null!);
-
-	const { getNodes, getEdges, screenToFlowPosition } = useReactFlow();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
-	const onConnect: OnConnect = useCallback(
-		(connection) =>
-			setEdges((eds) => animateNeededEdges(addEdge(connection, eds))),
-		[setEdges],
-	);
+	// biome-ignore lint/style/noNonNullAssertion: will be initialized as soon as possible
+	const containerRef = useRef<HTMLDivElement>(null!);
 
-	const animateNeededEdges = (edges: Edge[]) =>
-		edges.map((edge) => {
-			edge.animated =
-				(edge.sourceHandle ?? "").startsWith(FLOW_HANDLE_MARKER) ||
-				(edge.targetHandle ?? "").startsWith(FLOW_HANDLE_MARKER);
-			return edge;
-		});
+	const [colorMode, setColorMode] = useState<ColorMode>("light");
+	useEffect(() => {
+		window.addEventListener("theme-change", ((ev: CustomEvent) =>
+			setColorMode(ev.detail as ColorMode)) as EventListener);
+		setColorMode(
+			(localStorage.getItem(ThemeProps.KEY) as ColorMode | null) ?? "light",
+		);
+	}, []);
+
+	const { getNodes, getEdges, screenToFlowPosition } = useReactFlow();
 
 	const isValidConnection = useCallback(
 		(connection: Connection | Edge) => {
@@ -124,6 +105,9 @@ export default function FormatEditor() {
 				connectionState.fromNode?.type &&
 				connectionState.fromHandle?.id
 			) {
+				if (connectionState.fromHandle.id.startsWith(FLOW_HANDLE_MARKER))
+					return;
+
 				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
 				const node = baseNodesMap.get(connectionState.fromNode.type)!;
 				const handleId = connectionState.fromHandle.id;
@@ -161,8 +145,12 @@ export default function FormatEditor() {
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
 				onConnectEnd={onConnectEnd}
+				onReconnect={onReconnect}
+				onReconnectStart={onReconnectStart}
+				onReconnectEnd={onReconnectEnd}
 				isValidConnection={isValidConnection}
 				proOptions={{ hideAttribution: true }}
+				colorMode={colorMode}
 			>
 				<Controls showFitView={false} />
 				<Background size={2} />

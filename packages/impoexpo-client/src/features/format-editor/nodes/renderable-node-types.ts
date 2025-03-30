@@ -16,6 +16,7 @@ import { create } from "zustand";
 import DefaultNodeRenderer from "../DefaultNodeRenderer";
 import { nodesDatabase } from "./node-database";
 
+export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type IconRenderFunction = (size: number) => React.ReactNode;
 
 export type RenderableNodesStore = {
@@ -78,13 +79,13 @@ export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
 
 export type NodePropertyMetadata<
 	TProperty extends AllowedObjectEntry,
-	TIncludePlaceholder extends boolean,
+	TIsInput extends boolean,
 > = Partial<
 	{
 		title: MessageDescriptor;
 		description: MessageDescriptor;
-	} & (TIncludePlaceholder extends true
-		? { placeholder: MessageDescriptor }
+	} & (TIsInput extends true
+		? { placeholder: MessageDescriptor; mode: NodePropertyMode }
 		: // biome-ignore lint/complexity/noBannedTypes: empty type required here
 			{}) &
 		(NodePropertyOptions<TProperty> extends never

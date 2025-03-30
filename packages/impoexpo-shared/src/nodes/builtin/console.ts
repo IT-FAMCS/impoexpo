@@ -9,6 +9,7 @@ import {
 	minValue,
 	maxValue,
 	number,
+	boolean,
 } from "valibot";
 import { nodesScope, registerBaseNodes } from "../node-utils";
 import { BaseNode } from "../node-types";
@@ -29,8 +30,9 @@ export const TESTING_INPUT_NODE = new BaseNode({
 		choiceEnum: enum_({ meow: "MEOW", bark: "BARK" }),
 		str: pipe(string(), minLength(5)),
 		num: optional(pipe(number(), minValue(50), maxValue(300)), 100),
+		bool: boolean(),
+		boolOptional: optional(boolean(), true)
 	}),
-	independentInputs: ["choice", "choiceEnum"],
 });
 
 export const TESTING_OUTPUT_NODE = new BaseNode({
@@ -39,6 +41,7 @@ export const TESTING_OUTPUT_NODE = new BaseNode({
 	outputSchema: object({
 		strOut: string(),
 		numOut: number(),
+		boolOut: boolean()
 	}),
 	flowConnectable: false,
 });

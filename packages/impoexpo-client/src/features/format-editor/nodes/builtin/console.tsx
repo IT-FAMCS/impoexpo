@@ -25,6 +25,7 @@ nodesScope(() => {
 		searchable: false,
 		inputs: {
 			choice: {
+				mode: "independentOnly",
 				options: {
 					test: {
 						title: msg`test1`,
@@ -38,6 +39,7 @@ nodesScope(() => {
 				},
 			},
 			choiceEnum: {
+				mode: "independentOnly",
 				options: {
 					meow: { title: msg`meow`, description: msg`kitty` },
 					bark: { title: msg`bark`, description: msg`doggy` },
@@ -50,6 +52,14 @@ nodesScope(() => {
 			num: {
 				title: msg`number`,
 				placeholder: msg`input a number`,
+			},
+			bool: {
+				title: msg`boolean`,
+				mode: "independentOnly",
+			},
+			boolOptional: {
+				title: msg`boolean (optional)`,
+				mode: "hybrid",
 			},
 		},
 	});

@@ -2,6 +2,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	Checkbox,
 	Divider,
 	Input,
 	NumberInput,
@@ -10,7 +11,8 @@ import {
 } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
-import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
+import { Handle, type Node, type NodeProps, Position, useReactFlow } from "@xyflow/react";
+import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
@@ -33,8 +35,9 @@ import type { BaseIssue } from "valibot";
 export default function DefaultNodeRenderer<
 	TIn extends Record<string, unknown>,
 	TType extends string,
->({ type }: NodeProps<Node<TIn, TType>>) {
+>({ type, id }: NodeProps<Node<TIn, TType>>) {
 	const { t } = useLingui();
+	//const rawNode = useReactFlow()
 	// biome-ignore lint/style/noNonNullAssertion: only registered nodes get renderered
 	const nodeData = useMemo(() => baseNodesMap.get(type)!, [type]);
 	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
@@ -121,12 +124,15 @@ function NodePropertyRenderer(props: {
 	name: string;
 	input: boolean;
 }) {
-	// biome-ignore lint/style/noNonNullAssertion: only registered nodes get renderered
-	const nodeData = useMemo(() => baseNodesMap.get(props.type)!, [props.type]);
 	const [nodeRenderOptions] = useRenderableNodesStore(
 		// biome-ignore lint/style/noNonNullAssertion: only registered nodes get rendered
 		useShallow((state) => [state.nodeRenderOptions.get(props.type)!]),
 	);
+
+	const isIndependent = useMemo(() => {
+		if (!props.input) return false;
+		return nodeRenderOptions.inputs?.[props.name]?.mode === "independentOnly";
+	}, [nodeRenderOptions, props.input, props.name]);
 
 	const shouldHideLabel = (entry: AllowedObjectEntry) => {
 		if ("wrapped" in entry && entry.type === "optional")
@@ -156,6 +162,17 @@ function NodePropertyRenderer(props: {
 					name={props.name}
 					type={props.type}
 					default={(defaultValue as string | undefined) ?? ""}
+					validator={validator}
+				/>
+			);
+		}
+
+		if (entry.type === "boolean") {
+			return (
+				<NodePropertyGenericInput
+					name={props.name}
+					type={props.type}
+					default={(defaultValue as boolean | undefined) ?? false}
 					validator={validator}
 				/>
 			);
@@ -212,6 +229,7 @@ function NodePropertyRenderer(props: {
 				</Select>
 			);
 		}
+
 		return <></>;
 	};
 
@@ -221,7 +239,7 @@ function NodePropertyRenderer(props: {
 				{!shouldHideLabel(props.property) && (
 					<p className="pl-4">{extractPropertyTitle(props.type, props.name)}</p>
 				)}
-				{!nodeData.independentInputs.includes(props.name) && (
+				{!isIndependent && (
 					<Handle
 						type="target"
 						id={props.name}
@@ -244,26 +262,24 @@ function NodePropertyRenderer(props: {
 				{!shouldHideLabel(props.property) && (
 					<p className="pr-4">{extractPropertyTitle(props.type, props.name)}</p>
 				)}
-				{!nodeData.independentInputs.includes(props.name) && (
-					<Handle
-						type="source"
-						id={props.name}
-						position={Position.Right}
-						style={{
-							top: 0,
-							transform: "translate(50%, 75%)",
-							right: 0,
-							width: 10,
-							height: 10,
-						}}
-					/>
-				)}
+				<Handle
+					type="source"
+					id={props.name}
+					position={Position.Right}
+					style={{
+						top: 0,
+						transform: "translate(50%, 75%)",
+						right: 0,
+						width: 10,
+						height: 10,
+					}}
+				/>
 			</div>
 		</div>
 	);
 }
 
-function NodePropertyGenericInput<T extends string | number>(props: {
+function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	type: string;
 	name: string;
 	default: T;
@@ -280,6 +296,19 @@ function NodePropertyGenericInput<T extends string | number>(props: {
 			validationResult.issues === undefined ? [] : validationResult.issues,
 		);
 	}, [props.validator, value]);
+
+	if (typeof props.default === "boolean") {
+		return (
+			<Checkbox
+				aria-label={extractPropertyPlaceholder(props.type, props.name)}
+				isSelected={value as boolean | undefined}
+				onValueChange={(selected) =>
+					(setValue as React.Dispatch<boolean>)(selected)
+				}
+				isInvalid={issues.length > 0}
+			/>
+		);
+	}
 
 	if (typeof props.default === "string") {
 		return (

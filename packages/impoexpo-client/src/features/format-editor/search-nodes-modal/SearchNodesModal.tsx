@@ -12,7 +12,7 @@ import {
 import { Icon } from "@iconify/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { useLingui } from "@lingui/react/macro";
-import { search } from "@orama/orama";
+import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { nodesDatabase } from "../nodes/node-database";
@@ -44,14 +44,11 @@ export default function SearchNodesModal(props: {
 	}, [props.isOpen]);
 
 	useEffect(() => {
-		const searchResults = search(
-			nodesDatabase,
-			{
-				term: query,
-				where: filters.length === 0 ? {} : { tags: filters },
-			},
-			"russian",
-		); // TODO
+		const params: SearchParams<typeof nodesDatabase> = {};
+		if (query !== "") params.term = query;
+		if (filters.length !== 0) params.where = { tags: filters };
+		
+		const searchResults = search(nodesDatabase, params, "russian"); // TODO
 		if (searchResults instanceof Promise) return;
 
 		setSearchResults(

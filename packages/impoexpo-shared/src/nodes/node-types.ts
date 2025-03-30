@@ -24,7 +24,6 @@ export class BaseNode<
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
 	public flowConnectable = true;
-	public independentInputs: Array<keyof TIn> = [];
 
 	constructor(
 		init: Partial<BaseNode<TName, TCategory, TIn, TOut>> &

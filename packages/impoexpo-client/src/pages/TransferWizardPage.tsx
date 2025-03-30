@@ -9,7 +9,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-utils";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { ReactFlowProvider, useEdges } from "@xyflow/react";
+import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -38,7 +38,7 @@ export default function TransferWizardPage() {
 							<FormatEditor />
 						</ReactFlowProvider>
 						{showBlockerContainer && (
-							<motion.div
+							<AnimatedCard
 								transition={{
 									delay: 0.25,
 									ease: [0.83, 0, 0.17, 1],
