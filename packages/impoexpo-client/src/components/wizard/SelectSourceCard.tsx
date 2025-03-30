@@ -35,7 +35,7 @@ export default function SelectSourceCard() {
 			: t`what's the write source?`;
 	}, [state, integrationType, t]);
 
-	const renderer = () => {
+	const renderer = useMemo(() => {
 		switch (state) {
 			case SourceCardState.SELECT_SOURCE:
 				return <SourceSelector />;
@@ -48,16 +48,16 @@ export default function SelectSourceCard() {
 			case SourceCardState.CHECK_ADDED_SOURCES:
 				return <SourceChecker />;
 		}
-	};
+	}, [state]);
 
 	return state === SourceCardState.DONE ? (
 		<AnimatedTransitionCard />
 	) : (
-		<Card className="p-2">
+		<Card className="p-2 min-w-80">
 			<CardHeader className="justify-center text-large">{title}</CardHeader>
 			<Divider />
 			<AnimateChangeInSize height>
-				<CardBody>{renderer()}</CardBody>
+				<CardBody>{renderer}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
 	);

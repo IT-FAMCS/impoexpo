@@ -13,284 +13,284 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/WelcomePage.tsx:53
-#: src/pages/WelcomePage.tsx:60
-msgid "about the project"
-msgstr "о проекте"
+#: src/components/network/CacheInfoModal.tsx:27
+msgid "the data is stale?"
+msgstr "данные не обновляются?"
 
-#: src/components/wizard/SelectSourceCard.tsx:106
-msgid "add another"
-msgstr "добавить ещё"
+#: src/components/network/CacheInfoModal.tsx:34
+msgid "why doesn't the data refresh?"
+msgstr "почему данные не обновляются?"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:101
-msgid "an error occurred during login:"
-msgstr "во время входа произошла ошибка:"
+#: src/components/network/CacheInfoModal.tsx:38
+msgid "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the button bellow."
+msgstr "чтобы не перегрузить сервер, мы кэшируем некоторые ресурсоёмкие запросы (например, всё что связано с интеграциями).<0/>если вы <1>абсолютно уверены</1>, что обновили данные, нажмите на кнопку ниже."
 
-#: src/components/wizard/SelectSourceCard.tsx:31
-msgid "anything else?"
-msgstr "что-нибудь ещё?"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
-msgid "back to form selection"
-msgstr "назад к выбору формы"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:185
-msgid "back to source selection"
-msgstr "назад к выбору источника"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:42
-msgid "bark"
-msgstr "гав"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:67
-msgid "checking read permissions for the form"
-msgstr "проверка прав на чтение формы"
+#: src/components/network/CacheInfoModal.tsx:49
+msgid "please note that the amount of times you can perform this request is <0>limited</0>.<1/>if you'll do it too often, the server will give you a timeout."
+msgstr "обратите внимание, что количество возможных запросов <0>ограничено</0>.<1/>если вы будете делать это слишком часто, сервер выдаст вам таймаут."
 
 #: src/components/network/CacheInfoModal.tsx:60
 msgid "close"
 msgstr "закрыть"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:11
+#: src/components/network/CacheInfoModal.tsx:69
+msgid "refresh"
+msgstr "обновить"
+
+#: src/components/network/NetworkErrorCard.tsx:19
+msgid "you're sending requests too often!<0/>you can try again in:"
+msgstr "вы слишком часто отправляете запросы!<0/>попробуйте снова через:"
+
+#: src/components/network/NetworkErrorCard.tsx:42
+msgid "retry"
+msgstr "попробовать снова"
+
+#: src/components/wizard/SelectSourceCard.tsx:32
+msgid "anything else?"
+msgstr "что-нибудь ещё?"
+
+#: src/components/wizard/SelectSourceCard.tsx:34
+msgid "what's the read source?"
+msgstr "откуда будем читать?"
+
+#: src/components/wizard/SelectSourceCard.tsx:35
+msgid "what's the write source?"
+msgstr "куда будем писать?"
+
+#: src/components/wizard/SelectSourceCard.tsx:107
+msgid "add another"
+msgstr "добавить ещё"
+
+#: src/components/wizard/SelectSourceCard.tsx:121
+#: src/integrations/google/GoogleVerificator.tsx:48
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+msgid "next"
+msgstr "далее"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:12
 msgid "console"
 msgstr "консоль"
 
-#: src/integrations/console/ConsoleIntegration.tsx:11
-#: src/integrations/console/ConsoleIntegration.tsx:38
-msgid "Console"
-msgstr "Консоль"
+#: src/features/format-editor/nodes/builtin/console.tsx:17
+msgid "print to console"
+msgstr "вывести в консоль"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:67
-msgid "couldn't exchange tokens with the server (check the console)"
-msgstr "не удалось обменяться токенами с сервером (проверьте консоль)"
+#: src/features/format-editor/nodes/builtin/console.tsx:19
+msgid "text"
+msgstr "текст"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:129
-msgid "couldn't receive a list of your forms"
-msgstr "не удалось получить список ваших форм"
+#: src/features/format-editor/nodes/builtin/console.tsx:24
+msgid "testing input node"
+msgstr "тестовый входной граф"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
-msgid "couldn't verify read permissions for the form (or their lack of)"
-msgstr "не удалось проверить права на форму (или их нет)"
+#: src/features/format-editor/nodes/builtin/console.tsx:30
+msgid "test1"
+msgstr "тест1"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:31
+msgid "next option won't have a description"
+msgstr "следующая опция будет без описания"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:33
+msgid "no description!"
+msgstr "без описания!"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:35
+msgid "test3"
+msgstr "тест3"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:36
+msgid "the description is back!"
+msgstr "описание снова есть!"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:42
+msgid "meow"
+msgstr "мяу"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:42
+msgid "kitty"
+msgstr "котик"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:43
+msgid "bark"
+msgstr "гав"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:43
 msgid "doggy"
 msgstr "собакин"
 
-#: src/pages/TransferWizardPage.tsx:87
-msgid "done!"
-msgstr "готово!"
-
 #: src/features/format-editor/nodes/builtin/console.tsx:47
+msgid "string"
+msgstr "строка"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:48
 msgid "enter a string (at least 5 characters)"
 msgstr "введите строку (как минимум 5 символов)"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:113
+#: src/features/format-editor/nodes/builtin/console.tsx:51
+msgid "number"
+msgstr "число"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:52
+msgid "input a number"
+msgstr "введите число"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:58
+msgid "testing output node"
+msgstr "тестовый выходной граф"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:61
+msgid "yeah"
+msgstr "ага"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:62
+msgid "hell yeah!"
+msgstr "hell yeah!"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:12
+msgid "notifications"
+msgstr "уведомления"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:17
+msgid "information"
+msgstr "информация"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:21
+msgid "warning"
+msgstr "предупреждение"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:25
+msgid "error"
+msgstr "ошибка"
+
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:112
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:24
-msgid "error"
-msgstr "ошибка"
+#: src/integrations/console/ConsoleIntegration.tsx:12
+#: src/integrations/console/ConsoleIntegration.tsx:39
+msgid "Console"
+msgstr "Консоль"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:49
+msgid "not all permissions have been provided!"
+msgstr "не все права были предоставлены!"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:51
 msgid "exchanging tokens with the server"
 msgstr "обмениваемся токенами с сервером"
 
-#: src/pages/TransferWizardPage.tsx:85
-msgid "formatting"
-msgstr "форматирование"
+#: src/integrations/google/GoogleAuthenticator.tsx:67
+msgid "couldn't exchange tokens with the server (check the console)"
+msgstr "не удалось обменяться токенами с сервером (проверьте консоль)"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:81
+msgid "waiting for the login flow response"
+msgstr "ожидаем результат входа"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:88
+msgid "to continue, login with your google account."
+msgstr "чтобы продолжить, войдите через свой google аккаунт."
+
+#: src/integrations/google/GoogleAuthenticator.tsx:96
+msgid "login via google"
+msgstr "войти через гугл"
+
+#: src/integrations/google/GoogleAuthenticator.tsx:101
+msgid "an error occurred during login:"
+msgstr "во время входа произошла ошибка:"
+
+#: src/integrations/google/GoogleVerificator.tsx:16
+msgid "is this you?"
+msgstr "всё верно?"
+
+#: src/integrations/google/GoogleVerificator.tsx:40
+msgid "relogin"
+msgstr "перезайти"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:67
+msgid "checking read permissions for the form"
+msgstr "проверяем наличие прав на чтение формы"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
+msgid "couldn't verify read permissions for the form (or their lack of)"
+msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
+msgid "back to form selection"
+msgstr "назад к выбору формы"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
+msgid "receiving a list of your forms"
+msgstr "получаем список ваших форм"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:129
+msgid "couldn't receive a list of your forms"
+msgstr "не удалось получить список ваших форм"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+msgid "select a form:"
+msgstr "выберите форму:"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:154
+msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
+msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:185
+msgid "back to source selection"
+msgstr "назад к выбору источника"
 
 #: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:14
 #: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:41
 msgid "Google Forms"
 msgstr "Google Forms"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:61
-msgid "hell yeah!"
-msgstr "hell yeah!"
-
-#: src/pages/TransferWizardPage.tsx:85
-msgid "how should we transfer?"
-msgstr "как будем перемещать?"
-
-#: src/pages/WelcomePage.tsx:71
-msgid "impoexpo is open-source and its code can be found <0>here</0>."
-msgstr "impoexpo является открытым ПО, и его код можно найти <0>здесь</0>."
-
-#: src/pages/WelcomePage.tsx:64
-msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
-msgstr "impoexpo стремится упростить жизнь людей, кто часто работает с большим объёмом данных, в то же время используя несколько сервисов."
-
-#: src/components/network/CacheInfoModal.tsx:38
-msgid "in order to avoid overwhelming the server, we cache some resource-intensive requests (i.e. anything related to integrations).<0/>if you're <1>absolutely sure</1> that you've updated the data, click the button bellow."
-msgstr "чтобы не перегрузить сервер, мы кэшируем некоторые ресурсоёмкие запросы (например, всё что связано с интеграциями).<0/>если вы <1>абсолютно уверены</1>, что обновили данные, нажмите на кнопку ниже."
-
-#: src/features/format-editor/nodes/builtin/notifications.tsx:16
-msgid "information"
-msgstr "информация"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:51
-msgid "input a number"
-msgstr "введите число"
-
-#: src/integrations/google/GoogleVerificator.tsx:16
-msgid "is this you?"
-msgstr "всё верно?"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:41
-msgid "kitty"
-msgstr "котик"
-
-#: src/integrations/google/GoogleAuthenticator.tsx:96
-msgid "login via google"
-msgstr "войти через гугл"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:41
-msgid "meow"
-msgstr "мяу"
-
+#: src/pages/TransferWizardPage.tsx:76
 #: src/pages/WelcomePage.tsx:46
-#: src/pages/TransferWizardPage.tsx:75
 msgid "new data transfer"
 msgstr "новый перенос данных"
 
-#: src/integrations/google/GoogleVerificator.tsx:48
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
-#: src/components/wizard/SelectSourceCard.tsx:120
-msgid "next"
-msgstr "далее"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:30
-msgid "next option won't have a description"
-msgstr "следующая опция будет без описания"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:32
-msgid "no description!"
-msgstr "без описания!"
-
-#: src/integrations/google/GoogleAuthenticator.tsx:49
-msgid "not all permissions have been provided!"
-msgstr "не все права были предоставлены!"
-
-#: src/features/format-editor/nodes/builtin/notifications.tsx:11
-msgid "notifications"
-msgstr "уведомления"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:50
-msgid "number"
-msgstr "число"
-
-#: src/components/network/CacheInfoModal.tsx:49
-msgid "please note that the amount of times you can perform this request is <0>limited</0>.<1/>if you'll do it too often, the server will give you a timeout."
-msgstr "обратите внимание, что количество возможных запросов <0>ограничено</0>.<1/>если вы будете делать это слишком часто, сервер выдаст вам таймаут."
-
-#: src/features/format-editor/nodes/builtin/console.tsx:16
-msgid "print to console"
-msgstr "вывести в консоль"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
-msgid "receiving a list of your forms"
-msgstr "получаем список ваших форм"
-
-#: src/components/network/CacheInfoModal.tsx:69
-msgid "refresh"
-msgstr "обновить"
-
-#: src/integrations/google/GoogleVerificator.tsx:40
-msgid "relogin"
-msgstr "перезайти"
-
-#: src/components/network/NetworkErrorCard.tsx:42
-msgid "retry"
-msgstr ""
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
-msgid "select a form:"
-msgstr "выберите форму:"
-
-#: src/pages/TransferWizardPage.tsx:82
+#: src/pages/TransferWizardPage.tsx:83
 msgid "select sources"
 msgstr "выбор источников"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:46
-msgid "string"
-msgstr "строка"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:29
-msgid "test1"
-msgstr "тест1"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:34
-msgid "test3"
-msgstr "тест3"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:23
-msgid "testing input node"
-msgstr "тестовый входной граф"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:57
-msgid "testing output node"
-msgstr "тестовый выходной граф"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:18
-msgid "text"
-msgstr "текст"
-
-#: src/components/network/CacheInfoModal.tsx:27
-msgid "the data is stale?"
-msgstr "данные не обновляются?"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:35
-msgid "the description is back!"
-msgstr "описание снова есть!"
-
-#: src/integrations/google/GoogleAuthenticator.tsx:88
-msgid "to continue, login with your google account."
-msgstr "чтобы продолжить, войдите через свой google аккаунт."
+#: src/pages/TransferWizardPage.tsx:84
+msgid "where should we read from and where should we write to?"
+msgstr "откуда и куда переносим"
 
 #: src/pages/TransferWizardPage.tsx:86
+msgid "formatting"
+msgstr "форматирование"
+
+#: src/pages/TransferWizardPage.tsx:86
+msgid "how should we transfer?"
+msgstr "как будем перемещать?"
+
+#: src/pages/TransferWizardPage.tsx:87
 msgid "transfer"
 msgstr "перенесение"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:81
-msgid "waiting for the login flow response"
-msgstr "ожидаем результат входа"
+#: src/pages/TransferWizardPage.tsx:87
+msgid "where the magic happens"
+msgstr "where the magic happens"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:20
-msgid "warning"
-msgstr "предупреждение"
+#: src/pages/TransferWizardPage.tsx:88
+msgid "done!"
+msgstr "готово!"
 
 #: src/pages/WelcomePage.tsx:29
 msgid "welcome to <0>impoexpo</0>!"
 msgstr "добро пожаловать в <0>impoexpo</0>!"
 
-#: src/components/wizard/SelectSourceCard.tsx:33
-msgid "what's the read source?"
-msgstr "откуда будем читать?"
+#: src/pages/WelcomePage.tsx:53
+#: src/pages/WelcomePage.tsx:60
+msgid "about the project"
+msgstr "о проекте"
 
-#: src/components/wizard/SelectSourceCard.tsx:34
-msgid "what's the write source?"
-msgstr "куда будем писать?"
+#: src/pages/WelcomePage.tsx:64
+msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
+msgstr "impoexpo стремится упростить жизнь людей, кто часто работает с большим объёмом данных, в то же время используя несколько сервисов."
 
-#: src/pages/TransferWizardPage.tsx:83
-msgid "where should we read from and where should we write to?"
-msgstr "откуда и куда переносим"
-
-#: src/pages/TransferWizardPage.tsx:86
-msgid "where the magic happens"
-msgstr "where the magic happens"
-
-#: src/components/network/CacheInfoModal.tsx:34
-msgid "why doesn't the data refresh?"
-msgstr "почему данные не обновляются?"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:60
-msgid "yeah"
-msgstr "ага"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:154
-msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
-msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
-
-#: src/components/network/NetworkErrorCard.tsx:19
-msgid "you're sending requests too often!<0/>you can try again in:"
-msgstr "вы слишком часто отправляете запросы!<0/>попробуйте снова через:"
+#: src/pages/WelcomePage.tsx:71
+msgid "impoexpo is open-source and its code can be found <0>here</0>."
+msgstr "impoexpo является открытым ПО, и его код можно найти <0>здесь</0>."
