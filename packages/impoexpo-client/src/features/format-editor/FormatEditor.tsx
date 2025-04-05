@@ -23,10 +23,7 @@ import {
 	getHandleType,
 	nodeSchemasCompatible,
 } from "./nodes/node-schema-helpers";
-import {
-	FLOW_HANDLE_MARKER,
-	useRenderableNodesStore,
-} from "./nodes/renderable-node-types";
+import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
@@ -34,17 +31,17 @@ import { useFormatEditorStore } from "./store";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
-	getNodes: () => Node[],
-	getEdges: () => Edge[],
+	nodes: Node[],
+	edges: Edge[],
 ): boolean => {
-	const target = getNodes().find((node) => node.id === connection.target);
+	const target = nodes.find((node) => node.id === connection.target);
 	if (!target) return false;
 	const hasCycle = (node: Node, visited = new Set()) => {
 		if (visited.has(node.id)) return false;
 
 		visited.add(node.id);
 
-		for (const outgoer of getOutgoers(node, getNodes(), getEdges())) {
+		for (const outgoer of getOutgoers(node, nodes, edges)) {
 			if (outgoer.id === connection.source) return true;
 			if (hasCycle(outgoer, visited)) return true;
 		}
@@ -57,7 +54,7 @@ const connectionHasCycles = (
 };
 
 export default function FormatEditor() {
-	const {
+	const [
 		edges,
 		nodes,
 		onConnect,
@@ -66,12 +63,25 @@ export default function FormatEditor() {
 		onReconnect,
 		onReconnectStart,
 		onReconnectEnd,
-	} = useFormatEditorStore();
+	] = useFormatEditorStore(
+		useShallow((s) => [
+			s.edges,
+			s.nodes,
+			s.onConnect,
+			s.onEdgesChange,
+			s.onNodesChange,
+			s.onReconnect,
+			s.onReconnectStart,
+			s.onReconnectEnd,
+		]),
+	);
+
 	const {
 		onOpen: openSearchModal,
 		isOpen: isSearchModalOpen,
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
+
 	const { setFilters } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
@@ -88,14 +98,12 @@ export default function FormatEditor() {
 		);
 	}, []);
 
-	const { getNodes, getEdges, screenToFlowPosition } = useReactFlow();
-
 	const isValidConnection = useCallback(
 		(connection: Connection | Edge) => {
-			if (!nodeSchemasCompatible(connection, getNodes)) return false;
-			return !connectionHasCycles(connection, getNodes, getEdges);
+			if (!nodeSchemasCompatible(connection, nodes)) return false;
+			return !connectionHasCycles(connection, nodes, edges);
 		},
-		[getNodes, getEdges],
+		[nodes, edges],
 	);
 
 	const onConnectEnd = useCallback(
@@ -105,9 +113,6 @@ export default function FormatEditor() {
 				connectionState.fromNode?.type &&
 				connectionState.fromHandle?.id
 			) {
-				if (connectionState.fromHandle.id.startsWith(FLOW_HANDLE_MARKER))
-					return;
-
 				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
 				const node = baseNodesMap.get(connectionState.fromNode.type)!;
 				const handleId = connectionState.fromHandle.id;

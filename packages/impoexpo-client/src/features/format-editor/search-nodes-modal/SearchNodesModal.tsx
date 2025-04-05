@@ -15,9 +15,10 @@ import { useLingui } from "@lingui/react/macro";
 import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { nodesDatabase } from "../nodes/node-database";
 import { useRenderableNodesStore } from "../nodes/renderable-node-types";
 import { useSearchNodesModalStore } from "./store";
+import { useNodeSearchMetadataStore } from "../nodes/node-database";
+import useLocaleInformation from "@/hooks/useLocaleInformation";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -25,6 +26,8 @@ export default function SearchNodesModal(props: {
 	portal: React.MutableRefObject<HTMLDivElement>;
 }) {
 	const { t } = useLingui();
+	const locale = useLocaleInformation();
+	const { database, reset } = useNodeSearchMetadataStore();
 	const { setFilters, filters } = useSearchNodesModalStore();
 	const { nodeRenderOptions, categoryRenderOptions } =
 		useRenderableNodesStore();
@@ -36,6 +39,11 @@ export default function SearchNodesModal(props: {
 		}[]
 	>([]);
 	const inputRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		reset(locale.id);
+	}, [locale, reset]);
+
 	useEffect(() => {
 		if (props.isOpen) {
 			if (inputRef.current) inputRef.current.focus();
@@ -44,11 +52,13 @@ export default function SearchNodesModal(props: {
 	}, [props.isOpen]);
 
 	useEffect(() => {
-		const params: SearchParams<typeof nodesDatabase> = {};
+		if (!database || !props.isOpen) return;
+
+		const params: SearchParams<typeof database> = {};
 		if (query !== "") params.term = query;
 		if (filters.length !== 0) params.where = { tags: filters };
-		
-		const searchResults = search(nodesDatabase, params, "russian"); // TODO
+
+		const searchResults = search(database, params, locale.fullName);
 		if (searchResults instanceof Promise) return;
 
 		setSearchResults(
@@ -60,7 +70,7 @@ export default function SearchNodesModal(props: {
 					score: hit.score,
 				})),
 		);
-	}, [query, filters]);
+	}, [database, locale, query, filters, props.isOpen]);
 
 	return (
 		<Modal

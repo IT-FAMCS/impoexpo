@@ -31,7 +31,7 @@ export const TESTING_INPUT_NODE = new BaseNode({
 		str: pipe(string(), minLength(5)),
 		num: optional(pipe(number(), minValue(50), maxValue(300)), 100),
 		bool: boolean(),
-		boolOptional: optional(boolean(), true)
+		boolOptional: optional(boolean(), true),
 	}),
 });
 
@@ -41,9 +41,8 @@ export const TESTING_OUTPUT_NODE = new BaseNode({
 	outputSchema: object({
 		strOut: string(),
 		numOut: number(),
-		boolOut: boolean()
+		boolOut: boolean(),
 	}),
-	flowConnectable: false,
 });
 
 nodesScope(() => {

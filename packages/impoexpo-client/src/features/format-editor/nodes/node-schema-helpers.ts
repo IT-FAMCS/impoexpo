@@ -9,7 +9,6 @@ import type { Connection, Edge, Node } from "@xyflow/react";
 import type { EnumSchema, PicklistSchema } from "valibot";
 import type * as v from "valibot";
 import {
-	FLOW_HANDLE_MARKER,
 	type NodePropertyOptions,
 	type NodePropertyOptionsMetadata,
 	useRenderableNodesStore,
@@ -140,33 +139,12 @@ export const getHandleType = (
 
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
-	getNodes: () => Node[],
+	nodes: Node[],
 ): boolean => {
 	if (!connection.sourceHandle || !connection.targetHandle) return false;
 
-	const sourceIsFlow = connection.sourceHandle.startsWith(FLOW_HANDLE_MARKER);
-	const targetIsFlow = connection.targetHandle.startsWith(FLOW_HANDLE_MARKER);
-
-	if (sourceIsFlow || targetIsFlow) {
-		if (sourceIsFlow && targetIsFlow && connection.source === connection.target)
-			return false;
-
-		if (
-			sourceIsFlow &&
-			(!targetIsFlow || connection.sourceHandle === connection.targetHandle)
-		)
-			return false;
-		if (
-			targetIsFlow &&
-			(!sourceIsFlow || connection.sourceHandle === connection.targetHandle)
-		)
-			return false;
-
-		return true;
-	}
-
-	const sourceType = getNodes().find((n) => n.id === connection.source)?.type;
-	const targetType = getNodes().find((n) => n.id === connection.target)?.type;
+	const sourceType = nodes.find((n) => n.id === connection.source)?.type;
+	const targetType = nodes.find((n) => n.id === connection.target)?.type;
 	if (!sourceType || !targetType) return false;
 
 	const source = baseNodesMap.get(sourceType);

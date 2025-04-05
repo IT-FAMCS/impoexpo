@@ -12,7 +12,6 @@ import {
 	reconnectEdge,
 } from "@xyflow/react";
 import { create } from "zustand/react";
-import { FLOW_HANDLE_MARKER } from "./nodes/renderable-node-types";
 
 const initialNodes: Node[] = [
 	{
@@ -70,12 +69,7 @@ export const useFormatEditorStore = create<FormatEditorStore>((set, get) => ({
 	},
 	onConnect: (connection) => {
 		set({
-			edges: addEdge(connection, get().edges).map((edge) => {
-				edge.animated =
-					(edge.sourceHandle ?? "").startsWith(FLOW_HANDLE_MARKER) ||
-					(edge.targetHandle ?? "").startsWith(FLOW_HANDLE_MARKER);
-				return edge;
-			}),
+			edges: addEdge(connection, get().edges),
 		});
 	},
 	setNodes: (nodes) => {

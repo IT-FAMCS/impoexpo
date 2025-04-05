@@ -14,7 +14,7 @@ import type React from "react";
 import type { EnumSchema, OptionalSchema, PicklistSchema } from "valibot";
 import { create } from "zustand";
 import DefaultNodeRenderer from "../DefaultNodeRenderer";
-import { nodesDatabase } from "./node-database";
+import { searchScope } from "./node-database";
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type IconRenderFunction = (size: number) => React.ReactNode;
@@ -142,15 +142,18 @@ export const registerWithDefaultRenderer = <
 		const categoryRenderOptions = useRenderableNodesStore
 			.getState()
 			.categoryRenderOptions.get(node.category);
-		insert(nodesDatabase, {
-			category:
-				categoryRenderOptions?.name !== undefined
-					? i18n.t(categoryRenderOptions?.name)
-					: node.category,
-			name: node.name,
-			title: options.title !== undefined ? i18n.t(options.title) : "",
-			id: type,
-			tags: Array.from(tags),
+
+		searchScope((database) => {
+			insert(database, {
+				category:
+					categoryRenderOptions?.name !== undefined
+						? i18n.t(categoryRenderOptions?.name)
+						: node.category,
+				name: node.name,
+				title: options.title !== undefined ? i18n.t(options.title) : "",
+				id: type,
+				tags: Array.from(tags),
+			});
 		});
 	}
 };
@@ -176,7 +179,3 @@ export const registerCategory = (
 	});
 
 persistStoreOnReload("renderableNodes", useRenderableNodesStore);
-
-export const FLOW_HANDLE_MARKER: string = "FLOW";
-export const FLOW_IN_HANDLE_ID: string = `${FLOW_HANDLE_MARKER}_IN`;
-export const FLOW_OUT_HANDLE_ID: string = `${FLOW_HANDLE_MARKER}_OUT`;

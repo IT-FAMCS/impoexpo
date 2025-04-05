@@ -23,8 +23,6 @@ export class BaseNode<
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
-	public flowConnectable = true;
-
 	constructor(
 		init: Partial<BaseNode<TName, TCategory, TIn, TOut>> &
 			Pick<BaseNode<TName, TCategory, TIn, TOut>, "name" | "category">,
