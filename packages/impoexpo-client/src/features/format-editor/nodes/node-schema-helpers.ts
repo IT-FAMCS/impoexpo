@@ -126,7 +126,7 @@ export const getHandleSchema = (
 	);
 };
 
-export const getHandleType = (
+export const getHandleSource = (
 	node: DefaultBaseNode,
 	handle: string,
 ): "input" | "output" => {
@@ -134,6 +134,30 @@ export const getHandleType = (
 	if (node.outputSchema && handle in node.outputSchema.entries) return "output";
 	throw new Error(
 		`couldn't get handle "${handle}" in node with type "${node.category}-${node.name}"`,
+	);
+};
+
+export const findCompatibleHandle = (
+	fromNode: DefaultBaseNode,
+	fromHandle: string,
+	toNode: DefaultBaseNode,
+): [string, AllowedObjectEntry] => {
+	const fromHandleSource = getHandleSource(fromNode, fromHandle);
+	const fromHandleSchema = unwrapNodeIfNeeded(
+		getHandleSchema(fromNode, fromHandle),
+	);
+
+	const entries =
+		fromHandleSource === "input"
+			? (toNode.outputSchema?.entries ?? {})
+			: (toNode.inputSchema?.entries ?? {});
+	for (const [name, entry] of Object.entries(entries)) {
+		const toHandleSchema = unwrapNodeIfNeeded(entry);
+		if (fromHandleSchema.expects === toHandleSchema.expects)
+			return [name, entry];
+	}
+	throw new Error(
+		`couldn't find a compatible handle between ${fromNode.name} <=> ${toNode.name} (handle ${fromHandle}, expects ${fromHandleSchema.expects})`,
 	);
 };
 

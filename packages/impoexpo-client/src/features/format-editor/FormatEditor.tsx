@@ -12,6 +12,7 @@ import {
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
+import "../../styles/reactflow.css";
 import "./nodes/builtin/console";
 import { useDisclosure } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
@@ -20,7 +21,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	getHandleSchema,
-	getHandleType,
+	getHandleSource,
 	nodeSchemasCompatible,
 } from "./nodes/node-schema-helpers";
 import { useRenderableNodesStore } from "./nodes/renderable-node-types";
@@ -75,6 +76,7 @@ export default function FormatEditor() {
 			s.onReconnectEnd,
 		]),
 	);
+	const { screenToFlowPosition } = useReactFlow();
 
 	const {
 		onOpen: openSearchModal,
@@ -82,7 +84,7 @@ export default function FormatEditor() {
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
 
-	const { setFilters } = useSearchNodesModalStore();
+	const { setFilters, setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
@@ -118,26 +120,23 @@ export default function FormatEditor() {
 				const handleId = connectionState.fromHandle.id;
 				const handle = unwrapNodeIfNeeded(getHandleSchema(node, handleId));
 				setFilters([
-					`${getHandleType(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
+					`${getHandleSource(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
 				]);
-				openSearchModal();
-
-				/* const id = getId();
 				const { clientX, clientY } =
-					"changedTouches" in event ? event.changedTouches[0] : event; */
-				/* const newNode = {
-				id,
-				position: screenToFlowPosition({
-					x: clientX,
-					y: clientY,
-				}),
-				data: { label: `Node ${id}` },
-				origin: [0.5, 0.0],
-			}; */
-				/*  */
+					"changedTouches" in event ? event.changedTouches[0] : event;
+				setNewNodeInformation({
+					position: screenToFlowPosition({
+						x: clientX,
+						y: clientY,
+					}),
+					fromNodeId: connectionState.fromNode.id,
+					fromHandleId: connectionState.fromHandle.id,
+					fromNodeType: connectionState.fromNode.type,
+				});
+				openSearchModal();
 			}
 		},
-		[openSearchModal, setFilters],
+		[openSearchModal, setFilters, setNewNodeInformation, screenToFlowPosition],
 	);
 
 	return (

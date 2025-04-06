@@ -11,12 +11,7 @@ import {
 } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
-import {
-	Handle,
-	type Node,
-	type NodeProps,
-	Position,
-} from "@xyflow/react";
+import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -34,6 +29,7 @@ import { useLingui } from "@lingui/react/macro";
 import type { BaseIssue } from "valibot";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "./store";
+import clsx from "clsx";
 
 export default function DefaultNodeRenderer<
 	TIn extends Record<string, unknown>,
@@ -57,7 +53,12 @@ export default function DefaultNodeRenderer<
 
 	return (
 		<Card classNames={{ body: "p-0", base: "overflow-visible" }}>
-			<CardHeader className="pl-4 flex flex-row gap-2 relative">
+			<CardHeader
+				className={clsx(
+					"pl-4 flex flex-row gap-2 relative",
+					nodeRenderOptions.headerColor,
+				)}
+			>
 				{categoryIcon?.(16)}
 				<p>
 					{nodeRenderOptions.title !== undefined

@@ -19,6 +19,7 @@ import { useRenderableNodesStore } from "../nodes/renderable-node-types";
 import { useSearchNodesModalStore } from "./store";
 import { useNodeSearchMetadataStore } from "../nodes/node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
+import { useFormatEditorStore } from "../store";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -28,7 +29,9 @@ export default function SearchNodesModal(props: {
 	const { t } = useLingui();
 	const locale = useLocaleInformation();
 	const { database, reset } = useNodeSearchMetadataStore();
-	const { setFilters, filters } = useSearchNodesModalStore();
+	const { setFilters, setNewNodeInformation, filters, newNodeInformation } =
+		useSearchNodesModalStore();
+	const { attachNewNode } = useFormatEditorStore();
 	const { nodeRenderOptions, categoryRenderOptions } =
 		useRenderableNodesStore();
 	const [query, setQuery] = useState("");
@@ -48,15 +51,17 @@ export default function SearchNodesModal(props: {
 		if (props.isOpen) {
 			if (inputRef.current) inputRef.current.focus();
 			setQuery("");
+		} else {
+			setNewNodeInformation(undefined);
 		}
-	}, [props.isOpen]);
+	}, [props.isOpen, setNewNodeInformation]);
 
 	useEffect(() => {
 		if (!database || !props.isOpen) return;
 
 		const params: SearchParams<typeof database> = {};
 		if (query !== "") params.term = query;
-		if (filters.length !== 0) params.where = { tags: filters };
+		if (filters.length !== 0) params.where = { tags: { containsAny: filters } };
 
 		const searchResults = search(database, params, locale.fullName);
 		if (searchResults instanceof Promise) return;
@@ -131,6 +136,17 @@ export default function SearchNodesModal(props: {
 
 											return (
 												<ListboxItem
+													onPress={() => {
+														if (!newNodeInformation) return;
+														attachNewNode(
+															newNodeInformation.fromNodeId,
+															newNodeInformation.fromNodeType,
+															item.id,
+															newNodeInformation.fromHandleId,
+															newNodeInformation.position,
+														);
+														onClose();
+													}}
 													startContent={(
 														renderOptions.categoryIcon ?? categoryOptions.icon
 													)(24)}

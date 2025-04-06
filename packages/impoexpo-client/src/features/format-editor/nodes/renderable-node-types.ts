@@ -42,6 +42,7 @@ export type NodeRenderOptions<
 	TSOutput extends Record<string, AllowedObjectEntry>,
 > = Partial<{
 	categoryIcon: IconRenderFunction;
+	headerColor: string;
 	searchable: boolean;
 	title: MessageDescriptor;
 }> &

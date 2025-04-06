@@ -17,7 +17,7 @@ export const nodesDatabaseSchema = {
 	name: "string" as const,
 	category: "string" as const,
 	id: "string" as const,
-	tags: "string[]" as const,
+	tags: "enum[]" as const,
 };
 
 export type NodeSearchMetadataStore = {
