@@ -3,9 +3,10 @@ import {
 	pipe,
 	string,
 	nonEmpty,
-	type InferOutput,
 	boolean,
 	optional,
+	type InferInput,
+	type InferOutput,
 } from "valibot";
 
 export const FaultyActionSchema = object({
@@ -14,4 +15,5 @@ export const FaultyActionSchema = object({
 	error: optional(pipe(string(), nonEmpty())),
 });
 
+export type FaultyActionInput = InferInput<typeof FaultyActionSchema>;
 export type FaultyAction = InferOutput<typeof FaultyActionSchema>;

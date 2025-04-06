@@ -23,7 +23,7 @@ export const registerGoogleEndpoints = (app: Express) => {
 		);
 	}
 
-	logger.info("	-> registering google endpoints");
+	logger.info("\t-> registering google endpoints");
 	registerGoogleFormsEndpoints(app);
 
 	app.post(
