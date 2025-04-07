@@ -13,8 +13,12 @@ import {
 	reconnectEdge,
 } from "@xyflow/react";
 import { create } from "zustand/react";
-import { findCompatibleHandle } from "./nodes/node-schema-helpers";
+import {
+	findCompatibleHandle,
+	getHandleSource,
+} from "./nodes/node-schema-helpers";
 import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import { persistStoreOnReload } from "@/stores/hot-reload";
 
 const nodeCount: Map<string, number> = new Map();
 export const getNodeId = (type: string) => {
@@ -40,6 +44,7 @@ export type FormatEditorStore = {
 		fromHandleId: string,
 		position: { x: number; y: number },
 	) => void;
+	addNewNode: (type: string, position: { x: number; y: number }) => void;
 
 	edgeReconnectSuccessful: boolean;
 	onReconnect: OnReconnect;
@@ -92,11 +97,26 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		get().setEdges(reconnectEdge(oldEdge, newConnection, get().edges));
 	},
 
+	addNewNode(type, position) {
+		const toData = baseNodesMap.get(type);
+		if (!toData) return;
+		const id = getNodeId(type);
+
+		const newNode = {
+			id: id,
+			position: position,
+			data: {},
+			type: type,
+		} satisfies Node;
+		get().setNodes(get().nodes.concat(newNode));
+	},
+
 	attachNewNode(fromNodeId, fromNodeType, toNodeType, fromHandleId, position) {
 		const fromData = baseNodesMap.get(fromNodeType);
 		const toData = baseNodesMap.get(toNodeType);
 		if (!fromData || !toData) return;
 
+		const fromSource = getHandleSource(fromData, fromHandleId);
 		const [name] = findCompatibleHandle(fromData, fromHandleId, toData);
 		const id = getNodeId(toNodeType);
 
@@ -109,13 +129,25 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 		get().setNodes(get().nodes.concat(newNode));
 		get().setEdges(
-			get().edges.concat({
-				id: id,
-				source: fromNodeId,
-				sourceHandle: fromHandleId,
-				target: id,
-				targetHandle: name,
-			}),
+			get().edges.concat(
+				fromSource === "output"
+					? {
+							id: id,
+							source: fromNodeId,
+							sourceHandle: fromHandleId,
+							target: id,
+							targetHandle: name,
+						}
+					: {
+							id: id,
+							source: id,
+							sourceHandle: name,
+							target: fromNodeId,
+							targetHandle: fromHandleId,
+						},
+			),
 		);
 	},
 }));
+
+persistStoreOnReload("formatEditorStore", useFormatEditorStore);

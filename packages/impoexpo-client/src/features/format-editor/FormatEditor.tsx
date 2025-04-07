@@ -8,6 +8,7 @@ import {
 	type Node,
 	ReactFlow,
 	getOutgoers,
+	useKeyPress,
 	useReactFlow,
 } from "@xyflow/react";
 
@@ -29,6 +30,7 @@ import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
 import { useFormatEditorStore } from "./store";
+import useMousePosition from "../../hooks/useMousePosition";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -39,7 +41,6 @@ const connectionHasCycles = (
 	if (!target) return false;
 	const hasCycle = (node: Node, visited = new Set()) => {
 		if (visited.has(node.id)) return false;
-
 		visited.add(node.id);
 
 		for (const outgoer of getOutgoers(node, nodes, edges)) {
@@ -77,12 +78,33 @@ export default function FormatEditor() {
 		]),
 	);
 	const { screenToFlowPosition } = useReactFlow();
-
 	const {
 		onOpen: openSearchModal,
 		isOpen: isSearchModalOpen,
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
+
+	const mousePosition = useMousePosition();
+	const spacePressed = useKeyPress("Space");
+
+	useEffect(() => {
+		if (spacePressed && !isSearchModalOpen) {
+			setFilters([]);
+			setNewNodeInformation({
+				position: screenToFlowPosition({
+					x: mousePosition.x ?? 0,
+					y: mousePosition.y ?? 0,
+				}),
+			});
+			openSearchModal();
+		}
+	}, [
+		spacePressed,
+		isSearchModalOpen,
+		mousePosition,
+		openSearchModal,
+		screenToFlowPosition,
+	]);
 
 	const { setFilters, setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(

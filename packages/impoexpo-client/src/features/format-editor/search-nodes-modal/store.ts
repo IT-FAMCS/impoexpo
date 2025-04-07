@@ -2,9 +2,9 @@ import { create } from "zustand";
 
 export type NewNodeInformation = {
 	position: { x: number; y: number };
-	fromNodeType: string;
-	fromHandleId: string;
-	fromNodeId: string;
+	fromNodeType?: string;
+	fromHandleId?: string;
+	fromNodeId?: string;
 };
 
 export type SearchNodesModalStore = {

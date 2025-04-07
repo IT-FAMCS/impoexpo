@@ -12,7 +12,14 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
-	safelist: ["pr-4", "pl-4", "ml-2", "bg-secondary-200"],
+	safelist: [
+		"pr-4",
+		"pl-4",
+		"ml-2",
+		"max-w-64",
+		"bg-secondary-200",
+		"bg-primary-200",
+	],
 	darkMode: "class",
 	plugins: [
 		heroui({

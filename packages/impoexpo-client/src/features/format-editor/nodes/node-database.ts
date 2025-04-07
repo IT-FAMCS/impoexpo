@@ -2,6 +2,9 @@ import { create as createDatabase, type Orama } from "@orama/orama";
 
 import "./builtin/console";
 import "./builtin/notifications";
+import "./builtin/math";
+import "./builtin/strings";
+
 import { create } from "zustand/react";
 import { supportedLocales } from "@/locales/supportedLocales";
 
@@ -17,6 +20,7 @@ export const nodesDatabaseSchema = {
 	name: "string" as const,
 	category: "string" as const,
 	id: "string" as const,
+	aliases: "string[]" as const,
 	tags: "enum[]" as const,
 };
 

@@ -249,7 +249,9 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row gap-4 items-start">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col gap-1 items-start pl-4">
-						<p>{extractPropertyTitle(props.type, props.name)}</p>
+						<p className="max-w-64 text-start">
+							{extractPropertyTitle(props.type, props.name)}
+						</p>
 						<p className="text-foreground-400 text-tiny">
 							{extractPropertyDescription(props.type, props.name)}
 						</p>
@@ -277,7 +279,9 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row gap-4 items-start">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col gap-1 items-end pr-4">
-						<p className="">{extractPropertyTitle(props.type, props.name)}</p>
+						<p className="max-w-64 text-end">
+							{extractPropertyTitle(props.type, props.name)}
+						</p>
 						<p className="text-foreground-400 text-tiny">
 							{extractPropertyDescription(props.type, props.name)}
 						</p>

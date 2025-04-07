@@ -34,7 +34,7 @@ export default function SearchNodesModal(props: {
 	const { database, reset } = useNodeSearchMetadataStore();
 	const { setFilters, setNewNodeInformation, filters, newNodeInformation } =
 		useSearchNodesModalStore();
-	const { attachNewNode } = useFormatEditorStore();
+	const { attachNewNode, addNewNode } = useFormatEditorStore();
 	const { nodeRenderOptions, categoryRenderOptions } =
 		useRenderableNodesStore();
 	const [query, setQuery] = useState("");
@@ -122,8 +122,11 @@ export default function SearchNodesModal(props: {
 												))}
 											</div>
 										}
-										classNames={{ inputWrapper: "rounded-none" }}
-										className="w-full ring-0"
+										classNames={{
+											inputWrapper:
+												"rounded-none group-data-[focus-visible=true]:ring-0 group-data-[focus-visible=true]:ring-offset-0",
+										}}
+										className="w-full"
 										placeholder={t`enter the name, category or tag of the needed node...`}
 									/>
 									<Divider />
@@ -141,13 +144,22 @@ export default function SearchNodesModal(props: {
 												<ListboxItem
 													onPress={() => {
 														if (!newNodeInformation) return;
-														attachNewNode(
-															newNodeInformation.fromNodeId,
-															newNodeInformation.fromNodeType,
-															item.id,
-															newNodeInformation.fromHandleId,
-															newNodeInformation.position,
-														);
+														if (
+															newNodeInformation.fromNodeId &&
+															newNodeInformation.fromNodeType &&
+															newNodeInformation.fromHandleId
+														) {
+															attachNewNode(
+																newNodeInformation.fromNodeId,
+																newNodeInformation.fromNodeType,
+																item.id,
+																newNodeInformation.fromHandleId,
+																newNodeInformation.position,
+															);
+														} else {
+															addNewNode(item.id, newNodeInformation.position);
+														}
+
 														onClose();
 													}}
 													startContent={(

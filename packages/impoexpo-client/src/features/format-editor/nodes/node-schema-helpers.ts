@@ -97,13 +97,18 @@ export const extractPropertyDescription = (
 			`attempted to extract property description of an invalid node with type "${type}"`,
 		);
 
+	const schema = unwrapNodeIfNeeded(
+		// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist by now
+		getHandleSchema(baseNodesMap.get(type)!, propertyName),
+	);
+
 	if (renderProperties.inputs?.[propertyName]?.description !== undefined)
 		return localizableString(renderProperties.inputs[propertyName].description);
 	if (renderProperties.outputs?.[propertyName]?.description !== undefined)
 		return localizableString(
 			renderProperties.outputs[propertyName].description,
 		);
-	return undefined;
+	return schema.expects;
 };
 
 export const extractPropertyPlaceholder = (

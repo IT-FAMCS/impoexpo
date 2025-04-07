@@ -46,7 +46,7 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 		if (!options.outputs) continue;
 		options.outputs[item.id] = {
 			title: item.title ?? item.id,
-			description: item.description ?? item.type,
+			description: item.description ?? undefined,
 		};
 	}
 

@@ -48,6 +48,7 @@ export type NodeRenderOptions<
 	categoryIcon: IconRenderFunction;
 	headerColor: string;
 	searchable: boolean;
+	aliases: (MessageDescriptor | string)[];
 	title: MessageDescriptor | string;
 }> &
 	(keyof TSInput extends never
@@ -155,6 +156,9 @@ export const registerWithDefaultRenderer = <
 				title:
 					options.title !== undefined ? localizableString(options.title) : "",
 				id: type,
+				aliases: (options.aliases ?? []).map((alias) =>
+					localizableString(alias),
+				),
 				tags: Array.from(tags),
 			});
 		});

@@ -120,6 +120,11 @@ msgid "doggy"
 msgstr "собакин"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:49
+#: src/features/format-editor/nodes/builtin/strings.tsx:35
+#: src/features/format-editor/nodes/builtin/strings.tsx:50
+#: src/features/format-editor/nodes/builtin/strings.tsx:63
+#: src/features/format-editor/nodes/builtin/strings.tsx:78
+#: src/features/format-editor/nodes/builtin/strings.tsx:92
 msgid "string"
 msgstr "строка"
 
@@ -128,6 +133,7 @@ msgid "enter a string (at least 5 characters)"
 msgstr "введите строку (как минимум 5 символов)"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:53
+#: src/features/format-editor/nodes/builtin/strings.tsx:75
 msgid "number"
 msgstr "число"
 
@@ -136,6 +142,7 @@ msgid "input a number"
 msgstr "введите число"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:57
+#: src/features/format-editor/nodes/builtin/strings.tsx:87
 msgid "boolean"
 msgstr "флаг"
 
@@ -155,6 +162,79 @@ msgstr "ага"
 msgid "hell yeah!"
 msgstr "hell yeah!"
 
+#: src/features/format-editor/nodes/builtin/math.tsx:12
+msgid "math"
+msgstr "математика"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:32
+#: src/features/format-editor/nodes/builtin/math.tsx:52
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:40
+#: src/features/format-editor/nodes/builtin/strings.tsx:54
+#: src/features/format-editor/nodes/builtin/strings.tsx:66
+msgid "result"
+msgstr "результат"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:49
+msgid "input"
+msgstr "ввод"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:57
+msgid "add"
+msgstr "сложить"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:57
+msgid "sum"
+msgstr "сумма"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:58
+msgid "subtract"
+msgstr "вычесть"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:59
+msgid "multiply"
+msgstr "умножить"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:60
+msgid "divide"
+msgstr "делить"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:61
+msgid "modulo"
+msgstr "остаток от деления"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:61
+msgid "remainder"
+msgstr "деление с остатком"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:62
+msgid "power"
+msgstr "возвести в степень"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:64
+msgid "absolute value"
+msgstr "модуль"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:64
+msgid "abs"
+msgstr "abs"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:65
+msgid "log"
+msgstr "логарифм"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:66
+msgid "negate"
+msgstr "отрицать"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:67
+msgid "square root"
+msgstr "квадратный корень"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:67
+msgid "sqrt"
+msgstr "sqrt"
+
 #: src/features/format-editor/nodes/builtin/notifications.tsx:12
 msgid "notifications"
 msgstr "уведомления"
@@ -171,7 +251,68 @@ msgstr "предупреждение"
 msgid "error"
 msgstr "ошибка"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:127
+#: src/features/format-editor/nodes/builtin/strings.tsx:12
+msgid "strings"
+msgstr "строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:17
+msgid "combine strings"
+msgstr "объединить строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:18
+msgid "add strings"
+msgstr "сложить строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:18
+msgid "join strings"
+msgstr "добавить строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:31
+msgid "replace in string"
+msgstr "заменить в строке"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:36
+#: src/features/format-editor/nodes/builtin/strings.tsx:51
+msgid "pattern"
+msgstr "образец"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:37
+msgid "replacement"
+msgstr "замена"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:45
+msgid "string contains X?"
+msgstr "строка содержит X?"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:46
+msgid "search in string"
+msgstr "поиск в строке"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:46
+msgid "find in string"
+msgstr "найти в строке"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:59
+msgid "length of string"
+msgstr "длина строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
+msgid "number -> string"
+msgstr "число -> строка"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:83
+msgid "boolean -> string"
+msgstr "флаг -> число"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:88
+msgid "\"true\" string"
+msgstr "строка \"истина\""
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:89
+msgid "\"false\" string"
+msgstr "строка \"ложь\""
+
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:130
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
