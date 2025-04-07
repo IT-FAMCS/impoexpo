@@ -63,7 +63,7 @@ msgstr "add another"
 
 #: src/components/wizard/SelectSourceCard.tsx:121
 #: src/integrations/google/GoogleVerificator.tsx:48
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:255
 msgid "next"
 msgstr "next"
 
@@ -83,67 +83,75 @@ msgstr "text"
 msgid "testing input node"
 msgstr "testing input node"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:30
+#: src/features/format-editor/nodes/builtin/console.tsx:31
 msgid "test1"
 msgstr "test1"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:31
+#: src/features/format-editor/nodes/builtin/console.tsx:32
 msgid "next option won't have a description"
 msgstr "next option won't have a description"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:33
+#: src/features/format-editor/nodes/builtin/console.tsx:34
 msgid "no description!"
 msgstr "no description!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:35
+#: src/features/format-editor/nodes/builtin/console.tsx:36
 msgid "test3"
 msgstr "test3"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:36
+#: src/features/format-editor/nodes/builtin/console.tsx:37
 msgid "the description is back!"
 msgstr "the description is back!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:42
+#: src/features/format-editor/nodes/builtin/console.tsx:44
 msgid "meow"
 msgstr "meow"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:42
+#: src/features/format-editor/nodes/builtin/console.tsx:44
 msgid "kitty"
 msgstr "kitty"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:43
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "bark"
 msgstr "bark"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:43
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "doggy"
 msgstr "doggy"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:47
+#: src/features/format-editor/nodes/builtin/console.tsx:49
 msgid "string"
 msgstr "string"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:48
+#: src/features/format-editor/nodes/builtin/console.tsx:50
 msgid "enter a string (at least 5 characters)"
 msgstr "enter a string (at least 5 characters)"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:51
+#: src/features/format-editor/nodes/builtin/console.tsx:53
 msgid "number"
 msgstr "number"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:52
+#: src/features/format-editor/nodes/builtin/console.tsx:54
 msgid "input a number"
 msgstr "input a number"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:58
+#: src/features/format-editor/nodes/builtin/console.tsx:57
+msgid "boolean"
+msgstr "boolean"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:61
+msgid "boolean (optional)"
+msgstr "boolean (optional)"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:68
 msgid "testing output node"
 msgstr "testing output node"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:61
+#: src/features/format-editor/nodes/builtin/console.tsx:71
 msgid "yeah"
 msgstr "yeah"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:62
+#: src/features/format-editor/nodes/builtin/console.tsx:72
 msgid "hell yeah!"
 msgstr "hell yeah!"
 
@@ -163,7 +171,7 @@ msgstr "warning"
 msgid "error"
 msgstr "error"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:112
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:127
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
@@ -208,35 +216,44 @@ msgstr "is this you?"
 msgid "relogin"
 msgstr "relogin"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:67
-msgid "checking read permissions for the form"
-msgstr "checking read permissions for the form"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
-msgid "couldn't verify read permissions for the form (or their lack of)"
-msgstr "couldn't verify read permissions for the form (or their lack of)"
-
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
+msgid "receiving the form's layout"
+msgstr "receiving the form's layout"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
+msgid "failed to receive the form's layout (and create a node for it)"
+msgstr "failed to receive the form's layout (and create a node for it)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:89
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:127
 msgid "back to form selection"
 msgstr "back to form selection"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:116
+msgid "checking read permissions for the form"
+msgstr "checking read permissions for the form"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
+msgid "couldn't verify read permissions for the form (or their lack of)"
+msgstr "couldn't verify read permissions for the form (or their lack of)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:169
 msgid "receiving a list of your forms"
 msgstr "receiving a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:129
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:178
 msgid "couldn't receive a list of your forms"
 msgstr "couldn't receive a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:188
 msgid "select a form:"
 msgstr "select a form:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:154
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:203
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:185
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:234
 msgid "back to source selection"
 msgstr "back to source selection"
 

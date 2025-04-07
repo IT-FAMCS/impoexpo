@@ -68,8 +68,8 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 
 				const layout: GoogleFormsLayout = {
 					documentTitle: response.data.info?.documentTitle ?? "",
-					title: response.data.info?.title ?? "",
-					description: response.data.info?.description ?? "",
+					title: response.data.info?.title ?? null,
+					description: response.data.info?.description ?? null,
 					items: [],
 				};
 				for (const rawItem of response.data.items ?? []) {

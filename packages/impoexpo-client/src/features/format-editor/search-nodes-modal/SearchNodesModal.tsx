@@ -15,7 +15,10 @@ import { useLingui } from "@lingui/react/macro";
 import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useRenderableNodesStore } from "../nodes/renderable-node-types";
+import {
+	localizableString,
+	useRenderableNodesStore,
+} from "../nodes/renderable-node-types";
 import { useSearchNodesModalStore } from "./store";
 import { useNodeSearchMetadataStore } from "../nodes/node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
@@ -153,10 +156,10 @@ export default function SearchNodesModal(props: {
 													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
 												>
 													<div className="flex flex-row items-center justify-center gap-1">
-														{t(categoryOptions.name)}{" "}
+														{localizableString(categoryOptions.name, t)}{" "}
 														<Icon icon="mdi:arrow-right" />{" "}
 														{renderOptions.title !== undefined
-															? t(renderOptions.title)
+															? localizableString(renderOptions.title, t)
 															: item.id}
 													</div>
 												</ListboxItem>

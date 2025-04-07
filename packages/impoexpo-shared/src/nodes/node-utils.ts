@@ -14,8 +14,6 @@ export const unwrapNodeIfNeeded = (
 
 export const registerBaseNodes = (
 	...nodes: BaseNode<
-		string,
-		string,
 		Record<string, AllowedObjectEntry>,
 		Record<string, AllowedObjectEntry>
 	>[]

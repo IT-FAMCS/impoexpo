@@ -18,6 +18,10 @@ import { searchScope } from "./node-database";
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type IconRenderFunction = (size: number) => React.ReactNode;
+export const localizableString = (
+	str: MessageDescriptor | string,
+	localizer?: (msg: MessageDescriptor) => string,
+) => (typeof str === "string" ? str : localizer ? localizer(str) : i18n.t(str));
 
 export type RenderableNodesStore = {
 	nodeRenderers: NodeTypes;
@@ -32,7 +36,7 @@ export type RenderableNodesStore = {
 		string,
 		{
 			icon: IconRenderFunction;
-			name: MessageDescriptor;
+			name: MessageDescriptor | string;
 		}
 	>;
 };
@@ -44,7 +48,7 @@ export type NodeRenderOptions<
 	categoryIcon: IconRenderFunction;
 	headerColor: string;
 	searchable: boolean;
-	title: MessageDescriptor;
+	title: MessageDescriptor | string;
 }> &
 	(keyof TSInput extends never
 		? // biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -83,10 +87,10 @@ export type NodePropertyMetadata<
 	TIsInput extends boolean,
 > = Partial<
 	{
-		title: MessageDescriptor;
-		description: MessageDescriptor;
+		title: MessageDescriptor | string;
+		description: MessageDescriptor | string;
 	} & (TIsInput extends true
-		? { placeholder: MessageDescriptor; mode: NodePropertyMode }
+		? { placeholder: MessageDescriptor | string; mode: NodePropertyMode }
 		: // biome-ignore lint/complexity/noBannedTypes: empty type required here
 			{}) &
 		(NodePropertyOptions<TProperty> extends never
@@ -96,7 +100,7 @@ export type NodePropertyMetadata<
 					options: Partial<
 						Record<
 							Exclude<NodePropertyOptions<TProperty>, bigint>,
-							NodePropertyOptionsMetadata<MessageDescriptor>
+							NodePropertyOptionsMetadata<MessageDescriptor | string>
 						>
 					>;
 				})
@@ -109,20 +113,17 @@ export type NodePropertyOptionsMetadata<T> = Partial<{
 }>;
 
 export const registerWithDefaultRenderer = <
-	TName extends string,
-	TCategory extends string,
 	TSInput extends Record<string, AllowedObjectEntry>,
 	TSOutput extends Record<string, AllowedObjectEntry>,
 >(
-	node: BaseNode<TName, TCategory, TSInput, TSOutput>,
+	node: BaseNode<TSInput, TSOutput>,
 	options: NodeRenderOptions<TSInput, TSOutput>,
 ) => {
-	type NodeType = `${(typeof node)["category"]}-${(typeof node)["name"]}`;
 	const type = `${node.category}-${node.name}`;
 	useRenderableNodesStore.setState((state) => {
 		return {
 			nodeRenderers: Object.assign(state.nodeRenderers, {
-				[type]: DefaultNodeRenderer<Record<string, unknown>, NodeType>,
+				[type]: DefaultNodeRenderer,
 			}),
 			nodeRenderOptions: new Map(state.nodeRenderOptions).set(
 				type,
@@ -148,10 +149,11 @@ export const registerWithDefaultRenderer = <
 			insert(database, {
 				category:
 					categoryRenderOptions?.name !== undefined
-						? i18n.t(categoryRenderOptions?.name)
+						? localizableString(categoryRenderOptions?.name)
 						: node.category,
 				name: node.name,
-				title: options.title !== undefined ? i18n.t(options.title) : "",
+				title:
+					options.title !== undefined ? localizableString(options.title) : "",
 				id: type,
 				tags: Array.from(tags),
 			});

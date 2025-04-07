@@ -22,4 +22,9 @@ export default defineConfig({
 			process.env.npm_package_version,
 		),
 	},
+	esbuild: {
+		supported: {
+			"top-level-await": true,
+		},
+	},
 });

@@ -21,7 +21,7 @@ export type GoogleFormsLayoutItem = InferOutput<typeof googleFormsLayoutItem>;
 
 export const googleFormsLayoutSchema = object({
 	documentTitle: pipe(string(), nonEmpty()),
-	title: pipe(string(), nonEmpty()),
+	title: nullable(string()),
 	description: nullable(string()),
 	items: array(googleFormsLayoutItem),
 });

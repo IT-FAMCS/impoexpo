@@ -11,19 +11,28 @@ import {
 } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
-import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
+import {
+	type BuiltInNode,
+	Handle,
+	type NodeProps,
+	Position,
+} from "@xyflow/react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	type ValidatorFunction,
 	extractOptionMetadata,
+	extractPropertyDescription,
 	extractPropertyPlaceholder,
 	extractPropertyTitle,
 	isEnum,
 	isPicklist,
 } from "./nodes/node-schema-helpers";
-import { useRenderableNodesStore } from "./nodes/renderable-node-types";
+import {
+	localizableString,
+	useRenderableNodesStore,
+} from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
 import { useLingui } from "@lingui/react/macro";
 import type { BaseIssue } from "valibot";
@@ -31,12 +40,12 @@ import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "./store";
 import clsx from "clsx";
 
-export default function DefaultNodeRenderer<
-	TIn extends Record<string, unknown>,
-	TType extends string,
->({ type, id }: NodeProps<Node<TIn, TType>>) {
+export default function DefaultNodeRenderer({
+	type,
+	id,
+}: NodeProps<BuiltInNode>) {
 	const { t } = useLingui();
-	//const rawNode = useReactFlow()
+
 	// biome-ignore lint/style/noNonNullAssertion: only registered nodes get renderered
 	const nodeData = useMemo(() => baseNodesMap.get(type)!, [type]);
 	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
@@ -62,7 +71,7 @@ export default function DefaultNodeRenderer<
 				{categoryIcon?.(16)}
 				<p>
 					{nodeRenderOptions.title !== undefined
-						? t(nodeRenderOptions.title)
+						? localizableString(nodeRenderOptions.title, t)
 						: nodeData.name}
 				</p>
 			</CardHeader>
@@ -239,7 +248,12 @@ function NodePropertyRenderer(props: {
 		<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
 			<div className="relative flex flex-row gap-4 items-start">
 				{!shouldHideLabel(props.property) && (
-					<p className="pl-4">{extractPropertyTitle(props.type, props.name)}</p>
+					<div className="flex flex-col gap-1 items-start pl-4">
+						<p>{extractPropertyTitle(props.type, props.name)}</p>
+						<p className="text-foreground-400 text-tiny">
+							{extractPropertyDescription(props.type, props.name)}
+						</p>
+					</div>
 				)}
 				{!isIndependent && (
 					<Handle
@@ -262,7 +276,12 @@ function NodePropertyRenderer(props: {
 		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
 			<div className="relative flex flex-row gap-4 items-start">
 				{!shouldHideLabel(props.property) && (
-					<p className="pr-4">{extractPropertyTitle(props.type, props.name)}</p>
+					<div className="flex flex-col gap-1 items-end pr-4">
+						<p className="">{extractPropertyTitle(props.type, props.name)}</p>
+						<p className="text-foreground-400 text-tiny">
+							{extractPropertyDescription(props.type, props.name)}
+						</p>
+					</div>
 				)}
 				<Handle
 					type="source"

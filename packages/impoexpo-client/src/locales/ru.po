@@ -63,7 +63,7 @@ msgstr "добавить ещё"
 
 #: src/components/wizard/SelectSourceCard.tsx:121
 #: src/integrations/google/GoogleVerificator.tsx:48
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:255
 msgid "next"
 msgstr "далее"
 
@@ -83,67 +83,75 @@ msgstr "текст"
 msgid "testing input node"
 msgstr "тестовый входной граф"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:30
+#: src/features/format-editor/nodes/builtin/console.tsx:31
 msgid "test1"
 msgstr "тест1"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:31
+#: src/features/format-editor/nodes/builtin/console.tsx:32
 msgid "next option won't have a description"
 msgstr "следующая опция будет без описания"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:33
+#: src/features/format-editor/nodes/builtin/console.tsx:34
 msgid "no description!"
 msgstr "без описания!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:35
+#: src/features/format-editor/nodes/builtin/console.tsx:36
 msgid "test3"
 msgstr "тест3"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:36
+#: src/features/format-editor/nodes/builtin/console.tsx:37
 msgid "the description is back!"
 msgstr "описание снова есть!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:42
+#: src/features/format-editor/nodes/builtin/console.tsx:44
 msgid "meow"
 msgstr "мяу"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:42
+#: src/features/format-editor/nodes/builtin/console.tsx:44
 msgid "kitty"
 msgstr "котик"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:43
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "bark"
 msgstr "гав"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:43
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "doggy"
 msgstr "собакин"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:47
+#: src/features/format-editor/nodes/builtin/console.tsx:49
 msgid "string"
 msgstr "строка"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:48
+#: src/features/format-editor/nodes/builtin/console.tsx:50
 msgid "enter a string (at least 5 characters)"
 msgstr "введите строку (как минимум 5 символов)"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:51
+#: src/features/format-editor/nodes/builtin/console.tsx:53
 msgid "number"
 msgstr "число"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:52
+#: src/features/format-editor/nodes/builtin/console.tsx:54
 msgid "input a number"
 msgstr "введите число"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:58
+#: src/features/format-editor/nodes/builtin/console.tsx:57
+msgid "boolean"
+msgstr "флаг"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:61
+msgid "boolean (optional)"
+msgstr "флаг (необязательный)"
+
+#: src/features/format-editor/nodes/builtin/console.tsx:68
 msgid "testing output node"
 msgstr "тестовый выходной граф"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:61
+#: src/features/format-editor/nodes/builtin/console.tsx:71
 msgid "yeah"
 msgstr "ага"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:62
+#: src/features/format-editor/nodes/builtin/console.tsx:72
 msgid "hell yeah!"
 msgstr "hell yeah!"
 
@@ -163,7 +171,7 @@ msgstr "предупреждение"
 msgid "error"
 msgstr "ошибка"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:112
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:127
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
@@ -208,35 +216,44 @@ msgstr "всё верно?"
 msgid "relogin"
 msgstr "перезайти"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:67
-msgid "checking read permissions for the form"
-msgstr "проверяем наличие прав на чтение формы"
-
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
-msgid "couldn't verify read permissions for the form (or their lack of)"
-msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
-
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
+msgid "receiving the form's layout"
+msgstr "получаем макет формы"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
+msgid "failed to receive the form's layout (and create a node for it)"
+msgstr "не удалось получить макет формы (и создать для неё граф)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:89
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:127
 msgid "back to form selection"
 msgstr "назад к выбору формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:116
+msgid "checking read permissions for the form"
+msgstr "проверяем наличие прав на чтение формы"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
+msgid "couldn't verify read permissions for the form (or their lack of)"
+msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:169
 msgid "receiving a list of your forms"
 msgstr "получаем список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:129
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:178
 msgid "couldn't receive a list of your forms"
 msgstr "не удалось получить список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:188
 msgid "select a form:"
 msgstr "выберите форму:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:154
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:203
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:185
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:234
 msgid "back to source selection"
 msgstr "назад к выбору источника"
 

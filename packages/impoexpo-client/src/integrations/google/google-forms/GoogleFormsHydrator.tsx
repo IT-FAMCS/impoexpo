@@ -15,7 +15,9 @@ import {
 import { Icon } from "@iconify/react";
 import { FaultyActionSchema } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import { ListGoogleFormsResponseSchema } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
+import { googleFormsLayoutSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import {
+	GOOGLE_FORMS_LAYOUT_ROUTE,
 	GOOGLE_FORMS_LIST_ROUTE,
 	GOOGLE_FORMS_VERIFY_ROUTE,
 } from "@impoexpo/shared/schemas/integrations/google/forms/endpoints";
@@ -24,6 +26,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { getGoogleAuthHeaders } from "../common";
 import { GoogleFormsHydratorState, useGoogleFormsHydratorStore } from "./store";
+import { registerGoogleFormNode } from "./nodes";
 
 export function GoogleFormsHydrator(props: { callback: () => void }) {
 	const { state } = useGoogleFormsHydratorStore();
@@ -32,14 +35,67 @@ export function GoogleFormsHydrator(props: { callback: () => void }) {
 		case GoogleFormsHydratorState.SELECT:
 			return <GoogleFormsSelector />;
 		case GoogleFormsHydratorState.VERIFY:
-			return <GoogleFormsVerificator successCallback={props.callback} />;
+			return <GoogleFormsVerificator />;
+		case GoogleFormsHydratorState.CREATE_LAYOUT_NODE:
+			return <GoogleFormsNodeCreator successCallback={props.callback} />;
 	}
 }
 
-function GoogleFormsVerificator(props: { successCallback: () => void }) {
+function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	const { t } = useLingui();
 	const { currentForm, setCurrentForm, addUsedForm, setState } =
 		useGoogleFormsHydratorStore();
+	const { isFetching, isError, data, error } = useQuery({
+		queryKey: ["get-google-form-layout", currentForm?.id],
+		refetchOnWindowFocus: false,
+		queryFn: () =>
+			getWithSchema(GOOGLE_FORMS_LAYOUT_ROUTE, googleFormsLayoutSchema, {
+				headers: getGoogleAuthHeaders(),
+				query: { id: currentForm?.id ?? "" },
+			}),
+	});
+
+	useEffect(() => {
+		if (data && currentForm) {
+			registerGoogleFormNode(currentForm.id, data);
+			addUsedForm(currentForm);
+			setCurrentForm(undefined);
+			setState(GoogleFormsHydratorState.SELECT);
+			props.successCallback();
+		}
+	}, [
+		data,
+		addUsedForm,
+		setState,
+		setCurrentForm,
+		currentForm,
+		props.successCallback,
+	]);
+
+	if (isFetching) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-2">
+				<Trans>receiving the form's layout</Trans>
+				<CircularProgress />
+			</div>
+		);
+	}
+
+	if (isError) {
+		return (
+			<NetworkErrorCard
+				title={t`failed to receive the form's layout (and create a node for it)`}
+				retry={() => setState(GoogleFormsHydratorState.SELECT)}
+				retryButtonText={t`back to form selection`}
+				error={error}
+			/>
+		);
+	}
+}
+
+function GoogleFormsVerificator() {
+	const { t } = useLingui();
+	const { currentForm, setState } = useGoogleFormsHydratorStore();
 	const { isFetching, isError, data, error } = useQuery({
 		queryKey: ["verify-google-form-permissions", currentForm?.id],
 		refetchOnWindowFocus: false,
@@ -50,16 +106,9 @@ function GoogleFormsVerificator(props: { successCallback: () => void }) {
 			}),
 	});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: props.successCallback does not change
 	useEffect(() => {
-		if (data?.ok) {
-			// biome-ignore lint/style/noNonNullAssertion: guaranteed to not be undefined
-			addUsedForm(currentForm!);
-			setCurrentForm(undefined);
-			setState(GoogleFormsHydratorState.SELECT);
-			props.successCallback();
-		}
-	}, [data]);
+		if (data?.ok) setState(GoogleFormsHydratorState.CREATE_LAYOUT_NODE);
+	}, [data, setState]);
 
 	if (isFetching) {
 		return (
@@ -83,7 +132,7 @@ function GoogleFormsVerificator(props: { successCallback: () => void }) {
 }
 
 function GoogleFormsSelector() {
-	const { currentForm, usedForms, hasForm, setCurrentForm, setState } =
+	const { currentForm, hasForm, setCurrentForm, setState } =
 		useGoogleFormsHydratorStore();
 	const { setState: setSourceCardState } = useSourceCardStore();
 	const { t } = useLingui();

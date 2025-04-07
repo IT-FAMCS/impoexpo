@@ -9,6 +9,7 @@ import type { Connection, Edge, Node } from "@xyflow/react";
 import type { EnumSchema, PicklistSchema } from "valibot";
 import type * as v from "valibot";
 import {
+	localizableString,
 	type NodePropertyOptions,
 	type NodePropertyOptionsMetadata,
 	useRenderableNodesStore,
@@ -78,10 +79,31 @@ export const extractPropertyTitle = (type: string, propertyName: string) => {
 		);
 
 	if (renderProperties.inputs?.[propertyName]?.title !== undefined)
-		return i18n.t(renderProperties.inputs[propertyName].title);
+		return localizableString(renderProperties.inputs[propertyName].title);
 	if (renderProperties.outputs?.[propertyName]?.title !== undefined)
-		return i18n.t(renderProperties.outputs[propertyName].title);
+		return localizableString(renderProperties.outputs[propertyName].title);
 	return propertyName;
+};
+
+export const extractPropertyDescription = (
+	type: string,
+	propertyName: string,
+): string | undefined => {
+	const renderProperties = useRenderableNodesStore
+		.getState()
+		.nodeRenderOptions.get(type);
+	if (renderProperties === undefined)
+		throw new Error(
+			`attempted to extract property description of an invalid node with type "${type}"`,
+		);
+
+	if (renderProperties.inputs?.[propertyName]?.description !== undefined)
+		return localizableString(renderProperties.inputs[propertyName].description);
+	if (renderProperties.outputs?.[propertyName]?.description !== undefined)
+		return localizableString(
+			renderProperties.outputs[propertyName].description,
+		);
+	return undefined;
 };
 
 export const extractPropertyPlaceholder = (
@@ -97,7 +119,7 @@ export const extractPropertyPlaceholder = (
 		);
 
 	return renderProperties.inputs?.[propertyName]?.placeholder !== undefined
-		? i18n.t(renderProperties.inputs[propertyName]?.placeholder)
+		? localizableString(renderProperties.inputs[propertyName]?.placeholder)
 		: propertyName;
 };
 
@@ -107,8 +129,6 @@ export type ValidatorFunction = (
 ) => v.OutputDataset<unknown, v.BaseIssue<unknown>>;
 
 type DefaultBaseNode = BaseNode<
-	string,
-	string,
 	Record<string, AllowedObjectEntry>,
 	Record<string, AllowedObjectEntry>
 >;

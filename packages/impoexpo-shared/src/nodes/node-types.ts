@@ -8,8 +8,6 @@ export type AllowedObjectEntry =
 	| v.OptionalSchema<v.GenericSchema, unknown>;
 
 export class BaseNode<
-	TName extends string,
-	TCategory extends string,
 	// biome-ignore lint/complexity/noBannedTypes: empty type required here
 	TIn extends v.ObjectEntries = {},
 	// biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -17,15 +15,15 @@ export class BaseNode<
 	TInMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 	TOutMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 > {
-	public name!: TName;
-	public category!: TCategory;
+	public name!: string;
+	public category!: string;
 
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
 	constructor(
-		init: Partial<BaseNode<TName, TCategory, TIn, TOut>> &
-			Pick<BaseNode<TName, TCategory, TIn, TOut>, "name" | "category">,
+		init: Partial<BaseNode<TIn, TOut>> &
+			Pick<BaseNode<TIn, TOut>, "name" | "category">,
 	) {
 		Object.assign(this, init);
 	}

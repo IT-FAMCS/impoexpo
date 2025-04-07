@@ -14,6 +14,7 @@ import {
 } from "@xyflow/react";
 import { create } from "zustand/react";
 import { findCompatibleHandle } from "./nodes/node-schema-helpers";
+import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 
 const nodeCount: Map<string, number> = new Map();
 export const getNodeId = (type: string) => {
@@ -23,28 +24,6 @@ export const getNodeId = (type: string) => {
 	nodeCount.set(type, next);
 	return `${type}-${next}`;
 };
-
-const initialNodes: Node[] = [
-	{
-		id: "console-test-in-1",
-		data: {},
-		position: { x: 300, y: 100 },
-		type: "console-test-in",
-	},
-	{
-		id: "console-test-in-2",
-		data: {},
-		position: { x: 800, y: 100 },
-		type: "console-test-in",
-	},
-	{
-		id: "console-test-out",
-		data: {},
-		position: { x: 50, y: 200 },
-		type: "console-test-out",
-	},
-];
-const initialEdges: Edge[] = [];
 
 export type FormatEditorStore = {
 	nodes: Node[];
@@ -72,9 +51,11 @@ export type FormatEditorStore = {
 	) => void;
 };
 
-export const useFormatEditorStore = create<FormatEditorStore>((set, get) => ({
-	nodes: initialNodes,
-	edges: initialEdges,
+export const useFormatEditorStore = createResettable<FormatEditorStore>(
+	WIZARD_STORE_CATEGORY,
+)((set, get) => ({
+	nodes: [],
+	edges: [],
 	onNodesChange: (changes) => {
 		set({
 			nodes: applyNodeChanges(changes, get().nodes),
