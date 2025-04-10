@@ -21,6 +21,8 @@ export class BaseNode<
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
+	public relatedProperties?: (keyof (TIn & TOut))[][] = undefined;
+
 	constructor(
 		init: Partial<BaseNode<TIn, TOut>> &
 			Pick<BaseNode<TIn, TOut>, "name" | "category">,

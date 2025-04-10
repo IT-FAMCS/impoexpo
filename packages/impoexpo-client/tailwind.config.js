@@ -19,6 +19,7 @@ module.exports = {
 		"max-w-64",
 		"bg-secondary-200",
 		"bg-primary-200",
+		"bg-warning-200",
 	],
 	darkMode: "class",
 	plugins: [

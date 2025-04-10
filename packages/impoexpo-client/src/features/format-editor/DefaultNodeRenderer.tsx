@@ -222,11 +222,13 @@ function NodePropertyRenderer(props: {
 	const { edges } = useFormatEditorStore();
 
 	const shouldHideEntryComponent = useMemo(() => {
-		if (!props.input) return;
+		if (!props.input) return true;
+		if (nodeRenderOptions.inputs?.[props.name]?.mode === "dependentOnly")
+			return true;
 		return edges.some((edge) => {
 			return edge.target === props.id && edge.targetHandle === props.name;
 		});
-	}, [edges, props.id, props.input, props.name]);
+	}, [edges, props.id, props.input, props.name, nodeRenderOptions]);
 
 	const isIndependent = useMemo(() => {
 		if (!props.input) return false;

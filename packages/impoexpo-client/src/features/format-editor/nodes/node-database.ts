@@ -4,6 +4,7 @@ import "./builtin/console";
 import "./builtin/notifications";
 import "./builtin/math";
 import "./builtin/strings";
+import "./builtin/conditional";
 
 import { create } from "zustand/react";
 import { supportedLocales } from "@/locales/supportedLocales";
