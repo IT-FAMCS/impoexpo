@@ -1,4 +1,4 @@
-import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
+import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 import {
 	registerCategory,
 	registerWithDefaultRenderer,

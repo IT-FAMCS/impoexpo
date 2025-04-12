@@ -1,5 +1,4 @@
 import * as notificationNodes from "@impoexpo/shared/nodes/builtin/notifications";
-import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
 
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
@@ -7,6 +6,7 @@ import {
 	registerCategory,
 	registerWithDefaultRenderer,
 } from "../renderable-node-types";
+import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 
 nodesScope(() => {
 	registerCategory("notifications", msg`notifications`, (size) => (

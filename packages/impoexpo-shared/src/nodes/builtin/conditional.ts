@@ -1,6 +1,6 @@
 import { boolean, object, unknown } from "valibot";
 import { BaseNode } from "../node-types";
-import { nodesScope, registerBaseNodes } from "../node-utils";
+import { nodesScope, registerBaseNodes } from "../node-database";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",
@@ -13,7 +13,9 @@ export const IF_NODE = new BaseNode({
 	outputSchema: object({
 		out: unknown(),
 	}),
-	relatedProperties: [["out", "falseValue", "trueValue"]],
+	genericProperties: {
+		T: ["out", "falseValue", "trueValue"],
+	},
 });
 
 nodesScope(() => {

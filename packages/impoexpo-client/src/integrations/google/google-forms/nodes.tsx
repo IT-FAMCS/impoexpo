@@ -15,7 +15,7 @@ import {
 import {
 	nodesScope,
 	registerBaseNodes,
-} from "@impoexpo/shared/nodes/node-utils";
+} from "@impoexpo/shared/nodes/node-database";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import { object } from "valibot";
 

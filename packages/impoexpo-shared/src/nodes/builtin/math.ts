@@ -1,6 +1,7 @@
 import { number, object } from "valibot";
 import { BaseNode } from "../node-types";
-import { nodesScope, registerBaseNodes } from "../node-utils";
+import { nodesScope } from "../node-database";
+import { registerBaseNodes } from "../node-database";
 
 const binaryNode = (name: string) =>
 	new BaseNode({

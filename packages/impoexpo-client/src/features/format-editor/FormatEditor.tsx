@@ -17,14 +17,14 @@ import "../../styles/reactflow.css";
 import "./nodes/builtin/console";
 import { useDisclosure } from "@heroui/react";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
+import {
+	getEntrySchema,
+	getEntrySource,
+	unwrapNodeIfNeeded,
+} from "@impoexpo/shared/nodes/node-utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import {
-	getHandleSchema,
-	getHandleSource,
-	nodeSchemasCompatible,
-} from "./nodes/node-schema-helpers";
+import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
 import { useRenderableNodesStore } from "./nodes/renderable-node-types";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
@@ -140,9 +140,9 @@ export default function FormatEditor() {
 				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
 				const node = baseNodesMap.get(connectionState.fromNode.type)!;
 				const handleId = connectionState.fromHandle.id;
-				const handle = unwrapNodeIfNeeded(getHandleSchema(node, handleId));
+				const handle = unwrapNodeIfNeeded(getEntrySchema(node, handleId));
 				setFilters([
-					`${getHandleSource(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
+					`${getEntrySource(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
 				]);
 				const { clientX, clientY } =
 					"changedTouches" in event ? event.changedTouches[0] : event;

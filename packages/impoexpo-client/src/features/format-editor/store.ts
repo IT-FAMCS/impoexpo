@@ -12,13 +12,13 @@ import {
 	type HandleType,
 	reconnectEdge,
 } from "@xyflow/react";
-import { create } from "zustand/react";
-import {
-	findCompatibleHandle,
-	getHandleSource,
-} from "./nodes/node-schema-helpers";
 import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 import { persistStoreOnReload } from "@/stores/hot-reload";
+import type { NodeInternalData } from "./nodes/renderable-node-types";
+import {
+	getEntrySource,
+	findCompatibleEntry,
+} from "@impoexpo/shared/nodes/node-utils";
 
 const nodeCount: Map<string, number> = new Map();
 export const getNodeId = (type: string) => {
@@ -30,12 +30,12 @@ export const getNodeId = (type: string) => {
 };
 
 export type FormatEditorStore = {
-	nodes: Node[];
+	nodes: Node<NodeInternalData>[];
 	edges: Edge[];
-	onNodesChange: OnNodesChange<Node>;
+	onNodesChange: OnNodesChange<Node<NodeInternalData>>;
 	onEdgesChange: OnEdgesChange;
 	onConnect: OnConnect;
-	setNodes: (nodes: Node[]) => void;
+	setNodes: (nodes: Node<NodeInternalData>[]) => void;
 	setEdges: (edges: Edge[]) => void;
 	attachNewNode: (
 		fromNodeId: string,
@@ -105,9 +105,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		const newNode = {
 			id: id,
 			position: position,
-			data: {},
+			data: { resolvedTypes: {} },
 			type: type,
-		} satisfies Node;
+		} satisfies Node<NodeInternalData>;
 		get().setNodes(get().nodes.concat(newNode));
 	},
 
@@ -116,16 +116,16 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		const toData = baseNodesMap.get(toNodeType);
 		if (!fromData || !toData) return;
 
-		const fromSource = getHandleSource(fromData, fromHandleId);
-		const [name] = findCompatibleHandle(fromData, fromHandleId, toData);
+		const fromSource = getEntrySource(fromData, fromHandleId);
+		const [name] = findCompatibleEntry(fromData, fromHandleId, toData);
 		const id = getNodeId(toNodeType);
 
 		const newNode = {
 			id: id,
 			position: position,
-			data: {},
+			data: { resolvedTypes: {} },
 			type: toNodeType,
-		} satisfies Node;
+		} satisfies Node<NodeInternalData>;
 
 		get().setNodes(get().nodes.concat(newNode));
 		get().setEdges(

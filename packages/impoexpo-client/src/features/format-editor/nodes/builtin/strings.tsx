@@ -1,5 +1,5 @@
 import * as stringNodes from "@impoexpo/shared/nodes/builtin/strings";
-import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
+import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";

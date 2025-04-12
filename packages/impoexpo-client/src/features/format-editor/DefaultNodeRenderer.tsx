@@ -12,22 +12,19 @@ import {
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import {
-	type BuiltInNode,
 	Handle,
 	type NodeProps,
 	Position,
+	type BuiltInNode,
 } from "@xyflow/react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
-	type ValidatorFunction,
 	extractOptionMetadata,
 	extractPropertyDescription,
 	extractPropertyPlaceholder,
 	extractPropertyTitle,
-	isEnum,
-	isPicklist,
 } from "./nodes/node-schema-helpers";
 import {
 	localizableString,
@@ -39,6 +36,11 @@ import type { BaseIssue } from "valibot";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "./store";
 import clsx from "clsx";
+import {
+	type ValidatorFunction,
+	isPicklist,
+	isEnum,
+} from "@impoexpo/shared/nodes/node-utils";
 
 export default function DefaultNodeRenderer({
 	type,
@@ -248,9 +250,9 @@ function NodePropertyRenderer(props: {
 
 	return props.input ? (
 		<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
-			<div className="relative flex flex-row gap-4 items-start">
+			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
-					<div className="flex flex-col gap-1 items-start pl-4">
+					<div className="flex flex-col items-start gap-1 pl-4">
 						<p className="max-w-64 text-start">
 							{extractPropertyTitle(props.type, props.name)}
 						</p>
@@ -278,9 +280,9 @@ function NodePropertyRenderer(props: {
 		</div>
 	) : (
 		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
-			<div className="relative flex flex-row gap-4 items-start">
+			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
-					<div className="flex flex-col gap-1 items-end pr-4">
+					<div className="flex flex-col items-end gap-1 pr-4">
 						<p className="max-w-64 text-end">
 							{extractPropertyTitle(props.type, props.name)}
 						</p>

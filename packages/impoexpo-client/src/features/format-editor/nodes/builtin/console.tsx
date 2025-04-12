@@ -1,5 +1,5 @@
 import * as consoleNodes from "@impoexpo/shared/nodes/builtin/console";
-import { nodesScope } from "@impoexpo/shared/nodes/node-utils";
+import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";

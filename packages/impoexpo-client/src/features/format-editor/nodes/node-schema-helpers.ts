@@ -1,31 +1,15 @@
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import type {
-	AllowedObjectEntry,
-	BaseNode,
-} from "@impoexpo/shared/nodes/node-types";
-import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
+import {
+	getEntrySchema,
+	unwrapNodeIfNeeded,
+} from "@impoexpo/shared/nodes/node-utils";
 import { type MessageDescriptor, i18n } from "@lingui/core";
 import type { Connection, Edge, Node } from "@xyflow/react";
-import type { EnumSchema, PicklistSchema } from "valibot";
-import type * as v from "valibot";
 import {
 	localizableString,
-	type NodePropertyOptions,
 	type NodePropertyOptionsMetadata,
 	useRenderableNodesStore,
 } from "./renderable-node-types";
-
-export const isPicklist = (
-	schema: AllowedObjectEntry,
-): schema is PicklistSchema<NodePropertyOptions<typeof schema>, undefined> => {
-	return schema.type === "picklist";
-};
-
-export const isEnum = (
-	schema: AllowedObjectEntry,
-): schema is EnumSchema<NodePropertyOptions<typeof schema>, undefined> => {
-	return schema.type === "enum";
-};
 
 export const extractOptionMetadata = (
 	nodeType: string,
@@ -99,7 +83,7 @@ export const extractPropertyDescription = (
 
 	const schema = unwrapNodeIfNeeded(
 		// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist by now
-		getHandleSchema(baseNodesMap.get(type)!, propertyName),
+		getEntrySchema(baseNodesMap.get(type)!, propertyName),
 	);
 
 	if (renderProperties.inputs?.[propertyName]?.description !== undefined)
@@ -128,64 +112,6 @@ export const extractPropertyPlaceholder = (
 		: propertyName;
 };
 
-export type ValidatorFunction = (
-	dataset: v.UnknownDataset,
-	config: v.Config<v.BaseIssue<unknown>>,
-) => v.OutputDataset<unknown, v.BaseIssue<unknown>>;
-
-type DefaultBaseNode = BaseNode<
-	Record<string, AllowedObjectEntry>,
-	Record<string, AllowedObjectEntry>
->;
-
-export const getHandleSchema = (
-	node: DefaultBaseNode,
-	handle: string,
-): AllowedObjectEntry => {
-	if (node.inputSchema && handle in node.inputSchema.entries)
-		return node.inputSchema.entries[handle];
-	if (node.outputSchema && handle in node.outputSchema.entries)
-		return node.outputSchema.entries[handle];
-	throw new Error(
-		`couldn't get handle "${handle}" in node with type "${node.category}-${node.name}"`,
-	);
-};
-
-export const getHandleSource = (
-	node: DefaultBaseNode,
-	handle: string,
-): "input" | "output" => {
-	if (node.inputSchema && handle in node.inputSchema.entries) return "input";
-	if (node.outputSchema && handle in node.outputSchema.entries) return "output";
-	throw new Error(
-		`couldn't get handle "${handle}" in node with type "${node.category}-${node.name}"`,
-	);
-};
-
-export const findCompatibleHandle = (
-	fromNode: DefaultBaseNode,
-	fromHandle: string,
-	toNode: DefaultBaseNode,
-): [string, AllowedObjectEntry] => {
-	const fromHandleSource = getHandleSource(fromNode, fromHandle);
-	const fromHandleSchema = unwrapNodeIfNeeded(
-		getHandleSchema(fromNode, fromHandle),
-	);
-
-	const entries =
-		fromHandleSource === "input"
-			? (toNode.outputSchema?.entries ?? {})
-			: (toNode.inputSchema?.entries ?? {});
-	for (const [name, entry] of Object.entries(entries)) {
-		const toHandleSchema = unwrapNodeIfNeeded(entry);
-		if (fromHandleSchema.expects === toHandleSchema.expects)
-			return [name, entry];
-	}
-	throw new Error(
-		`couldn't find a compatible handle between ${fromNode.name} <=> ${toNode.name} (handle ${fromHandle}, expects ${fromHandleSchema.expects})`,
-	);
-};
-
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
 	nodes: Node[],
@@ -201,10 +127,10 @@ export const nodeSchemasCompatible = (
 	if (!source || !target) return false;
 
 	const sourceSchema = unwrapNodeIfNeeded(
-		getHandleSchema(source, connection.sourceHandle),
+		getEntrySchema(source, connection.sourceHandle),
 	);
 	const targetSchema = unwrapNodeIfNeeded(
-		getHandleSchema(target, connection.targetHandle),
+		getEntrySchema(target, connection.targetHandle),
 	);
 	return sourceSchema.expects === targetSchema.expects;
 };

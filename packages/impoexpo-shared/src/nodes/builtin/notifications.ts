@@ -1,6 +1,7 @@
 import { object, string } from "valibot";
 import { BaseNode } from "../node-types";
-import { nodesScope, registerBaseNodes } from "../node-utils";
+import { nodesScope } from "../node-database";
+import { registerBaseNodes } from "../node-database";
 
 export const INFORMATION_NOTIFICATION_NODE = new BaseNode({
 	name: "information",

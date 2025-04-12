@@ -11,7 +11,8 @@ import {
 	number,
 	boolean,
 } from "valibot";
-import { nodesScope, registerBaseNodes } from "../node-utils";
+import { nodesScope } from "../node-database";
+import { registerBaseNodes } from "../node-database";
 import { BaseNode } from "../node-types";
 
 export const CONSOLE_WRITE_NODE = new BaseNode({

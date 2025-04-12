@@ -1,6 +1,7 @@
 import { boolean, number, object, optional, string } from "valibot";
 import { BaseNode } from "../node-types";
-import { nodesScope, registerBaseNodes } from "../node-utils";
+import { nodesScope } from "../node-database";
+import { registerBaseNodes } from "../node-database";
 
 export const COMBINE_STRINGS_NODE = new BaseNode({
 	category: "string",

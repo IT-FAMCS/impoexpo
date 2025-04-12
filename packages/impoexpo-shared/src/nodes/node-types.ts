@@ -7,6 +7,21 @@ export type AllowedObjectEntry =
 	| v.NullishSchema<v.GenericSchema, unknown>
 	| v.OptionalSchema<v.GenericSchema, unknown>;
 
+export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
+	TProperty extends v.OptionalSchema<
+		infer TWrappedSchema extends AllowedObjectEntry,
+		unknown
+	>
+		? NodePropertyOptions<TWrappedSchema>
+		: TProperty extends v.PicklistSchema<infer TOptions, undefined>
+			? TOptions[number]
+			: TProperty extends v.EnumSchema<
+						infer TOptions extends Record<string, string | number>,
+						undefined
+					>
+				? keyof TOptions
+				: never;
+
 export class BaseNode<
 	// biome-ignore lint/complexity/noBannedTypes: empty type required here
 	TIn extends v.ObjectEntries = {},
@@ -21,7 +36,7 @@ export class BaseNode<
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
-	public relatedProperties?: (keyof (TIn & TOut))[][] = undefined;
+	public genericProperties?: Record<string, (keyof (TIn & TOut))[]> = undefined;
 
 	constructor(
 		init: Partial<BaseNode<TIn, TOut>> &

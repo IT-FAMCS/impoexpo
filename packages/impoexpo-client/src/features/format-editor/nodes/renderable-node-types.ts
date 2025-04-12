@@ -5,13 +5,13 @@ import { persistStoreOnReload } from "@/stores/hot-reload";
 import type {
 	AllowedObjectEntry,
 	BaseNode,
+	NodePropertyOptions,
 } from "@impoexpo/shared/nodes/node-types";
 import { unwrapNodeIfNeeded } from "@impoexpo/shared/nodes/node-utils";
 import { type MessageDescriptor, i18n } from "@lingui/core";
 import { insert } from "@orama/orama";
 import type { NodeTypes } from "@xyflow/react";
 import type React from "react";
-import type { EnumSchema, OptionalSchema, PicklistSchema } from "valibot";
 import { create } from "zustand";
 import DefaultNodeRenderer from "../DefaultNodeRenderer";
 import { searchScope } from "./node-database";
@@ -22,6 +22,12 @@ export const localizableString = (
 	str: MessageDescriptor | string,
 	localizer?: (msg: MessageDescriptor) => string,
 ) => (typeof str === "string" ? str : localizer ? localizer(str) : i18n.t(str));
+
+// TODO: implementing typescript strictness here is very difficult
+// and probably not required? who knows
+export type NodeInternalData = Partial<{
+	resolvedTypes: Record<string, AllowedObjectEntry>;
+}>;
 
 export type RenderableNodesStore = {
 	nodeRenderers: NodeTypes;
@@ -67,21 +73,6 @@ export type NodeRenderOptions<
 					[key in keyof TSOutput]: NodePropertyMetadata<TSOutput[key], false>;
 				}>;
 			}>);
-
-export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
-	TProperty extends OptionalSchema<
-		infer TWrappedSchema extends AllowedObjectEntry,
-		unknown
-	>
-		? NodePropertyOptions<TWrappedSchema>
-		: TProperty extends PicklistSchema<infer TOptions, undefined>
-			? TOptions[number]
-			: TProperty extends EnumSchema<
-						infer TOptions extends Record<string, string | number>,
-						undefined
-					>
-				? keyof TOptions
-				: never;
 
 export type NodePropertyMetadata<
 	TProperty extends AllowedObjectEntry,
