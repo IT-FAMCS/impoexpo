@@ -53,7 +53,7 @@ export default function DefaultNodeRenderer({
 	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
 		useShallow((state) => [
 			state.nodeRenderOptions.get(type),
-			state.nodeRenderOptions.get(type)?.categoryIcon ??
+			state.nodeRenderOptions.get(type)?.icon ??
 				(state.categoryRenderOptions.has(nodeData.category)
 					? state.categoryRenderOptions.get(nodeData.category)?.icon
 					: null),
@@ -67,7 +67,7 @@ export default function DefaultNodeRenderer({
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",
-					nodeRenderOptions.headerColor,
+					nodeRenderOptions.header,
 				)}
 			>
 				{categoryIcon?.(16)}

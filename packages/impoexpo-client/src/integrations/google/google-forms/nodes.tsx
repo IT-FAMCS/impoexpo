@@ -1,5 +1,5 @@
 import {
-	type NodeRenderOptions,
+	type RawNodeRenderOptions,
 	registerWithDefaultRenderer,
 } from "@/features/format-editor/nodes/renderable-node-types";
 import { schemaFromString } from "@/features/format-editor/nodes/schema-from-string";
@@ -30,14 +30,14 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 		outputSchema: schema,
 	});
 
-	const options: NodeRenderOptions<
+	const options: RawNodeRenderOptions<
 		Record<string, AllowedObjectEntry>,
 		typeof schema.entries
 	> = {
 		searchable: false,
 		title: form.title ?? form.documentTitle,
-		headerColor: "bg-secondary-200",
-		categoryIcon: (size: number) => (
+		header: "bg-secondary-200",
+		icon: (size: number) => (
 			<Icon width={size} icon="simple-icons:googleforms" />
 		),
 		outputs: {},

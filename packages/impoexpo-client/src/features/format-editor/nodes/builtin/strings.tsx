@@ -16,7 +16,7 @@ nodesScope(() => {
 	registerWithDefaultRenderer(stringNodes.COMBINE_STRINGS_NODE, {
 		title: msg`combine strings`,
 		aliases: [msg`add strings`, msg`join strings`],
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			stringA: { title: "A" },
@@ -29,7 +29,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(stringNodes.REPLACE_NODE, {
 		title: msg`replace in string`,
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
@@ -44,7 +44,7 @@ nodesScope(() => {
 	registerWithDefaultRenderer(stringNodes.CONTAINS_NODE, {
 		title: msg`string contains X?`,
 		aliases: [msg`search in string`, msg`find in string`],
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
@@ -57,7 +57,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(stringNodes.LENGTH_NODE, {
 		title: msg`length of string`,
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
@@ -69,7 +69,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(stringNodes.NUMBER_TO_STRING_NODE, {
 		title: msg`number -> string`,
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			number: { title: msg`number` },
@@ -81,7 +81,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(stringNodes.BOOLEAN_TO_STRING_NODE, {
 		title: msg`boolean -> string`,
-		headerColor: "bg-primary-200",
+		header: "bg-primary-200",
 		searchable: true,
 		inputs: {
 			boolean: { title: msg`boolean` },

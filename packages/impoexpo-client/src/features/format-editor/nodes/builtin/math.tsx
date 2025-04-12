@@ -22,7 +22,7 @@ nodesScope(() => {
 		registerWithDefaultRenderer(node, {
 			title: title,
 			aliases: aliases,
-			headerColor: "bg-primary-200",
+			header: "bg-primary-200",
 			searchable: true,
 			inputs: {
 				inA: { title: "A" },
@@ -43,7 +43,7 @@ nodesScope(() => {
 		registerWithDefaultRenderer(node, {
 			title: title,
 			aliases: aliases,
-			headerColor: "bg-primary-200",
+			header: "bg-primary-200",
 			searchable: true,
 			inputs: {
 				in: { title: msg`input` },

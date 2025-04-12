@@ -163,7 +163,7 @@ export default function SearchNodesModal(props: {
 														onClose();
 													}}
 													startContent={(
-														renderOptions.categoryIcon ?? categoryOptions.icon
+														renderOptions.icon ?? categoryOptions.icon
 													)(24)}
 													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
 												>

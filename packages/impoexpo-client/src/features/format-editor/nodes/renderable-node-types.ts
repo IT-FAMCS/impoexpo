@@ -47,12 +47,96 @@ export type RenderableNodesStore = {
 	>;
 };
 
-export type NodeRenderOptions<
+export class NodeRenderOptions<
+	TSInput extends Record<string, AllowedObjectEntry>,
+	TSOutput extends Record<string, AllowedObjectEntry>,
+> {
+	public raw: RawNodeRenderOptions<TSInput, TSOutput>;
+	public node: BaseNode<TSInput, TSOutput>;
+	constructor(
+		node: BaseNode<TSInput, TSOutput>,
+		raw: RawNodeRenderOptions<TSInput, TSOutput>,
+	) {
+		this.node = node;
+		this.raw = raw;
+	}
+
+	public input<TKey extends keyof TSInput>(
+		key: TKey,
+	): NodePropertyMetadata<TSInput[TKey], true> | undefined {
+		if (!("inputs" in this.raw) || !this.raw.inputs) {
+			throw new Error(
+				"NodeRenderOptions.input() was somehow called despite the node not having an input schema",
+			);
+		}
+		return this.raw.inputs[key];
+	}
+
+	public output<TKey extends keyof TSOutput>(
+		key: TKey,
+	): NodePropertyMetadata<TSOutput[TKey], false> | undefined {
+		if (!("outputs" in this.raw) || !this.raw.outputs) {
+			throw new Error(
+				"NodeRenderOptions.output() was somehow called despite the node not having an output schema",
+			);
+		}
+		return this.raw.outputs[key];
+	}
+
+	property<TKey extends keyof TSInput | keyof TSOutput>(
+		key: TKey,
+	): NodePropertyMetadata<AllowedObjectEntry, true> | undefined {
+		return key in (this.node.inputSchema ?? {})
+			? this.input(key as keyof TSInput)
+			: this.output(key as keyof TSOutput);
+	}
+
+	public title<TKey extends keyof TSInput | keyof TSOutput>(key: TKey): string {
+		return localizableString(this.property(key)?.title ?? String(key));
+	}
+
+	public description<TKey extends keyof TSInput | keyof TSOutput>(
+		key: TKey,
+	): string {
+		return localizableString(this.property(key)?.description ?? String(key));
+	}
+
+	public placeholder<TKey extends keyof TSInput | keyof TSOutput>(
+		key: TKey,
+	): string {
+		return localizableString(this.property(key)?.placeholder ?? String(key));
+	}
+
+	public options<TInputName extends keyof TSInput>(
+		inputName: TInputName,
+		key: string,
+	): NodePropertyOptionsMetadata<string> | undefined {
+		const input = this.input(inputName);
+		if (!input || !("options" in input)) return undefined;
+
+		const keyString = String(key);
+		const options = input.options as Partial<
+			Record<string, NodePropertyOptionsMetadata<MessageDescriptor | string>>
+		>;
+		if (!(key in options)) return { key: keyString, title: keyString };
+
+		const option = options[keyString];
+		return {
+			key: keyString,
+			title: localizableString(option?.title ?? keyString),
+			description: option?.description
+				? localizableString(option?.description)
+				: undefined,
+		};
+	}
+}
+
+export type RawNodeRenderOptions<
 	TSInput extends Record<string, AllowedObjectEntry>,
 	TSOutput extends Record<string, AllowedObjectEntry>,
 > = Partial<{
-	categoryIcon: IconRenderFunction;
-	headerColor: string;
+	icon: IconRenderFunction;
+	header: string;
 	searchable: boolean;
 	aliases: (MessageDescriptor | string)[];
 	title: MessageDescriptor | string;
@@ -109,7 +193,7 @@ export const registerWithDefaultRenderer = <
 	TSOutput extends Record<string, AllowedObjectEntry>,
 >(
 	node: BaseNode<TSInput, TSOutput>,
-	options: NodeRenderOptions<TSInput, TSOutput>,
+	options: RawNodeRenderOptions<TSInput, TSOutput>,
 ) => {
 	const type = `${node.category}-${node.name}`;
 	useRenderableNodesStore.setState((state) => {
@@ -119,7 +203,7 @@ export const registerWithDefaultRenderer = <
 			}),
 			nodeRenderOptions: new Map(state.nodeRenderOptions).set(
 				type,
-				options ?? {},
+				new NodeRenderOptions(node, options),
 			),
 		};
 	});
