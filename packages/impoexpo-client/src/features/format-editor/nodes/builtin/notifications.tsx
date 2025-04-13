@@ -5,7 +5,7 @@ import { msg } from "@lingui/core/macro";
 import {
 	registerCategory,
 	registerWithDefaultRenderer,
-} from "../renderable-node-types";
+} from "../renderable-node-database";
 import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 
 nodesScope(() => {

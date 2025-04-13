@@ -16,16 +16,14 @@ import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
 import "./nodes/builtin/console";
 import { useDisclosure } from "@heroui/react";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import {
-	getEntrySchema,
-	getEntrySource,
-	unwrapNodeIfNeeded,
-} from "@impoexpo/shared/nodes/node-utils";
+import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { nodeSchemasCompatible } from "./nodes/node-schema-helpers";
-import { useRenderableNodesStore } from "./nodes/renderable-node-types";
+import { nodeSchemasCompatible } from "./nodes/renderable-node-helpers";
+import {
+	getNodeRenderOptions,
+	useRenderableNodesStore,
+} from "./nodes/renderable-node-database";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
@@ -65,6 +63,9 @@ export default function FormatEditor() {
 		onReconnect,
 		onReconnectStart,
 		onReconnectEnd,
+		resolveGenericNode,
+		onNodesDelete,
+		onEdgesDelete,
 	] = useFormatEditorStore(
 		useShallow((s) => [
 			s.edges,
@@ -75,6 +76,9 @@ export default function FormatEditor() {
 			s.onReconnect,
 			s.onReconnectStart,
 			s.onReconnectEnd,
+			s.resolveGenericNode,
+			s.onNodesDelete,
+			s.onEdgesDelete,
 		]),
 	);
 	const { screenToFlowPosition } = useReactFlow();
@@ -137,12 +141,12 @@ export default function FormatEditor() {
 				connectionState.fromNode?.type &&
 				connectionState.fromHandle?.id
 			) {
-				// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
-				const node = baseNodesMap.get(connectionState.fromNode.type)!;
+				const node = getBaseNode(connectionState.fromNode.type);
 				const handleId = connectionState.fromHandle.id;
-				const handle = unwrapNodeIfNeeded(getEntrySchema(node, handleId));
+				const handle = node.entry(handleId, true);
+				// TODO
 				setFilters([
-					`${getEntrySource(node, handleId) === "input" ? "outputs" : "accepts"}:${handle.expects}`,
+					`${handle.source === "input" ? "outputs" : "accepts"}:${handle.type}`,
 				]);
 				const { clientX, clientY } =
 					"changedTouches" in event ? event.changedTouches[0] : event;
@@ -156,9 +160,48 @@ export default function FormatEditor() {
 					fromNodeType: connectionState.fromNode.type,
 				});
 				openSearchModal();
+			} else if (
+				connectionState.isValid &&
+				connectionState.fromNode?.type &&
+				connectionState.toNode?.type &&
+				connectionState.fromHandle?.id &&
+				connectionState.toHandle?.id
+			) {
+				const fromNode = getBaseNode(connectionState.fromNode.type);
+				const toNode = getBaseNode(connectionState.toNode.type);
+				const fromEntry = fromNode.entry(connectionState.fromHandle.id);
+				const toEntry = toNode.entry(connectionState.toHandle.id);
+
+				if (fromEntry.generic) {
+					resolveGenericNode(
+						{
+							node: fromNode,
+							options: getNodeRenderOptions(connectionState.fromNode.type),
+						},
+						fromEntry.type,
+						toEntry,
+						connectionState.fromNode.id,
+					);
+				} else if (toEntry.generic) {
+					resolveGenericNode(
+						{
+							node: toNode,
+							options: getNodeRenderOptions(connectionState.toNode.type),
+						},
+						toEntry.type,
+						fromEntry,
+						connectionState.toNode.id,
+					);
+				}
 			}
 		},
-		[openSearchModal, setFilters, setNewNodeInformation, screenToFlowPosition],
+		[
+			openSearchModal,
+			setFilters,
+			setNewNodeInformation,
+			screenToFlowPosition,
+			resolveGenericNode,
+		],
 	);
 
 	return (
@@ -174,6 +217,8 @@ export default function FormatEditor() {
 				onReconnect={onReconnect}
 				onReconnectStart={onReconnectStart}
 				onReconnectEnd={onReconnectEnd}
+				onNodesDelete={onNodesDelete}
+				onEdgesDelete={onEdgesDelete}
 				isValidConnection={isValidConnection}
 				proOptions={{ hideAttribution: true }}
 				colorMode={colorMode}

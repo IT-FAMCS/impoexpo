@@ -1,22 +1,24 @@
-import type {
-	AllowedObjectEntry,
-	BaseNode,
-	NodePropertyOptions,
-} from "./node-types";
+import type { ObjectEntry, BaseNode, NodePropertyOptions } from "./node-types";
 import type * as v from "valibot";
 
-export const unwrapNodeIfNeeded = (
-	node: AllowedObjectEntry,
-): AllowedObjectEntry => {
+export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
+	// NOTE: do not unwrap nullable types here! they must be handled by the user
+	// with special nodes.
 	return node.type === "optional"
 		? unwrapNodeIfNeeded(
-				(node as v.OptionalSchema<AllowedObjectEntry, unknown>).wrapped,
+				(node as v.OptionalSchema<ObjectEntry, unknown>).wrapped,
 			)
 		: node;
 };
 
+export const isArray = (
+	schema: ObjectEntry,
+): schema is v.ArraySchema<ObjectEntry, undefined> => {
+	return schema.type === "array";
+};
+
 export const isPicklist = (
-	schema: AllowedObjectEntry,
+	schema: ObjectEntry,
 ): schema is v.PicklistSchema<
 	NodePropertyOptions<typeof schema>,
 	undefined
@@ -25,7 +27,7 @@ export const isPicklist = (
 };
 
 export const isEnum = (
-	schema: AllowedObjectEntry,
+	schema: ObjectEntry,
 ): schema is v.EnumSchema<NodePropertyOptions<typeof schema>, undefined> => {
 	return schema.type === "enum";
 };
@@ -35,16 +37,13 @@ export type ValidatorFunction = (
 	config: v.Config<v.BaseIssue<unknown>>,
 ) => v.OutputDataset<unknown, v.BaseIssue<unknown>>;
 
-type DefaultBaseNode = BaseNode<
-	Record<string, AllowedObjectEntry>,
-	Record<string, AllowedObjectEntry>
->;
+export type DefaultBaseNode = BaseNode<v.ObjectEntries, v.ObjectEntries>;
 
 export const findCompatibleEntry = (
 	fromNode: DefaultBaseNode,
 	fromEntryKey: string,
 	toNode: DefaultBaseNode,
-): [string, AllowedObjectEntry] => {
+): [string, ObjectEntry] => {
 	const fromEntry = fromNode.entry(fromEntryKey, true);
 
 	const entries =
@@ -53,11 +52,10 @@ export const findCompatibleEntry = (
 			: (toNode.inputSchema?.entries ?? {});
 	for (const [name, entry] of Object.entries(entries)) {
 		const toHandleSchema = unwrapNodeIfNeeded(entry);
-		if (fromEntry.schema.expects === toHandleSchema.expects)
-			return [name, entry];
+		if (fromEntry.schema.type === toHandleSchema.type) return [name, entry];
 	}
 
 	throw new Error(
-		`couldn't find a compatible entry between ${fromNode.name} <=> ${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.schema.expects})`,
+		`couldn't find a compatible entry between ${fromNode.name} <=> ${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.type})`,
 	);
 };

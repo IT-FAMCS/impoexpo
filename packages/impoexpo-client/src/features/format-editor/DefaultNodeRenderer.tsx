@@ -9,8 +9,8 @@ import {
 	Select,
 	SelectItem,
 } from "@heroui/react";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
-import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
+import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import {
 	Handle,
 	type NodeProps,
@@ -21,14 +21,8 @@ import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
-	extractOptionMetadata,
-	extractPropertyDescription,
-	extractPropertyPlaceholder,
-	extractPropertyTitle,
-} from "./nodes/node-schema-helpers";
-import {
+	type DefaultNodeRenderOptions,
 	localizableString,
-	useRenderableNodesStore,
 } from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
 import { useLingui } from "@lingui/react/macro";
@@ -41,6 +35,7 @@ import {
 	isPicklist,
 	isEnum,
 } from "@impoexpo/shared/nodes/node-utils";
+import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 
 export default function DefaultNodeRenderer({
 	type,
@@ -48,16 +43,9 @@ export default function DefaultNodeRenderer({
 }: NodeProps<BuiltInNode>) {
 	const { t } = useLingui();
 
-	// biome-ignore lint/style/noNonNullAssertion: only registered nodes get renderered
-	const nodeData = useMemo(() => baseNodesMap.get(type)!, [type]);
-	const [nodeRenderOptions, categoryIcon] = useRenderableNodesStore(
-		useShallow((state) => [
-			state.nodeRenderOptions.get(type),
-			state.nodeRenderOptions.get(type)?.icon ??
-				(state.categoryRenderOptions.has(nodeData.category)
-					? state.categoryRenderOptions.get(nodeData.category)?.icon
-					: null),
-		]),
+	const nodeData = useMemo(() => getBaseNode(type), [type]);
+	const [nodeRenderOptions] = useRenderableNodesStore(
+		useShallow((state) => [state.nodeRenderOptions.get(type)]),
 	);
 
 	if (nodeRenderOptions === undefined) return <>meow</>;
@@ -67,13 +55,13 @@ export default function DefaultNodeRenderer({
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",
-					nodeRenderOptions.header,
+					nodeRenderOptions.raw.header,
 				)}
 			>
-				{categoryIcon?.(16)}
+				{nodeRenderOptions.raw.icon?.(16)}
 				<p>
-					{nodeRenderOptions.title !== undefined
-						? localizableString(nodeRenderOptions.title, t)
+					{nodeRenderOptions.raw.title !== undefined
+						? localizableString(nodeRenderOptions.raw.title, t)
 						: nodeData.name}
 				</p>
 			</CardHeader>
@@ -83,7 +71,7 @@ export default function DefaultNodeRenderer({
 					Object.entries(nodeData.inputSchema.entries).map((pair) => (
 						<NodePropertyRenderer
 							key={pair[0]}
-							type={type}
+							renderOptions={nodeRenderOptions}
 							name={pair[0]}
 							property={pair[1]}
 							input={true}
@@ -95,7 +83,7 @@ export default function DefaultNodeRenderer({
 					Object.entries(nodeData.outputSchema.entries).map((pair) => (
 						<NodePropertyRenderer
 							key={pair[0]}
-							type={type}
+							renderOptions={nodeRenderOptions}
 							name={pair[0]}
 							property={pair[1]}
 							input={false}
@@ -108,15 +96,15 @@ export default function DefaultNodeRenderer({
 }
 
 const getEntryComponent = <TDefault,>(
-	nodeType: string,
+	renderOptions: DefaultNodeRenderOptions,
 	handleName: string,
-	entry: AllowedObjectEntry,
+	entry: ObjectEntry,
 	defaultValue?: TDefault,
 	validator?: ValidatorFunction,
 ) => {
 	if ("default" in entry) {
 		return getEntryComponent(
-			nodeType,
+			renderOptions,
 			handleName,
 			entry.wrapped,
 			entry.default,
@@ -124,9 +112,9 @@ const getEntryComponent = <TDefault,>(
 	}
 	if ("pipe" in entry && Array.isArray(entry.pipe) && entry.pipe.length > 0) {
 		return getEntryComponent(
-			nodeType,
+			renderOptions,
 			handleName,
-			entry.pipe[0] as AllowedObjectEntry,
+			entry.pipe[0] as ObjectEntry,
 			defaultValue,
 			entry["~run"],
 		);
@@ -136,7 +124,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
-				type={nodeType}
+				renderOptions={renderOptions}
 				default={(defaultValue as string | undefined) ?? ""}
 				validator={validator}
 			/>
@@ -147,7 +135,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
-				type={nodeType}
+				renderOptions={renderOptions}
 				default={(defaultValue as boolean | undefined) ?? false}
 				validator={validator}
 			/>
@@ -158,7 +146,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
-				type={nodeType}
+				renderOptions={renderOptions}
 				default={(defaultValue as number | undefined) ?? 0}
 				validator={validator}
 			/>
@@ -171,16 +159,16 @@ const getEntryComponent = <TDefault,>(
 			: isEnum(entry)
 				? Object.keys(entry.enum)
 				: [];
-		const items = options.map((key) =>
-			extractOptionMetadata(nodeType, handleName, key),
-		);
+		const items = options
+			.map((key) => renderOptions.options(handleName, key))
+			.filter((i) => i !== undefined);
 
 		return (
 			<Select
 				style={{ minWidth: "10rem" }}
 				popoverProps={{ style: { minWidth: "fit-content" } }}
-				aria-label={extractPropertyPlaceholder(nodeType, handleName)}
-				placeholder={extractPropertyPlaceholder(nodeType, handleName)}
+				aria-label={renderOptions.placeholder(handleName)}
+				placeholder={renderOptions.placeholder(handleName)}
 				className="nodrag"
 				defaultSelectedKeys={
 					defaultValue === undefined
@@ -192,7 +180,7 @@ const getEntryComponent = <TDefault,>(
 										defaultValue!.toString(),
 							)
 				}
-				items={items.filter((i) => i !== undefined)}
+				items={items}
 			>
 				{(data) => (
 					<SelectItem
@@ -211,41 +199,37 @@ const getEntryComponent = <TDefault,>(
 };
 
 function NodePropertyRenderer(props: {
-	type: string;
-	property: AllowedObjectEntry;
+	renderOptions: DefaultNodeRenderOptions;
+	property: ObjectEntry;
 	name: string;
 	input: boolean;
 	id: string;
 }) {
-	const [nodeRenderOptions] = useRenderableNodesStore(
-		// biome-ignore lint/style/noNonNullAssertion: only registered nodes get rendered
-		useShallow((state) => [state.nodeRenderOptions.get(props.type)!]),
-	);
 	const { edges } = useFormatEditorStore();
 
 	const shouldHideEntryComponent = useMemo(() => {
 		if (!props.input) return true;
-		if (nodeRenderOptions.inputs?.[props.name]?.mode === "dependentOnly")
+		if (props.renderOptions.input(props.name)?.mode === "dependentOnly")
 			return true;
 		return edges.some((edge) => {
 			return edge.target === props.id && edge.targetHandle === props.name;
 		});
-	}, [edges, props.id, props.input, props.name, nodeRenderOptions]);
+	}, [edges, props.id, props.input, props.name, props.renderOptions.input]);
 
 	const isIndependent = useMemo(() => {
 		if (!props.input) return false;
-		return nodeRenderOptions.inputs?.[props.name]?.mode === "independentOnly";
-	}, [nodeRenderOptions, props.input, props.name]);
+		return props.renderOptions.input(props.name)?.mode === "independentOnly";
+	}, [props.renderOptions.input, props.input, props.name]);
 
-	const shouldHideLabel = (entry: AllowedObjectEntry) => {
+	const shouldHideLabel = (entry: ObjectEntry) => {
 		if ("wrapped" in entry && entry.type === "optional")
 			return shouldHideLabel(entry.wrapped);
 		if ("options" in entry) return true;
 	};
 
 	const entryComponent = useMemo(
-		() => getEntryComponent(props.type, props.name, props.property),
-		[props.type, props.name, props.property],
+		() => getEntryComponent(props.renderOptions, props.name, props.property),
+		[props.renderOptions, props.name, props.property],
 	);
 
 	return props.input ? (
@@ -254,10 +238,10 @@ function NodePropertyRenderer(props: {
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-start gap-1 pl-4">
 						<p className="max-w-64 text-start">
-							{extractPropertyTitle(props.type, props.name)}
+							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">
-							{extractPropertyDescription(props.type, props.name)}
+							{props.renderOptions.description(props.name)}
 						</p>
 					</div>
 				)}
@@ -284,10 +268,10 @@ function NodePropertyRenderer(props: {
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-end gap-1 pr-4">
 						<p className="max-w-64 text-end">
-							{extractPropertyTitle(props.type, props.name)}
+							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">
-							{extractPropertyDescription(props.type, props.name)}
+							{props.renderOptions.description(props.name)}
 						</p>
 					</div>
 				)}
@@ -309,7 +293,7 @@ function NodePropertyRenderer(props: {
 }
 
 function NodePropertyGenericInput<T extends string | number | boolean>(props: {
-	type: string;
+	renderOptions: DefaultNodeRenderOptions;
 	name: string;
 	default: T;
 	validator?: ValidatorFunction;
@@ -332,7 +316,7 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	if (typeof props.default === "boolean") {
 		return (
 			<Checkbox
-				aria-label={extractPropertyPlaceholder(props.type, props.name)}
+				aria-label={props.renderOptions.placeholder(props.name)}
 				isSelected={value as boolean | undefined}
 				onValueChange={(selected) =>
 					(setValue as React.Dispatch<boolean>)(selected)
@@ -346,8 +330,8 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	if (typeof props.default === "string") {
 		return (
 			<Input
-				aria-label={extractPropertyPlaceholder(props.type, props.name)}
-				placeholder={extractPropertyPlaceholder(props.type, props.name)}
+				aria-label={props.renderOptions.placeholder(props.name)}
+				placeholder={props.renderOptions.placeholder(props.name)}
 				value={value as string | undefined}
 				onValueChange={(v: string) => (setValue as React.Dispatch<string>)(v)}
 				errorMessage={() => (
@@ -367,8 +351,8 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	if (typeof props.default === "number") {
 		return (
 			<NumberInput
-				aria-label={extractPropertyPlaceholder(props.type, props.name)}
-				placeholder={extractPropertyPlaceholder(props.type, props.name)}
+				aria-label={props.renderOptions.placeholder(props.name)}
+				placeholder={props.renderOptions.placeholder(props.name)}
 				value={value as number | undefined}
 				onValueChange={(v: number) => (setValue as React.Dispatch<number>)(v)}
 				errorMessage={() => (

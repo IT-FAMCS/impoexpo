@@ -1,26 +1,21 @@
-import {
-	type RawNodeRenderOptions,
-	registerWithDefaultRenderer,
-} from "@/features/format-editor/nodes/renderable-node-types";
+import { registerWithDefaultRenderer } from "@/features/format-editor/nodes/renderable-node-database";
 import { schemaFromString } from "@/features/format-editor/nodes/schema-from-string";
 import {
 	getNodeId,
 	useFormatEditorStore,
 } from "@/features/format-editor/store";
 import { Icon } from "@iconify/react";
-import {
-	type AllowedObjectEntry,
-	BaseNode,
-} from "@impoexpo/shared/nodes/node-types";
+import { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import {
 	nodesScope,
 	registerBaseNodes,
 } from "@impoexpo/shared/nodes/node-database";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
-import { object } from "valibot";
+import { object, type ObjectEntries } from "valibot";
+import type { RawNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-types";
 
 export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
-	const entries: Record<string, AllowedObjectEntry> = {};
+	const entries: ObjectEntries = {};
 	for (const item of form.items) entries[item.id] = schemaFromString(item.type);
 	const schema = object(entries);
 
@@ -30,10 +25,7 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 		outputSchema: schema,
 	});
 
-	const options: RawNodeRenderOptions<
-		Record<string, AllowedObjectEntry>,
-		typeof schema.entries
-	> = {
+	const options: RawNodeRenderOptions<ObjectEntries, typeof schema.entries> = {
 		searchable: false,
 		title: form.title ?? form.documentTitle,
 		header: "bg-secondary-200",
@@ -62,7 +54,7 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 			data: {},
 			type: type,
 			id: getNodeId(type),
-			position: { x: 100, y: 100 },
+			position: { x: 100, y: 100 }, // TODO
 		}),
 	);
 };

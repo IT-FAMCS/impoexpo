@@ -1,16 +1,11 @@
 import type * as v from "valibot";
-import { unwrapNodeIfNeeded } from "./node-utils";
+import { isArray, unwrapNodeIfNeeded } from "./node-utils";
 
-export type AllowedObjectEntry =
-	| v.GenericSchema
-	| v.SchemaWithFallback<v.GenericSchema, unknown>
-	| v.ExactOptionalSchema<v.GenericSchema, unknown>
-	| v.NullishSchema<v.GenericSchema, unknown>
-	| v.OptionalSchema<v.GenericSchema, unknown>;
+export type ObjectEntry = v.ObjectEntries[string];
 
-export type NodePropertyOptions<TProperty extends AllowedObjectEntry> =
+export type NodePropertyOptions<TProperty extends ObjectEntry> =
 	TProperty extends v.OptionalSchema<
-		infer TWrappedSchema extends AllowedObjectEntry,
+		infer TWrappedSchema extends ObjectEntry,
 		unknown
 	>
 		? NodePropertyOptions<TWrappedSchema>
@@ -55,29 +50,83 @@ export class BaseNode<
 		if (init.genericProperties === undefined) this.genericProperties = {};
 	}
 
+	public setEntrySchema(key: string, schema: ObjectEntry) {
+		if (this.inputSchema && key in this.inputSchema.entries) {
+			Object.assign(this.inputSchema.entries, { [key]: schema });
+		} else if (this.outputSchema && key in this.outputSchema.entries) {
+			Object.assign(this.outputSchema.entries, { [key]: schema });
+		} else {
+			throw new Error(
+				`attempted to change schema of entry "${key}", which doesn't exist in node "${this.category}-${this.name}"`,
+			);
+		}
+	}
+
+	public hasEntry(key: string) {
+		return (
+			(this.inputSchema && key in this.inputSchema.entries) ||
+			(this.outputSchema && key in this.outputSchema.entries)
+		);
+	}
+
 	public entry(
 		key: string,
 		unwrap = false,
 	): {
 		source: "input" | "output";
-		schema: AllowedObjectEntry;
+		type: string;
+		generic: boolean;
+		schema: ObjectEntry;
 	} {
 		if (this.inputSchema && key in this.inputSchema.entries) {
 			const rawSchema = this.inputSchema.entries[key];
+			const typeData = this.type(key, rawSchema);
 			return {
 				source: "input",
+				type: typeData.type,
+				generic: typeData.generic,
 				schema: unwrap ? unwrapNodeIfNeeded(rawSchema) : rawSchema,
 			};
 		}
 		if (this.outputSchema && key in this.outputSchema.entries) {
 			const rawSchema = this.outputSchema.entries[key];
+			const typeData = this.type(key, rawSchema);
 			return {
 				source: "output",
+				type: typeData.type,
+				generic: typeData.generic,
 				schema: unwrap ? unwrapNodeIfNeeded(rawSchema) : rawSchema,
 			};
 		}
+
 		throw new Error(
 			`couldn't pick entry "${key}" in node with type "${this.category}-${this.name}"`,
 		);
+	}
+
+	type(
+		key: string,
+		schema: ObjectEntry,
+	): {
+		type: string;
+		generic: boolean;
+	} {
+		if (Object.values(this.genericProperties).some((x) => x.includes(key))) {
+			return {
+				// biome-ignore lint/style/noNonNullAssertion: checked above
+				type: Object.entries(this.genericProperties).find((x) =>
+					x[1].includes(key),
+				)![0],
+				generic: true,
+			};
+		}
+
+		const unwrapped = unwrapNodeIfNeeded(schema);
+		return {
+			type: isArray(unwrapped)
+				? `Array<${unwrapNodeIfNeeded(unwrapped.item).expects}>`
+				: unwrapped.expects,
+			generic: false,
+		};
 	}
 }

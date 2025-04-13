@@ -1,13 +1,13 @@
-import type { AllowedObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import { array, boolean, nullable, number, string } from "valibot";
 
-const schemaConverterMap: Record<string, () => AllowedObjectEntry> = {
+const schemaConverterMap: Record<string, () => ObjectEntry> = {
 	string: string,
 	number: number,
 	boolean: boolean,
 };
 
-export const schemaFromString = (raw: string): AllowedObjectEntry => {
+export const schemaFromString = (raw: string): ObjectEntry => {
 	const str = raw.trim();
 	if (str.includes("| null"))
 		return nullable(schemaFromString(str.split("| null")[0]));

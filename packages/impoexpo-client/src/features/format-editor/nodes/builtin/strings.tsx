@@ -6,7 +6,7 @@ import { msg } from "@lingui/core/macro";
 import {
 	registerCategory,
 	registerWithDefaultRenderer,
-} from "../renderable-node-types";
+} from "../renderable-node-database";
 
 nodesScope(() => {
 	registerCategory("string", msg`strings`, (size) => (

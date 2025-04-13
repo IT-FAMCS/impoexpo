@@ -10,19 +10,20 @@ import {
 	ModalContent,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import { useLingui } from "@lingui/react/macro";
 import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import {
-	localizableString,
+	getNodeRenderOptions,
 	useRenderableNodesStore,
-} from "../nodes/renderable-node-types";
+} from "../nodes/renderable-node-database";
 import { useSearchNodesModalStore } from "./store";
-import { useNodeSearchMetadataStore } from "../nodes/node-database";
+import { useNodeSearchMetadataStore } from "../nodes/renderable-node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "../store";
+import { localizableString } from "../nodes/renderable-node-types";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -132,9 +133,9 @@ export default function SearchNodesModal(props: {
 									<Divider />
 									<Listbox items={searchResults} className="w-full">
 										{(item) => {
-											const renderOptions = nodeRenderOptions.get(item.id);
-											const nodeData = baseNodesMap.get(item.id);
-											if (!renderOptions || !nodeData) return null;
+											const renderOptions = getNodeRenderOptions(item.id);
+											const nodeData = getBaseNode(item.id);
+
 											const categoryOptions = categoryRenderOptions.get(
 												nodeData.category,
 											);
@@ -163,15 +164,15 @@ export default function SearchNodesModal(props: {
 														onClose();
 													}}
 													startContent={(
-														renderOptions.icon ?? categoryOptions.icon
+														renderOptions.raw.icon ?? categoryOptions.icon
 													)(24)}
 													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
 												>
 													<div className="flex flex-row items-center justify-center gap-1">
 														{localizableString(categoryOptions.name, t)}{" "}
 														<Icon icon="mdi:arrow-right" />{" "}
-														{renderOptions.title !== undefined
-															? localizableString(renderOptions.title, t)
+														{renderOptions.raw.title !== undefined
+															? localizableString(renderOptions.raw.title, t)
 															: item.id}
 													</div>
 												</ListboxItem>

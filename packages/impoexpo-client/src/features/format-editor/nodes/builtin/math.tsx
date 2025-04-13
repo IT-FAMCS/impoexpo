@@ -2,7 +2,7 @@ import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 import {
 	registerCategory,
 	registerWithDefaultRenderer,
-} from "../renderable-node-types";
+} from "../renderable-node-database";
 import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 import * as mathNodes from "@impoexpo/shared/nodes/builtin/math";

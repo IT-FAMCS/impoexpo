@@ -79,6 +79,9 @@ importers:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      deep-copy-ts:
+        specifier: ^0.5.4
+        version: 0.5.4
       framer-motion:
         specifier: 11.15.0
         version: 11.15.0(react-dom@18.3.0(react@18.3.0))(react@18.3.0)
@@ -2687,6 +2690,9 @@ packages:
 
   decimal.js@10.5.0:
     resolution: {integrity: sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw==}
+
+  deep-copy-ts@0.5.4:
+    resolution: {integrity: sha512-YJbPjw0YqdosorpCsa6copy1p/gJsFT9Q6Zq0tLi7D0nXh6Y/usjeIQZfkzV3HVuqY0Hl/5gM7TwgIbIWvEjlA==}
 
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -7577,6 +7583,8 @@ snapshots:
       supports-color: 5.5.0
 
   decimal.js@10.5.0: {}
+
+  deep-copy-ts@0.5.4: {}
 
   deepmerge@4.3.1: {}
 
