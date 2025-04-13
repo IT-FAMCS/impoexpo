@@ -1,5 +1,5 @@
-import type * as v from "valibot";
-import { isArray, unwrapNodeIfNeeded } from "./node-utils";
+import * as v from "valibot";
+import { isArray, isNullable, unwrapNodeIfNeeded } from "./node-utils";
 
 export type ObjectEntry = v.ObjectEntries[string];
 
@@ -17,6 +17,14 @@ export type NodePropertyOptions<TProperty extends ObjectEntry> =
 					>
 				? keyof TOptions
 				: never;
+
+export type BaseNodeEntry = {
+	name: string;
+	source: "input" | "output";
+	type: string;
+	generic?: string;
+	schema: ObjectEntry;
+};
 
 export class BaseNode<
 	// biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -50,15 +58,28 @@ export class BaseNode<
 		if (init.genericProperties === undefined) this.genericProperties = {};
 	}
 
-	public setEntrySchema(key: string, schema: ObjectEntry) {
-		if (this.inputSchema && key in this.inputSchema.entries) {
-			Object.assign(this.inputSchema.entries, { [key]: schema });
-		} else if (this.outputSchema && key in this.outputSchema.entries) {
-			Object.assign(this.outputSchema.entries, { [key]: schema });
-		} else {
+	public resolveGenericEntry(key: string, resolvedWith: ObjectEntry) {
+		const entry = this.entry(key);
+
+		const replaceUnknownWithSchema = (root: ObjectEntry): ObjectEntry => {
+			if (root.type === "unknown") return resolvedWith;
+			if (isArray(root)) return v.array(replaceUnknownWithSchema(root.item));
+			if (isNullable(root))
+				return v.nullable(replaceUnknownWithSchema(root.wrapped));
+
 			throw new Error(
-				`attempted to change schema of entry "${key}", which doesn't exist in node "${this.category}-${this.name}"`,
+				`BaseNode.resolveGenericEntry.replaceUnknownWithSchema failed: couldn't process node: ${root}`,
 			);
+		};
+
+		if (entry.source === "input" && this.inputSchema) {
+			Object.assign(this.inputSchema.entries, {
+				[key]: replaceUnknownWithSchema(entry.schema),
+			});
+		} else if (entry.source === "output" && this.outputSchema) {
+			Object.assign(this.outputSchema.entries, {
+				[key]: replaceUnknownWithSchema(entry.schema),
+			});
 		}
 	}
 
@@ -69,19 +90,12 @@ export class BaseNode<
 		);
 	}
 
-	public entry(
-		key: string,
-		unwrap = false,
-	): {
-		source: "input" | "output";
-		type: string;
-		generic: boolean;
-		schema: ObjectEntry;
-	} {
+	public entry(key: string, unwrap = false): BaseNodeEntry {
 		if (this.inputSchema && key in this.inputSchema.entries) {
 			const rawSchema = this.inputSchema.entries[key];
 			const typeData = this.type(key, rawSchema);
 			return {
+				name: key,
 				source: "input",
 				type: typeData.type,
 				generic: typeData.generic,
@@ -92,6 +106,7 @@ export class BaseNode<
 			const rawSchema = this.outputSchema.entries[key];
 			const typeData = this.type(key, rawSchema);
 			return {
+				name: key,
 				source: "output",
 				type: typeData.type,
 				generic: typeData.generic,
@@ -109,24 +124,32 @@ export class BaseNode<
 		schema: ObjectEntry,
 	): {
 		type: string;
-		generic: boolean;
+		generic?: string;
 	} {
+		const get = (schema: ObjectEntry, genericName?: string): string => {
+			if (schema.type === "unknown")
+				return genericName ? genericName : "unknown";
+			if (isArray(schema)) return `Array<${get(schema.item, genericName)}>`;
+			if (isNullable(schema))
+				return `${get(schema.wrapped, genericName)}${isNullable(schema.wrapped) ? "" : " | null"}`;
+			return schema.expects;
+		};
+
+		const unwrapped = unwrapNodeIfNeeded(schema);
 		if (Object.values(this.genericProperties).some((x) => x.includes(key))) {
-			return {
-				// biome-ignore lint/style/noNonNullAssertion: checked above
-				type: Object.entries(this.genericProperties).find((x) =>
+			const generic = // biome-ignore lint/style/noNonNullAssertion: checked above
+				Object.entries(this.genericProperties).find((x) =>
 					x[1].includes(key),
-				)![0],
-				generic: true,
+				)![0];
+			return {
+				type: get(unwrapped, generic),
+				generic: generic,
 			};
 		}
 
-		const unwrapped = unwrapNodeIfNeeded(schema);
 		return {
-			type: isArray(unwrapped)
-				? `Array<${unwrapNodeIfNeeded(unwrapped.item).expects}>`
-				: unwrapped.expects,
-			generic: false,
+			type: get(unwrapped),
+			generic: undefined,
 		};
 	}
 }

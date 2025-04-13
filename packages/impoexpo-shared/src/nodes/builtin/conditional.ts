@@ -1,4 +1,4 @@
-import { boolean, object, unknown } from "valibot";
+import { array, boolean, nullable, object, unknown } from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
 

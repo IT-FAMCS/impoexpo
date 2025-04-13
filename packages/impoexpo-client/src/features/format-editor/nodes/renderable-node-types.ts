@@ -6,6 +6,7 @@ import type {
 import { type MessageDescriptor, i18n } from "@lingui/core";
 import type React from "react";
 import type { ObjectEntries } from "valibot";
+import { useRenderableNodesStore } from "./renderable-node-database";
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type IconRenderFunction = (size: number) => React.ReactNode;
@@ -92,6 +93,10 @@ export class NodeRenderOptions<
 			Object.assign(this.raw, { inputs: {} });
 		if (!("outputs" in this.raw) || !this.raw.outputs)
 			Object.assign(this.raw, { outputs: {} });
+
+		const { categoryRenderOptions } = useRenderableNodesStore.getState();
+		if (!this.raw.icon && categoryRenderOptions.has(this.node.category))
+			this.raw.icon = categoryRenderOptions.get(this.node.category)?.icon;
 	}
 
 	public input<TKey extends keyof TSInput>(

@@ -67,6 +67,36 @@ msgstr "добавить ещё"
 msgid "next"
 msgstr "далее"
 
+#: src/features/format-editor/nodes/builtin/conditional.tsx:11
+msgid "conditional"
+msgstr "условия"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:16
+msgid "if..."
+msgstr "если..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:22
+msgid "condition"
+msgstr "условие"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:25
+msgid "value when true"
+msgstr "значение когда "истина""
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:28
+msgid "value when false"
+msgstr "значение когда "ложь""
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:33
+#: src/features/format-editor/nodes/builtin/math.tsx:32
+#: src/features/format-editor/nodes/builtin/math.tsx:52
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:40
+#: src/features/format-editor/nodes/builtin/strings.tsx:54
+#: src/features/format-editor/nodes/builtin/strings.tsx:66
+msgid "result"
+msgstr "результат"
+
 #: src/features/format-editor/nodes/builtin/console.tsx:12
 msgid "console"
 msgstr "консоль"
@@ -165,15 +195,6 @@ msgstr "hell yeah!"
 #: src/features/format-editor/nodes/builtin/math.tsx:12
 msgid "math"
 msgstr "математика"
-
-#: src/features/format-editor/nodes/builtin/math.tsx:32
-#: src/features/format-editor/nodes/builtin/math.tsx:52
-#: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:40
-#: src/features/format-editor/nodes/builtin/strings.tsx:54
-#: src/features/format-editor/nodes/builtin/strings.tsx:66
-msgid "result"
-msgstr "результат"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:49
 msgid "input"
@@ -312,7 +333,7 @@ msgstr "строка \"истина\""
 msgid "\"false\" string"
 msgstr "строка \"ложь\""
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:130
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:131
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 

@@ -13,12 +13,24 @@ nodesScope(() => {
 	));
 
 	registerWithDefaultRenderer(conditionalNodes.IF_NODE, {
-		title: msg`if X...`,
+		title: msg`if...`,
 		searchable: true,
 		header: "bg-warning-200",
 		inputs: {
 			condition: {
 				mode: "dependentOnly",
+				title: msg`condition`,
+			},
+			trueValue: {
+				title: msg`value when true`,
+			},
+			falseValue: {
+				title: msg`value when false`,
+			},
+		},
+		outputs: {
+			out: {
+				title: msg`result`,
 			},
 		},
 	});

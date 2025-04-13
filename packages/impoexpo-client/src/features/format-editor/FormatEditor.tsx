@@ -54,7 +54,7 @@ const connectionHasCycles = (
 };
 
 export default function FormatEditor() {
-	const [
+	const {
 		edges,
 		nodes,
 		onConnect,
@@ -63,24 +63,10 @@ export default function FormatEditor() {
 		onReconnect,
 		onReconnectStart,
 		onReconnectEnd,
-		resolveGenericNode,
 		onNodesDelete,
 		onEdgesDelete,
-	] = useFormatEditorStore(
-		useShallow((s) => [
-			s.edges,
-			s.nodes,
-			s.onConnect,
-			s.onEdgesChange,
-			s.onNodesChange,
-			s.onReconnect,
-			s.onReconnectStart,
-			s.onReconnectEnd,
-			s.resolveGenericNode,
-			s.onNodesDelete,
-			s.onEdgesDelete,
-		]),
-	);
+		onConnectEnd,
+	} = useFormatEditorStore();
 	const { screenToFlowPosition } = useReactFlow();
 	const {
 		onOpen: openSearchModal,
@@ -127,81 +113,22 @@ export default function FormatEditor() {
 	}, []);
 
 	const isValidConnection = useCallback(
-		(connection: Connection | Edge) => {
-			if (!nodeSchemasCompatible(connection, nodes)) return false;
-			return !connectionHasCycles(connection, nodes, edges);
-		},
+		(connection: Connection | Edge) =>
+			nodeSchemasCompatible(connection, nodes) &&
+			!connectionHasCycles(connection, nodes, edges),
 		[nodes, edges],
 	);
 
-	const onConnectEnd = useCallback(
+	const proxyOnConnectEnd = useCallback(
 		(event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
-			if (
-				!connectionState.isValid &&
-				connectionState.fromNode?.type &&
-				connectionState.fromHandle?.id
-			) {
-				const node = getBaseNode(connectionState.fromNode.type);
-				const handleId = connectionState.fromHandle.id;
-				const handle = node.entry(handleId, true);
-				// TODO
-				setFilters([
-					`${handle.source === "input" ? "outputs" : "accepts"}:${handle.type}`,
-				]);
-				const { clientX, clientY } =
-					"changedTouches" in event ? event.changedTouches[0] : event;
-				setNewNodeInformation({
-					position: screenToFlowPosition({
-						x: clientX,
-						y: clientY,
-					}),
-					fromNodeId: connectionState.fromNode.id,
-					fromHandleId: connectionState.fromHandle.id,
-					fromNodeType: connectionState.fromNode.type,
-				});
-				openSearchModal();
-			} else if (
-				connectionState.isValid &&
-				connectionState.fromNode?.type &&
-				connectionState.toNode?.type &&
-				connectionState.fromHandle?.id &&
-				connectionState.toHandle?.id
-			) {
-				const fromNode = getBaseNode(connectionState.fromNode.type);
-				const toNode = getBaseNode(connectionState.toNode.type);
-				const fromEntry = fromNode.entry(connectionState.fromHandle.id);
-				const toEntry = toNode.entry(connectionState.toHandle.id);
-
-				if (fromEntry.generic) {
-					resolveGenericNode(
-						{
-							node: fromNode,
-							options: getNodeRenderOptions(connectionState.fromNode.type),
-						},
-						fromEntry.type,
-						toEntry,
-						connectionState.fromNode.id,
-					);
-				} else if (toEntry.generic) {
-					resolveGenericNode(
-						{
-							node: toNode,
-							options: getNodeRenderOptions(connectionState.toNode.type),
-						},
-						toEntry.type,
-						fromEntry,
-						connectionState.toNode.id,
-					);
-				}
-			}
+			onConnectEnd(
+				event,
+				connectionState,
+				screenToFlowPosition,
+				openSearchModal,
+			);
 		},
-		[
-			openSearchModal,
-			setFilters,
-			setNewNodeInformation,
-			screenToFlowPosition,
-			resolveGenericNode,
-		],
+		[onConnectEnd, screenToFlowPosition, openSearchModal],
 	);
 
 	return (
@@ -213,7 +140,7 @@ export default function FormatEditor() {
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
-				onConnectEnd={onConnectEnd}
+				onConnectEnd={proxyOnConnectEnd}
 				onReconnect={onReconnect}
 				onReconnectStart={onReconnectStart}
 				onReconnectEnd={onReconnectEnd}

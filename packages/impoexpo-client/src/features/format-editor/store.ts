@@ -15,8 +15,9 @@ import {
 	type OnReconnect,
 	type HandleType,
 	reconnectEdge,
-	getOutgoers,
 	getConnectedEdges,
+	type FinalConnectionState,
+	type ReactFlowInstance,
 } from "@xyflow/react";
 import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 import { persistStoreOnReload } from "@/stores/hot-reload";
@@ -27,10 +28,12 @@ import {
 import { BaseNode, type ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import { deepCopy } from "deep-copy-ts";
 import {
+	getNodeRenderOptions,
 	registerWithDefaultRenderer,
 	useRenderableNodesStore,
 } from "./nodes/renderable-node-database";
 import type { DefaultNodeRenderOptions } from "./nodes/renderable-node-types";
+import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 
 const nodeCount: Map<string, number> = new Map();
 export const getNodeId = (type: string) => {
@@ -47,11 +50,17 @@ export type FormatEditorStore = {
 	onNodesChange: OnNodesChange<Node>;
 	onEdgesChange: OnEdgesChange;
 	onConnect: OnConnect;
+	onConnectEnd: (
+		event: MouseEvent | TouchEvent,
+		connectionState: FinalConnectionState,
+		screenToFlowPosition: ReactFlowInstance<Node, Edge>["screenToFlowPosition"],
+		openSearchModal: () => void,
+	) => void;
 	setNodes: (nodes: Node[]) => void;
 	setEdges: (edges: Edge[]) => void;
 	onNodesDelete: (nodes: Node[]) => void;
 	onEdgesDelete: (edges: Edge[]) => void;
-	edgeReconnectSuccessful: boolean;
+	isReconnecting: boolean;
 	onReconnect: OnReconnect;
 	onReconnectStart: () => void;
 	onReconnectEnd: (
@@ -110,18 +119,96 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		set({ edges });
 	},
 
-	edgeReconnectSuccessful: true,
+	isReconnecting: false,
 	onReconnectStart() {
-		set(() => ({ edgeReconnectSuccessful: false }));
+		set({ isReconnecting: true });
 	},
 	onReconnectEnd(_, edge) {
-		if (!get().edgeReconnectSuccessful) {
+		if (get().isReconnecting) {
 			get().setEdges(get().edges.filter((e) => e.id !== edge.id));
+			get().onEdgesDelete([edge]);
+			get().isReconnecting = false;
 		}
 	},
 	onReconnect(oldEdge, newConnection) {
-		get().edgeReconnectSuccessful = true;
+		get().isReconnecting = false;
 		get().setEdges(reconnectEdge(oldEdge, newConnection, get().edges));
+	},
+
+	onConnectEnd: (
+		event: MouseEvent | TouchEvent,
+		connectionState: FinalConnectionState,
+		screenToFlowPosition: ReactFlowInstance<Node, Edge>["screenToFlowPosition"],
+		openSearchModal: () => void,
+	) => {
+		const { setFilters, setNewNodeInformation } =
+			useSearchNodesModalStore.getState();
+
+		if (
+			!connectionState.isValid &&
+			connectionState.fromNode?.type &&
+			connectionState.fromHandle?.id &&
+			!get().isReconnecting
+		) {
+			const node = getBaseNode(connectionState.fromNode.type);
+			const handleId = connectionState.fromHandle.id;
+			const handle = node.entry(handleId, true);
+
+			const filters = [
+				`${handle.source === "input" ? "outputs" : "accepts"}${handle.generic ? "" : `:${handle.type}`}`,
+			];
+			if (!handle.generic)
+				filters.push(
+					`${handle.source === "input" ? "outputs" : "accepts"}:generic`,
+				);
+			setFilters(filters);
+
+			const { clientX, clientY } =
+				"changedTouches" in event ? event.changedTouches[0] : event;
+			setNewNodeInformation({
+				position: screenToFlowPosition({
+					x: clientX,
+					y: clientY,
+				}),
+				fromNodeId: connectionState.fromNode.id,
+				fromHandleId: connectionState.fromHandle.id,
+				fromNodeType: connectionState.fromNode.type,
+			});
+			openSearchModal();
+		} else if (
+			connectionState.isValid &&
+			connectionState.fromNode?.type &&
+			connectionState.toNode?.type &&
+			connectionState.fromHandle?.id &&
+			connectionState.toHandle?.id
+		) {
+			const fromNode = getBaseNode(connectionState.fromNode.type);
+			const toNode = getBaseNode(connectionState.toNode.type);
+			const fromEntry = fromNode.entry(connectionState.fromHandle.id);
+			const toEntry = toNode.entry(connectionState.toHandle.id);
+
+			if (fromEntry.generic) {
+				get().resolveGenericNode(
+					{
+						node: fromNode,
+						options: getNodeRenderOptions(connectionState.fromNode.type),
+					},
+					fromEntry.generic,
+					toEntry,
+					connectionState.fromNode.id,
+				);
+			} else if (toEntry.generic) {
+				get().resolveGenericNode(
+					{
+						node: toNode,
+						options: getNodeRenderOptions(connectionState.toNode.type),
+					},
+					toEntry.generic,
+					fromEntry,
+					connectionState.toNode.id,
+				);
+			}
+		}
 	},
 
 	onEdgesDelete(edges) {
@@ -131,59 +218,55 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 			const source = get().getBaseNodeFromId(edge.source);
 			const target = get().getBaseNodeFromId(edge.target);
+
 			if (!source || !target || (!isGeneric(source) && !isGeneric(target)))
 				return;
 
-			let affectedNode: Node;
-			let affectedHandle: string;
-			let affectedNodeData: DefaultBaseNode;
-			let base: DefaultBaseNode;
+			const checkNode = (id: string, node: DefaultBaseNode) => {
+				if (!isGeneric(node)) return;
 
-			if (isGeneric(source)) {
 				// biome-ignore lint/style/noNonNullAssertion: why wouldn't it exist
-				affectedNode = get().nodes.find((n) => n.id === edge.source)!;
-				affectedHandle = edge.sourceHandle;
-				// biome-ignore lint/style/noNonNullAssertion: also required to exist
-				affectedNodeData = get().getBaseNodeFromId(edge.source)!;
-				base = genericNodes[`${source.category}-${source.name}`].base;
-			} else {
-				// biome-ignore lint/style/noNonNullAssertion: why wouldn't it exist
-				affectedNode = get().nodes.find((n) => n.id === edge.target)!;
-				affectedHandle = edge.targetHandle;
-				// biome-ignore lint/style/noNonNullAssertion: also required to exist
-				affectedNodeData = get().getBaseNodeFromId(edge.target)!;
-				base = genericNodes[`${target.category}-${target.name}`].base;
-			}
+				const affectedNode: Node = get().nodes.find((n) => n.id === id)!;
+				const base: DefaultBaseNode =
+					genericNodes[`${node.category}-${node.name}`].base;
 
-			const connectedEdges = getConnectedEdges(get().nodes, get().edges).filter(
-				(e) =>
-					(e.target === affectedNode.id || e.source === affectedNode.id) &&
-					e.id !== edge.id,
-			);
+				const connectedEdges = getConnectedEdges(
+					get().nodes,
+					get().edges,
+				).filter(
+					(e) =>
+						(e.target === affectedNode.id || e.source === affectedNode.id) &&
+						e.id !== edge.id,
+				);
 
-			if (
-				connectedEdges.some(
-					(e) =>
-						e.targetHandle &&
-						base.hasEntry(e.targetHandle) &&
-						base.entry(e.targetHandle).generic,
-				) ||
-				connectedEdges.some(
-					(e) =>
-						e.sourceHandle &&
-						base.hasEntry(e.sourceHandle) &&
-						base.entry(e.sourceHandle).generic,
+				// if there are any other nodes connected to generic fields of this node, DO NOT reset the node
+				if (
+					connectedEdges.some(
+						(e) =>
+							e.targetHandle &&
+							base.hasEntry(e.targetHandle) &&
+							base.entry(e.targetHandle).generic,
+					) ||
+					connectedEdges.some(
+						(e) =>
+							e.sourceHandle &&
+							base.hasEntry(e.sourceHandle) &&
+							base.entry(e.sourceHandle).generic,
+					)
 				)
-			)
-				continue;
+					return;
 
-			get().setNodes(
-				get().nodes.map((n) =>
-					n.id === affectedNode.id
-						? { ...affectedNode, type: `${base.category}-${base.name}` }
-						: n,
-				),
-			);
+				get().setNodes(
+					get().nodes.map((n) =>
+						n.id === affectedNode.id
+							? { ...affectedNode, type: `${base.category}-${base.name}` }
+							: n,
+					),
+				);
+			};
+
+			checkNode(edge.source, source);
+			checkNode(edge.target, target);
 		}
 	},
 
@@ -225,8 +308,8 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		const fromData = getBaseNode(fromNodeType);
 		const toData = getBaseNode(toNodeType);
 
-		const fromSource = fromData.entry(fromHandleId).source;
-		const [name] = findCompatibleEntry(fromData, fromHandleId, toData);
+		const fromEntry = fromData.entry(fromHandleId);
+		const toEntry = findCompatibleEntry(fromData, fromHandleId, toData);
 		const id = getNodeId(toNodeType);
 
 		const newNode = {
@@ -239,23 +322,53 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		get().setNodes(get().nodes.concat(newNode));
 		get().setEdges(
 			get().edges.concat(
-				fromSource === "output"
+				fromEntry.source === "output"
 					? {
 							id: id,
 							source: fromNodeId,
 							sourceHandle: fromHandleId,
 							target: id,
-							targetHandle: name,
+							targetHandle: toEntry.name,
 						}
 					: {
 							id: id,
 							source: id,
-							sourceHandle: name,
+							sourceHandle: toEntry.name,
 							target: fromNodeId,
 							targetHandle: fromHandleId,
 						},
 			),
 		);
+
+		if (toEntry.generic) {
+			get().resolveGenericNode(
+				{
+					node: toData,
+					options: getNodeRenderOptions(`${toData.category}-${toData.name}`),
+				},
+				toEntry.generic,
+				{
+					schema: fromEntry.schema,
+					type: fromEntry.type,
+				},
+				id,
+			);
+		} else if (fromEntry.generic) {
+			get().resolveGenericNode(
+				{
+					node: fromData,
+					options: getNodeRenderOptions(
+						`${fromData.category}-${fromData.name}`,
+					),
+				},
+				fromEntry.generic,
+				{
+					schema: toEntry.schema,
+					type: toEntry.type,
+				},
+				fromNodeId,
+			);
+		}
 	},
 
 	resolveGenericNode(base, resolvedType, resolver, replaceNodeId) {
@@ -268,7 +381,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 		const genericEntries = copy.genericProperties[resolvedType];
 		for (const entry of genericEntries)
-			copy.setEntrySchema(entry, resolver.schema);
+			copy.resolveGenericEntry(entry, resolver.schema);
 		delete copy.genericProperties[resolvedType];
 
 		const { addGenericNodeInstance } = useRenderableNodesStore.getState();

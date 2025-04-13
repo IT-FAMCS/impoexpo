@@ -1,4 +1,9 @@
-import type { ObjectEntry, BaseNode, NodePropertyOptions } from "./node-types";
+import type {
+	ObjectEntry,
+	BaseNode,
+	NodePropertyOptions,
+	BaseNodeEntry,
+} from "./node-types";
 import type * as v from "valibot";
 
 export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
@@ -32,6 +37,12 @@ export const isEnum = (
 	return schema.type === "enum";
 };
 
+export const isNullable = (
+	schema: ObjectEntry,
+): schema is v.NullableSchema<ObjectEntry, null> => {
+	return schema.type === "nullable";
+};
+
 export type ValidatorFunction = (
 	dataset: v.UnknownDataset,
 	config: v.Config<v.BaseIssue<unknown>>,
@@ -43,19 +54,24 @@ export const findCompatibleEntry = (
 	fromNode: DefaultBaseNode,
 	fromEntryKey: string,
 	toNode: DefaultBaseNode,
-): [string, ObjectEntry] => {
+): BaseNodeEntry => {
 	const fromEntry = fromNode.entry(fromEntryKey, true);
 
 	const entries =
 		fromEntry.source === "input"
-			? (toNode.outputSchema?.entries ?? {})
-			: (toNode.inputSchema?.entries ?? {});
-	for (const [name, entry] of Object.entries(entries)) {
-		const toHandleSchema = unwrapNodeIfNeeded(entry);
-		if (fromEntry.schema.type === toHandleSchema.type) return [name, entry];
+			? Object.keys(toNode.outputSchema?.entries ?? {})
+			: Object.keys(toNode.inputSchema?.entries ?? {});
+	for (const key of entries) {
+		const toEntry = toNode.entry(key);
+		if (
+			fromEntry.schema.type === toEntry.type ||
+			(toEntry.generic && !fromEntry.generic) ||
+			(!toEntry.generic && fromEntry.generic)
+		)
+			return toEntry;
 	}
 
 	throw new Error(
-		`couldn't find a compatible entry between ${fromNode.name} <=> ${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.type})`,
+		`couldn't find a compatible entry between ${fromNode.category}-${fromNode.name} <=> ${toNode.category}-${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.type})`,
 	);
 };

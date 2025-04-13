@@ -67,6 +67,36 @@ msgstr "add another"
 msgid "next"
 msgstr "next"
 
+#: src/features/format-editor/nodes/builtin/conditional.tsx:11
+msgid "conditional"
+msgstr "conditional"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:16
+msgid "if..."
+msgstr "if..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:22
+msgid "condition"
+msgstr "condition"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:25
+msgid "value when true"
+msgstr "value when true"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:28
+msgid "value when false"
+msgstr "value when false"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:33
+#: src/features/format-editor/nodes/builtin/math.tsx:32
+#: src/features/format-editor/nodes/builtin/math.tsx:52
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:40
+#: src/features/format-editor/nodes/builtin/strings.tsx:54
+#: src/features/format-editor/nodes/builtin/strings.tsx:66
+msgid "result"
+msgstr "result"
+
 #: src/features/format-editor/nodes/builtin/console.tsx:12
 msgid "console"
 msgstr "console"
@@ -165,15 +195,6 @@ msgstr "hell yeah!"
 #: src/features/format-editor/nodes/builtin/math.tsx:12
 msgid "math"
 msgstr "math"
-
-#: src/features/format-editor/nodes/builtin/math.tsx:32
-#: src/features/format-editor/nodes/builtin/math.tsx:52
-#: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:40
-#: src/features/format-editor/nodes/builtin/strings.tsx:54
-#: src/features/format-editor/nodes/builtin/strings.tsx:66
-msgid "result"
-msgstr "result"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:49
 msgid "input"
@@ -312,7 +333,7 @@ msgstr "\"true\" string"
 msgid "\"false\" string"
 msgstr "\"false\" string"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:130
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:131
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 

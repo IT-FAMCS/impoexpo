@@ -17,6 +17,7 @@ export const nodeSchemasCompatible = (
 	const sourceEntry = source.entry(connection.sourceHandle);
 	const targetEntry = target.entry(connection.targetHandle);
 	if (!sourceEntry || !targetEntry) return false;
+	if (sourceEntry.generic && targetEntry.generic) return false;
 	if (
 		(sourceEntry.generic && !targetEntry.generic) ||
 		(!sourceEntry.generic && targetEntry.generic)

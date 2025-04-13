@@ -90,12 +90,30 @@ export const registerWithDefaultRenderer = <
 
 	if (options.searchable ?? true) {
 		const tags: Set<string> = new Set();
-		for (const key of Object.keys(node.inputSchema?.entries ?? [])) {
-			tags.add(`accepts:${node.entry(key).type}`);
+
+		const inputs = Object.keys(node.inputSchema?.entries ?? []);
+		const outputs = Object.keys(node.outputSchema?.entries ?? []);
+		for (const key of inputs) {
+			tags.add(
+				`accepts:${node.entry(key).generic ? "generic" : node.entry(key).type}`,
+			);
 		}
-		for (const key of Object.keys(node.outputSchema?.entries ?? [])) {
-			tags.add(`outputs:${node.entry(key).type}`);
+		for (const key of outputs) {
+			tags.add(
+				`outputs:${node.entry(key).generic ? "generic" : node.entry(key).type}`,
+			);
 		}
+
+		if (
+			inputs.length > 0 &&
+			inputs.length !== inputs.filter((k) => node.entry(k).generic).length
+		)
+			tags.add("accepts");
+		if (
+			outputs.length > 0 &&
+			outputs.length !== outputs.filter((k) => node.entry(k).generic).length
+		)
+			tags.add("outputs");
 
 		const categoryRenderOptions = useRenderableNodesStore
 			.getState()
