@@ -1,5 +1,16 @@
 import * as v from "valibot";
-import { isArray, isNullable, unwrapNodeIfNeeded } from "./node-utils";
+import {
+	getGenericEntries,
+	getGenericName,
+	getObjectName,
+	getRootSchema,
+	isArray,
+	isGeneric,
+	isNamed,
+	isNullable,
+	isObject,
+	unwrapNodeIfNeeded,
+} from "./node-utils";
 
 export type ObjectEntry = v.ObjectEntries[string];
 
@@ -40,46 +51,65 @@ export class BaseNode<
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
-	genericProperties: Record<string, string[]> = {};
+	public genericTypes: string[] = [];
 
 	constructor(
 		init: Partial<BaseNode<TIn, TOut>> &
-			Pick<BaseNode<TIn, TOut>, "name" | "category"> & {
-				genericProperties?: Record<
-					string,
-					(
-						| v.ObjectKeys<v.ObjectSchema<TIn, TInMessages>>["0"]
-						| v.ObjectKeys<v.ObjectSchema<TOut, TOutMessages>>["0"]
-					)[]
-				>;
-			},
+			Pick<BaseNode<TIn, TOut>, "name" | "category">,
 	) {
 		Object.assign(this, init);
-		if (init.genericProperties === undefined) this.genericProperties = {};
+		this.fillGenericTypes();
+		console.warn(this.name, this.genericTypes);
 	}
 
-	public resolveGenericEntry(key: string, resolvedWith: ObjectEntry) {
-		const entry = this.entry(key);
+	fillGenericTypes() {
+		const genericTypes: string[] = [];
+		for (const entry of [
+			...Object.values(this.inputSchema?.entries ?? {}),
+			...Object.values(this.outputSchema?.entries ?? {}),
+		]) {
+			genericTypes.push(
+				...getGenericEntries(entry).map((ge) => getGenericName(ge)),
+			);
+		}
+		this.genericTypes = genericTypes.filter(
+			(type, idx, array) => array.indexOf(type) === idx,
+		);
+	}
 
-		const replaceUnknownWithSchema = (root: ObjectEntry): ObjectEntry => {
-			if (root.type === "unknown") return resolvedWith;
-			if (isArray(root)) return v.array(replaceUnknownWithSchema(root.item));
+	public resolveGenericType(resolvedType: string, resolvedWith: ObjectEntry) {
+		const replaceGenericWithSchema = (
+			root: ObjectEntry,
+			name: string,
+		): ObjectEntry => {
+			if (isGeneric(root) && getGenericName(root) === name) return resolvedWith;
+			if (isArray(root))
+				return v.array(replaceGenericWithSchema(root.item, name));
 			if (isNullable(root))
-				return v.nullable(replaceUnknownWithSchema(root.wrapped));
+				return v.nullable(replaceGenericWithSchema(root.wrapped, name));
 
 			throw new Error(
-				`BaseNode.resolveGenericEntry.replaceUnknownWithSchema failed: couldn't process node: ${root}`,
+				`BaseNode.resolveGenericEntry.replaceUnknownWithSchema failed: couldn't process node: ${JSON.stringify(root)}`,
 			);
 		};
 
-		if (entry.source === "input" && this.inputSchema) {
-			Object.assign(this.inputSchema.entries, {
-				[key]: replaceUnknownWithSchema(entry.schema),
-			});
-		} else if (entry.source === "output" && this.outputSchema) {
-			Object.assign(this.outputSchema.entries, {
-				[key]: replaceUnknownWithSchema(entry.schema),
-			});
+		for (const key of [
+			...Object.keys(this.inputSchema?.entries ?? {}),
+			...Object.keys(this.outputSchema?.entries ?? {}),
+		]) {
+			const entry = this.entry(key);
+			if (entry.generic === resolvedType) {
+				Object.assign(
+					entry.source === "input"
+						? // biome-ignore lint/style/noNonNullAssertion: this.entry will throw if entry is not found
+							this.inputSchema!.entries
+						: // biome-ignore lint/style/noNonNullAssertion: this.entry will throw if entry is not found
+							this.outputSchema!.entries,
+					{
+						[key]: replaceGenericWithSchema(entry.schema, resolvedType),
+					},
+				);
+			}
 		}
 	}
 
@@ -90,66 +120,64 @@ export class BaseNode<
 		);
 	}
 
-	public entry(key: string, unwrap = false): BaseNodeEntry {
+	basicEntry(key: string): {
+		name: string;
+		source: "input" | "output";
+		schema: ObjectEntry;
+	} {
 		if (this.inputSchema && key in this.inputSchema.entries) {
-			const rawSchema = this.inputSchema.entries[key];
-			const typeData = this.type(key, rawSchema);
 			return {
 				name: key,
 				source: "input",
-				type: typeData.type,
-				generic: typeData.generic,
-				schema: unwrap ? unwrapNodeIfNeeded(rawSchema) : rawSchema,
+				schema: this.inputSchema.entries[key],
 			};
 		}
 		if (this.outputSchema && key in this.outputSchema.entries) {
-			const rawSchema = this.outputSchema.entries[key];
-			const typeData = this.type(key, rawSchema);
 			return {
 				name: key,
 				source: "output",
-				type: typeData.type,
-				generic: typeData.generic,
-				schema: unwrap ? unwrapNodeIfNeeded(rawSchema) : rawSchema,
+				schema: this.outputSchema.entries[key],
 			};
 		}
-
 		throw new Error(
 			`couldn't pick entry "${key}" in node with type "${this.category}-${this.name}"`,
 		);
 	}
 
-	type(
-		key: string,
-		schema: ObjectEntry,
-	): {
+	public entry(key: string): BaseNodeEntry {
+		const basic = this.basicEntry(key);
+		const typeData = this.type(key);
+		return {
+			...basic,
+			type: typeData.type,
+			generic: typeData.generic,
+		};
+	}
+
+	type(key: string): {
 		type: string;
 		generic?: string;
 	} {
-		const get = (schema: ObjectEntry, genericName?: string): string => {
-			if (schema.type === "unknown")
-				return genericName ? genericName : "unknown";
-			if (isArray(schema)) return `Array<${get(schema.item, genericName)}>`;
+		let generic: string | undefined = undefined;
+		const get = (schema: ObjectEntry): string => {
+			if (isArray(schema)) return `Array<${get(schema.item)}>`;
 			if (isNullable(schema))
-				return `${get(schema.wrapped, genericName)}${isNullable(schema.wrapped) ? "" : " | null"}`;
+				return `${get(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
+			if (isNamed(schema)) return getObjectName(schema);
+			if (isGeneric(schema)) {
+				generic = getGenericName(schema);
+				return generic;
+			}
 			return schema.expects;
 		};
 
-		const unwrapped = unwrapNodeIfNeeded(schema);
-		if (Object.values(this.genericProperties).some((x) => x.includes(key))) {
-			const generic = // biome-ignore lint/style/noNonNullAssertion: checked above
-				Object.entries(this.genericProperties).find((x) =>
-					x[1].includes(key),
-				)![0];
-			return {
-				type: get(unwrapped, generic),
-				generic: generic,
-			};
-		}
+		const basic = this.basicEntry(key);
+		const unwrapped = unwrapNodeIfNeeded(basic.schema);
+		const type = get(unwrapped);
 
 		return {
-			type: get(unwrapped),
-			generic: undefined,
+			type: type,
+			generic: generic,
 		};
 	}
 }

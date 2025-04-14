@@ -152,7 +152,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		) {
 			const node = getBaseNode(connectionState.fromNode.type);
 			const handleId = connectionState.fromHandle.id;
-			const handle = node.entry(handleId, true);
+			const handle = node.entry(handleId);
 
 			const filters = [
 				`${handle.source === "input" ? "outputs" : "accepts"}${handle.generic ? "" : `:${handle.type}`}`,
@@ -375,14 +375,12 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		const copy = deepCopy(base.node);
 		Object.setPrototypeOf(copy, BaseNode.prototype);
 
-		copy.name = `${base.node.name}-${Object.keys(base.node.genericProperties)
+		copy.name = `${base.node.name}-${base.node.genericTypes
 			.map((p) => (p === resolvedType ? resolver.type : p))
 			.join("-")}`;
 
-		const genericEntries = copy.genericProperties[resolvedType];
-		for (const entry of genericEntries)
-			copy.resolveGenericEntry(entry, resolver.schema);
-		delete copy.genericProperties[resolvedType];
+		copy.resolveGenericType(resolvedType, resolver.schema);
+		copy.genericTypes = copy.genericTypes.filter((t) => t !== resolvedType);
 
 		const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 		addGenericNodeInstance(base.node, copy);

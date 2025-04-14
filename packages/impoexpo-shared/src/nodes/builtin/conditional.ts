@@ -1,21 +1,19 @@
-import { array, boolean, nullable, object, unknown } from "valibot";
+import { boolean, object, string } from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
+import { generic, named } from "../node-utils";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",
 	name: "if",
 	inputSchema: object({
 		condition: boolean(),
-		trueValue: unknown(),
-		falseValue: unknown(),
+		trueValue: generic("T"),
+		falseValue: generic("T"),
 	}),
 	outputSchema: object({
-		out: unknown(),
+		out: generic("T"),
 	}),
-	genericProperties: {
-		T: ["out", "falseValue", "trueValue"],
-	},
 });
 
 nodesScope(() => {

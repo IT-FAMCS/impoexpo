@@ -4,16 +4,100 @@ import type {
 	NodePropertyOptions,
 	BaseNodeEntry,
 } from "./node-types";
-import type * as v from "valibot";
+import * as v from "valibot";
+
+const hasMetadata = (
+	schema: ObjectEntry,
+): schema is v.SchemaWithPipe<
+	[
+		ObjectEntry,
+		v.MetadataAction<
+			ObjectEntry,
+			{
+				metadataType: string;
+			}
+		>,
+	]
+> => {
+	const isPipe = (
+		schema: ObjectEntry,
+	): schema is v.SchemaWithPipe<[ObjectEntry, v.GenericPipeAction]> =>
+		"pipe" in schema;
+
+	const isMetadataAction = (
+		item: v.GenericPipeAction,
+	): item is v.MetadataAction<ObjectEntry, Record<string, unknown>> => {
+		return item.type === "metadata";
+	};
+
+	return (
+		isPipe(schema) &&
+		schema.pipe.length > 1 &&
+		isMetadataAction(schema.pipe[1]) &&
+		"metadataType" in schema.pipe[1].metadata
+	);
+};
+
+export const generic = (name: string) =>
+	v.pipe(v.unknown(), v.metadata({ metadataType: "generic", typeName: name }));
+export const isGeneric = (
+	schema: ObjectEntry,
+): schema is ReturnType<typeof generic> => {
+	if (isObject(schema))
+		return Object.values(schema.entries).some((entry) => isGeneric(entry));
+	return (
+		hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "generic"
+	);
+};
+export const getGenericEntries = (
+	schema: ObjectEntry,
+): ReturnType<typeof generic>[] => {
+	return isObject(schema)
+		? Object.values(schema.entries).filter((entry) => isGeneric(entry))
+		: isGeneric(schema)
+			? [schema]
+			: [];
+};
+export const getGenericName = (schema: ReturnType<typeof generic>): string =>
+	schema.pipe[1].metadata.typeName;
+
+export const named = (
+	name: string,
+	child: v.ObjectSchema<v.ObjectEntries, undefined>,
+) => v.pipe(child, v.metadata({ metadataType: "named", objectName: name }));
+export const isNamed = (
+	schema: ObjectEntry,
+): schema is ReturnType<typeof named> => {
+	return (
+		hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "named"
+	);
+};
+export const getObjectName = (schema: ReturnType<typeof named>) =>
+	schema.pipe[1].metadata.objectName;
 
 export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
 	// NOTE: do not unwrap nullable types here! they must be handled by the user
 	// with special nodes.
-	return node.type === "optional"
-		? unwrapNodeIfNeeded(
-				(node as v.OptionalSchema<ObjectEntry, unknown>).wrapped,
-			)
-		: node;
+	return isOptional(node) ? unwrapNodeIfNeeded(node.wrapped) : node;
+};
+
+export const getRootSchema = (node: ObjectEntry): ObjectEntry => {
+	if (isOptional(node)) return getRootSchema(node.wrapped);
+	if (isArray(node)) return getRootSchema(node.item);
+	if (isNullable(node)) return getRootSchema(node.wrapped);
+	return node;
+};
+
+export const isOptional = (
+	schema: ObjectEntry,
+): schema is v.OptionalSchema<ObjectEntry, unknown> => {
+	return schema.type === "optional";
+};
+
+export const isObject = (
+	schema: ObjectEntry,
+): schema is v.ObjectSchema<v.ObjectEntries, undefined> => {
+	return schema.type === "object";
 };
 
 export const isArray = (
@@ -55,7 +139,7 @@ export const findCompatibleEntry = (
 	fromEntryKey: string,
 	toNode: DefaultBaseNode,
 ): BaseNodeEntry => {
-	const fromEntry = fromNode.entry(fromEntryKey, true);
+	const fromEntry = fromNode.entry(fromEntryKey);
 
 	const entries =
 		fromEntry.source === "input"
