@@ -1,68 +1,51 @@
 import { nodesScope } from "@impoexpo/shared/nodes/node-database";
-import {
-	registerCategory,
-	registerWithDefaultRenderer,
-} from "../renderable-node-database";
+import { registerCategory } from "../renderable-node-database";
 import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 import * as mathNodes from "@impoexpo/shared/nodes/builtin/math";
-import type { MessageDescriptor } from "@lingui/core";
+import {
+	registerSymmetricBinaryNode,
+	registerSymmetricUnaryNode,
+} from "../common";
 
 nodesScope(() => {
-	registerCategory("math", msg`math`, (size) => (
-		<Icon width={size} icon="mdi:plus-minus-variant" />
-	));
+	registerCategory("math", {
+		name: msg`math`,
+		header: "bg-primary-200",
+		icon: (size) => <Icon width={size} icon="mdi:plus-minus-variant" />,
+	});
 
-	type BinaryNode = typeof mathNodes.ADD_NODE;
-	const registerBinaryNode = (
-		node: BinaryNode,
-		title: MessageDescriptor | string,
-		aliases?: (MessageDescriptor | string)[],
-	) => {
-		registerWithDefaultRenderer(node, {
-			title: title,
-			aliases: aliases,
-			header: "bg-primary-200",
-			searchable: true,
-			inputs: {
-				inA: { title: "A" },
-				inB: { title: "B" },
-			},
-			outputs: {
-				out: { title: msg`result` },
-			},
-		});
-	};
+	registerSymmetricBinaryNode(mathNodes.ADD_NODE, {
+		title: msg`add`,
+		aliases: [msg`sum`],
+	});
+	registerSymmetricBinaryNode(mathNodes.SUBTRACT_NODE, {
+		title: msg`subtract`,
+	});
+	registerSymmetricBinaryNode(mathNodes.MULTIPLY_NODE, {
+		title: msg`multiply`,
+	});
+	registerSymmetricBinaryNode(mathNodes.DIVIDE_NODE, {
+		title: msg`divide`,
+	});
+	registerSymmetricBinaryNode(mathNodes.MODULO_NODE, {
+		title: msg`modulo`,
+		aliases: [msg`remainder`],
+	});
+	registerSymmetricBinaryNode(mathNodes.POWER_NODE, {
+		title: msg`power`,
+	});
 
-	type UnaryNode = typeof mathNodes.ABS_NODE;
-	const registerUnaryNode = (
-		node: UnaryNode,
-		title: MessageDescriptor | string,
-		aliases?: (MessageDescriptor | string)[],
-	) => {
-		registerWithDefaultRenderer(node, {
-			title: title,
-			aliases: aliases,
-			header: "bg-primary-200",
-			searchable: true,
-			inputs: {
-				in: { title: msg`input` },
-			},
-			outputs: {
-				out: { title: msg`result` },
-			},
-		});
-	};
-
-	registerBinaryNode(mathNodes.ADD_NODE, msg`add`, [msg`sum`]);
-	registerBinaryNode(mathNodes.SUBTRACT_NODE, msg`subtract`);
-	registerBinaryNode(mathNodes.MULTIPLY_NODE, msg`multiply`);
-	registerBinaryNode(mathNodes.DIVIDE_NODE, msg`divide`);
-	registerBinaryNode(mathNodes.MODULO_NODE, msg`modulo`, [msg`remainder`]);
-	registerBinaryNode(mathNodes.POWER_NODE, msg`power`);
-
-	registerUnaryNode(mathNodes.ABS_NODE, msg`absolute value`, [msg`abs`]);
-	registerUnaryNode(mathNodes.LOG_NODE, msg`log`);
-	registerUnaryNode(mathNodes.NEGATE_NODE, msg`negate`);
-	registerUnaryNode(mathNodes.SQUARE_ROOT_NODE, msg`square root`, [msg`sqrt`]);
+	registerSymmetricUnaryNode(mathNodes.ABS_NODE, {
+		title: msg`absolute value`,
+		aliases: [msg`abs`],
+	});
+	registerSymmetricUnaryNode(mathNodes.LOG_NODE, { title: msg`log` });
+	registerSymmetricUnaryNode(mathNodes.NEGATE_NODE, {
+		title: msg`negate`,
+	});
+	registerSymmetricUnaryNode(mathNodes.SQUARE_ROOT_NODE, {
+		title: msg`square root`,
+		aliases: [msg`sqrt`],
+	});
 });

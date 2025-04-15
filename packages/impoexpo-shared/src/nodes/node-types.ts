@@ -59,7 +59,6 @@ export class BaseNode<
 	) {
 		Object.assign(this, init);
 		this.fillGenericTypes();
-		console.warn(this.name, this.genericTypes);
 	}
 
 	fillGenericTypes() {
@@ -80,13 +79,16 @@ export class BaseNode<
 	public resolveGenericType(resolvedType: string, resolvedWith: ObjectEntry) {
 		const replaceGenericWithSchema = (
 			root: ObjectEntry,
+			resolver: ObjectEntry,
 			name: string,
 		): ObjectEntry => {
-			if (isGeneric(root) && getGenericName(root) === name) return resolvedWith;
+			if (isGeneric(root) && getGenericName(root) === name) return resolver;
 			if (isArray(root))
-				return v.array(replaceGenericWithSchema(root.item, name));
+				return v.array(replaceGenericWithSchema(root.item, resolver, name));
 			if (isNullable(root))
-				return v.nullable(replaceGenericWithSchema(root.wrapped, name));
+				return v.nullable(
+					replaceGenericWithSchema(root.wrapped, resolver, name),
+				);
 
 			throw new Error(
 				`BaseNode.resolveGenericEntry.replaceUnknownWithSchema failed: couldn't process node: ${JSON.stringify(root)}`,
@@ -106,7 +108,11 @@ export class BaseNode<
 						: // biome-ignore lint/style/noNonNullAssertion: this.entry will throw if entry is not found
 							this.outputSchema!.entries,
 					{
-						[key]: replaceGenericWithSchema(entry.schema, resolvedType),
+						[key]: replaceGenericWithSchema(
+							entry.schema,
+							resolvedWith,
+							resolvedType,
+						),
 					},
 				);
 			}

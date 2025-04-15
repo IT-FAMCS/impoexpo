@@ -44,8 +44,11 @@ export default function DefaultNodeRenderer({
 	const { t } = useLingui();
 
 	const nodeData = useMemo(() => getBaseNode(type), [type]);
-	const [nodeRenderOptions] = useRenderableNodesStore(
-		useShallow((state) => [state.nodeRenderOptions.get(type)]),
+	const [nodeRenderOptions, categoryRenderOptions] = useRenderableNodesStore(
+		useShallow((state) => [
+			state.nodeRenderOptions.get(type),
+			state.categoryRenderOptions.get(nodeData.category),
+		]),
 	);
 
 	if (nodeRenderOptions === undefined) return <>meow</>;
@@ -55,10 +58,10 @@ export default function DefaultNodeRenderer({
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",
-					nodeRenderOptions.raw.header,
+					nodeRenderOptions.raw.header ?? categoryRenderOptions?.header,
 				)}
 			>
-				{nodeRenderOptions.raw.icon?.(16)}
+				{nodeRenderOptions.raw.icon?.(16) ?? categoryRenderOptions?.icon?.(16)}
 				<p>
 					{nodeRenderOptions.raw.title !== undefined
 						? localizableString(nodeRenderOptions.raw.title, t)
@@ -237,7 +240,7 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-start gap-1 pl-4">
-						<p className="max-w-64 text-start">
+						<p className="max-w-64 text-start whitespace-nowrap">
 							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">
@@ -267,7 +270,7 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-end gap-1 pr-4">
-						<p className="max-w-64 text-end">
+						<p className="max-w-64 text-end whitespace-nowrap">
 							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">

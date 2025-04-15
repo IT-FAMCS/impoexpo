@@ -9,9 +9,10 @@ import {
 import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 
 nodesScope(() => {
-	registerCategory("notifications", msg`notifications`, (size) => (
-		<Icon width={size} icon="mdi:message-badge" />
-	));
+	registerCategory("notifications", {
+		name: msg`notifications`,
+		icon: (size) => <Icon width={size} icon="mdi:message-badge" />,
+	});
 
 	registerWithDefaultRenderer(notificationNodes.INFORMATION_NOTIFICATION_NODE, {
 		title: msg`information`,

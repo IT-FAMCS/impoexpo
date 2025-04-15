@@ -9,28 +9,14 @@ import {
 } from "../renderable-node-database";
 
 nodesScope(() => {
-	registerCategory("string", msg`strings`, (size) => (
-		<Icon width={size} icon="mdi:text" />
-	));
-
-	registerWithDefaultRenderer(stringNodes.COMBINE_STRINGS_NODE, {
-		title: msg`combine strings`,
-		aliases: [msg`add strings`, msg`join strings`],
+	registerCategory("string", {
+		name: msg`strings`,
 		header: "bg-primary-200",
-		searchable: true,
-		inputs: {
-			stringA: { title: "A" },
-			stringB: { title: "B" },
-		},
-		outputs: {
-			out: { title: msg`result` },
-		},
+		icon: (size) => <Icon width={size} icon="mdi:text" />,
 	});
 
 	registerWithDefaultRenderer(stringNodes.REPLACE_NODE, {
 		title: msg`replace in string`,
-		header: "bg-primary-200",
-		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
 			pattern: { title: msg`pattern` },
@@ -44,8 +30,6 @@ nodesScope(() => {
 	registerWithDefaultRenderer(stringNodes.CONTAINS_NODE, {
 		title: msg`string contains X?`,
 		aliases: [msg`search in string`, msg`find in string`],
-		header: "bg-primary-200",
-		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
 			pattern: { title: msg`pattern` },
@@ -57,8 +41,6 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(stringNodes.LENGTH_NODE, {
 		title: msg`length of string`,
-		header: "bg-primary-200",
-		searchable: true,
 		inputs: {
 			string: { title: msg`string` },
 		},
@@ -67,26 +49,23 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(stringNodes.NUMBER_TO_STRING_NODE, {
-		title: msg`number -> string`,
-		header: "bg-primary-200",
-		searchable: true,
+	registerWithDefaultRenderer(stringNodes.JOIN_STRINGS_NODE, {
+		title: msg`join strings`,
+		aliases: [msg`combine strings`],
 		inputs: {
-			number: { title: msg`number` },
+			stringA: { title: "A" },
+			stringB: { title: "B" },
+			delimeter: { title: msg`delimeter (optional)` },
 		},
 		outputs: {
-			out: { title: msg`string` },
+			out: { title: msg`result` },
 		},
 	});
 
-	registerWithDefaultRenderer(stringNodes.BOOLEAN_TO_STRING_NODE, {
-		title: msg`boolean -> string`,
-		header: "bg-primary-200",
-		searchable: true,
+	registerWithDefaultRenderer(stringNodes.NUMBER_TO_STRING_NODE, {
+		title: msg`number -> string`,
 		inputs: {
-			boolean: { title: msg`boolean` },
-			trueValue: { title: msg`"true" string` },
-			falseValue: { title: msg`"false" string` },
+			number: { title: msg`number` },
 		},
 		outputs: {
 			out: { title: msg`string` },

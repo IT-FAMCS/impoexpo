@@ -1,44 +1,23 @@
-import { number, object } from "valibot";
-import { BaseNode } from "../node-types";
+import { number } from "valibot";
 import { nodesScope } from "../node-database";
 import { registerBaseNodes } from "../node-database";
+import { symmetricBinaryNode, symmetricUnaryNode } from "../common";
 
-const binaryNode = (name: string) =>
-	new BaseNode({
-		name: name,
-		category: "math",
-		inputSchema: object({
-			inA: number(),
-			inB: number(),
-		}),
-		outputSchema: object({
-			out: number(),
-		}),
-	});
+export const ADD_NODE = symmetricBinaryNode("math", "add", number);
+export const SUBTRACT_NODE = symmetricBinaryNode("math", "subtract", number);
+export const MULTIPLY_NODE = symmetricBinaryNode("math", "multiply", number);
+export const DIVIDE_NODE = symmetricBinaryNode("math", "divide", number);
+export const MODULO_NODE = symmetricBinaryNode("math", "modulo", number);
+export const POWER_NODE = symmetricBinaryNode("math", "power", number);
 
-const unaryNode = (name: string) =>
-	new BaseNode({
-		name: name,
-		category: "math",
-		inputSchema: object({
-			in: number(),
-		}),
-		outputSchema: object({
-			out: number(),
-		}),
-	});
-
-export const ADD_NODE = binaryNode("add");
-export const SUBTRACT_NODE = binaryNode("subtract");
-export const MULTIPLY_NODE = binaryNode("multiply");
-export const DIVIDE_NODE = binaryNode("divide");
-export const MODULO_NODE = binaryNode("modulo");
-export const POWER_NODE = binaryNode("power");
-
-export const SQUARE_ROOT_NODE = unaryNode("square-root");
-export const ABS_NODE = unaryNode("abs");
-export const NEGATE_NODE = unaryNode("negate");
-export const LOG_NODE = unaryNode("log");
+export const SQUARE_ROOT_NODE = symmetricUnaryNode(
+	"math",
+	"square-root",
+	number,
+);
+export const ABS_NODE = symmetricUnaryNode("math", "abs", number);
+export const NEGATE_NODE = symmetricUnaryNode("math", "negate", number);
+export const LOG_NODE = symmetricUnaryNode("math", "log", number);
 
 nodesScope(() => {
 	registerBaseNodes(

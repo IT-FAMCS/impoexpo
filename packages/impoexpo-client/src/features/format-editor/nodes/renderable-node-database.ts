@@ -5,6 +5,7 @@ import "./builtin/notifications";
 import "./builtin/math";
 import "./builtin/strings";
 import "./builtin/conditional";
+import "./builtin/operators";
 
 import { create } from "zustand/react";
 import { supportedLocales } from "@/locales/supportedLocales";
@@ -147,7 +148,8 @@ export type RenderableNodesStore = {
 	categoryRenderOptions: Map<
 		string,
 		{
-			icon: IconRenderFunction;
+			icon?: IconRenderFunction;
+			header?: string;
 			name: MessageDescriptor | string;
 		}
 	>;
@@ -205,15 +207,15 @@ export const useRenderableNodesStore = create<RenderableNodesStore>(
 
 export const registerCategory = (
 	id: string,
-	name: MessageDescriptor,
-	icon: IconRenderFunction,
+	data: {
+		name: MessageDescriptor;
+		header?: string;
+		icon?: IconRenderFunction;
+	},
 ) =>
 	useRenderableNodesStore.setState((state) => {
 		return {
-			categoryRenderOptions: new Map(state.categoryRenderOptions).set(id, {
-				icon: icon,
-				name: name,
-			}),
+			categoryRenderOptions: new Map(state.categoryRenderOptions).set(id, data),
 		};
 	});
 

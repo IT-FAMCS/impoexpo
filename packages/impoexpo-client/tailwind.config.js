@@ -20,6 +20,7 @@ module.exports = {
 		"bg-secondary-200",
 		"bg-primary-200",
 		"bg-warning-200",
+		"bg-success-200",
 	],
 	darkMode: "class",
 	plugins: [

@@ -9,9 +9,10 @@ import {
 } from "../renderable-node-database";
 
 nodesScope(() => {
-	registerCategory("console", msg`console`, (size) => (
-		<Icon width={size} icon="mdi:console" />
-	));
+	registerCategory("console", {
+		name: msg`console`,
+		icon: (size) => <Icon width={size} icon="mdi:console" />,
+	});
 
 	registerWithDefaultRenderer(consoleNodes.CONSOLE_WRITE_NODE, {
 		title: msg`print to console`,

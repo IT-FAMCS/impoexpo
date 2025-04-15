@@ -3,18 +3,6 @@ import { BaseNode } from "../node-types";
 import { nodesScope } from "../node-database";
 import { registerBaseNodes } from "../node-database";
 
-export const COMBINE_STRINGS_NODE = new BaseNode({
-	category: "string",
-	name: "combine",
-	inputSchema: object({
-		stringA: string(),
-		stringB: string(),
-	}),
-	outputSchema: object({
-		out: string(),
-	}),
-});
-
 export const REPLACE_NODE = new BaseNode({
 	category: "string",
 	name: "replace",
@@ -51,6 +39,19 @@ export const LENGTH_NODE = new BaseNode({
 	}),
 });
 
+export const JOIN_STRINGS_NODE = new BaseNode({
+	category: "string",
+	name: "join",
+	inputSchema: object({
+		stringA: string(),
+		stringB: string(),
+		delimeter: optional(string(), ""),
+	}),
+	outputSchema: object({
+		out: string(),
+	}),
+});
+
 export const NUMBER_TO_STRING_NODE = new BaseNode({
 	category: "string",
 	name: "number-to-string",
@@ -62,26 +63,12 @@ export const NUMBER_TO_STRING_NODE = new BaseNode({
 	}),
 });
 
-export const BOOLEAN_TO_STRING_NODE = new BaseNode({
-	category: "string",
-	name: "boolean-to-string",
-	inputSchema: object({
-		boolean: boolean(),
-		trueValue: optional(string(), "true"),
-		falseValue: optional(string(), "false"),
-	}),
-	outputSchema: object({
-		out: string(),
-	}),
-});
-
 nodesScope(() => {
 	registerBaseNodes(
-		COMBINE_STRINGS_NODE,
 		REPLACE_NODE,
 		CONTAINS_NODE,
 		LENGTH_NODE,
+		JOIN_STRINGS_NODE,
 		NUMBER_TO_STRING_NODE,
-		BOOLEAN_TO_STRING_NODE,
 	);
 });

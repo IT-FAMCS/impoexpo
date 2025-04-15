@@ -8,14 +8,14 @@ import { Icon } from "@iconify/react";
 import * as conditionalNodes from "@impoexpo/shared/nodes/builtin/conditional";
 
 nodesScope(() => {
-	registerCategory("conditional", msg`conditional`, (size) => (
-		<Icon width={size} icon="mdi:question-mark" />
-	));
+	registerCategory("conditional", {
+		name: msg`conditional`,
+		header: "bg-warning-200",
+		icon: (size) => <Icon width={size} icon="mdi:question-mark" />,
+	});
 
 	registerWithDefaultRenderer(conditionalNodes.IF_NODE, {
 		title: msg`if...`,
-		searchable: true,
-		header: "bg-warning-200",
 		inputs: {
 			condition: {
 				mode: "dependentOnly",
@@ -31,6 +31,24 @@ nodesScope(() => {
 		outputs: {
 			out: {
 				title: msg`result`,
+			},
+		},
+	});
+
+	registerWithDefaultRenderer(conditionalNodes.THROW_ERROR_IF_NULL_NODE, {
+		title: msg`throw error if null`,
+		inputs: {
+			nullableObject: {
+				title: msg`nullable object`,
+			},
+			errorMessage: {
+				title: msg`error message`,
+				mode: "independentOnly",
+			},
+		},
+		outputs: {
+			object: {
+				title: msg`object`,
 			},
 		},
 	});

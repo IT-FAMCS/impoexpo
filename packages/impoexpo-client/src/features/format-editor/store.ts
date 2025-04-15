@@ -24,8 +24,14 @@ import { persistStoreOnReload } from "@/stores/hot-reload";
 import {
 	type DefaultBaseNode,
 	findCompatibleEntry,
+	isArray,
+	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
-import { BaseNode, type ObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import {
+	BaseNode,
+	type BaseNodeEntry,
+	type ObjectEntry,
+} from "@impoexpo/shared/nodes/node-types";
 import { deepCopy } from "deep-copy-ts";
 import {
 	getNodeRenderOptions,
@@ -82,7 +88,7 @@ export type FormatEditorStore = {
 			node: DefaultBaseNode;
 			options: DefaultNodeRenderOptions;
 		},
-		resolvedType: string,
+		resolvedEntry: BaseNodeEntry,
 		resolver: {
 			type: string;
 			schema: ObjectEntry;
@@ -193,7 +199,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						node: fromNode,
 						options: getNodeRenderOptions(connectionState.fromNode.type),
 					},
-					fromEntry.generic,
+					fromEntry,
 					toEntry,
 					connectionState.fromNode.id,
 				);
@@ -203,7 +209,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						node: toNode,
 						options: getNodeRenderOptions(connectionState.toNode.type),
 					},
-					toEntry.generic,
+					toEntry,
 					fromEntry,
 					connectionState.toNode.id,
 				);
@@ -346,7 +352,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					node: toData,
 					options: getNodeRenderOptions(`${toData.category}-${toData.name}`),
 				},
-				toEntry.generic,
+				toEntry,
 				{
 					schema: fromEntry.schema,
 					type: fromEntry.type,
@@ -361,7 +367,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						`${fromData.category}-${fromData.name}`,
 					),
 				},
-				fromEntry.generic,
+				fromEntry,
 				{
 					schema: toEntry.schema,
 					type: toEntry.type,
@@ -371,7 +377,10 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		}
 	},
 
-	resolveGenericNode(base, resolvedType, resolver, replaceNodeId) {
+	resolveGenericNode(base, resolvedEntry, resolver, replaceNodeId) {
+		const resolvedType = resolvedEntry.generic;
+		if (!resolvedType) return;
+
 		const copy = deepCopy(base.node);
 		Object.setPrototypeOf(copy, BaseNode.prototype);
 
@@ -379,7 +388,22 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			.map((p) => (p === resolvedType ? resolver.type : p))
 			.join("-")}`;
 
-		copy.resolveGenericType(resolvedType, resolver.schema);
+		// TODO: should this be here or in BaseNode?
+		const simplifyResolver = (
+			entry: ObjectEntry,
+			resolver: ObjectEntry,
+		): ObjectEntry => {
+			if (isArray(entry) && isArray(resolver))
+				return simplifyResolver(entry.item, resolver.item);
+			if (isNullable(entry) && isNullable(resolver))
+				return simplifyResolver(entry.wrapped, resolver.wrapped);
+			return resolver;
+		};
+
+		copy.resolveGenericType(
+			resolvedType,
+			simplifyResolver(resolvedEntry.schema, resolver.schema),
+		);
 		copy.genericTypes = copy.genericTypes.filter((t) => t !== resolvedType);
 
 		const { addGenericNodeInstance } = useRenderableNodesStore.getState();
