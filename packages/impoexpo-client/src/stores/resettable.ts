@@ -1,4 +1,4 @@
-import type { StateCreator } from "zustand";
+import type { StateCreator, StoreMutatorIdentifier } from "zustand";
 import { create as actualCreate } from "zustand";
 
 export const WIZARD_STORE_CATEGORY = "wizard";
@@ -20,7 +20,9 @@ export const resetStores = (...categories: string[]) => {
 };
 
 export const createResettable = <T>(...categories: string[]) => {
-	return (stateCreator: StateCreator<T>) => {
+	return <Mos extends [StoreMutatorIdentifier, unknown][]>(
+		stateCreator: StateCreator<T, [], Mos>,
+	) => {
 		const store = actualCreate(stateCreator);
 		const initialState = store.getInitialState();
 

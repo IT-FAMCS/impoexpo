@@ -6,6 +6,7 @@ import {
 	type Edge,
 	type FinalConnectionState,
 	type Node,
+	Panel,
 	ReactFlow,
 	getOutgoers,
 	useKeyPress,
@@ -15,20 +16,17 @@ import {
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
 import "./nodes/builtin/console";
-import { useDisclosure } from "@heroui/react";
-import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
+import { Button, useDisclosure } from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { nodeSchemasCompatible } from "./nodes/renderable-node-helpers";
-import {
-	getNodeRenderOptions,
-	useRenderableNodesStore,
-} from "./nodes/renderable-node-database";
+import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore, useFormatEditorTemporalStore } from "./store";
 import useMousePosition from "../../hooks/useMousePosition";
+import { Icon } from "@iconify/react";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -67,6 +65,14 @@ export default function FormatEditor() {
 		onEdgesDelete,
 		onConnectEnd,
 	} = useFormatEditorStore();
+	const { undo, redo, futureStates, pastStates } = useFormatEditorTemporalStore(
+		(state) => state,
+	);
+
+	useEffect(() => {
+		console.log("past: ", pastStates, "future: ", futureStates);
+	}, [pastStates, futureStates]);
+
 	const { screenToFlowPosition } = useReactFlow();
 	const {
 		onOpen: openSearchModal,
@@ -152,6 +158,22 @@ export default function FormatEditor() {
 			>
 				<Controls showFitView={false} />
 				<Background size={2} />
+				<Panel position="top-left">
+					<div className="flex flex-row gap-2">
+						<Button
+							onPress={() => undo()}
+							isIconOnly
+							isDisabled={pastStates.length === 0}
+							startContent={<Icon icon="mdi:undo" />}
+						/>
+						<Button
+							onPress={() => redo()}
+							isIconOnly
+							isDisabled={futureStates.length === 0}
+							startContent={<Icon icon="mdi:redo" />}
+						/>
+					</div>
+				</Panel>
 			</ReactFlow>
 			<SearchNodesModal
 				portal={containerRef}
