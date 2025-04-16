@@ -97,8 +97,8 @@ export type FormatEditorStore = {
 			type: string;
 			schema: ObjectEntry;
 		},
-		replaceNodeId: string,
-	) => void;
+		node: Node,
+	) => Node;
 	getBaseNodeFromId: (id: string) => DefaultBaseNode | undefined;
 };
 
@@ -111,17 +111,16 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		immer((set, get) => ({
 			nodes: [],
 			edges: [],
+
 			onNodesChange: (changes) => {
-				console.error(changes);
-				/* set({
+				set({
 					nodes: applyNodeChanges(changes, get().nodes),
-				}); */
+				});
 			},
 			onEdgesChange: (changes) => {
-				console.error(changes);
-				/* set({
+				set({
 					edges: applyEdgeChanges(changes, get().edges),
-				}); */
+				});
 			},
 			onConnect: (connection) => {
 				set({
@@ -141,14 +140,20 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			},
 			onReconnectEnd(_, edge) {
 				if (get().isReconnecting) {
-					get().setEdges(get().edges.filter((e) => e.id !== edge.id));
-					get().onEdgesDelete([edge]);
-					get().isReconnecting = false;
+					set((state) => {
+						state.onEdgesDelete([edge]);
+						return {
+							edges: state.edges.filter((e) => e.id !== edge.id),
+							isReconnecting: false,
+						};
+					});
 				}
 			},
 			onReconnect(oldEdge, newConnection) {
-				get().isReconnecting = false;
-				get().setEdges(reconnectEdge(oldEdge, newConnection, get().edges));
+				set(() => ({
+					isReconnecting: false,
+					edges: reconnectEdge(oldEdge, newConnection, get().edges),
+				}));
 			},
 
 			onConnectEnd: (
@@ -206,27 +211,42 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const fromEntry = fromNode.entry(connectionState.fromHandle.id);
 					const toEntry = toNode.entry(connectionState.toHandle.id);
 
+					const affectedNode = fromEntry.generic
+						? connectionState.fromNode
+						: toEntry.generic
+							? connectionState.toNode
+							: undefined;
+					let newNode: Node | undefined;
+					if (!affectedNode) return;
+
 					if (fromEntry.generic) {
-						get().resolveGenericNode(
+						newNode = get().resolveGenericNode(
 							{
 								node: fromNode,
 								options: getNodeRenderOptions(connectionState.fromNode.type),
 							},
 							fromEntry,
 							toEntry,
-							connectionState.fromNode.id,
+							connectionState.fromNode,
 						);
 					} else if (toEntry.generic) {
-						get().resolveGenericNode(
+						newNode = get().resolveGenericNode(
 							{
 								node: toNode,
 								options: getNodeRenderOptions(connectionState.toNode.type),
 							},
 							toEntry,
 							fromEntry,
-							connectionState.toNode.id,
+							connectionState.toNode,
 						);
 					}
+					if (!newNode) return;
+
+					set((state) => ({
+						nodes: state.nodes.map((n) =>
+							n.id === affectedNode.id ? newNode : n,
+						),
+					}));
 				}
 			},
 
@@ -277,13 +297,13 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						)
 							return;
 
-						get().setNodes(
-							get().nodes.map((n) =>
+						set((state) => ({
+							nodes: state.nodes.map((n) =>
 								n.id === affectedNode.id
 									? { ...affectedNode, type: `${base.category}-${base.name}` }
 									: n,
 							),
-						);
+						}));
 					};
 
 					checkNode(edge.source, source);
@@ -318,14 +338,15 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 			addNewNode(type, position) {
 				const id = getNodeId(type);
-
 				const newNode = {
 					id: id,
 					position: position,
 					data: {},
 					type: type,
 				} satisfies Node;
-				get().setNodes(get().nodes.concat(newNode));
+				set(() => ({
+					nodes: get().nodes.concat(newNode),
+				}));
 			},
 
 			attachNewNode(
@@ -342,16 +363,48 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const toEntry = findCompatibleEntry(fromData, fromHandleId, toData);
 				const id = getNodeId(toNodeType);
 
-				const newNode = {
+				let newNode: Node = {
 					id: id,
 					position: position,
 					data: {},
 					type: toNodeType,
-				} satisfies Node;
+				};
 
-				get().setNodes(get().nodes.concat(newNode));
-				get().setEdges(
-					get().edges.concat(
+				if (toEntry.generic) {
+					newNode = get().resolveGenericNode(
+						{
+							node: toData,
+							options: getNodeRenderOptions(
+								`${toData.category}-${toData.name}`,
+							),
+						},
+						toEntry,
+						{
+							schema: fromEntry.schema,
+							type: fromEntry.type,
+						},
+						newNode,
+					);
+				} else if (fromEntry.generic) {
+					newNode = get().resolveGenericNode(
+						{
+							node: fromData,
+							options: getNodeRenderOptions(
+								`${fromData.category}-${fromData.name}`,
+							),
+						},
+						fromEntry,
+						{
+							schema: toEntry.schema,
+							type: toEntry.type,
+						},
+						newNode,
+					);
+				}
+
+				set(() => ({
+					nodes: get().nodes.concat(newNode),
+					edges: get().edges.concat(
 						fromEntry.source === "output"
 							? {
 									id: id,
@@ -368,44 +421,12 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 									targetHandle: fromHandleId,
 								},
 					),
-				);
-
-				if (toEntry.generic) {
-					get().resolveGenericNode(
-						{
-							node: toData,
-							options: getNodeRenderOptions(
-								`${toData.category}-${toData.name}`,
-							),
-						},
-						toEntry,
-						{
-							schema: fromEntry.schema,
-							type: fromEntry.type,
-						},
-						id,
-					);
-				} else if (fromEntry.generic) {
-					get().resolveGenericNode(
-						{
-							node: fromData,
-							options: getNodeRenderOptions(
-								`${fromData.category}-${fromData.name}`,
-							),
-						},
-						fromEntry,
-						{
-							schema: toEntry.schema,
-							type: toEntry.type,
-						},
-						fromNodeId,
-					);
-				}
+				}));
 			},
 
-			resolveGenericNode(base, resolvedEntry, resolver, replaceNodeId) {
+			resolveGenericNode(base, resolvedEntry, resolver, node) {
 				const resolvedType = resolvedEntry.generic;
-				if (!resolvedType) return;
+				if (!resolvedType) return node;
 
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
@@ -440,16 +461,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					searchable: false,
 				});
 
-				const replaceNode = get().nodes.find((n) => n.id === replaceNodeId);
-				if (!replaceNode) return;
-
-				get().setNodes(
-					get().nodes.map((n) =>
-						n.id === replaceNodeId
-							? { ...replaceNode, type: `${copy.category}-${copy.name}` }
-							: n,
-					),
-				);
+				return { ...node, type: `${copy.category}-${copy.name}` };
 			},
 		})),
 		{
@@ -458,8 +470,24 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				edges: state.edges,
 			}),
 			limit: 100,
-			equality: (past, current) => deepEqual(past, current),
-			onSave: (prev, next) => console.warn(prev, next),
+			equality: (past, current) => {
+				const filtered = (data: { nodes: Node[]; edges: Edge[] }) => ({
+					nodes: data.nodes.map((n) => ({
+						id: n.id,
+						type: n.type,
+						data: n.data,
+					})),
+					edges: data.edges.map((e) => ({
+						id: e.id,
+						source: e.source,
+						sourceHandle: e.sourceHandle,
+						target: e.target,
+						targetHandle: e.targetHandle,
+						data: e.data,
+					})),
+				});
+				return deepEqual(filtered(past), filtered(current));
+			},
 		},
 	),
 );

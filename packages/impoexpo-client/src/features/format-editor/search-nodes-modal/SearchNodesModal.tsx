@@ -36,8 +36,7 @@ export default function SearchNodesModal(props: {
 	const { setFilters, setNewNodeInformation, filters, newNodeInformation } =
 		useSearchNodesModalStore();
 	const { attachNewNode, addNewNode } = useFormatEditorStore();
-	const { nodeRenderOptions, categoryRenderOptions } =
-		useRenderableNodesStore();
+	const { categoryRenderOptions } = useRenderableNodesStore();
 	const [query, setQuery] = useState("");
 	const [searchResults, setSearchResults] = useState<
 		{
@@ -163,9 +162,10 @@ export default function SearchNodesModal(props: {
 
 														onClose();
 													}}
-													startContent={(
-														renderOptions.raw.icon ?? categoryOptions.icon
-													)(24)}
+													startContent={
+														renderOptions.raw.icon?.(24) ??
+														categoryOptions.icon?.(24)
+													}
 													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
 												>
 													<div className="flex flex-row items-center justify-center gap-1">

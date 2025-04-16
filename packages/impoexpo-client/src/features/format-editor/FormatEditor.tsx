@@ -9,14 +9,13 @@ import {
 	Panel,
 	ReactFlow,
 	getOutgoers,
-	useKeyPress,
 	useReactFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
 import "./nodes/builtin/console";
-import { Button, useDisclosure } from "@heroui/react";
+import { Button, Input, Kbd, Tooltip, useDisclosure } from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { nodeSchemasCompatible } from "./nodes/renderable-node-helpers";
@@ -27,6 +26,8 @@ import { ThemeProps } from "@heroui/use-theme";
 import { useFormatEditorStore, useFormatEditorTemporalStore } from "./store";
 import useMousePosition from "../../hooks/useMousePosition";
 import { Icon } from "@iconify/react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { Trans } from "@lingui/react/macro";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -69,10 +70,6 @@ export default function FormatEditor() {
 		(state) => state,
 	);
 
-	useEffect(() => {
-		console.log("past: ", pastStates, "future: ", futureStates);
-	}, [pastStates, futureStates]);
-
 	const { screenToFlowPosition } = useReactFlow();
 	const {
 		onOpen: openSearchModal,
@@ -80,34 +77,33 @@ export default function FormatEditor() {
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
 
-	const mousePosition = useMousePosition();
-	const spacePressed = useKeyPress("Space");
-
-	useEffect(() => {
-		if (spacePressed && !isSearchModalOpen) {
-			setFilters([]);
-			setNewNodeInformation({
-				position: screenToFlowPosition({
-					x: mousePosition.x ?? 0,
-					y: mousePosition.y ?? 0,
-				}),
-			});
-			openSearchModal();
-		}
-	}, [
-		spacePressed,
-		isSearchModalOpen,
-		mousePosition,
-		openSearchModal,
-		screenToFlowPosition,
-	]);
-
 	const { setFilters, setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
 	// biome-ignore lint/style/noNonNullAssertion: will be initialized as soon as possible
 	const containerRef = useRef<HTMLDivElement>(null!);
+
+	const mousePosition = useMousePosition();
+	useHotkeys(
+		"space",
+		() => {
+			if (!isSearchModalOpen) {
+				setFilters([]);
+				setNewNodeInformation({
+					position: screenToFlowPosition({
+						x: mousePosition.x ?? 0,
+						y: mousePosition.y ?? 0,
+					}),
+				});
+				openSearchModal();
+			}
+		},
+		[isSearchModalOpen, setFilters, setNewNodeInformation, openSearchModal],
+	);
+
+	useHotkeys("ctrl+z", () => undo(), [undo]);
+	useHotkeys("ctrl+shift+z, ctrl+y", () => redo(), [redo]);
 
 	const [colorMode, setColorMode] = useState<ColorMode>("light");
 	useEffect(() => {
@@ -160,18 +156,42 @@ export default function FormatEditor() {
 				<Background size={2} />
 				<Panel position="top-left">
 					<div className="flex flex-row gap-2">
-						<Button
-							onPress={() => undo()}
-							isIconOnly
-							isDisabled={pastStates.length === 0}
-							startContent={<Icon icon="mdi:undo" />}
-						/>
-						<Button
-							onPress={() => redo()}
-							isIconOnly
-							isDisabled={futureStates.length === 0}
-							startContent={<Icon icon="mdi:redo" />}
-						/>
+						{/* TODO */}
+						<Input value="untitled" />
+						<Tooltip
+							delay={500}
+							showArrow
+							content={
+								<div className="flex flex-row items-center justify-center gap-2 p-1">
+									<Trans>undo</Trans>
+									<Kbd keys={["ctrl"]}>Z</Kbd>
+								</div>
+							}
+						>
+							<Button
+								onPress={() => undo()}
+								isIconOnly
+								isDisabled={pastStates.length === 0}
+								startContent={<Icon icon="mdi:undo" />}
+							/>
+						</Tooltip>
+						<Tooltip
+							delay={500}
+							showArrow
+							content={
+								<div className="flex flex-row items-center justify-center gap-2 p-1">
+									<Trans>redo</Trans>
+									<Kbd keys={["ctrl", "shift"]}>Z</Kbd>
+								</div>
+							}
+						>
+							<Button
+								onPress={() => redo()}
+								isIconOnly
+								isDisabled={futureStates.length === 0}
+								startContent={<Icon icon="mdi:redo" />}
+							/>
+						</Tooltip>
 					</div>
 				</Panel>
 			</ReactFlow>

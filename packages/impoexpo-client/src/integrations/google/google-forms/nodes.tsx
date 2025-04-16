@@ -48,13 +48,12 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 	});
 
 	const type = `${base.category}-${base.name}`;
-	const editorState = useFormatEditorStore.getState();
-	editorState.setNodes(
-		editorState.nodes.concat({
+	useFormatEditorStore.setState((state) => ({
+		nodes: state.nodes.concat({
 			data: {},
 			type: type,
 			id: getNodeId(type),
 			position: { x: 100, y: 100 }, // TODO
 		}),
-	);
+	}));
 };

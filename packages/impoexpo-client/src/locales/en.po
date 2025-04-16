@@ -67,11 +67,19 @@ msgstr "add another"
 msgid "next"
 msgstr "next"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:11
+#: src/features/format-editor/FormatEditor.tsx:166
+msgid "undo"
+msgstr "undo"
+
+#: src/features/format-editor/FormatEditor.tsx:183
+msgid "redo"
+msgstr "redo"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:12
 msgid "conditional"
 msgstr "conditional"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:16
+#: src/features/format-editor/nodes/builtin/conditional.tsx:18
 msgid "if..."
 msgstr "if..."
 
@@ -89,11 +97,11 @@ msgstr "value when false"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:33
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:40
-#: src/features/format-editor/nodes/builtin/strings.tsx:52
-#: src/features/format-editor/nodes/builtin/strings.tsx:67
+#: src/features/format-editor/nodes/builtin/strings.tsx:38
+#: src/features/format-editor/nodes/builtin/strings.tsx:48
+#: src/features/format-editor/nodes/builtin/strings.tsx:61
 #: src/features/format-editor/nodes/common.tsx:28
-#: src/features/format-editor/nodes/common.tsx:51
+#: src/features/format-editor/nodes/common.tsx:50
 msgid "result"
 msgstr "result"
 
@@ -101,257 +109,257 @@ msgstr "result"
 msgid "throw error if null"
 msgstr "throw error if null"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:44
+#: src/features/format-editor/nodes/builtin/conditional.tsx:42
 msgid "nullable object"
 msgstr "nullable object"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:47
+#: src/features/format-editor/nodes/builtin/conditional.tsx:45
 msgid "error message"
 msgstr "error message"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:53
+#: src/features/format-editor/nodes/builtin/conditional.tsx:51
 msgid "object"
 msgstr "object"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:12
+#: src/features/format-editor/nodes/builtin/console.tsx:13
 msgid "console"
 msgstr "console"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:17
+#: src/features/format-editor/nodes/builtin/console.tsx:18
 msgid "print to console"
 msgstr "print to console"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:19
+#: src/features/format-editor/nodes/builtin/console.tsx:20
 msgid "text"
 msgstr "text"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:24
+#: src/features/format-editor/nodes/builtin/console.tsx:25
 msgid "testing input node"
 msgstr "testing input node"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:31
+#: src/features/format-editor/nodes/builtin/console.tsx:32
 msgid "test1"
 msgstr "test1"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:32
+#: src/features/format-editor/nodes/builtin/console.tsx:33
 msgid "next option won't have a description"
 msgstr "next option won't have a description"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:34
+#: src/features/format-editor/nodes/builtin/console.tsx:35
 msgid "no description!"
 msgstr "no description!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:36
+#: src/features/format-editor/nodes/builtin/console.tsx:37
 msgid "test3"
 msgstr "test3"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:37
+#: src/features/format-editor/nodes/builtin/console.tsx:38
 msgid "the description is back!"
 msgstr "the description is back!"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:44
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "meow"
 msgstr "meow"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:44
+#: src/features/format-editor/nodes/builtin/console.tsx:45
 msgid "kitty"
 msgstr "kitty"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:45
+#: src/features/format-editor/nodes/builtin/console.tsx:46
 msgid "bark"
 msgstr "bark"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:45
+#: src/features/format-editor/nodes/builtin/console.tsx:46
 msgid "doggy"
 msgstr "doggy"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:49
+#: src/features/format-editor/nodes/builtin/console.tsx:50
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
-#: src/features/format-editor/nodes/builtin/strings.tsx:36
-#: src/features/format-editor/nodes/builtin/strings.tsx:49
-#: src/features/format-editor/nodes/builtin/strings.tsx:79
+#: src/features/format-editor/nodes/builtin/strings.tsx:34
+#: src/features/format-editor/nodes/builtin/strings.tsx:45
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
 msgid "string"
 msgstr "string"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:50
+#: src/features/format-editor/nodes/builtin/console.tsx:51
 msgid "enter a string (at least 5 characters)"
 msgstr "enter a string (at least 5 characters)"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:53
-#: src/features/format-editor/nodes/builtin/strings.tsx:76
+#: src/features/format-editor/nodes/builtin/console.tsx:54
+#: src/features/format-editor/nodes/builtin/strings.tsx:68
 msgid "number"
 msgstr "number"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:54
+#: src/features/format-editor/nodes/builtin/console.tsx:55
 msgid "input a number"
 msgstr "input a number"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:57
+#: src/features/format-editor/nodes/builtin/console.tsx:58
 msgid "boolean"
 msgstr "boolean"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:61
+#: src/features/format-editor/nodes/builtin/console.tsx:62
 msgid "boolean (optional)"
 msgstr "boolean (optional)"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:68
+#: src/features/format-editor/nodes/builtin/console.tsx:69
 msgid "testing output node"
 msgstr "testing output node"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:71
+#: src/features/format-editor/nodes/builtin/console.tsx:72
 msgid "yeah"
 msgstr "yeah"
 
-#: src/features/format-editor/nodes/builtin/console.tsx:72
+#: src/features/format-editor/nodes/builtin/console.tsx:73
 msgid "hell yeah!"
 msgstr "hell yeah!"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:12
+#: src/features/format-editor/nodes/builtin/math.tsx:13
 msgid "math"
 msgstr "math"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:17
+#: src/features/format-editor/nodes/builtin/math.tsx:19
 msgid "add"
 msgstr "add"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:18
+#: src/features/format-editor/nodes/builtin/math.tsx:20
 msgid "sum"
 msgstr "sum"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:21
+#: src/features/format-editor/nodes/builtin/math.tsx:23
 msgid "subtract"
 msgstr "subtract"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:24
+#: src/features/format-editor/nodes/builtin/math.tsx:26
 msgid "multiply"
 msgstr "multiply"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:26
+#: src/features/format-editor/nodes/builtin/math.tsx:29
 msgid "divide"
 msgstr "divide"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:28
+#: src/features/format-editor/nodes/builtin/math.tsx:32
 msgid "modulo"
 msgstr "modulo"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:29
+#: src/features/format-editor/nodes/builtin/math.tsx:33
 msgid "remainder"
 msgstr "remainder"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:31
+#: src/features/format-editor/nodes/builtin/math.tsx:36
 msgid "power"
 msgstr "power"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:34
+#: src/features/format-editor/nodes/builtin/math.tsx:40
 msgid "absolute value"
 msgstr "absolute value"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:35
+#: src/features/format-editor/nodes/builtin/math.tsx:41
 msgid "abs"
 msgstr "abs"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:37
+#: src/features/format-editor/nodes/builtin/math.tsx:43
 msgid "log"
 msgstr "log"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:38
+#: src/features/format-editor/nodes/builtin/math.tsx:45
 msgid "negate"
 msgstr "negate"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:40
+#: src/features/format-editor/nodes/builtin/math.tsx:48
 msgid "square root"
 msgstr "square root"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:41
+#: src/features/format-editor/nodes/builtin/math.tsx:49
 msgid "sqrt"
 msgstr "sqrt"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:12
+#: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "notifications"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:17
+#: src/features/format-editor/nodes/builtin/notifications.tsx:18
 msgid "information"
 msgstr "information"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:21
+#: src/features/format-editor/nodes/builtin/notifications.tsx:22
 msgid "warning"
 msgstr "warning"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:25
+#: src/features/format-editor/nodes/builtin/notifications.tsx:26
 msgid "error"
 msgstr "error"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:12
+#: src/features/format-editor/nodes/builtin/operators.tsx:13
 msgid "operators"
 msgstr "operators"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:17
+#: src/features/format-editor/nodes/builtin/operators.tsx:19
 msgid "equal"
 msgstr "equal"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:18
+#: src/features/format-editor/nodes/builtin/operators.tsx:20
 msgid "same"
 msgstr "same"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:23
+#: src/features/format-editor/nodes/builtin/operators.tsx:25
 msgid "and"
 msgstr "and"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:29
+#: src/features/format-editor/nodes/builtin/operators.tsx:31
 msgid "or"
 msgstr "or"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:35
+#: src/features/format-editor/nodes/builtin/operators.tsx:37
 msgid "not"
 msgstr "not"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:41
+#: src/features/format-editor/nodes/builtin/operators.tsx:43
 msgid "less than"
 msgstr "less than"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:42
+#: src/features/format-editor/nodes/builtin/operators.tsx:44
 msgid "<"
 msgstr "<"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:47
+#: src/features/format-editor/nodes/builtin/operators.tsx:49
 msgid "less or equal to"
 msgstr "less or equal to"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:48
+#: src/features/format-editor/nodes/builtin/operators.tsx:50
 msgid "<="
 msgstr "<="
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:53
+#: src/features/format-editor/nodes/builtin/operators.tsx:55
 msgid "greater than"
 msgstr "greater than"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:54
+#: src/features/format-editor/nodes/builtin/operators.tsx:56
 msgid ">"
 msgstr ">"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:59
+#: src/features/format-editor/nodes/builtin/operators.tsx:61
 msgid "greater or equal to"
 msgstr "greater or equal to"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:60
+#: src/features/format-editor/nodes/builtin/operators.tsx:62
 msgid ">="
 msgstr ">="
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:12
+#: src/features/format-editor/nodes/builtin/strings.tsx:13
 msgid "strings"
 msgstr "strings"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:17
-msgid "replace in string"
-msgstr "replace in string"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:18
 #~ msgid "add strings"
 #~ msgstr "add strings"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:19
+msgid "replace in string"
+msgstr "replace in string"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:22
-#: src/features/format-editor/nodes/builtin/strings.tsx:37
+#: src/features/format-editor/nodes/builtin/strings.tsx:35
 msgid "pattern"
 msgstr "pattern"
 
@@ -371,23 +379,23 @@ msgstr "search in string"
 msgid "find in string"
 msgstr "find in string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:45
+#: src/features/format-editor/nodes/builtin/strings.tsx:43
 msgid "length of string"
 msgstr "length of string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:57
+#: src/features/format-editor/nodes/builtin/strings.tsx:53
 msgid "join strings"
 msgstr "join strings"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:60
+#: src/features/format-editor/nodes/builtin/strings.tsx:54
 msgid "combine strings"
 msgstr "combine strings"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:64
+#: src/features/format-editor/nodes/builtin/strings.tsx:58
 msgid "delimeter (optional)"
 msgstr "delimeter (optional)"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:72
+#: src/features/format-editor/nodes/builtin/strings.tsx:66
 msgid "number -> string"
 msgstr "number -> string"
 
@@ -403,7 +411,7 @@ msgstr "number -> string"
 #~ msgid "\"false\" string"
 #~ msgstr "\"false\" string"
 
-#: src/features/format-editor/nodes/common.tsx:48
+#: src/features/format-editor/nodes/common.tsx:47
 msgid "input"
 msgstr "input"
 
