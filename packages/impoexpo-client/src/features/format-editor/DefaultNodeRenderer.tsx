@@ -62,7 +62,7 @@ export default function DefaultNodeRenderer({
 				)}
 			>
 				{nodeRenderOptions.raw.icon?.(16) ?? categoryRenderOptions?.icon?.(16)}
-				<p>
+				<p className="overflow-hidden overflow-ellipsis max-w-64">
 					{nodeRenderOptions.raw.title !== undefined
 						? localizableString(nodeRenderOptions.raw.title, t)
 						: nodeData.name}
@@ -240,7 +240,7 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-start gap-1 pl-4">
-						<p className="max-w-64 text-start whitespace-nowrap">
+						<p className="max-w-64 text-start">
 							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">
@@ -270,7 +270,7 @@ function NodePropertyRenderer(props: {
 			<div className="relative flex flex-row items-start gap-4">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-end gap-1 pr-4">
-						<p className="max-w-64 text-end whitespace-nowrap">
+						<p className="max-w-64 text-end">
 							{props.renderOptions.title(props.name)}
 						</p>
 						<p className="text-foreground-400 text-tiny">

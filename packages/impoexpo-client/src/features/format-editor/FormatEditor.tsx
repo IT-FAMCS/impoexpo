@@ -160,7 +160,6 @@ export default function FormatEditor() {
 						<Input value="untitled" />
 						<Tooltip
 							delay={500}
-							showArrow
 							content={
 								<div className="flex flex-row items-center justify-center gap-2 p-1">
 									<Trans>undo</Trans>
@@ -177,7 +176,6 @@ export default function FormatEditor() {
 						</Tooltip>
 						<Tooltip
 							delay={500}
-							showArrow
 							content={
 								<div className="flex flex-row items-center justify-center gap-2 p-1">
 									<Trans>redo</Trans>

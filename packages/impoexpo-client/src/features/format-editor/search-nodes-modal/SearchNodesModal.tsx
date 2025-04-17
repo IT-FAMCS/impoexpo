@@ -116,6 +116,7 @@ export default function SearchNodesModal(props: {
 														key={filter}
 														color="primary"
 														variant="solid"
+														className="whitespace-nowrap"
 													>
 														{filter}
 													</Chip>

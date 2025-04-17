@@ -113,14 +113,22 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			edges: [],
 
 			onNodesChange: (changes) => {
-				set({
-					nodes: applyNodeChanges(changes, get().nodes),
-				});
+				try {
+					set({
+						nodes: applyNodeChanges(changes, get().nodes),
+					});
+				} catch (err) {
+					console.warn(`failed to apply node changes: ${err}`);
+				}
 			},
 			onEdgesChange: (changes) => {
-				set({
-					edges: applyEdgeChanges(changes, get().edges),
-				});
+				try {
+					set({
+						edges: applyEdgeChanges(changes, get().edges),
+					});
+				} catch (err) {
+					console.warn(`failed to apply edge changes: ${err}`);
+				}
 			},
 			onConnect: (connection) => {
 				set({
@@ -432,7 +440,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
 				copy.name = `${base.node.name}-${base.node.genericTypes
-					.map((p) => (p === resolvedType ? resolver.type : p))
+					.map((p) =>
+						(p === resolvedType ? resolver.type : p).replaceAll(" ", ""),
+					)
 					.join("-")}`;
 
 				// TODO: should this be here or in BaseNode?
