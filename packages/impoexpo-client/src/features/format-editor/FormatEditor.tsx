@@ -14,7 +14,6 @@ import {
 
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
-import "./nodes/builtin/console";
 import { Button, Input, Kbd, Tooltip, useDisclosure } from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";

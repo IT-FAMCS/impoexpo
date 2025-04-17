@@ -15,7 +15,7 @@ import {
 import { Icon } from "@iconify/react";
 import { FaultyActionSchema } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import { ListGoogleFormsResponseSchema } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
-import { googleFormsLayoutSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
+import { GoogleFormsLayoutSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import {
 	GOOGLE_FORMS_LAYOUT_ROUTE,
 	GOOGLE_FORMS_LIST_ROUTE,
@@ -49,7 +49,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 		queryKey: ["get-google-form-layout", currentForm?.id],
 		refetchOnWindowFocus: false,
 		queryFn: () =>
-			getWithSchema(GOOGLE_FORMS_LAYOUT_ROUTE, googleFormsLayoutSchema, {
+			getWithSchema(GOOGLE_FORMS_LAYOUT_ROUTE, GoogleFormsLayoutSchema, {
 				headers: getGoogleAuthHeaders(),
 				query: { id: currentForm?.id ?? "" },
 			}),

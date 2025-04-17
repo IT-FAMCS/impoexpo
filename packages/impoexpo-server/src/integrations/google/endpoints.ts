@@ -6,11 +6,13 @@ import { registerGoogleFormsEndpoints } from "./forms/endpoints";
 import { getGoogleClient } from "./helpers";
 
 import {
+	type GoogleAccessTokensSchema,
 	type GoogleExchangeResponse,
 	GoogleExchangeResponseSchema,
 } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
+import { encryptObject } from "../../helpers/crypto-utils";
 
 export const registerGoogleEndpoints = (app: Express) => {
 	if (
@@ -70,15 +72,21 @@ export const registerGoogleEndpoints = (app: Express) => {
 				if (!tokens.token_type)
 					throw new Error("received null instead of token type");
 
+				const encryptedTokens = encryptObject(
+					{
+						accessToken: tokens.access_token,
+						refreshToken: tokens.refresh_token,
+						tokenType: tokens.token_type,
+						expiryTimestamp: tokens.expiry_date,
+					} satisfies GoogleAccessTokensSchema,
+					"base64",
+				);
+
 				const response: GoogleExchangeResponse = {
 					email: info.data.email,
 					profilePicture: info.data.picture,
 					username: info.data.name,
-
-					accessToken: tokens.access_token,
-					refreshToken: tokens.refresh_token,
-					tokenType: tokens.token_type,
-					expiryTimestamp: tokens.expiry_date,
+					tokens: encryptedTokens,
 				};
 
 				res.send(response);

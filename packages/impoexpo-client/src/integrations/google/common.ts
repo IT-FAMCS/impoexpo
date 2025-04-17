@@ -1,9 +1,5 @@
 import { useAuthStore } from "@/stores/auth";
-import {
-	GOOGLE_ACCESS_TOKEN_HEADER_NAME,
-	GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME,
-	GOOGLE_REFRESH_TOKEN_HEADER_NAME,
-} from "@impoexpo/shared/schemas/integrations/google/static";
+import { GOOGLE_ACCESS_TOKENS_HEADER_NAME } from "@impoexpo/shared/schemas/integrations/google/static";
 
 export const GOOGLE_AUTH_KEY = "google_auth";
 
@@ -25,8 +21,6 @@ export const getGoogleAuthHeaders = (): Record<string, string> => {
 			"can't get google auth headers without auth data in localStorage!",
 		);
 	return {
-		[GOOGLE_ACCESS_TOKEN_HEADER_NAME]: state.accessToken,
-		[GOOGLE_REFRESH_TOKEN_HEADER_NAME]: state.refreshToken,
-		[GOOGLE_EXPIRY_TIMESTAMP_HEADER_NAME]: state.expiryTimestamp.toString(),
+		[GOOGLE_ACCESS_TOKENS_HEADER_NAME]: state.tokens,
 	};
 };

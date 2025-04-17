@@ -263,11 +263,11 @@ function NodePropertyRenderer(props: {
 					/>
 				)}
 			</div>
-			{!shouldHideEntryComponent && entryComponent}
+			<div>{!shouldHideEntryComponent && entryComponent}</div>
 		</div>
 	) : (
 		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
-			<div className="relative flex flex-row items-start gap-4">
+			<div className="relative flex flex-row items-start gap-4 w-fit">
 				{!shouldHideLabel(props.property) && (
 					<div className="flex flex-col items-end gap-1 pr-4">
 						<p className="max-w-64 text-end">
@@ -345,7 +345,7 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 						))}
 					</div>
 				)}
-				className="nodrag"
+				className="nodrag max-w-64"
 				isInvalid={issues.length > 0}
 			/>
 		);
@@ -368,6 +368,7 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 				)}
 				isInvalid={issues.length > 0}
 				/* TODO: for some reason just doing size="md" doesn't work for now */
+				className="max-w-64"
 				classNames={{
 					inputWrapper: "h-10 min-h-10 rounded-medium",
 					input: "text-small",

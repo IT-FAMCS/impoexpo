@@ -9,7 +9,7 @@ import {
 	type InferOutput,
 } from "valibot";
 
-export const googleFormsLayoutItem = object({
+export const GoogleFormsLayoutItemSchema = object({
 	id: pipe(string(), nonEmpty()),
 	title: nullable(string()),
 	description: nullable(string()),
@@ -17,13 +17,15 @@ export const googleFormsLayoutItem = object({
 	type: pipe(string(), nonEmpty()),
 });
 
-export type GoogleFormsLayoutItem = InferOutput<typeof googleFormsLayoutItem>;
+export type GoogleFormsLayoutItem = InferOutput<
+	typeof GoogleFormsLayoutItemSchema
+>;
 
-export const googleFormsLayoutSchema = object({
+export const GoogleFormsLayoutSchema = object({
 	documentTitle: pipe(string(), nonEmpty()),
 	title: nullable(string()),
 	description: nullable(string()),
-	items: array(googleFormsLayoutItem),
+	items: array(GoogleFormsLayoutItemSchema),
 });
 
-export type GoogleFormsLayout = InferOutput<typeof googleFormsLayoutSchema>;
+export type GoogleFormsLayout = InferOutput<typeof GoogleFormsLayoutSchema>;

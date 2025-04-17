@@ -38,7 +38,7 @@ const hasMetadata = (
 	);
 };
 
-export const generic = (name: string) =>
+export const generic = <T extends string>(name: T) =>
 	v.pipe(v.unknown(), v.metadata({ metadataType: "generic", typeName: name }));
 export const isGeneric = (
 	schema: ObjectEntry,

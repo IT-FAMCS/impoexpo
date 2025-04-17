@@ -5,12 +5,14 @@ import { logger } from "./logger";
 import pino from "pino-http";
 import cors from "cors";
 import { registerGoogleEndpoints } from "./integrations/google/endpoints";
+import { loadOrCreateKey } from "./helpers/crypto-utils";
 
 dotenv.config();
 if (!process.env.PORT) {
 	logger.error("couldn't find PORT in .env, exiting");
 	process.exit(1);
 }
+await loadOrCreateKey();
 
 const app = express();
 app.use(express.json());

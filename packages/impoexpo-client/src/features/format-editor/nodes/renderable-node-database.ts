@@ -1,6 +1,5 @@
 import { create as createDatabase, insert, type Orama } from "@orama/orama";
 
-import "./builtin/console";
 import "./builtin/notifications";
 import "./builtin/math";
 import "./builtin/strings";
