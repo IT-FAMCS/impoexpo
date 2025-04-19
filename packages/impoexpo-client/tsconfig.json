@@ -24,6 +24,5 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["src", "../impoexpo-shared/src/nodes/schema-from-string.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

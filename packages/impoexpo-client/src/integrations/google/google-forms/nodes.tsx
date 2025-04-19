@@ -7,7 +7,6 @@ import {
 import { Icon } from "@iconify/react";
 import { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import {
-	nodesScope,
 	registerBaseNodes,
 } from "@impoexpo/shared/nodes/node-database";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";

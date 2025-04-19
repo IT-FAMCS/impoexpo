@@ -26,8 +26,6 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
-import { importBuiltinNodes } from "@/features/format-editor/nodes/renderable-node-database";
-import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
