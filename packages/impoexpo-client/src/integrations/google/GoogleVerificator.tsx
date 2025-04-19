@@ -1,15 +1,25 @@
-import { useAuthStore } from "@/stores/auth";
+import { getAuthFromDatabase, removeAuthFromDatabase } from "@/db/auth";
 import { Button, Card, User } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { Trans } from "@lingui/react/macro";
+import { useQuery } from "@tanstack/react-query";
 
 export default function GoogleVerificator(props: {
 	onSuccess: () => void;
 	onReset: () => void;
 }) {
-	const { google: auth, resetGoogleAuth } = useAuthStore();
+	const getGoogleAuthQuery = useQuery({
+		queryKey: ["get-google-auth"],
+		queryFn: async () =>
+			(await getAuthFromDatabase("google", GoogleExchangeResponseSchema)) ??
+			null,
+	});
 
-	if (auth === undefined) return <></>;
+	if (getGoogleAuthQuery.isLoading || !getGoogleAuthQuery.data) return <></>;
+
+	// biome-ignore lint/style/noNonNullAssertion: checked above
+	const auth = getGoogleAuthQuery.data!;
 
 	return (
 		<div className="flex flex-col items-center justify-center gap-3">
@@ -30,7 +40,7 @@ export default function GoogleVerificator(props: {
 			<div className="flex flex-row items-center justify-center gap-2">
 				<Button
 					onPress={() => {
-						resetGoogleAuth();
+						removeAuthFromDatabase("google");
 						props.onReset();
 					}}
 					color="danger"

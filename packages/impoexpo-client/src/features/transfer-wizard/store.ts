@@ -1,4 +1,9 @@
-import { WIZARD_STORE_CATEGORY, createResettable } from "./resettable";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
+import {
+	WIZARD_STORE_CATEGORY,
+	createResettable,
+} from "../../stores/resettable";
+import { importBuiltinNodes } from "../format-editor/nodes/renderable-node-database";
 
 export enum TransferWizardStage {
 	SELECT_SOURCE = 0,

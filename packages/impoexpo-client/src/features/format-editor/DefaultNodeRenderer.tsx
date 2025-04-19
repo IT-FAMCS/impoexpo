@@ -263,7 +263,9 @@ function NodePropertyRenderer(props: {
 					/>
 				)}
 			</div>
-			<div>{!shouldHideEntryComponent && entryComponent}</div>
+			<div className="flex-grow">
+				{!shouldHideEntryComponent && entryComponent}
+			</div>
 		</div>
 	) : (
 		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
@@ -345,7 +347,7 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 						))}
 					</div>
 				)}
-				className="nodrag max-w-64"
+				className="nodrag"
 				isInvalid={issues.length > 0}
 			/>
 		);
@@ -368,7 +370,6 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 				)}
 				isInvalid={issues.length > 0}
 				/* TODO: for some reason just doing size="md" doesn't work for now */
-				className="max-w-64"
 				classNames={{
 					inputWrapper: "h-10 min-h-10 rounded-medium",
 					input: "text-small",

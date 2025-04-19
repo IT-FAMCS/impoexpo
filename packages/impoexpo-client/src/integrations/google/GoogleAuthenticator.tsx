@@ -3,17 +3,16 @@ import { Button, CircularProgress, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import { useAuthStore } from "@/stores/auth";
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { saveAuthToDatabase } from "@/db/auth";
 
 export default function GoogleAuthenticator(props: {
 	scopes: string[];
 	onSuccess: () => void;
 }) {
 	const { t } = useLingui();
-	const { setGoogleAuth } = useAuthStore();
 
 	const [client, setClient] = useState<
 		google.accounts.oauth2.CodeClient | undefined
@@ -56,7 +55,7 @@ export default function GoogleAuthenticator(props: {
 							{ query: { code: response.code } },
 						)
 							.then(async (data) => {
-								setGoogleAuth(data);
+								saveAuthToDatabase("google", data);
 								props.onSuccess();
 							})
 							.catch((err) => {

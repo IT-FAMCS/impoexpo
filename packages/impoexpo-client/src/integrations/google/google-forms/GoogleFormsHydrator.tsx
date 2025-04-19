@@ -4,7 +4,7 @@ import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 import {
 	SourceCardState,
 	useSourceCardStore,
-} from "@/stores/select-source-card";
+} from "@/features/transfer-wizard/select-source-card/store";
 import {
 	Button,
 	CircularProgress,
@@ -48,9 +48,9 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	const { isFetching, isError, data, error } = useQuery({
 		queryKey: ["get-google-form-layout", currentForm?.id],
 		refetchOnWindowFocus: false,
-		queryFn: () =>
+		queryFn: async () =>
 			getWithSchema(GOOGLE_FORMS_LAYOUT_ROUTE, GoogleFormsLayoutSchema, {
-				headers: getGoogleAuthHeaders(),
+				headers: await getGoogleAuthHeaders(),
 				query: { id: currentForm?.id ?? "" },
 			}),
 	});
@@ -58,7 +58,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	useEffect(() => {
 		if (data && currentForm) {
 			registerGoogleFormNode(currentForm.id, data);
-			addUsedForm(currentForm);
+			addUsedForm(currentForm.id, data);
 			setCurrentForm(undefined);
 			setState(GoogleFormsHydratorState.SELECT);
 			props.successCallback();
@@ -99,9 +99,9 @@ function GoogleFormsVerificator() {
 	const { isFetching, isError, data, error } = useQuery({
 		queryKey: ["verify-google-form-permissions", currentForm?.id],
 		refetchOnWindowFocus: false,
-		queryFn: () =>
+		queryFn: async () =>
 			getWithSchema(GOOGLE_FORMS_VERIFY_ROUTE, FaultyActionSchema, {
-				headers: getGoogleAuthHeaders(),
+				headers: await getGoogleAuthHeaders(),
 				query: { id: currentForm?.id ?? "" },
 			}),
 	});
@@ -149,9 +149,9 @@ function GoogleFormsSelector() {
 	} = useQuery({
 		queryKey: ["receive-google-form-info", bypassCache],
 		refetchOnWindowFocus: false,
-		queryFn: () =>
+		queryFn: async () =>
 			getWithSchema(GOOGLE_FORMS_LIST_ROUTE, ListGoogleFormsResponseSchema, {
-				headers: getGoogleAuthHeaders(),
+				headers: await getGoogleAuthHeaders(),
 				bypassCache: bypassCache,
 			}),
 	});
@@ -186,10 +186,7 @@ function GoogleFormsSelector() {
 		return (
 			<div className="flex flex-col items-center justify-center w-full max-w-lg gap-2">
 				<Trans>select a form:</Trans>
-				<ScrollShadow
-					className="w-full"
-					style={{ maxHeight: "50vh", overflow: "scroll" }}
-				>
+				<ScrollShadow className="w-full" style={{ maxHeight: "50vh" }}>
 					<Listbox
 						className="border-small rounded-small border-default"
 						disallowEmptySelection

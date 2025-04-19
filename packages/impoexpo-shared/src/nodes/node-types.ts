@@ -11,6 +11,7 @@ import {
 	isObject,
 	unwrapNodeIfNeeded,
 } from "./node-utils";
+import { schemaToString } from "./schema-string-conversions";
 
 export type ObjectEntry = v.ObjectEntries[string];
 
@@ -51,7 +52,7 @@ export class BaseNode<
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
 
-	public genericTypes: string[] = [];
+	public genericTypes: Record<string, string | null> = {};
 
 	constructor(
 		init: Partial<BaseNode<TIn, TOut>> &
@@ -62,18 +63,15 @@ export class BaseNode<
 	}
 
 	fillGenericTypes() {
-		const genericTypes: string[] = [];
+		const genericTypes: Record<string, null> = {};
 		for (const entry of [
 			...Object.values(this.inputSchema?.entries ?? {}),
 			...Object.values(this.outputSchema?.entries ?? {}),
 		]) {
-			genericTypes.push(
-				...getGenericEntries(entry).map((ge) => getGenericName(ge)),
-			);
+			const types = getGenericEntries(entry).map((ge) => getGenericName(ge));
+			for (const type of types) genericTypes[type] = null;
 		}
-		this.genericTypes = genericTypes.filter(
-			(type, idx, array) => array.indexOf(type) === idx,
-		);
+		this.genericTypes = genericTypes;
 	}
 
 	public resolveGenericType(resolvedType: string, resolvedWith: ObjectEntry) {
@@ -117,6 +115,8 @@ export class BaseNode<
 				);
 			}
 		}
+
+		this.genericTypes[resolvedType] = schemaToString(resolvedWith).type;
 	}
 
 	public hasEntry(key: string) {
@@ -164,26 +164,13 @@ export class BaseNode<
 		type: string;
 		generic?: string;
 	} {
-		let generic: string | undefined = undefined;
-		const get = (schema: ObjectEntry): string => {
-			if (isArray(schema)) return `Array<${get(schema.item)}>`;
-			if (isNullable(schema))
-				return `${get(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
-			if (isNamed(schema)) return getObjectName(schema);
-			if (isGeneric(schema)) {
-				generic = getGenericName(schema);
-				return generic;
-			}
-			return schema.expects;
-		};
-
 		const basic = this.basicEntry(key);
 		const unwrapped = unwrapNodeIfNeeded(basic.schema);
-		const type = get(unwrapped);
+		const schemaString = schemaToString(unwrapped);
 
 		return {
-			type: type,
-			generic: generic,
+			type: schemaString.type,
+			generic: schemaString.generic,
 		};
 	}
 }

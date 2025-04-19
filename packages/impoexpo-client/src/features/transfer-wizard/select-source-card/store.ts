@@ -1,5 +1,8 @@
 import type { Integration } from "@/types/Integration";
-import { WIZARD_STORE_CATEGORY, createResettable } from "./resettable";
+import {
+	WIZARD_STORE_CATEGORY,
+	createResettable,
+} from "../../../stores/resettable";
 
 export enum SourceCardState {
 	SELECT_SOURCE = 0,

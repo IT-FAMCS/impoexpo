@@ -1,22 +1,64 @@
 import LanguageSwitcher from "@/components/buttons/LanguageSwitcher";
 import ThemeSwitcher from "@/components/buttons/ThemeSwitcher";
 import ColumnSteps from "@/components/external/ColumnStep";
-import SelectSourceCard from "@/components/wizard/SelectSourceCard";
+import SelectSourceCard from "@/features/transfer-wizard/select-source-card/SelectSourceCard";
 import FormatEditor from "@/features/format-editor/FormatEditor";
 import { WIZARD_STORE_CATEGORY, resetStores } from "@/stores/resettable";
-import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
-import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
+import {
+	TransferWizardStage,
+	useTransferWizardStore,
+} from "@/features/transfer-wizard/store";
+import {
+	Button,
+	Card,
+	CardBody,
+	CardFooter,
+	CardHeader,
+	CircularProgress,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import {
+	clearStatesFromDatabase,
+	loadStatesFromDatabase,
+	saveStatesToDatabase,
+} from "@/db/persisted";
+import { useQuery } from "@tanstack/react-query";
+import { importBuiltinNodes } from "../format-editor/nodes/renderable-node-database";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 const AnimatedCard = motion.create(Card);
-
 export default function TransferWizardPage() {
+	const importNodesQuery = useQuery({
+		queryKey: ["import-nodes"],
+		queryFn: async () => {
+			await importBuiltinNodes();
+			initializeNodes();
+			return true;
+		},
+	});
+	const importNodesSuccessful = importNodesQuery.data;
+	const loadPersistentDataQuery = useQuery({
+		queryKey: ["load-persistent-data"],
+		queryFn: async () => {
+			await Promise.all(
+				Object.values(
+					import.meta.glob([
+						"../../integrations/**/integration.ts",
+						"../../integrations/**/integration.tsx",
+					]),
+				).map((v) => v()),
+			);
+			await loadStatesFromDatabase();
+			return true;
+		},
+		enabled: !!importNodesSuccessful,
+	});
+
 	const navigate = useNavigate();
 	const { t } = useLingui();
 	const { stage } = useTransferWizardStore();
@@ -24,10 +66,22 @@ export default function TransferWizardPage() {
 		useState<boolean>(true);
 
 	useEffect(() => {
-		if (stage === TransferWizardStage.FORMAT) initializeNodes();
-	}, [stage]);
+		window.addEventListener("beforeunload", saveStatesToDatabase);
+		return () =>
+			window.removeEventListener("beforeunload", saveStatesToDatabase);
+	}, []);
 
 	const getStageWidget = () => {
+		if (loadPersistentDataQuery.isLoading || importNodesQuery.isLoading) {
+			return (
+				<Card>
+					<CardBody>
+						<CircularProgress />
+					</CardBody>
+				</Card>
+			);
+		}
+
 		switch (stage) {
 			case TransferWizardStage.SELECT_SOURCE:
 				return <SelectSourceCard />;
@@ -65,7 +119,8 @@ export default function TransferWizardPage() {
 			>
 				<CardHeader className="flex flex-row gap-3 pl-4 font-medium text-large">
 					<Button
-						onPress={() => {
+						onPress={async () => {
+							await clearStatesFromDatabase();
 							resetStores(WIZARD_STORE_CATEGORY);
 							navigate("/");
 						}}

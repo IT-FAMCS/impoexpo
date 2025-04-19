@@ -1,13 +1,6 @@
 import { create as createDatabase, insert, type Orama } from "@orama/orama";
-
-import "./builtin/notifications";
-import "./builtin/math";
-import "./builtin/strings";
-import "./builtin/conditional";
-import "./builtin/operators";
-
 import { create } from "zustand/react";
-import { supportedLocales } from "@/locales/supportedLocales";
+import { supportedLocales } from "@/locales/supported-locales";
 import { persistStoreOnReload } from "@/stores/hot-reload";
 import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import type { MessageDescriptor } from "@lingui/core";
@@ -22,6 +15,13 @@ import {
 } from "./renderable-node-types";
 import type { NodeTypes } from "@xyflow/react";
 import type { DefaultBaseNode } from "@impoexpo/shared/nodes/node-utils";
+
+export const importBuiltinNodes = async () => {
+	console.log("importing built-in nodes");
+	await Promise.all(
+		Object.values(import.meta.glob("./builtin/*.tsx")).map((v) => v()),
+	);
+};
 
 const searchInitializers: Array<
 	(database: Orama<typeof nodesDatabaseSchema>) => void

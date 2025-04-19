@@ -11,18 +11,23 @@ import {
 	Divider,
 	Listbox,
 } from "@heroui/react";
-import ActionCard from "../external/ActionCard";
+import ActionCard from "../../../components/external/ActionCard";
 
 import {
 	SourceCardState,
 	useSourceCardStore,
-} from "@/stores/select-source-card";
-import { TransferWizardStage, useTransferWizardStore } from "@/stores/wizard";
+} from "@/features/transfer-wizard/select-source-card/store";
+import {
+	TransferWizardStage,
+	useTransferWizardStore,
+} from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import AnimateChangeInSize from "../external/AnimateChangeInSize";
+import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
+import { importBuiltinNodes } from "@/features/format-editor/nodes/renderable-node-database";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -85,7 +90,7 @@ function SourceChecker() {
 		useSourceCardStore();
 
 	const items = (
-		integrationType === "read" ? readIntegrations : writeIntegrations
+		integrationType === "read" ? readIntegrations() : writeIntegrations()
 	).flatMap((integration) => integration.selectedItemsRenderer());
 
 	return (
@@ -132,29 +137,30 @@ function SourceSelector() {
 
 	return (
 		<div className="flex flex-col items-center justify-center">
-			{(integrationType === "read" ? readIntegrations : writeIntegrations).map(
-				(integration, idx) => {
-					return (
-						<ActionCard
-							onPress={() => {
-								/*
+			{(integrationType === "read"
+				? readIntegrations()
+				: writeIntegrations()
+			).map((integration, idx) => {
+				return (
+					<ActionCard
+						onPress={() => {
+							/*
 								integration === "read"
 									? setReadIntegration(integration)
 									: setWriteIntegration(integration)
 								*/
-								// TODO: hydrate project state when it's implemented
-								setCurrentIntegration(integration);
-								setState(SourceCardState.AUTHENTICATE_SOURCE);
-							}}
-							className="w-full p-0"
-							// biome-ignore lint/suspicious/noArrayIndexKey: doesn't update, no rerenders will happen
-							key={idx}
-							icon={integration.icon}
-							title={t(integration.title)}
-						/>
-					);
-				},
-			)}
+							// TODO: hydrate project state when it's implemented
+							setCurrentIntegration(integration);
+							setState(SourceCardState.AUTHENTICATE_SOURCE);
+						}}
+						className="w-full p-0"
+						// biome-ignore lint/suspicious/noArrayIndexKey: doesn't update, no rerenders will happen
+						key={idx}
+						icon={integration.icon}
+						title={t(integration.title)}
+					/>
+				);
+			})}
 		</div>
 	);
 }

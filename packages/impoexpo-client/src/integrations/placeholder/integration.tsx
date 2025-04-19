@@ -1,16 +1,16 @@
-import type { Integration } from "@/types/Integration";
 import { ListboxItem } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
 import { useEffect } from "react";
-import { useConsoleIntegrationStore } from "./store";
+import { usePlaceholderIntegrationStore } from "./store";
 
 import { Trans } from "@lingui/react/macro";
+import { registerIntegration } from "../integrations";
 
-export const ConsoleIntegration: Integration = {
-	id: "console",
-	title: msg`Console`,
-	icon: <Icon icon="mdi:console" />,
+registerIntegration({
+	id: "placeholder",
+	title: msg`Nowhere`,
+	icon: <Icon icon="mdi:border-none-variant" />,
 	read: false,
 	write: true,
 	checkAuthenticated: () => Promise.resolve(true),
@@ -24,20 +24,20 @@ export const ConsoleIntegration: Integration = {
 		return <></>;
 	},
 	hydrator: (callback) => {
-		useConsoleIntegrationStore.setState({ enabled: true });
+		usePlaceholderIntegrationStore.setState({ enabled: true });
 		useEffect(callback, []);
 		return <></>;
 	},
 	selectedItemsRenderer: () =>
-		useConsoleIntegrationStore.getState().enabled
+		usePlaceholderIntegrationStore.getState().enabled
 			? [
 					<ListboxItem
 						className="p-3"
-						startContent={<Icon icon="mdi:console" />}
-						key="console"
+						startContent={<Icon icon="mdi:border-none-variant" />}
+						key="placeholder"
 					>
-						<Trans>Console</Trans>
+						<Trans>Nowhere</Trans>
 					</ListboxItem>,
 				]
 			: [],
-};
+});

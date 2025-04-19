@@ -69,7 +69,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 					>
 						{icon}
 					</div>
-					<div className="flex flex-col items-start justify-center h-full">
+					<div className="flex flex-col items-center justify-center h-full">
 						<p className="text-medium">{title}</p>
 						{(description || children) && (
 							<p className="text-small text-default-400">

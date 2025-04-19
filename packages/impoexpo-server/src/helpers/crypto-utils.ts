@@ -48,7 +48,6 @@ export const decryptString = (
 	const rest = buffer.subarray(0, buffer.length - 28);
 
 	const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
-	console.log(iv, tag);
 	decipher.setAuthTag(tag);
 	return Buffer.concat([decipher.update(rest), decipher.final()]).toString(
 		outputEncoding,

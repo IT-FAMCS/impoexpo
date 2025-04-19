@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router";
-import TransferWizardPage from "./pages/TransferWizardPage";
+import TransferWizardPage from "./features/transfer-wizard/TransferWizardPage";
 import WelcomePage from "./pages/WelcomePage";
 
 function App() {

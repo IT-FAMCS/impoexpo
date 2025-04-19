@@ -44,6 +44,16 @@ import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
 import { useStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
+
+export type PersistentGenericNodeData = Record<
+	string,
+	{
+		base: string;
+		name: string;
+		resolvedTypes: Record<string, string | null>;
+	}
+>;
 
 const nodeCount: Map<string, number> = new Map();
 export const getNodeId = (type: string) => {
@@ -57,6 +67,7 @@ export const getNodeId = (type: string) => {
 export type FormatEditorStore = {
 	nodes: Node[];
 	edges: Edge[];
+
 	onNodesChange: OnNodesChange<Node>;
 	onEdgesChange: OnEdgesChange;
 	onConnect: OnConnect;
@@ -100,6 +111,9 @@ export type FormatEditorStore = {
 		node: Node,
 	) => Node;
 	getBaseNodeFromId: (id: string) => DefaultBaseNode | undefined;
+
+	genericNodes: PersistentGenericNodeData;
+	recoverGenericNodes: (nodes: PersistentGenericNodeData) => void;
 };
 
 type PartializedFormatEditorState = Pick<FormatEditorStore, "nodes" | "edges">;
@@ -111,6 +125,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 		immer((set, get) => ({
 			nodes: [],
 			edges: [],
+			genericNodes: {},
 
 			onNodesChange: (changes) => {
 				try {
@@ -334,6 +349,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						removeGenericNodeInstance(node.type);
 						unregisterRenderOptions(node.type);
 						unregisterBaseNodes(getBaseNode(node.type));
+						set((state) => {
+							if (node.type) delete state.genericNodes[node.type];
+						});
 					}
 				}
 			},
@@ -439,7 +457,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
-				copy.name = `${base.node.name}-${base.node.genericTypes
+				copy.name = `${base.node.name}-${Object.keys(base.node.genericTypes)
 					.map((p) =>
 						(p === resolvedType ? resolver.type : p).replaceAll(" ", ""),
 					)
@@ -461,7 +479,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					resolvedType,
 					simplifyResolver(resolvedEntry.schema, resolver.schema),
 				);
-				copy.genericTypes = copy.genericTypes.filter((t) => t !== resolvedType);
 
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 				addGenericNodeInstance(base.node, copy);
@@ -470,8 +487,40 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					...base.options.raw,
 					searchable: false,
 				});
+				set((state) => {
+					state.genericNodes[node.id] = {
+						base: `${base.node.category}-${base.node.name}`,
+						name: copy.name,
+						resolvedTypes: copy.genericTypes,
+					};
+				});
 
 				return { ...node, type: `${copy.category}-${copy.name}` };
+			},
+
+			recoverGenericNodes(nodes) {
+				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
+
+				for (const [, { base, name, resolvedTypes }] of Object.entries(nodes)) {
+					const baseNode = getBaseNode(base);
+					const copy = deepCopy(baseNode);
+					Object.setPrototypeOf(copy, BaseNode.prototype);
+
+					copy.name = name;
+					for (const [type, resolvedWith] of Object.entries(resolvedTypes)) {
+						if (!resolvedWith) continue;
+						copy.resolveGenericType(type, schemaFromString(resolvedWith));
+					}
+
+					addGenericNodeInstance(baseNode, copy);
+					registerBaseNodes(copy);
+					registerWithDefaultRenderer(copy, {
+						...getNodeRenderOptions(base).raw,
+						searchable: false,
+					});
+				}
+
+				set({ genericNodes: nodes });
 			},
 		})),
 		{

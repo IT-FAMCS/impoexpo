@@ -1,14 +1,9 @@
 import type { Integration } from "@/types/Integration";
-import { ConsoleIntegration } from "./console/ConsoleIntegration";
-import { GoogleFormsIntegration } from "./google/google-forms/GoogleFormsIntegration";
 
-export const allIntegrations: Integration[] = [
-	GoogleFormsIntegration,
-	ConsoleIntegration,
-];
-export const readIntegrations: Integration[] = allIntegrations.filter(
-	(i) => i.read,
-);
-export const writeIntegrations: Integration[] = allIntegrations.filter(
-	(i) => i.write,
-);
+export const registerIntegration = (integration: Integration) => {
+	if (allIntegrations.findIndex((i) => i.id === integration.id) === -1)
+		allIntegrations.push(integration);
+};
+export const allIntegrations: Integration[] = [];
+export const readIntegrations = () => allIntegrations.filter((i) => i.read);
+export const writeIntegrations = () => allIntegrations.filter((i) => i.write);

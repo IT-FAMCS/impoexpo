@@ -88,9 +88,12 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 						item.type = "number";
 					if (rawItem.questionItem.question.textQuestion) item.type = "string";
 					if (rawItem.questionItem.question.fileUploadQuestion)
-						item.type = "string[]";
+						item.type = "Array<string>";
 					if (rawItem.questionItem.question.choiceQuestion)
-						item.type = `string${rawItem.questionItem.question.choiceQuestion.type === "CHECKBOX" ? "[]" : ""}`;
+						item.type =
+							rawItem.questionItem.question.choiceQuestion.type === "CHECKBOX"
+								? "Array<string>"
+								: "string";
 					if (!item.required) item.type += " | null";
 					layout.items.push(item);
 				}

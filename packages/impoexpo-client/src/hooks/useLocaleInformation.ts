@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
 	type SupportedLocale,
 	supportedLocales,
-} from "@/locales/supportedLocales";
+} from "@/locales/supported-locales";
 import useLinguiChange from "./useLinguiChange";
 
 export default function useLocaleInformation() {

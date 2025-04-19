@@ -1,5 +1,5 @@
 import { registerWithDefaultRenderer } from "@/features/format-editor/nodes/renderable-node-database";
-import { schemaFromString } from "@/features/format-editor/nodes/schema-from-string";
+import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
 import {
 	getNodeId,
 	useFormatEditorStore,
@@ -42,10 +42,8 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 		};
 	}
 
-	nodesScope(() => {
-		registerBaseNodes(base);
-		registerWithDefaultRenderer(base, options);
-	});
+	registerBaseNodes(base);
+	registerWithDefaultRenderer(base, options);
 
 	const type = `${base.category}-${base.name}`;
 	useFormatEditorStore.setState((state) => ({

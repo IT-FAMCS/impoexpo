@@ -1,4 +1,4 @@
-import { supportedLocales } from "@/locales/supportedLocales";
+import { supportedLocales } from "@/locales/supported-locales";
 import {
 	Button,
 	Dropdown,
