@@ -5,7 +5,6 @@ import {
 	Controls,
 	type Edge,
 	type FinalConnectionState,
-	type Node,
 	Panel,
 	ReactFlow,
 	getOutgoers,
@@ -27,15 +26,17 @@ import useMousePosition from "../../hooks/useMousePosition";
 import { Icon } from "@iconify/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Trans } from "@lingui/react/macro";
+import type { ProjectNode } from "./nodes/renderable-node-types";
+import { useProjectStore } from "@/stores/project";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
-	nodes: Node[],
+	nodes: ProjectNode[],
 	edges: Edge[],
 ): boolean => {
 	const target = nodes.find((node) => node.id === connection.target);
 	if (!target) return false;
-	const hasCycle = (node: Node, visited = new Set()) => {
+	const hasCycle = (node: ProjectNode, visited = new Set()) => {
 		if (visited.has(node.id)) return false;
 		visited.add(node.id);
 
@@ -51,7 +52,7 @@ const connectionHasCycles = (
 	return hasCycle(target);
 };
 
-export default function FormatEditor() {
+export default function FormatEditor(props: { doneCallback: () => void }) {
 	const {
 		edges,
 		nodes,
@@ -189,6 +190,23 @@ export default function FormatEditor() {
 								startContent={<Icon icon="mdi:redo" />}
 							/>
 						</Tooltip>
+					</div>
+				</Panel>
+				<Panel position="bottom-right">
+					<div className="flex flex-row gap-2">
+						<Button
+							size="lg"
+							className="text-lg gap-2 items-center"
+							color="primary"
+							variant="shadow"
+							endContent={<Icon width={20} icon="mdi:arrow-right" />}
+							onPress={() => {
+								useProjectStore.getState().hydrateNodes();
+								props.doneCallback();
+							}}
+						>
+							done
+						</Button>
 					</div>
 				</Panel>
 			</ReactFlow>

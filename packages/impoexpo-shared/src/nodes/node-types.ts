@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import {
+	type DefaultBaseNode,
 	getGenericEntries,
 	getGenericName,
 	getObjectName,
@@ -9,10 +10,12 @@ import {
 	isNamed,
 	isNullable,
 	isObject,
+	predictNodePurpose,
 	unwrapNodeIfNeeded,
 } from "./node-utils";
 import { schemaToString } from "./schema-string-conversions";
 
+export type NodePurpose = "generator" | "transformer" | "terminator";
 export type ObjectEntry = v.ObjectEntries[string];
 
 export type NodePropertyOptions<TProperty extends ObjectEntry> =
@@ -48,6 +51,7 @@ export class BaseNode<
 > {
 	public name!: string;
 	public category!: string;
+	public purpose!: NodePurpose;
 
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
@@ -60,6 +64,8 @@ export class BaseNode<
 	) {
 		Object.assign(this, init);
 		this.fillGenericTypes();
+		if (!init.purpose)
+			this.purpose = predictNodePurpose(this as DefaultBaseNode);
 	}
 
 	fillGenericTypes() {

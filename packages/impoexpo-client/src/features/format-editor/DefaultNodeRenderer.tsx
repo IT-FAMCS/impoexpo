@@ -36,6 +36,7 @@ import {
 	isEnum,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
+import useThrottle from "@/hooks/useThrottle";
 
 export default function DefaultNodeRenderer({
 	type,
@@ -100,6 +101,7 @@ export default function DefaultNodeRenderer({
 
 const getEntryComponent = <TDefault,>(
 	renderOptions: DefaultNodeRenderOptions,
+	node: string,
 	handleName: string,
 	entry: ObjectEntry,
 	defaultValue?: TDefault,
@@ -108,6 +110,7 @@ const getEntryComponent = <TDefault,>(
 	if ("default" in entry) {
 		return getEntryComponent(
 			renderOptions,
+			node,
 			handleName,
 			entry.wrapped,
 			entry.default,
@@ -116,6 +119,7 @@ const getEntryComponent = <TDefault,>(
 	if ("pipe" in entry && Array.isArray(entry.pipe) && entry.pipe.length > 0) {
 		return getEntryComponent(
 			renderOptions,
+			node,
 			handleName,
 			entry.pipe[0] as ObjectEntry,
 			defaultValue,
@@ -127,6 +131,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
+				node={node}
 				renderOptions={renderOptions}
 				default={(defaultValue as string | undefined) ?? ""}
 				validator={validator}
@@ -138,6 +143,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
+				node={node}
 				renderOptions={renderOptions}
 				default={(defaultValue as boolean | undefined) ?? false}
 				validator={validator}
@@ -149,6 +155,7 @@ const getEntryComponent = <TDefault,>(
 		return (
 			<NodePropertyGenericInput
 				name={handleName}
+				node={node}
 				renderOptions={renderOptions}
 				default={(defaultValue as number | undefined) ?? 0}
 				validator={validator}
@@ -231,8 +238,14 @@ function NodePropertyRenderer(props: {
 	};
 
 	const entryComponent = useMemo(
-		() => getEntryComponent(props.renderOptions, props.name, props.property),
-		[props.renderOptions, props.name, props.property],
+		() =>
+			getEntryComponent(
+				props.renderOptions,
+				props.id,
+				props.name,
+				props.property,
+			),
+		[props.renderOptions, props.id, props.name, props.property],
 	);
 
 	return props.input ? (
@@ -299,13 +312,17 @@ function NodePropertyRenderer(props: {
 
 function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	renderOptions: DefaultNodeRenderOptions;
+	node: string;
 	name: string;
 	default: T;
 	validator?: ValidatorFunction;
 }) {
+	const { setNodeEntry } = useFormatEditorStore();
 	const [value, setValue] = useState<T | undefined>(props.default);
+	const throttledValue = useThrottle(value, 500);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 	const locale = useLocaleInformation();
+
 	useEffect(() => {
 		if (props.validator === undefined || value === undefined) return;
 
@@ -317,6 +334,10 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 			validationResult.issues === undefined ? [] : validationResult.issues,
 		);
 	}, [props.validator, value, locale]);
+
+	useEffect(() => {
+		setNodeEntry(props.node, props.name, throttledValue);
+	}, [props.name, props.node, setNodeEntry, throttledValue]);
 
 	if (typeof props.default === "boolean") {
 		return (

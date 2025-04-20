@@ -24,6 +24,7 @@
 	"dependencies": {
 		"@impoexpo/shared": "workspace:^",
 		"apicache": "^1.6.3",
+		"better-sse": "^0.14.1",
 		"compression": "^1.8.0",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.7",

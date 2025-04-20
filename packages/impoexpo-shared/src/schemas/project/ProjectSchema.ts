@@ -1,4 +1,19 @@
 import * as v from "valibot";
+import { NodePurpose } from "../../nodes/node-types";
+
+export const ProjectNodeEntrySchema = v.object({
+	type: v.picklist(["independent", "dependent"]),
+	source: v.optional(v.object({ node: v.string(), entry: v.string() })),
+	value: v.optional(v.unknown()),
+});
+
+export const ProjectNodeSchema = v.object({
+	id: v.pipe(v.string(), v.nonEmpty()),
+	type: v.pipe(v.string(), v.nonEmpty()),
+	purpose: v.picklist(["generator", "terminator", "transformer"]),
+	inputs: v.record(v.string(), ProjectNodeEntrySchema),
+	outputs: v.record(v.string(), ProjectNodeEntrySchema),
+});
 
 export const ProjectIntegrationSchema = v.object({
 	auth: v.optional(v.record(v.string(), v.unknown()), {}),
@@ -7,7 +22,11 @@ export const ProjectIntegrationSchema = v.object({
 
 export const ProjectSchema = v.object({
 	integrations: v.record(v.string(), ProjectIntegrationSchema),
+	nodes: v.array(ProjectNodeSchema),
 });
 
 export type ProjectIntegration = v.InferOutput<typeof ProjectIntegrationSchema>;
 export type Project = v.InferOutput<typeof ProjectSchema>;
+
+export type ProjectNode = v.InferOutput<typeof ProjectNodeSchema>;
+export type ProjectNodeEntry = v.InferOutput<typeof ProjectNodeEntrySchema>;

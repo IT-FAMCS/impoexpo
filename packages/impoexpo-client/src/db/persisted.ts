@@ -38,7 +38,10 @@ export const saveStatesToDatabase = async () => {
 
 	await globalDatabase.persisted.put({
 		type: "project-state",
-		data: useProjectStore.getState(),
+		data: {
+			nodes: useProjectStore.getState().nodes,
+			integrations: useProjectStore.getState().integrations,
+		},
 	});
 
 	const integrationsState: Record<string, Record<string, unknown>> = {};

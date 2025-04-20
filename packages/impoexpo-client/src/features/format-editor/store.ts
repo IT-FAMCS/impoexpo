@@ -4,7 +4,6 @@ import {
 	unregisterBaseNodes,
 } from "@impoexpo/shared/nodes/node-database";
 import {
-	type Node,
 	type Edge,
 	type OnNodesChange,
 	type OnEdgesChange,
@@ -38,7 +37,10 @@ import {
 	registerWithDefaultRenderer,
 	useRenderableNodesStore,
 } from "./nodes/renderable-node-database";
-import type { DefaultNodeRenderOptions } from "./nodes/renderable-node-types";
+import type {
+	DefaultNodeRenderOptions,
+	ProjectNode,
+} from "./nodes/renderable-node-types";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
@@ -65,21 +67,24 @@ export const getNodeId = (type: string) => {
 };
 
 export type FormatEditorStore = {
-	nodes: Node[];
+	nodes: ProjectNode[];
 	edges: Edge[];
 
-	onNodesChange: OnNodesChange<Node>;
+	onNodesChange: OnNodesChange<ProjectNode>;
 	onEdgesChange: OnEdgesChange;
 	onConnect: OnConnect;
 	onConnectEnd: (
 		event: MouseEvent | TouchEvent,
 		connectionState: FinalConnectionState,
-		screenToFlowPosition: ReactFlowInstance<Node, Edge>["screenToFlowPosition"],
+		screenToFlowPosition: ReactFlowInstance<
+			ProjectNode,
+			Edge
+		>["screenToFlowPosition"],
 		openSearchModal: () => void,
 	) => void;
-	setNodes: (nodes: Node[]) => void;
+	setNodes: (nodes: ProjectNode[]) => void;
 	setEdges: (edges: Edge[]) => void;
-	onNodesDelete: (nodes: Node[]) => void;
+	onNodesDelete: (nodes: ProjectNode[]) => void;
 	onEdgesDelete: (edges: Edge[]) => void;
 	isReconnecting: boolean;
 	onReconnect: OnReconnect;
@@ -90,6 +95,8 @@ export type FormatEditorStore = {
 		handle: HandleType,
 	) => void;
 
+	setNodeEntry: (id: string, entry: string, value: unknown) => void;
+	removeNodeEntry: (id: string, entry: string) => void;
 	attachNewNode: (
 		fromNodeId: string,
 		fromNodeType: string,
@@ -108,9 +115,10 @@ export type FormatEditorStore = {
 			type: string;
 			schema: ObjectEntry;
 		},
-		node: Node,
-	) => Node;
+		node: ProjectNode,
+	) => ProjectNode;
 	getBaseNodeFromId: (id: string) => DefaultBaseNode | undefined;
+	unrevertibleAction: (callback: () => void) => void;
 
 	genericNodes: PersistentGenericNodeData;
 	recoverGenericNodes: (nodes: PersistentGenericNodeData) => void;
@@ -183,7 +191,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				event: MouseEvent | TouchEvent,
 				connectionState: FinalConnectionState,
 				screenToFlowPosition: ReactFlowInstance<
-					Node,
+					ProjectNode,
 					Edge
 				>["screenToFlowPosition"],
 				openSearchModal: () => void,
@@ -234,12 +242,21 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const fromEntry = fromNode.entry(connectionState.fromHandle.id);
 					const toEntry = toNode.entry(connectionState.toHandle.id);
 
+					get().removeNodeEntry(
+						connectionState.fromNode.id,
+						connectionState.fromHandle.id,
+					);
+					get().removeNodeEntry(
+						connectionState.toNode.id,
+						connectionState.toHandle.id,
+					);
+
 					const affectedNode = fromEntry.generic
 						? connectionState.fromNode
 						: toEntry.generic
 							? connectionState.toNode
 							: undefined;
-					let newNode: Node | undefined;
+					let newNode: ProjectNode | undefined;
 					if (!affectedNode) return;
 
 					if (fromEntry.generic) {
@@ -289,7 +306,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						if (!isGeneric(node)) return;
 
 						// biome-ignore lint/style/noNonNullAssertion: why wouldn't it exist
-						const affectedNode: Node = get().nodes.find((n) => n.id === id)!;
+						const affectedNode: ProjectNode = get().nodes.find(
+							(n) => n.id === id,
+						)!;
 						const base: DefaultBaseNode =
 							genericNodes[`${node.category}-${node.name}`].base;
 
@@ -369,10 +388,35 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					position: position,
 					data: {},
 					type: type,
-				} satisfies Node;
+				} satisfies ProjectNode;
 				set(() => ({
 					nodes: get().nodes.concat(newNode),
 				}));
+			},
+
+			setNodeEntry(id, entry, value) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					state.nodes[nodeIndex].data.entries ??= {};
+					state.nodes[nodeIndex].data.entries[entry] = {
+						type: "independent",
+						value,
+					};
+				});
+			},
+
+			removeNodeEntry(id, entry) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					if (
+						!state.nodes[nodeIndex].data.entries ||
+						!(entry in state.nodes[nodeIndex].data.entries)
+					)
+						return;
+					delete state.nodes[nodeIndex].data.entries[entry];
+				});
 			},
 
 			attachNewNode(
@@ -389,7 +433,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const toEntry = findCompatibleEntry(fromData, fromHandleId, toData);
 				const id = getNodeId(toNodeType);
 
-				let newNode: Node = {
+				let newNode: ProjectNode = {
 					id: id,
 					position: position,
 					data: {},
@@ -522,6 +566,12 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 				set({ genericNodes: nodes });
 			},
+
+			unrevertibleAction(callback) {
+				useFormatEditorStore.temporal.getState().pause();
+				callback();
+				useFormatEditorStore.temporal.getState().resume();
+			},
 		})),
 		{
 			partialize: (state) => ({
@@ -530,7 +580,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			}),
 			limit: 100,
 			equality: (past, current) => {
-				const filtered = (data: { nodes: Node[]; edges: Edge[] }) => ({
+				const filtered = (data: { nodes: ProjectNode[]; edges: Edge[] }) => ({
 					nodes: data.nodes.map((n) => ({
 						id: n.id,
 						type: n.type,

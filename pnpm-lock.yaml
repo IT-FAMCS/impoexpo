@@ -194,6 +194,9 @@ importers:
       apicache:
         specifier: ^1.6.3
         version: 1.6.3
+      better-sse:
+        specifier: ^0.14.1
+        version: 0.14.1
       compression:
         specifier: ^1.8.0
         version: 1.8.0
@@ -2528,6 +2531,10 @@ packages:
 
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+
+  better-sse@0.14.1:
+    resolution: {integrity: sha512-htQOrymWPKD/LDkRRlgmqS5+xX3p9/BetUQTRshqtwuSk+aQ63RluzHx0CJpY1AYUadCvUex8J+B6XwkGLkZxw==}
+    engines: {node: '>=20', pnpm: '>=9'}
 
   bignumber.js@9.2.0:
     resolution: {integrity: sha512-JocpCSOixzy5XFJi2ub6IMmV/G9i8Lrm2lZvwBv9xPdglmZM0ufDVBbjbrfU/zuLvBfD7Bv2eYxz9i+OHTgkew==}
@@ -7563,6 +7570,8 @@ snapshots:
   balanced-match@1.0.2: {}
 
   base64-js@1.5.1: {}
+
+  better-sse@0.14.1: {}
 
   bignumber.js@9.2.0: {}
 

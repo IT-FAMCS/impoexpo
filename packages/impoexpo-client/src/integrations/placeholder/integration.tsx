@@ -9,7 +9,7 @@ import { registerIntegration } from "../integrations";
 
 registerIntegration({
 	id: "placeholder",
-	title: msg`Nowhere`,
+	title: msg`nowhere`,
 	icon: <Icon icon="mdi:border-none-variant" />,
 	read: false,
 	write: true,

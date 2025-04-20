@@ -45,33 +45,11 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/components/wizard/SelectSourceCard.tsx:32
-msgid "anything else?"
-msgstr "что-нибудь ещё?"
-
-#: src/components/wizard/SelectSourceCard.tsx:34
-msgid "what's the read source?"
-msgstr "откуда будем читать?"
-
-#: src/components/wizard/SelectSourceCard.tsx:35
-msgid "what's the write source?"
-msgstr "куда будем писать?"
-
-#: src/components/wizard/SelectSourceCard.tsx:107
-msgid "add another"
-msgstr "добавить ещё"
-
-#: src/components/wizard/SelectSourceCard.tsx:121
-#: src/integrations/google/GoogleVerificator.tsx:48
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:255
-msgid "next"
-msgstr "далее"
-
-#: src/features/format-editor/FormatEditor.tsx:166
+#: src/features/format-editor/FormatEditor.tsx:165
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:183
+#: src/features/format-editor/FormatEditor.tsx:181
 msgid "redo"
 msgstr "повторить"
 
@@ -122,97 +100,84 @@ msgid "object"
 msgstr "объект"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:13
-msgid "console"
-msgstr "консоль"
+#~ msgid "console"
+#~ msgstr "консоль"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:18
-msgid "print to console"
-msgstr "вывести в консоль"
+#~ msgid "print to console"
+#~ msgstr "вывести в консоль"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:20
-msgid "text"
-msgstr "текст"
+#~ msgid "text"
+#~ msgstr "текст"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:25
-msgid "testing input node"
-msgstr "тестовый входной граф"
+#~ msgid "testing input node"
+#~ msgstr "тестовый входной граф"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:32
-msgid "test1"
-msgstr "тест1"
+#~ msgid "test1"
+#~ msgstr "тест1"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:33
-msgid "next option won't have a description"
-msgstr "следующая опция будет без описания"
+#~ msgid "next option won't have a description"
+#~ msgstr "следующая опция будет без описания"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:35
-msgid "no description!"
-msgstr "без описания!"
+#~ msgid "no description!"
+#~ msgstr "без описания!"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:37
-msgid "test3"
-msgstr "тест3"
+#~ msgid "test3"
+#~ msgstr "тест3"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:38
-msgid "the description is back!"
-msgstr "описание снова есть!"
+#~ msgid "the description is back!"
+#~ msgstr "описание снова есть!"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:45
-msgid "meow"
-msgstr "мяу"
+#~ msgid "meow"
+#~ msgstr "мяу"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:45
-msgid "kitty"
-msgstr "котик"
+#~ msgid "kitty"
+#~ msgstr "котик"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:46
-msgid "bark"
-msgstr "гав"
+#~ msgid "bark"
+#~ msgstr "гав"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:46
-msgid "doggy"
-msgstr "собакин"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:50
-#: src/features/format-editor/nodes/builtin/strings.tsx:21
-#: src/features/format-editor/nodes/builtin/strings.tsx:34
-#: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:71
-msgid "string"
-msgstr "строка"
+#~ msgid "doggy"
+#~ msgstr "собакин"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:51
-msgid "enter a string (at least 5 characters)"
-msgstr "введите строку (как минимум 5 символов)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:54
-#: src/features/format-editor/nodes/builtin/strings.tsx:68
-msgid "number"
-msgstr "число"
+#~ msgid "enter a string (at least 5 characters)"
+#~ msgstr "введите строку (как минимум 5 символов)"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:55
-msgid "input a number"
-msgstr "введите число"
+#~ msgid "input a number"
+#~ msgstr "введите число"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:58
-msgid "boolean"
-msgstr "флаг"
+#~ msgid "boolean"
+#~ msgstr "флаг"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:62
-msgid "boolean (optional)"
-msgstr "флаг (необязательный)"
+#~ msgid "boolean (optional)"
+#~ msgstr "флаг (необязательный)"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:69
-msgid "testing output node"
-msgstr "тестовый выходной граф"
+#~ msgid "testing output node"
+#~ msgstr "тестовый выходной граф"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:72
-msgid "yeah"
-msgstr "ага"
+#~ msgid "yeah"
+#~ msgstr "ага"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:73
-msgid "hell yeah!"
-msgstr "hell yeah!"
+#~ msgid "hell yeah!"
+#~ msgstr "hell yeah!"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:13
 msgid "math"
@@ -282,11 +247,11 @@ msgstr "уведомления"
 msgid "information"
 msgstr "информация"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:22
+#: src/features/format-editor/nodes/builtin/notifications.tsx:23
 msgid "warning"
 msgstr "предупреждение"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:26
+#: src/features/format-editor/nodes/builtin/notifications.tsx:28
 msgid "error"
 msgstr "ошибка"
 
@@ -358,6 +323,13 @@ msgstr "строки"
 msgid "replace in string"
 msgstr "заменить в строке"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:21
+#: src/features/format-editor/nodes/builtin/strings.tsx:34
+#: src/features/format-editor/nodes/builtin/strings.tsx:45
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
+msgid "string"
+msgstr "строка"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:22
 #: src/features/format-editor/nodes/builtin/strings.tsx:35
 msgid "pattern"
@@ -399,6 +371,10 @@ msgstr "разделитель (необязательно)"
 msgid "number -> string"
 msgstr "число -> строка"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:68
+msgid "number"
+msgstr "число"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:83
 #~ msgid "boolean -> string"
 #~ msgstr "флаг -> число"
@@ -419,44 +395,99 @@ msgstr "ввод"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
+#: src/features/transfer-wizard/TransferWizardPage.tsx:146
+#: src/pages/WelcomePage.tsx:46
+msgid "new data transfer"
+msgstr "новый перенос данных"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:153
+msgid "select sources"
+msgstr "выбор источников"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:154
+msgid "where should we read from and where should we write to?"
+msgstr "откуда и куда переносим"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+msgid "formatting"
+msgstr "форматирование"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+msgid "how should we transfer?"
+msgstr "как будем перемещать?"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+msgid "transfer"
+msgstr "перенесение"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+msgid "where the magic happens"
+msgstr "where the magic happens"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+msgid "done!"
+msgstr "готово!"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:35
+msgid "anything else?"
+msgstr "что-нибудь ещё?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:37
+msgid "what's the read source?"
+msgstr "откуда будем читать?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:38
+msgid "what's the write source?"
+msgstr "куда будем писать?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:110
+msgid "add another"
+msgstr "добавить ещё"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
+#: src/integrations/google/GoogleVerificator.tsx:58
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:252
+msgid "next"
+msgstr "далее"
+
 #: src/integrations/console/ConsoleIntegration.tsx:12
 #: src/integrations/console/ConsoleIntegration.tsx:39
-msgid "Console"
-msgstr "Консоль"
+#~ msgid "Console"
+#~ msgstr "Консоль"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:49
+#: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
 msgstr "не все права были предоставлены!"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:51
+#: src/integrations/google/GoogleAuthenticator.tsx:50
 msgid "exchanging tokens with the server"
 msgstr "обмениваемся токенами с сервером"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:67
+#: src/integrations/google/GoogleAuthenticator.tsx:66
 msgid "couldn't exchange tokens with the server (check the console)"
 msgstr "не удалось обменяться токенами с сервером (проверьте консоль)"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:81
+#: src/integrations/google/GoogleAuthenticator.tsx:80
 msgid "waiting for the login flow response"
 msgstr "ожидаем результат входа"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:88
+#: src/integrations/google/GoogleAuthenticator.tsx:87
 msgid "to continue, login with your google account."
 msgstr "чтобы продолжить, войдите через свой google аккаунт."
 
-#: src/integrations/google/GoogleAuthenticator.tsx:96
+#: src/integrations/google/GoogleAuthenticator.tsx:95
 msgid "login via google"
 msgstr "войти через гугл"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:101
+#: src/integrations/google/GoogleAuthenticator.tsx:100
 msgid "an error occurred during login:"
 msgstr "во время входа произошла ошибка:"
 
-#: src/integrations/google/GoogleVerificator.tsx:16
+#: src/integrations/google/GoogleVerificator.tsx:26
 msgid "is this you?"
 msgstr "всё верно?"
 
-#: src/integrations/google/GoogleVerificator.tsx:40
+#: src/integrations/google/GoogleVerificator.tsx:50
 msgid "relogin"
 msgstr "перезайти"
 
@@ -493,51 +524,22 @@ msgstr "не удалось получить список ваших форм"
 msgid "select a form:"
 msgstr "выберите форму:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:203
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:200
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:234
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:231
 msgid "back to source selection"
 msgstr "назад к выбору источника"
 
-#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:14
-#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:41
+#: src/integrations/google/google-forms/integration.tsx:16
+#: src/integrations/google/google-forms/integration.tsx:59
 msgid "Google Forms"
 msgstr "Google Forms"
 
-#: src/pages/TransferWizardPage.tsx:76
-#: src/pages/WelcomePage.tsx:46
-msgid "new data transfer"
-msgstr "новый перенос данных"
-
-#: src/pages/TransferWizardPage.tsx:83
-msgid "select sources"
-msgstr "выбор источников"
-
-#: src/pages/TransferWizardPage.tsx:84
-msgid "where should we read from and where should we write to?"
-msgstr "откуда и куда переносим"
-
-#: src/pages/TransferWizardPage.tsx:86
-msgid "formatting"
-msgstr "форматирование"
-
-#: src/pages/TransferWizardPage.tsx:86
-msgid "how should we transfer?"
-msgstr "как будем перемещать?"
-
-#: src/pages/TransferWizardPage.tsx:87
-msgid "transfer"
-msgstr "перенесение"
-
-#: src/pages/TransferWizardPage.tsx:87
-msgid "where the magic happens"
-msgstr "where the magic happens"
-
-#: src/pages/TransferWizardPage.tsx:88
-msgid "done!"
-msgstr "готово!"
+#: src/integrations/placeholder/integration.tsx:12
+msgid "nowhere"
+msgstr "никуда"
 
 #: src/pages/WelcomePage.tsx:29
 msgid "welcome to <0>impoexpo</0>!"

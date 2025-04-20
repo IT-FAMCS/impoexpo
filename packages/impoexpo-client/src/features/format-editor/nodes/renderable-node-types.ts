@@ -7,6 +7,12 @@ import { type MessageDescriptor, i18n } from "@lingui/core";
 import type React from "react";
 import type { ObjectEntries } from "valibot";
 import { useRenderableNodesStore } from "./renderable-node-database";
+import type { Node } from "@xyflow/react";
+import type { ProjectNodeEntry } from "@impoexpo/shared/schemas/project/ProjectSchema";
+
+export type ProjectNode = Node<{
+	entries?: Record<string, ProjectNodeEntry>;
+}>;
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type IconRenderFunction = (size: number) => React.ReactNode;

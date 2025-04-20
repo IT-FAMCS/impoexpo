@@ -3,8 +3,20 @@ import type {
 	BaseNode,
 	NodePropertyOptions,
 	BaseNodeEntry,
+	NodePurpose,
 } from "./node-types";
 import * as v from "valibot";
+
+// NOTE: this isn't guaranteed to be correct,
+// since a generator can also accept inputs, in which case
+// the purpose must be specified manually.
+export const predictNodePurpose = (node: DefaultBaseNode): NodePurpose => {
+	const hasInputs = Object.keys(node.inputSchema?.entries ?? {}).length > 0;
+	const hasOutputs = Object.keys(node.outputSchema?.entries ?? {}).length > 0;
+	if (hasInputs && hasOutputs) return "transformer";
+	if (!hasInputs && hasOutputs) return "generator";
+	return "terminator";
+};
 
 const hasMetadata = (
 	schema: ObjectEntry,

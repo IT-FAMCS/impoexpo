@@ -1,9 +1,10 @@
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
-import type { Connection, Edge, Node } from "@xyflow/react";
+import type { Connection, Edge } from "@xyflow/react";
+import type { ProjectNode } from "./renderable-node-types";
 
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
-	nodes: Node[],
+	nodes: ProjectNode[],
 ): boolean => {
 	if (!connection.sourceHandle || !connection.targetHandle) return false;
 

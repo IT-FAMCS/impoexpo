@@ -6,9 +6,7 @@ import {
 } from "@/features/format-editor/store";
 import { Icon } from "@iconify/react";
 import { BaseNode } from "@impoexpo/shared/nodes/node-types";
-import {
-	registerBaseNodes,
-} from "@impoexpo/shared/nodes/node-database";
+import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import { object, type ObjectEntries } from "valibot";
 import type { RawNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-types";

@@ -20,7 +20,7 @@ import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
 	clearStatesFromDatabase,
@@ -61,14 +61,21 @@ export default function TransferWizardPage() {
 
 	const navigate = useNavigate();
 	const { t } = useLingui();
-	const { stage } = useTransferWizardStore();
+	const { stage, setStage } = useTransferWizardStore();
 	const [showBlockerContainer, setShowBlockerContainer] =
 		useState<boolean>(true);
+	const [reverseBlockerContainer, setReverseBlockerContainer] =
+		useState<boolean>(false);
 
 	useEffect(() => {
 		window.addEventListener("beforeunload", saveStatesToDatabase);
 		return () =>
 			window.removeEventListener("beforeunload", saveStatesToDatabase);
+	}, []);
+
+	const onFormatEditorClosedCallback = useCallback(() => {
+		setReverseBlockerContainer(true);
+		setShowBlockerContainer(true);
 	}, []);
 
 	const getStageWidget = () => {
@@ -89,7 +96,7 @@ export default function TransferWizardPage() {
 				return (
 					<Card className="relative flex items-center justify-center w-full h-full">
 						<ReactFlowProvider>
-							<FormatEditor />
+							<FormatEditor doneCallback={onFormatEditorClosedCallback} />
 						</ReactFlowProvider>
 						{showBlockerContainer && (
 							<AnimatedCard
@@ -98,13 +105,21 @@ export default function TransferWizardPage() {
 									ease: [0.83, 0, 0.17, 1],
 									duration: 0.5,
 								}}
-								initial={{ opacity: 1 }}
-								animate={{ opacity: 0 }}
-								onAnimationComplete={() => setShowBlockerContainer(false)}
+								initial={{ opacity: reverseBlockerContainer ? 0 : 1 }}
+								animate={{ opacity: reverseBlockerContainer ? 1 : 0 }}
+								onAnimationComplete={() => {
+									if (reverseBlockerContainer)
+										setStage(TransferWizardStage.TRANSFER);
+									else setShowBlockerContainer(false);
+								}}
 								className="absolute w-full h-full bg-content1"
 							/>
 						)}
 					</Card>
+				);
+			case TransferWizardStage.TRANSFER:
+				return (
+					<Card className="relative flex items-center justify-center w-full h-full" />
 				);
 		}
 	};

@@ -6,6 +6,7 @@ import pino from "pino-http";
 import cors from "cors";
 import { registerGoogleEndpoints } from "./integrations/google/endpoints";
 import { loadOrCreateKey } from "./helpers/crypto-utils";
+import { registerProjectEndpoints } from "./project/endpoints";
 
 dotenv.config();
 if (!process.env.PORT) {
@@ -22,10 +23,11 @@ app.use(cors());
 app.disable("x-powered-by");
 
 try {
-	logger.info("registering integration endpoints");
+	logger.info("registering endpoints");
+	registerProjectEndpoints(app);
 	registerGoogleEndpoints(app);
 } catch (err) {
-	logger.error(`failed to register integration endpoints: ${err}`);
+	logger.error(`failed to register endpoints: ${err}`);
 	process.exit(1);
 }
 

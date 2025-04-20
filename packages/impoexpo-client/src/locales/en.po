@@ -45,33 +45,11 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/components/wizard/SelectSourceCard.tsx:32
-msgid "anything else?"
-msgstr "anything else?"
-
-#: src/components/wizard/SelectSourceCard.tsx:34
-msgid "what's the read source?"
-msgstr "what's the read source?"
-
-#: src/components/wizard/SelectSourceCard.tsx:35
-msgid "what's the write source?"
-msgstr "what's the write source?"
-
-#: src/components/wizard/SelectSourceCard.tsx:107
-msgid "add another"
-msgstr "add another"
-
-#: src/components/wizard/SelectSourceCard.tsx:121
-#: src/integrations/google/GoogleVerificator.tsx:48
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:255
-msgid "next"
-msgstr "next"
-
-#: src/features/format-editor/FormatEditor.tsx:166
+#: src/features/format-editor/FormatEditor.tsx:165
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:183
+#: src/features/format-editor/FormatEditor.tsx:181
 msgid "redo"
 msgstr "redo"
 
@@ -122,97 +100,84 @@ msgid "object"
 msgstr "object"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:13
-msgid "console"
-msgstr "console"
+#~ msgid "console"
+#~ msgstr "console"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:18
-msgid "print to console"
-msgstr "print to console"
+#~ msgid "print to console"
+#~ msgstr "print to console"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:20
-msgid "text"
-msgstr "text"
+#~ msgid "text"
+#~ msgstr "text"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:25
-msgid "testing input node"
-msgstr "testing input node"
+#~ msgid "testing input node"
+#~ msgstr "testing input node"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:32
-msgid "test1"
-msgstr "test1"
+#~ msgid "test1"
+#~ msgstr "test1"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:33
-msgid "next option won't have a description"
-msgstr "next option won't have a description"
+#~ msgid "next option won't have a description"
+#~ msgstr "next option won't have a description"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:35
-msgid "no description!"
-msgstr "no description!"
+#~ msgid "no description!"
+#~ msgstr "no description!"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:37
-msgid "test3"
-msgstr "test3"
+#~ msgid "test3"
+#~ msgstr "test3"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:38
-msgid "the description is back!"
-msgstr "the description is back!"
+#~ msgid "the description is back!"
+#~ msgstr "the description is back!"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:45
-msgid "meow"
-msgstr "meow"
+#~ msgid "meow"
+#~ msgstr "meow"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:45
-msgid "kitty"
-msgstr "kitty"
+#~ msgid "kitty"
+#~ msgstr "kitty"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:46
-msgid "bark"
-msgstr "bark"
+#~ msgid "bark"
+#~ msgstr "bark"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:46
-msgid "doggy"
-msgstr "doggy"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:50
-#: src/features/format-editor/nodes/builtin/strings.tsx:21
-#: src/features/format-editor/nodes/builtin/strings.tsx:34
-#: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:71
-msgid "string"
-msgstr "string"
+#~ msgid "doggy"
+#~ msgstr "doggy"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:51
-msgid "enter a string (at least 5 characters)"
-msgstr "enter a string (at least 5 characters)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:54
-#: src/features/format-editor/nodes/builtin/strings.tsx:68
-msgid "number"
-msgstr "number"
+#~ msgid "enter a string (at least 5 characters)"
+#~ msgstr "enter a string (at least 5 characters)"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:55
-msgid "input a number"
-msgstr "input a number"
+#~ msgid "input a number"
+#~ msgstr "input a number"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:58
-msgid "boolean"
-msgstr "boolean"
+#~ msgid "boolean"
+#~ msgstr "boolean"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:62
-msgid "boolean (optional)"
-msgstr "boolean (optional)"
+#~ msgid "boolean (optional)"
+#~ msgstr "boolean (optional)"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:69
-msgid "testing output node"
-msgstr "testing output node"
+#~ msgid "testing output node"
+#~ msgstr "testing output node"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:72
-msgid "yeah"
-msgstr "yeah"
+#~ msgid "yeah"
+#~ msgstr "yeah"
 
 #: src/features/format-editor/nodes/builtin/console.tsx:73
-msgid "hell yeah!"
-msgstr "hell yeah!"
+#~ msgid "hell yeah!"
+#~ msgstr "hell yeah!"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:13
 msgid "math"
@@ -282,11 +247,11 @@ msgstr "notifications"
 msgid "information"
 msgstr "information"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:22
+#: src/features/format-editor/nodes/builtin/notifications.tsx:23
 msgid "warning"
 msgstr "warning"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:26
+#: src/features/format-editor/nodes/builtin/notifications.tsx:28
 msgid "error"
 msgstr "error"
 
@@ -358,6 +323,13 @@ msgstr "strings"
 msgid "replace in string"
 msgstr "replace in string"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:21
+#: src/features/format-editor/nodes/builtin/strings.tsx:34
+#: src/features/format-editor/nodes/builtin/strings.tsx:45
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
+msgid "string"
+msgstr "string"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:22
 #: src/features/format-editor/nodes/builtin/strings.tsx:35
 msgid "pattern"
@@ -399,6 +371,10 @@ msgstr "delimeter (optional)"
 msgid "number -> string"
 msgstr "number -> string"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:68
+msgid "number"
+msgstr "number"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:83
 #~ msgid "boolean -> string"
 #~ msgstr "boolean -> string"
@@ -419,44 +395,99 @@ msgstr "input"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
+#: src/features/transfer-wizard/TransferWizardPage.tsx:146
+#: src/pages/WelcomePage.tsx:46
+msgid "new data transfer"
+msgstr "new data transfer"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:153
+msgid "select sources"
+msgstr "select sources"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:154
+msgid "where should we read from and where should we write to?"
+msgstr "where should we read from and where should we write to?"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+msgid "formatting"
+msgstr "formatting"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+msgid "how should we transfer?"
+msgstr "how should we transfer?"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+msgid "transfer"
+msgstr "transfer"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+msgid "where the magic happens"
+msgstr "where the magic happens"
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+msgid "done!"
+msgstr "done!"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:35
+msgid "anything else?"
+msgstr "anything else?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:37
+msgid "what's the read source?"
+msgstr "what's the read source?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:38
+msgid "what's the write source?"
+msgstr "what's the write source?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:110
+msgid "add another"
+msgstr "add another"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
+#: src/integrations/google/GoogleVerificator.tsx:58
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:252
+msgid "next"
+msgstr "next"
+
 #: src/integrations/console/ConsoleIntegration.tsx:12
 #: src/integrations/console/ConsoleIntegration.tsx:39
-msgid "Console"
-msgstr "Console"
+#~ msgid "Console"
+#~ msgstr "Console"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:49
+#: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
 msgstr "not all permissions have been provided!"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:51
+#: src/integrations/google/GoogleAuthenticator.tsx:50
 msgid "exchanging tokens with the server"
 msgstr "exchanging tokens with the server"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:67
+#: src/integrations/google/GoogleAuthenticator.tsx:66
 msgid "couldn't exchange tokens with the server (check the console)"
 msgstr "couldn't exchange tokens with the server (check the console)"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:81
+#: src/integrations/google/GoogleAuthenticator.tsx:80
 msgid "waiting for the login flow response"
 msgstr "waiting for the login flow response"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:88
+#: src/integrations/google/GoogleAuthenticator.tsx:87
 msgid "to continue, login with your google account."
 msgstr "to continue, login with your google account."
 
-#: src/integrations/google/GoogleAuthenticator.tsx:96
+#: src/integrations/google/GoogleAuthenticator.tsx:95
 msgid "login via google"
 msgstr "login via google"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:101
+#: src/integrations/google/GoogleAuthenticator.tsx:100
 msgid "an error occurred during login:"
 msgstr "an error occurred during login:"
 
-#: src/integrations/google/GoogleVerificator.tsx:16
+#: src/integrations/google/GoogleVerificator.tsx:26
 msgid "is this you?"
 msgstr "is this you?"
 
-#: src/integrations/google/GoogleVerificator.tsx:40
+#: src/integrations/google/GoogleVerificator.tsx:50
 msgid "relogin"
 msgstr "relogin"
 
@@ -493,51 +524,26 @@ msgstr "couldn't receive a list of your forms"
 msgid "select a form:"
 msgstr "select a form:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:203
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:200
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:234
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:231
 msgid "back to source selection"
 msgstr "back to source selection"
 
-#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:14
-#: src/integrations/google/google-forms/GoogleFormsIntegration.tsx:41
+#: src/integrations/google/google-forms/integration.tsx:16
+#: src/integrations/google/google-forms/integration.tsx:59
 msgid "Google Forms"
 msgstr "Google Forms"
 
-#: src/pages/TransferWizardPage.tsx:76
-#: src/pages/WelcomePage.tsx:46
-msgid "new data transfer"
-msgstr "new data transfer"
+#: src/integrations/placeholder/integration.tsx:12
+msgid "nowhere"
+msgstr "nowhere"
 
-#: src/pages/TransferWizardPage.tsx:83
-msgid "select sources"
-msgstr "select sources"
-
-#: src/pages/TransferWizardPage.tsx:84
-msgid "where should we read from and where should we write to?"
-msgstr "where should we read from and where should we write to?"
-
-#: src/pages/TransferWizardPage.tsx:86
-msgid "formatting"
-msgstr "formatting"
-
-#: src/pages/TransferWizardPage.tsx:86
-msgid "how should we transfer?"
-msgstr "how should we transfer?"
-
-#: src/pages/TransferWizardPage.tsx:87
-msgid "transfer"
-msgstr "transfer"
-
-#: src/pages/TransferWizardPage.tsx:87
-msgid "where the magic happens"
-msgstr "where the magic happens"
-
-#: src/pages/TransferWizardPage.tsx:88
-msgid "done!"
-msgstr "done!"
+#: src/integrations/placeholder/integration.tsx:39
+msgid "Nowhere"
+msgstr "Nowhere"
 
 #: src/pages/WelcomePage.tsx:29
 msgid "welcome to <0>impoexpo</0>!"
