@@ -18,35 +18,61 @@ export const getWithSchema = async <const TSchema extends v.GenericSchema>(
 	schema: TSchema,
 	other?: OtherRequestData,
 ): Promise<v.InferOutput<TSchema>> =>
-	requestWithSchema("GET", path, schema, other);
+	v.parse(schema, await (await request("GET", path, undefined, other)).json());
 export const postWithSchema = async <const TSchema extends v.GenericSchema>(
 	path: string,
-	schema: TSchema,
+	body: v.InferOutput<TSchema>,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> =>
-	requestWithSchema("POST", path, schema, other);
+): Promise<Record<string, unknown>> =>
+	await (
+		await request("POST", path, JSON.stringify(body), {
+			...other,
+			headers: {
+				...other?.headers,
+				"Content-Type": "application/json",
+			},
+		})
+	).json();
+export const postWithSchemaAndResult = async <
+	const TInSchema extends v.GenericSchema,
+	const TOutSchema extends v.GenericSchema,
+>(
+	path: string,
+	body: v.InferOutput<TInSchema>,
+	outSchema: TOutSchema,
+	other?: OtherRequestData,
+): Promise<v.InferOutput<TOutSchema>> =>
+	v.parse(
+		outSchema,
+		await (
+			await request("POST", path, JSON.stringify(body), {
+				...other,
+				headers: {
+					...other?.headers,
+					"Content-Type": "application/json",
+				},
+			})
+		).json(),
+	);
 
 export const get = async (path: string, other?: OtherRequestData) =>
-	request("GET", path, other);
-export const post = async (path: string, other?: OtherRequestData) =>
-	request("POST", path, other);
-
-const requestWithSchema = async <const TSchema extends v.GenericSchema>(
-	method: RequestMethod,
+	request("GET", path, undefined, other);
+export const post = async (
 	path: string,
-	schema: TSchema,
+	body: unknown,
 	other?: OtherRequestData,
-): Promise<v.InferOutput<TSchema>> =>
-	v.parse(schema, await (await request(method, path, other)).json());
+) => request("POST", path, JSON.stringify(body), other);
 
 const request = async (
 	method: RequestMethod,
 	path: string,
+	body?: string,
 	other?: OtherRequestData,
 ): Promise<Response> => {
 	const response = await fetch(route(path, other?.query), {
 		method: method,
 		headers: getHeaders(other),
+		body: body,
 	});
 	if (!response.ok) {
 		if (response.status === 429) throw new RatelimitHitError(response);

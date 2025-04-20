@@ -30,6 +30,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { importBuiltinNodes } from "../format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
+import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
 
 const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
@@ -108,9 +109,12 @@ export default function TransferWizardPage() {
 								initial={{ opacity: reverseBlockerContainer ? 0 : 1 }}
 								animate={{ opacity: reverseBlockerContainer ? 1 : 0 }}
 								onAnimationComplete={() => {
-									if (reverseBlockerContainer)
-										setStage(TransferWizardStage.TRANSFER);
-									else setShowBlockerContainer(false);
+									if (reverseBlockerContainer) {
+										setTimeout(
+											() => setStage(TransferWizardStage.TRANSFER),
+											250,
+										);
+									} else setShowBlockerContainer(false);
 								}}
 								className="absolute w-full h-full bg-content1"
 							/>
@@ -118,9 +122,7 @@ export default function TransferWizardPage() {
 					</Card>
 				);
 			case TransferWizardStage.TRANSFER:
-				return (
-					<Card className="relative flex items-center justify-center w-full h-full" />
-				);
+				return <TransferProgressCard />;
 		}
 	};
 
