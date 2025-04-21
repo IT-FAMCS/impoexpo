@@ -142,12 +142,6 @@ function SourceSelector() {
 				return (
 					<ActionCard
 						onPress={() => {
-							/*
-								integration === "read"
-									? setReadIntegration(integration)
-									: setWriteIntegration(integration)
-								*/
-							// TODO: hydrate project state when it's implemented
 							setCurrentIntegration(integration);
 							setState(SourceCardState.AUTHENTICATE_SOURCE);
 						}}

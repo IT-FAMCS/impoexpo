@@ -25,7 +25,11 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { getGoogleAuthHeaders } from "../common";
-import { GoogleFormsHydratorState, useGoogleFormsHydratorStore } from "./store";
+import {
+	addFormToProjectStore,
+	GoogleFormsHydratorState,
+	useGoogleFormsHydratorStore,
+} from "./store";
 import { registerGoogleFormNode } from "./nodes";
 
 export function GoogleFormsHydrator(props: { callback: () => void }) {
@@ -59,6 +63,8 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 		if (data && currentForm) {
 			registerGoogleFormNode(currentForm.id, data);
 			addUsedForm(currentForm.id, data);
+			addFormToProjectStore(currentForm.id);
+
 			setCurrentForm(undefined);
 			setState(GoogleFormsHydratorState.SELECT);
 			props.successCallback();

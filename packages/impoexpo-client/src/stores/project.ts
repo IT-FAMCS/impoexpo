@@ -3,12 +3,15 @@ import { useFormatEditorStore } from "@/features/format-editor/store";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type {
 	Project,
+	ProjectIntegration,
 	ProjectNode,
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { create } from "zustand";
 
 export type ProjectStoreActions = {
 	hydrateNodes: () => void;
+	setIntegrationData: (key: string, data: ProjectIntegration) => void;
+	getIntegrationData: (key: string) => ProjectIntegration;
 };
 
 export const useProjectStore = create<Project & ProjectStoreActions>(
@@ -16,6 +19,10 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 		integrations: {},
 		nodes: [],
 
+		getIntegrationData: (key) =>
+			get().integrations[key] ?? { auth: {}, data: {} },
+		setIntegrationData: (key, data) =>
+			set({ integrations: { ...get().integrations, [key]: data } }),
 		hydrateNodes() {
 			const nodes: ProjectNode[] = [];
 			const clientNodes = useFormatEditorStore.getState().nodes;
