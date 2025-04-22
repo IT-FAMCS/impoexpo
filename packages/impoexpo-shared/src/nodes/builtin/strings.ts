@@ -45,7 +45,7 @@ export const JOIN_STRINGS_NODE = new BaseNode({
 	inputSchema: object({
 		stringA: string(),
 		stringB: string(),
-		delimeter: optional(string(), ""),
+		delimiter: optional(string(), ""),
 	}),
 	outputSchema: object({
 		out: string(),

@@ -55,7 +55,7 @@ nodesScope(() => {
 		inputs: {
 			stringA: { title: "A" },
 			stringB: { title: "B" },
-			delimeter: { title: msg`delimeter (optional)` },
+			delimiter: { title: msg`delimeter (optional)` },
 		},
 		outputs: {
 			out: { title: msg`result` },

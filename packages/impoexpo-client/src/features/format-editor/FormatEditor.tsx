@@ -205,7 +205,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 								props.doneCallback();
 							}}
 						>
-							done
+							<Trans>done</Trans>
 						</Button>
 					</div>
 				</Panel>

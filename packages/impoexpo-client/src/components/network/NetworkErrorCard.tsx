@@ -31,7 +31,7 @@ export default function NetworkErrorCard(props: {
 	}
 
 	return (
-		<div className="flex flex-col items-center justify-center gap-2">
+		<div className="flex flex-col items-center justify-center gap-1">
 			<Icon className="text-danger" width={48} icon="mdi:error-outline" />
 			<p className="text-center">
 				{props.title}

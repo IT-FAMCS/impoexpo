@@ -2,6 +2,7 @@ import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { Session } from "better-sse";
 import * as uuid from "uuid";
 import { childLogger } from "../logger";
+import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
 
 const logger = childLogger("jobs");
 export const jobs: Map<string, Job> = new Map();
@@ -22,12 +23,19 @@ export class Job {
 	}
 
 	public notify(
-		type: "error" | "warn" | "info",
+		type: ProjectStatusNotification["type"],
 		message: Record<string, unknown> | string,
 		serverShouldLog = false,
 	) {
 		if (!this.session) return;
-		this.session.push(message, type);
+		this.session.push(
+			{
+				type,
+				message:
+					typeof message === "object" ? JSON.stringify(message) : message,
+			} satisfies ProjectStatusNotification,
+			"notification",
+		);
 		if (serverShouldLog) childLogger(`job/${this.id}`)[type](message);
 	}
 }

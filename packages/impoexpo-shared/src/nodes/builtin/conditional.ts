@@ -1,15 +1,7 @@
-import {
-	boolean,
-	nonEmpty,
-	nullable,
-	object,
-	optional,
-	pipe,
-	string,
-} from "valibot";
+import { boolean, nonEmpty, nullable, object, pipe, string } from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { generic, named } from "../node-utils";
+import { generic } from "../node-utils";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",

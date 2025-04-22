@@ -53,6 +53,10 @@ msgstr "undo"
 msgid "redo"
 msgstr "redo"
 
+#: src/features/format-editor/FormatEditor.tsx:208
+msgid "done"
+msgstr "done"
+
 #: src/features/format-editor/nodes/builtin/conditional.tsx:12
 msgid "conditional"
 msgstr "conditional"
@@ -395,36 +399,36 @@ msgstr "input"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:146
+#: src/features/transfer-wizard/TransferWizardPage.tsx:148
 #: src/pages/WelcomePage.tsx:46
 msgid "new data transfer"
 msgstr "new data transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:153
+#: src/features/transfer-wizard/TransferWizardPage.tsx:155
 msgid "select sources"
 msgstr "select sources"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:154
+#: src/features/transfer-wizard/TransferWizardPage.tsx:156
 msgid "where should we read from and where should we write to?"
 msgstr "where should we read from and where should we write to?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+#: src/features/transfer-wizard/TransferWizardPage.tsx:158
 msgid "formatting"
 msgstr "formatting"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+#: src/features/transfer-wizard/TransferWizardPage.tsx:158
 msgid "how should we transfer?"
 msgstr "how should we transfer?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+#: src/features/transfer-wizard/TransferWizardPage.tsx:159
 msgid "transfer"
 msgstr "transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:157
+#: src/features/transfer-wizard/TransferWizardPage.tsx:159
 msgid "where the magic happens"
 msgstr "where the magic happens"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/features/transfer-wizard/TransferWizardPage.tsx:160
 msgid "done!"
 msgstr "done!"
 
@@ -446,9 +450,33 @@ msgstr "add another"
 
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
 #: src/integrations/google/GoogleVerificator.tsx:58
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:252
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:258
 msgid "next"
 msgstr "next"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:68
+msgid "failed to connect to the server via SSE"
+msgstr "failed to connect to the server via SSE"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:97
+msgid "failed to connect to the server via SSE<0/><1>(check the console)</1>"
+msgstr "failed to connect to the server via SSE<0/><1>(check the console)</1>"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:130
+msgid "we're working on your project"
+msgstr "we're working on your project"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:134
+msgid "this shouldn't take long, but if it does, grab a drink and do something else.<0/>updates will appear below."
+msgstr "this shouldn't take long, but if it does, grab a drink and do something else.<0/>updates will appear below."
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:194
+msgid "uploading your project"
+msgstr "uploading your project"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
+msgid "couldn't upload your project"
+msgstr "couldn't upload your project"
 
 #: src/integrations/console/ConsoleIntegration.tsx:12
 #: src/integrations/console/ConsoleIntegration.tsx:39
@@ -491,44 +519,44 @@ msgstr "is this you?"
 msgid "relogin"
 msgstr "relogin"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:78
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:84
 msgid "receiving the form's layout"
 msgstr "receiving the form's layout"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:93
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "failed to receive the form's layout (and create a node for it)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:89
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:127
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:95
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:133
 msgid "back to form selection"
 msgstr "back to form selection"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:116
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:122
 msgid "checking read permissions for the form"
 msgstr "checking read permissions for the form"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:131
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "couldn't verify read permissions for the form (or their lack of)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:169
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:175
 msgid "receiving a list of your forms"
 msgstr "receiving a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:178
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:184
 msgid "couldn't receive a list of your forms"
 msgstr "couldn't receive a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:188
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:194
 msgid "select a form:"
 msgstr "select a form:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:200
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:231
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:237
 msgid "back to source selection"
 msgstr "back to source selection"
 
