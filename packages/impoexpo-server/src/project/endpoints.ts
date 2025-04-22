@@ -5,7 +5,7 @@ import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyAction
 import { body, validationResult } from "express-validator";
 import * as v from "valibot";
 import { ProjectSchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
-import * as uuid from "uuid";
+import { createJob, jobs } from "../engine/job-manager";
 
 export const registerProjectEndpoints = (app: Express) => {
 	logger.info("\t-> registering project endpoints");
@@ -27,15 +27,26 @@ export const registerProjectEndpoints = (app: Express) => {
 			res.status(400).send({
 				ok: false,
 				internal: false,
-				error: err,
-			});
+				error: `${err}`,
+			} satisfies FaultyAction);
 			return;
 		}
 
-		res.send({ job: uuid.v4() });
+		res.send({ job: createJob(req.body) });
 	});
 
-	/* app.get("/project/status", async (req, res) => {
-        const session = await createSession(req, res);
-    }); */
+	app.get("/project/status/:id", async (req, res) => {
+		if (!jobs.has(req.params.id)) {
+			res.status(400).send({
+				ok: false,
+				internal: false,
+				error: `no job with the id ${req.params.id} is currently performed`,
+			} satisfies FaultyAction);
+			return;
+		}
+
+		const session = await createSession(req, res);
+		// biome-ignore lint/style/noNonNullAssertion: checked above
+		jobs.get(req.params.id)!.attachSession(session);
+	});
 };
