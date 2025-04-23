@@ -1,10 +1,12 @@
 import { pino } from "pino";
 
+// TODO: determine log level from .env
 const logger = pino({
 	name: "root",
+	level: "debug",
 	transport: {
 		targets: [
-			{ target: "pino-pretty", options: { colorize: true } },
+			{ target: "pino-pretty", options: { colorize: true }, level: "debug" },
 			{
 				target: "pino-pretty",
 				options: {
@@ -13,10 +15,16 @@ const logger = pino({
 					append: false,
 					mkdir: true,
 				},
+				level: "debug",
 			},
 			{
 				target: "pino/file",
-				options: { destination: "logs/latest.log", append: false, mkdir: true },
+				options: {
+					destination: "logs/latest.log",
+					append: false,
+					mkdir: true,
+					level: "debug",
+				},
 			},
 		],
 	},

@@ -7,6 +7,7 @@ import cors from "cors";
 import { registerGoogleEndpoints } from "./integrations/google/endpoints";
 import { loadOrCreateKey } from "./helpers/crypto-utils";
 import { registerProjectEndpoints } from "./project/endpoints";
+import { registerDefaultNodes } from "./engine/node-handler-utils";
 
 dotenv.config();
 if (!process.env.PORT) {
@@ -14,6 +15,8 @@ if (!process.env.PORT) {
 	process.exit(1);
 }
 await loadOrCreateKey();
+
+await registerDefaultNodes();
 
 const app = express();
 app.use(express.json());
