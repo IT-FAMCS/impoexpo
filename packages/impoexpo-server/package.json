@@ -32,6 +32,7 @@
 		"express-rate-limit": "^7.5.0",
 		"express-validator": "^7.2.1",
 		"extra-promise": "^7.0.0",
+		"glob": "^11.0.2",
 		"googleapis": "^146.0.0",
 		"migration-files": "^0.4.3",
 		"pino": "^9.6.0",

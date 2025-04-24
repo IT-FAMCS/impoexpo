@@ -3,6 +3,7 @@ import type { Session } from "better-sse";
 import * as uuid from "uuid";
 import { childLogger } from "../logger";
 import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
+import { executeJobNodes } from "./node-executor";
 
 const logger = childLogger("jobs");
 export const jobs: Map<string, Job> = new Map();
@@ -11,6 +12,7 @@ export class Job {
 	public session?: Session;
 	public id: string;
 	public project: Project;
+	public processing = false;
 
 	constructor(id: string, project: Project) {
 		this.id = id;
@@ -37,6 +39,19 @@ export class Job {
 			"notification",
 		);
 		if (serverShouldLog) childLogger(`job/${this.id}`)[type](message);
+	}
+
+	public terminate(message: string) {
+		if (!this.session) return;
+		this.processing = false;
+		this.session.push(message, "terminate");
+		childLogger(`job/${this.id}`).info(`terminating job | reason: ${message}`);
+	}
+
+	public run() {
+		if (this.processing) return;
+		this.processing = true;
+		executeJobNodes(this);
 	}
 }
 

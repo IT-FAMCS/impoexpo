@@ -2,7 +2,7 @@ import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import type * as v from "valibot";
 import type { Job } from "./job-manager";
 import { childLogger } from "../logger";
-import { glob } from "node:fs/promises";
+import { glob } from "glob";
 import * as path from "node:path";
 export const defaultNodeHandlers: Record<
 	string,
@@ -13,8 +13,8 @@ export type NodeHandlerFunction<
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
 > = (
-	job: Job,
 	data: ResolveEntries<TIn>,
+	job: Job,
 ) => ResolveEntries<TOut> | ResolveEntries<TOut>[];
 
 export const registerHandler = <
@@ -39,11 +39,9 @@ export const registerDefaultNodes = async () => {
 	logger.info("registering builtin nodes");
 
 	// TODO: this isn't exactly safe...
-	const entries = await Array.fromAsync(
-		glob("./handlers/**/*.ts", {
-			cwd: import.meta.dirname,
-		}),
-	);
+	const entries = await glob("./handlers/**/*.ts", {
+		cwd: import.meta.dirname,
+	});
 	await Promise.all(
 		entries.map(async (entry) => {
 			logger.info(`\t-> importing ${path.basename(entry)}`);

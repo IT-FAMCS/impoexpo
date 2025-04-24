@@ -40,13 +40,16 @@ export const registerProjectEndpoints = (app: Express) => {
 			res.status(400).send({
 				ok: false,
 				internal: false,
-				error: `no job with the id ${req.params.id} is currently performed`,
+				error: `no job with the id ${req.params.id} is currently running'`,
 			} satisfies FaultyAction);
 			return;
 		}
 
 		const session = await createSession(req, res);
-		// biome-ignore lint/style/noNonNullAssertion: checked above
-		jobs.get(req.params.id)!.attachSession(session);
+		const job = jobs.get(req.params.id);
+		if (!job) return;
+
+		job.attachSession(session);
+		job.run();
 	});
 };

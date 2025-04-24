@@ -58,7 +58,9 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 
 						if (options.property(entry)?.mode === "independentOnly") continue;
 
-						const edge = clientEdges.find((e) => e.target === clientNode.id);
+						const edge = clientEdges.find(
+							(e) => e.target === clientNode.id && e.targetHandle === entry,
+						);
 						if (edge?.source && edge.sourceHandle) {
 							node.inputs[entry] = {
 								type: "dependent",
@@ -83,7 +85,9 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 							continue;
 						}
 
-						const edge = clientEdges.find((e) => e.source === clientNode.id);
+						const edge = clientEdges.find(
+							(e) => e.source === clientNode.id && e.sourceHandle === entry,
+						);
 						if (edge?.target && edge.targetHandle) {
 							node.outputs[entry] = {
 								type: "dependent",
