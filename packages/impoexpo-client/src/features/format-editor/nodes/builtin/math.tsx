@@ -19,6 +19,7 @@ nodesScope(() => {
 		title: msg`add`,
 		aliases: [msg`sum`],
 	});
+
 	registerSymmetricBinaryNode(mathNodes.SUBTRACT_NODE, {
 		title: msg`subtract`,
 	});

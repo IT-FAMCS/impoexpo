@@ -38,16 +38,13 @@ export const registerDefaultNodes = async () => {
 	const logger = childLogger("nodes");
 	logger.info("registering builtin nodes");
 
-	// TODO: this isn't exactly safe...
 	const entries = await glob("./handlers/**/*.ts", {
 		cwd: import.meta.dirname,
 	});
-	await Promise.all(
-		entries.map(async (entry) => {
-			logger.info(`\t-> importing ${path.basename(entry)}`);
-			await import(`./${entry.replace(".ts", "")}`);
-		}),
-	);
+	for (const entry of entries) {
+		logger.info(`\t-> importing ${path.basename(entry)}`);
+		await import(`./${entry.replace(".ts", "")}`);
+	}
 };
 
 export type ResolveEntries<T extends v.ObjectEntries> = {

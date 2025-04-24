@@ -81,18 +81,22 @@ export const executeJobNodes = async (job: Job) => {
 
 		const { inputs, generators } = resolveNodeInputs(node);
 		const handler = getNodeHandler(node.type);
-		console.log(inputs, handler);
 		if (!handler) {
 			throw new Error(
 				`no handler was found for node "${node.id}" (node type "${node.type}")`,
 			);
 		}
+
 		const output = handler(inputs, job);
 		resultsCache[node.id] = output;
 		return output;
 	};
 
-	for (const node of terminators) {
-		runNode(node);
+	try {
+		for (const node of terminators) {
+			runNode(node);
+		}
+	} catch (err) {
+		job.terminate(`${err}`);
 	}
 };

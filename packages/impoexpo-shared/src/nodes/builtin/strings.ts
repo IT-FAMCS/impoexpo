@@ -1,65 +1,65 @@
-import { boolean, number, object, optional, string } from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope } from "../node-database";
 import { registerBaseNodes } from "../node-database";
+import * as v from "valibot";
 
 export const REPLACE_NODE = new BaseNode({
 	category: "string",
 	name: "replace",
-	inputSchema: object({
-		string: string(),
-		pattern: string(),
-		replacement: string(),
+	inputSchema: v.object({
+		string: v.string(),
+		pattern: v.string(),
+		replacement: v.string(),
 	}),
-	outputSchema: object({
-		out: string(),
+	outputSchema: v.object({
+		out: v.string(),
 	}),
 });
 
 export const CONTAINS_NODE = new BaseNode({
 	category: "string",
 	name: "contains",
-	inputSchema: object({
-		string: string(),
-		pattern: string(),
+	inputSchema: v.object({
+		string: v.string(),
+		pattern: v.string(),
 	}),
-	outputSchema: object({
-		out: boolean(),
+	outputSchema: v.object({
+		out: v.boolean(),
 	}),
 });
 
 export const LENGTH_NODE = new BaseNode({
 	category: "string",
 	name: "length",
-	inputSchema: object({
-		string: string(),
+	inputSchema: v.object({
+		string: v.string(),
 	}),
-	outputSchema: object({
-		out: number(),
+	outputSchema: v.object({
+		out: v.number(),
 	}),
 });
 
 export const JOIN_STRINGS_NODE = new BaseNode({
 	category: "string",
 	name: "join",
-	inputSchema: object({
-		stringA: string(),
-		stringB: string(),
-		delimiter: optional(string(), ""),
+	inputSchema: v.object({
+		stringA: v.string(),
+		stringB: v.string(),
+		delimiter: v.optional(v.string(), ""),
 	}),
-	outputSchema: object({
-		out: string(),
+	outputSchema: v.object({
+		out: v.string(),
 	}),
 });
 
 export const NUMBER_TO_STRING_NODE = new BaseNode({
 	category: "string",
 	name: "number-to-string",
-	inputSchema: object({
-		number: number(),
+	inputSchema: v.object({
+		number: v.number(),
 	}),
-	outputSchema: object({
-		out: string(),
+	outputSchema: v.object({
+		out: v.string(),
 	}),
 });
 

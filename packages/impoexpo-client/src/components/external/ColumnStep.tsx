@@ -191,6 +191,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 												"cursor-pointer": stepIdx <= currentStep,
 											},
 										)}
+										onClick={() => onStepChange?.(stepIdx)}
 										{...props}
 									>
 										<div className="h-ful relative flex flex-col items-center">

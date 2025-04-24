@@ -19,11 +19,13 @@ nodesScope(() => {
 		header: "bg-success-200",
 		icon: (size) => <Icon width={size} icon="mdi:information" />,
 	});
+
 	registerWithDefaultRenderer(notificationNodes.WARNING_NOTIFICATION_NODE, {
 		title: msg`warning`,
 		header: "bg-warning-200",
 		icon: (size) => <Icon width={size} icon="mdi:warning" />,
 	});
+
 	registerWithDefaultRenderer(notificationNodes.ERROR_NOTIFICATION_NODE, {
 		title: msg`error`,
 		header: "bg-danger-200",

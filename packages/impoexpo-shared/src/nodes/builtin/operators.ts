@@ -1,4 +1,4 @@
-import { boolean, number, object } from "valibot";
+import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
 import { generic } from "../node-utils";
@@ -11,42 +11,42 @@ import {
 export const EQUAL_NODE = new BaseNode({
 	category: "operators",
 	name: "equal",
-	inputSchema: object({
+	inputSchema: v.object({
 		inA: generic("T"),
 		inB: generic("T"),
 	}),
-	outputSchema: object({
-		out: boolean(),
+	outputSchema: v.object({
+		out: v.boolean(),
 	}),
 });
 
-export const NOT_NODE = unaryNode("operators", "not", boolean);
-export const AND_NODE = binaryNode("operators", "and", boolean);
-export const OR_NODE = binaryNode("operators", "or", boolean);
+export const NOT_NODE = unaryNode("operators", "not", v.boolean);
+export const AND_NODE = binaryNode("operators", "and", v.boolean);
+export const OR_NODE = binaryNode("operators", "or", v.boolean);
 
 export const LESS_THAN_NODE = binaryNodeWithDifferentOutput(
 	"operators",
 	"less-than",
-	number,
-	boolean,
+	v.number,
+	v.boolean,
 );
 export const LESS_OR_EQUAL_TO_NODE = binaryNodeWithDifferentOutput(
 	"operators",
 	"less-or-eq",
-	number,
-	boolean,
+	v.number,
+	v.boolean,
 );
 export const GREATER_THAN_NODE = binaryNodeWithDifferentOutput(
 	"operators",
 	"greater-than",
-	number,
-	boolean,
+	v.number,
+	v.boolean,
 );
 export const GREATER_OR_EQUAL_TO_NODE = binaryNodeWithDifferentOutput(
 	"operators",
 	"greater-or-eq",
-	number,
-	boolean,
+	v.number,
+	v.boolean,
 );
 
 nodesScope(() => {

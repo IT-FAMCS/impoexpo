@@ -38,14 +38,14 @@ export class Job {
 			} satisfies ProjectStatusNotification,
 			"notification",
 		);
-		if (serverShouldLog) childLogger(`job/${this.id}`)[type](message);
+		if (serverShouldLog) childLogger(`jobs/${this.id}`)[type](message);
 	}
 
 	public terminate(message: string) {
 		if (!this.session) return;
 		this.processing = false;
 		this.session.push(message, "terminate");
-		childLogger(`job/${this.id}`).info(`terminating job | reason: ${message}`);
+		childLogger(`jobs/${this.id}`).info(`terminating job | reason: ${message}`);
 	}
 
 	public run() {

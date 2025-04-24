@@ -132,13 +132,12 @@ function ProjectStatusCard() {
 			</p>
 			<p className="text-center">
 				<Trans>
-					this shouldn't take long, but if it does, grab a drink and do
-					something else.
+					this shouldn't take too long.
 					<br />
 					updates will appear below.
 				</Trans>
 			</p>
-			<ScrollShadow className="max-h-[25vh] max-w-[30vw] w-full mt-2">
+			<ScrollShadow className="max-h-[25vh] max-w-[30vw] w-full mt-2 pb-10">
 				<div className="flex flex-col h-full gap-2">
 					<AnimatePresence>
 						{Object.entries(notifications).map((pair) => (
@@ -146,7 +145,6 @@ function ProjectStatusCard() {
 								initial={{ opacity: 0, y: 5 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5 }}
-								// biome-ignore lint/suspicious/noArrayIndexKey: who cares
 								key={pair[0]}
 								color={convertColor(pair[1].type)}
 							>

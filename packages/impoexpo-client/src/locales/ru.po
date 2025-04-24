@@ -183,6 +183,24 @@ msgstr "объект"
 #~ msgid "hell yeah!"
 #~ msgstr "hell yeah!"
 
+#: src/features/format-editor/nodes/builtin/literals.tsx:12
+msgid "literals"
+msgstr "литералы"
+
+#: src/features/format-editor/nodes/builtin/literals.tsx:17
+#: src/features/format-editor/nodes/builtin/strings.tsx:68
+msgid "number"
+msgstr "число"
+
+#: src/features/format-editor/nodes/builtin/literals.tsx:23
+#: src/features/format-editor/nodes/builtin/literals.tsx:29
+#: src/features/format-editor/nodes/builtin/strings.tsx:21
+#: src/features/format-editor/nodes/builtin/strings.tsx:34
+#: src/features/format-editor/nodes/builtin/strings.tsx:45
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
+msgid "string"
+msgstr "строка"
+
 #: src/features/format-editor/nodes/builtin/math.tsx:13
 msgid "math"
 msgstr "математика"
@@ -195,51 +213,51 @@ msgstr "сложить"
 msgid "sum"
 msgstr "сумма"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:23
+#: src/features/format-editor/nodes/builtin/math.tsx:24
 msgid "subtract"
 msgstr "вычесть"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:26
+#: src/features/format-editor/nodes/builtin/math.tsx:27
 msgid "multiply"
 msgstr "умножить"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:29
+#: src/features/format-editor/nodes/builtin/math.tsx:30
 msgid "divide"
 msgstr "делить"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:32
+#: src/features/format-editor/nodes/builtin/math.tsx:33
 msgid "modulo"
 msgstr "остаток от деления"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:33
+#: src/features/format-editor/nodes/builtin/math.tsx:34
 msgid "remainder"
 msgstr "деление с остатком"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:36
+#: src/features/format-editor/nodes/builtin/math.tsx:37
 msgid "power"
 msgstr "возвести в степень"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:40
+#: src/features/format-editor/nodes/builtin/math.tsx:41
 msgid "absolute value"
 msgstr "модуль"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:41
+#: src/features/format-editor/nodes/builtin/math.tsx:42
 msgid "abs"
 msgstr "abs"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:43
+#: src/features/format-editor/nodes/builtin/math.tsx:44
 msgid "log"
 msgstr "логарифм"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:45
+#: src/features/format-editor/nodes/builtin/math.tsx:46
 msgid "negate"
 msgstr "отрицать"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:48
+#: src/features/format-editor/nodes/builtin/math.tsx:49
 msgid "square root"
 msgstr "квадратный корень"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:49
+#: src/features/format-editor/nodes/builtin/math.tsx:50
 msgid "sqrt"
 msgstr "sqrt"
 
@@ -251,11 +269,11 @@ msgstr "уведомления"
 msgid "information"
 msgstr "информация"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:23
+#: src/features/format-editor/nodes/builtin/notifications.tsx:24
 msgid "warning"
 msgstr "предупреждение"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:28
+#: src/features/format-editor/nodes/builtin/notifications.tsx:30
 msgid "error"
 msgstr "ошибка"
 
@@ -327,13 +345,6 @@ msgstr "строки"
 msgid "replace in string"
 msgstr "заменить в строке"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:21
-#: src/features/format-editor/nodes/builtin/strings.tsx:34
-#: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:71
-msgid "string"
-msgstr "строка"
-
 #: src/features/format-editor/nodes/builtin/strings.tsx:22
 #: src/features/format-editor/nodes/builtin/strings.tsx:35
 msgid "pattern"
@@ -374,10 +385,6 @@ msgstr "разделитель (необязательно)"
 #: src/features/format-editor/nodes/builtin/strings.tsx:66
 msgid "number -> string"
 msgstr "число -> строка"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:68
-msgid "number"
-msgstr "число"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:83
 #~ msgid "boolean -> string"
@@ -467,14 +474,14 @@ msgid "we're working on your project"
 msgstr "работаем над вашим проектом"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:134
-msgid "this shouldn't take long, but if it does, grab a drink and do something else.<0/>updates will appear below."
-msgstr "это не должно занять слишком долго, но если такое вдруг случится, сходите за напитком и позанимайтесь другими делами.<0/>ниже будут оповещения."
+msgid "this shouldn't take too long.<0/>updates will appear below."
+msgstr "это не должно занять слишком долго.<0/>ниже будут отображаться оповещения."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:194
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:192
 msgid "uploading your project"
 msgstr "выкладываем ваш проект"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
 msgid "couldn't upload your project"
 msgstr "не удалось выложить ваш проект"
 

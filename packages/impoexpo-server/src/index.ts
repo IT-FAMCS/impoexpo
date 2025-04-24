@@ -1,8 +1,7 @@
 import express from "express";
 import compression from "compression";
 import dotenv from "dotenv";
-import { logger } from "./logger";
-import pino from "pino-http";
+import { httpLogger, logger } from "./logger";
 import cors from "cors";
 import { registerGoogleEndpoints } from "./integrations/google/endpoints";
 import { loadOrCreateKey } from "./helpers/crypto-utils";
@@ -21,7 +20,7 @@ await registerDefaultNodes();
 const app = express();
 app.use(express.json());
 app.use(compression());
-app.use(pino({ logger: logger }));
+app.use(httpLogger);
 app.use(cors());
 app.disable("x-powered-by");
 

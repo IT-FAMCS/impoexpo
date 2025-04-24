@@ -95,8 +95,10 @@ export type FormatEditorStore = {
 		handle: HandleType,
 	) => void;
 
+	getNodeEntryValue: (id: string, entry: string) => unknown;
 	setNodeEntry: (id: string, entry: string, value: unknown) => void;
 	removeNodeEntry: (id: string, entry: string) => void;
+
 	attachNewNode: (
 		fromNodeId: string,
 		fromNodeType: string,
@@ -417,6 +419,14 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						return;
 					delete state.nodes[nodeIndex].data.entries[entry];
 				});
+			},
+
+			getNodeEntryValue(id, entry) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
+				if (nodeIndex === -1) return undefined;
+				const entries = get().nodes[nodeIndex].data.entries;
+				if (!entries || !(entry in entries)) return undefined;
+				return entries[entry].value;
 			},
 
 			attachNewNode(

@@ -317,9 +317,8 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	default: T;
 	validator?: ValidatorFunction;
 }) {
-	const { setNodeEntry } = useFormatEditorStore();
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
 	const [value, setValue] = useState<T | undefined>(props.default);
-	const throttledValue = useThrottle(value, 500);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 	const locale = useLocaleInformation();
 
@@ -336,8 +335,13 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	}, [props.validator, value, locale]);
 
 	useEffect(() => {
-		setNodeEntry(props.node, props.name, throttledValue);
-	}, [props.name, props.node, setNodeEntry, throttledValue]);
+		const savedValue = getNodeEntryValue(props.node, props.name);
+		if (savedValue) setValue(savedValue as T);
+	}, [getNodeEntryValue, props.name, props.node]);
+
+	useEffect(() => {
+		setNodeEntry(props.node, props.name, value);
+	}, [props.name, props.node, setNodeEntry, value]);
 
 	if (typeof props.default === "boolean") {
 		return (
