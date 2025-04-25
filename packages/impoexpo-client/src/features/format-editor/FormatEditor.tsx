@@ -200,8 +200,9 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 							color="primary"
 							variant="shadow"
 							endContent={<Icon width={20} icon="mdi:arrow-right" />}
-							onPress={() => {
-								useProjectStore.getState().hydrateNodes();
+							onPress={async () => {
+								useProjectStore.getState().collectNodes();
+								await useProjectStore.getState().collectIntegrations();
 								props.doneCallback();
 							}}
 						>

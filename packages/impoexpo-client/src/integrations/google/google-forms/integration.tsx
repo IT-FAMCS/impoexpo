@@ -3,13 +3,19 @@ import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import GoogleAuthenticator from "../GoogleAuthenticator";
-import GoogleVerificator from "../GoogleVerificator";
+import GoogleVerifier from "../GoogleVerifier";
 import { checkGoogleAuthentication } from "../common";
 import { GoogleFormsHydrator } from "./GoogleFormsHydrator";
 import { useGoogleFormsHydratorStore } from "./store";
 import { registerIntegration } from "@/integrations/integrations";
-import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import { registerGoogleFormNode } from "./nodes";
+import {
+	type GoogleFormsProjectIntegration,
+	GoogleFormsProjectIntegrationSchema,
+} from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsProjectIntegrationSchema";
+import { getAuthFromDatabase } from "@/db/auth";
+import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
+import * as v from "valibot";
 
 registerIntegration({
 	id: "google-forms",
@@ -19,19 +25,23 @@ registerIntegration({
 	write: false,
 	checkAuthenticated: checkGoogleAuthentication,
 
-	getPersistentInformation(prev) {
-		const current = useGoogleFormsHydratorStore.getState().usedForms;
-		return prev && "forms" in prev && typeof prev.forms === "object"
-			? { forms: { ...prev.forms, ...current } }
-			: { forms: current };
+	async getProjectInformation() {
+		const forms = useGoogleFormsHydratorStore.getState().usedForms;
+		const tokens = (
+			await getAuthFromDatabase("google", GoogleExchangeResponseSchema)
+		)?.tokens;
+		if (!tokens) return {};
+
+		return {
+			auth: { tokens },
+			data: { forms },
+		} satisfies GoogleFormsProjectIntegration;
 	},
-	onPersistentInformationLoaded(data) {
-		if (!("forms" in data)) return;
-		for (const [id, layout] of Object.entries(
-			(data as { forms: Record<string, GoogleFormsLayout> }).forms,
-		)) {
+
+	async onProjectInformationLoaded(data) {
+		if (!v.is(GoogleFormsProjectIntegrationSchema, data)) return;
+		for (const [id, layout] of Object.entries(data.data.forms))
 			registerGoogleFormNode(id, layout);
-		}
 	},
 
 	authenticator: (callback) => (
@@ -46,8 +56,8 @@ registerIntegration({
 			]}
 		/>
 	),
-	verificator: (success, reset) => (
-		<GoogleVerificator onSuccess={success} onReset={reset} />
+	verifier: (success, reset) => (
+		<GoogleVerifier onSuccess={success} onReset={reset} />
 	),
 	hydrator: (callback) => <GoogleFormsHydrator callback={callback} />,
 	selectedItemsRenderer: () =>

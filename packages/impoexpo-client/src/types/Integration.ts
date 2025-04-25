@@ -1,3 +1,4 @@
+import type { ProjectIntegration } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { MessageDescriptor } from "@lingui/core";
 
 export type Integration = {
@@ -7,13 +8,11 @@ export type Integration = {
 	read: boolean;
 	write: boolean;
 
-	getPersistentInformation?: (
-		prev?: Record<string, unknown>,
-	) => Record<string, unknown>;
-	onPersistentInformationLoaded?: (data: Record<string, unknown>) => void;
+	getProjectInformation?: () => Promise<ProjectIntegration>;
+	onProjectInformationLoaded?: (data: ProjectIntegration) => Promise<void>;
 
 	checkAuthenticated: () => Promise<boolean>;
-	verificator: (
+	verifier: (
 		successCallback: () => void,
 		resetCallback: () => void,
 	) => React.ReactNode;

@@ -5,7 +5,7 @@ import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrati
 import { Trans } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 
-export default function GoogleVerificator(props: {
+export default function GoogleVerifier(props: {
 	onSuccess: () => void;
 	onReset: () => void;
 }) {

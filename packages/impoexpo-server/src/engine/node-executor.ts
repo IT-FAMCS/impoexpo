@@ -2,15 +2,18 @@ import type { ProjectNode } from "@impoexpo/shared/schemas/project/ProjectSchema
 import type { Job } from "./job-manager";
 import {
 	defaultNodeHandlers,
+	type NodeOutput,
 	type NodeHandlerFunction,
 } from "./node-handler-utils";
+import type * as v from "valibot";
 import type { ObjectEntries } from "valibot";
-type NodeOutput = ReturnType<NodeHandlerFunction<ObjectEntries, ObjectEntries>>;
 
 export const getNodeHandler = (
 	type: string,
+	job: Job,
 ): NodeHandlerFunction<ObjectEntries, ObjectEntries> | undefined => {
 	if (type in defaultNodeHandlers) return defaultNodeHandlers[type];
+	if (type in job.customNodes) return job.customNodes[type];
 	return undefined;
 };
 
@@ -23,13 +26,13 @@ export const executeJobNodes = async (job: Job) => {
 		return;
 	}
 
-	const resultsCache: Record<string, NodeOutput> = {};
-	const resolveNodeInputs = (
+	const resultsCache: Record<string, NodeOutput<v.ObjectEntries>> = {};
+	const resolveNodeInputs = async (
 		node: ProjectNode,
-	): {
+	): Promise<{
 		inputs: Record<string, unknown>;
 		generators: [string, number][];
-	} => {
+	}> => {
 		const generators: [string, number][] = [];
 		const inputs: Record<string, unknown> = {};
 
@@ -38,10 +41,13 @@ export const executeJobNodes = async (job: Job) => {
 				case "independent": {
 					if (meta.value === null) {
 						throw new Error(
-							`input "${input}" of node "${node.id}" has an indepedent value that wasn't set`,
+							`input "${input}" of node "${node.id}" has an independent value that wasn't set`,
 						);
 					}
-					inputs[input] = meta.value;
+					if (node.purpose === "generator") {
+						inputs[input] = meta.value;
+						generators.push([input, 1]);
+					} else inputs[input] = meta.value;
 					break;
 				}
 				case "dependent": {
@@ -53,19 +59,31 @@ export const executeJobNodes = async (job: Job) => {
 							`input "${input}" of node "${node.id}" is dependent but ${!meta.source ? "was not set" : `was pointing to an invalid node (${meta.source.node})`}`,
 						);
 					}
-					const output = runNode(sourceNode);
-
-					if (!meta.source.entry || !(meta.source.entry in output)) {
-						throw new Error(
-							`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`}`,
-						);
-					}
+					const output = await runNode(sourceNode);
 
 					if (Array.isArray(output)) {
-						// biome-ignore lint/style/noNonNullAssertion: checked above
-						inputs[input] = output.map((o) => o[meta.source!.entry]);
+						if (
+							output.some(
+								(o) => !meta.source?.entry || !(meta.source.entry in o),
+							)
+						) {
+							throw new Error(
+								`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`} in one of its outputs`,
+							);
+						}
+						inputs[input] =
+							output.length === 1
+								? // biome-ignore lint/style/noNonNullAssertion: checked above
+									output[0][meta.source!.entry]
+								: // biome-ignore lint/style/noNonNullAssertion: checked above
+									output.map((o) => o[meta.source!.entry]);
 						generators.push([input, output.length]);
 					} else {
+						if (!meta.source.entry || !(meta.source.entry in output)) {
+							throw new Error(
+								`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`}`,
+							);
+						}
 						inputs[input] = output[meta.source.entry];
 					}
 					break;
@@ -76,20 +94,63 @@ export const executeJobNodes = async (job: Job) => {
 		return { inputs, generators };
 	};
 
-	const runNode = (node: ProjectNode): NodeOutput => {
+	const runNode = async (
+		node: ProjectNode,
+	): Promise<NodeOutput<v.ObjectEntries>> => {
 		if (node.id in resultsCache) return resultsCache[node.id];
 
-		const { inputs, generators } = resolveNodeInputs(node);
-		const handler = getNodeHandler(node.type);
+		const { inputs, generators } = await resolveNodeInputs(node);
+		const handler = getNodeHandler(node.type, job);
 		if (!handler) {
 			throw new Error(
 				`no handler was found for node "${node.id}" (node type "${node.type}")`,
 			);
 		}
 
-		const output = handler(inputs, job);
-		resultsCache[node.id] = output;
-		return output;
+		if (generators.length === 0) {
+			const output = await handler(inputs, job);
+			resultsCache[node.id] = output;
+			return output;
+		}
+		if (generators.filter((g) => Array.isArray(g)).length > 1) {
+			// TODO: terminate, this is one of the "rules" on impoexpo:
+			// "there cannot be two or more generators which output more than one value."
+		}
+
+		const iterableGenerator = generators.find((g) => g[1] > 1)?.[0];
+		if (iterableGenerator) {
+			const otherGenerators = generators.filter(
+				(g) => g[0] !== iterableGenerator,
+			);
+			if (!Array.isArray(inputs[iterableGenerator])) {
+				throw new Error("meow");
+			}
+
+			const clonedInputs = structuredClone(inputs);
+			for (const [id] of otherGenerators) {
+				console.log(inputs, inputs[id]);
+				clonedInputs[id] = inputs[id];
+			}
+
+			const outputs: NodeOutput<v.ObjectEntries> = [];
+			for (const item of inputs[iterableGenerator]) {
+				clonedInputs[iterableGenerator] = item;
+				const output = await handler(clonedInputs, job);
+				if (Array.isArray(output)) outputs.push(...output);
+				else outputs.push(output);
+			}
+			resultsCache[node.id] = outputs;
+			return outputs;
+		}
+		// biome-ignore lint/style/noUselessElse: not removed for clarity
+		else {
+			const clonedInputs = structuredClone(inputs);
+			for (const [id] of generators) clonedInputs[id] = inputs[id];
+
+			const output = await handler(clonedInputs, job);
+			resultsCache[node.id] = output;
+			return output;
+		}
 	};
 
 	try {

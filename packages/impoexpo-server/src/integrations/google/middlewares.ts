@@ -32,10 +32,11 @@ export const requireGoogleAuth = async (
 	next();
 };
 
-export const extractGoogleAuth = (req: Request): GoogleAccessTokensSchema => {
-	const encryptedString = req.get(GOOGLE_ACCESS_TOKENS_HEADER_NAME) as string;
+export const extractGoogleAuth = (
+	encryptedTokens: string,
+): GoogleAccessTokensSchema => {
 	const decrypted = JSON.parse(
-		decryptString(encryptedString, "base64", "utf8"),
+		decryptString(encryptedTokens, "base64", "utf8"),
 	);
 	if (!v.is(GoogleAccessTokensSchema, decrypted)) {
 		throw new Error(
@@ -46,7 +47,9 @@ export const extractGoogleAuth = (req: Request): GoogleAccessTokensSchema => {
 };
 
 export const getAuthenticatedGoogleClient = (req: Request) => {
-	const auth = extractGoogleAuth(req);
+	const auth = extractGoogleAuth(
+		req.get(GOOGLE_ACCESS_TOKENS_HEADER_NAME) as string,
+	);
 	const client = getGoogleClient();
 	client.setCredentials({
 		access_token: auth.accessToken,

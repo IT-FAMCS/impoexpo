@@ -1,28 +1,18 @@
 import { registerWithDefaultRenderer } from "@/features/format-editor/nodes/renderable-node-database";
-import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
 import {
 	getNodeId,
 	useFormatEditorStore,
 } from "@/features/format-editor/store";
 import { Icon } from "@iconify/react";
-import { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
-import { object, type ObjectEntries } from "valibot";
+import type { ObjectEntries } from "valibot";
 import type { RawNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-types";
+import { createGoogleFormsBaseNode } from "@impoexpo/shared/nodes/integrations/google/google-forms";
 
 export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
-	const entries: ObjectEntries = {};
-	for (const item of form.items) entries[item.id] = schemaFromString(item.type);
-	const schema = object(entries);
-
-	const base = new BaseNode({
-		category: "google-forms",
-		name: `form-${id}`,
-		outputSchema: schema,
-	});
-
-	const options: RawNodeRenderOptions<ObjectEntries, typeof schema.entries> = {
+	const base = createGoogleFormsBaseNode(id, form);
+	const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
 		searchable: false,
 		title: form.title ?? form.documentTitle,
 		header: "bg-secondary-200",

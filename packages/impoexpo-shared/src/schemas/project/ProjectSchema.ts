@@ -1,5 +1,4 @@
 import * as v from "valibot";
-import { NodePurpose } from "../../nodes/node-types";
 
 export const ProjectNodeEntrySchema = v.object({
 	type: v.picklist(["independent", "dependent"]),
@@ -16,8 +15,8 @@ export const ProjectNodeSchema = v.object({
 });
 
 export const ProjectIntegrationSchema = v.object({
-	auth: v.optional(v.record(v.string(), v.unknown()), {}),
-	data: v.optional(v.record(v.string(), v.unknown()), {}),
+	auth: v.optional(v.record(v.string(), v.unknown())),
+	data: v.optional(v.record(v.string(), v.unknown())),
 });
 
 export const ProjectSchema = v.object({

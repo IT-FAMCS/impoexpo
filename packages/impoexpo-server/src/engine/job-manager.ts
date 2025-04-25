@@ -1,9 +1,14 @@
 import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { Session } from "better-sse";
 import * as uuid from "uuid";
+import type * as v from "valibot";
 import { childLogger } from "../logger";
 import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
 import { executeJobNodes } from "./node-executor";
+import {
+	integrationNodeHandlerRegistrars,
+	type NodeHandlerFunction,
+} from "./node-handler-utils";
 
 const logger = childLogger("jobs");
 export const jobs: Map<string, Job> = new Map();
@@ -13,6 +18,10 @@ export class Job {
 	public id: string;
 	public project: Project;
 	public processing = false;
+	public customNodes: Record<
+		string,
+		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+	> = {};
 
 	constructor(id: string, project: Project) {
 		this.id = id;
@@ -51,6 +60,18 @@ export class Job {
 	public run() {
 		if (this.processing) return;
 		this.processing = true;
+
+		for (const id of Object.keys(this.project.integrations)) {
+			if (!(id in integrationNodeHandlerRegistrars)) {
+				childLogger(`jobs/${this.id}`).warn(
+					`no integration-specific node handler registrar was found for ${id}, but it's used in the job. this is likely to break things!`,
+				);
+				continue;
+			}
+
+			const registrar = integrationNodeHandlerRegistrars[id];
+			this.customNodes = { ...this.customNodes, ...registrar(this.project) };
+		}
 		executeJobNodes(this);
 	}
 }

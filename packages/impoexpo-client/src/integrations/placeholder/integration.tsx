@@ -19,7 +19,7 @@ registerIntegration({
 		useEffect(callback, []);
 		return <></>;
 	},
-	verificator: (callback) => {
+	verifier: (callback) => {
 		useEffect(callback, []);
 		return <></>;
 	},

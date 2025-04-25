@@ -1,4 +1,4 @@
-import type { ObjectEntry, BaseNode } from "./node-types";
+import type { BaseNode } from "./node-types";
 import type { ObjectEntries } from "valibot";
 import type { DefaultBaseNode } from "./node-utils";
 

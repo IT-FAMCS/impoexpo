@@ -36,7 +36,6 @@ import {
 	isEnum,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
-import useThrottle from "@/hooks/useThrottle";
 
 export default function DefaultNodeRenderer({
 	type,

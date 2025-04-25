@@ -174,7 +174,7 @@ function SourceVerificator() {
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{currentIntegration?.verificator(
+			{currentIntegration?.verifier(
 				() => {
 					setState(SourceCardState.HYDRATE_SOURCE);
 				},

@@ -1,5 +1,6 @@
 import { getNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-database";
 import { useFormatEditorStore } from "@/features/format-editor/store";
+import { allIntegrations } from "@/integrations/integrations";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type {
 	Project,
@@ -9,9 +10,8 @@ import type {
 import { create } from "zustand";
 
 export type ProjectStoreActions = {
-	hydrateNodes: () => void;
-	setIntegrationData: (key: string, data: ProjectIntegration) => void;
-	getIntegrationData: (key: string) => ProjectIntegration;
+	collectNodes: () => void;
+	collectIntegrations: () => Promise<void>;
 };
 
 export const useProjectStore = create<Project & ProjectStoreActions>(
@@ -19,11 +19,17 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 		integrations: {},
 		nodes: [],
 
-		getIntegrationData: (key) =>
-			get().integrations[key] ?? { auth: {}, data: {} },
-		setIntegrationData: (key, data) =>
-			set({ integrations: { ...get().integrations, [key]: data } }),
-		hydrateNodes() {
+		async collectIntegrations() {
+			const integrations: Record<string, ProjectIntegration> = {};
+			for (const integration of allIntegrations) {
+				if (!integration.getProjectInformation) continue;
+				integrations[integration.id] =
+					await integration.getProjectInformation();
+			}
+			set({ integrations });
+		},
+
+		collectNodes() {
 			const nodes: ProjectNode[] = [];
 			const clientNodes = useFormatEditorStore.getState().nodes;
 			const clientEdges = useFormatEditorStore.getState().edges;
@@ -70,7 +76,7 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 						}
 
 						console.warn(
-							`couldn't hydrate project state with nodes: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
+							`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
 						);
 					}
 				}
@@ -97,7 +103,7 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 						}
 
 						console.warn(
-							`couldn't hydrate project state with nodes: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
+							`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
 						);
 					}
 				}
