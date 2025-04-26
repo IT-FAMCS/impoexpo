@@ -5,36 +5,33 @@ import * as v from "valibot";
 export const NUMBER_NODE = new BaseNode({
 	category: "literals",
 	name: "number",
-	purpose: "generator",
 	inputSchema: v.object({
-		in: v.number(),
+		value: v.number(),
 	}),
 	outputSchema: v.object({
-		out: v.number(),
+		number: v.number(),
 	}),
 });
 
 export const STRING_NODE = new BaseNode({
 	category: "literals",
 	name: "string",
-	purpose: "generator",
 	inputSchema: v.object({
-		in: v.string(),
+		value: v.string(),
 	}),
 	outputSchema: v.object({
-		out: v.string(),
+		string: v.string(),
 	}),
 });
 
 export const BOOLEAN_NODE = new BaseNode({
 	category: "literals",
 	name: "boolean",
-	purpose: "generator",
 	inputSchema: v.object({
-		in: v.boolean(),
+		value: v.boolean(),
 	}),
 	outputSchema: v.object({
-		out: v.boolean(),
+		boolean: v.boolean(),
 	}),
 });
 

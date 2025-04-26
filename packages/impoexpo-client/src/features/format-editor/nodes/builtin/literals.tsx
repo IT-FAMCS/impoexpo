@@ -16,18 +16,18 @@ nodesScope(() => {
 	registerWithDefaultRenderer(literalNodes.NUMBER_NODE, {
 		title: msg`number`,
 		icon: (size) => <Icon width={size} icon="mdi:123" />,
-		inputs: { in: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly" } },
 	});
 
 	registerWithDefaultRenderer(literalNodes.STRING_NODE, {
 		title: msg`string`,
 		icon: (size) => <Icon width={size} icon="mdi:abc" />,
-		inputs: { in: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly" } },
 	});
 
 	registerWithDefaultRenderer(literalNodes.BOOLEAN_NODE, {
 		title: msg`boolean`,
 		icon: (size) => <Icon width={size} icon="mdi:checkbox-outline" />,
-		inputs: { in: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly" } },
 	});
 });

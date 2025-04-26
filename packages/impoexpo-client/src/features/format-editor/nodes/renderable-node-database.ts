@@ -129,9 +129,9 @@ export const registerWithDefaultRenderer = <
 				title:
 					options.title !== undefined ? localizableString(options.title) : "",
 				id: type,
-				aliases: (options.aliases ?? []).map((alias) =>
-					localizableString(alias),
-				),
+				aliases: localizableString(options.aliases ?? "")
+					.split(",")
+					.map((s) => s.trim()),
 				tags: Array.from(tags),
 			});
 		});

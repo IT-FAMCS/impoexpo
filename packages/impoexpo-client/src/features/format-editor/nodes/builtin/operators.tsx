@@ -3,10 +3,7 @@ import { registerCategory } from "../renderable-node-database";
 import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 import * as operatorNodes from "@impoexpo/shared/nodes/builtin/operators";
-import {
-	registerSymmetricBinaryNode,
-	registerSymmetricUnaryNode,
-} from "../common";
+import { registerBinaryNode, registerUnaryNode } from "../common";
 
 nodesScope(() => {
 	registerCategory("operators", {
@@ -15,51 +12,51 @@ nodesScope(() => {
 		icon: (size) => <Icon width={size} icon="mdi:code-brackets" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.EQUAL_NODE, {
+	registerBinaryNode(operatorNodes.EQUAL_NODE, {
 		title: msg`equal`,
-		aliases: [msg`same`],
+		aliases: msg`same`,
 		icon: (size) => <Icon width={size} icon="mdi:equal" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.AND_NODE, {
+	registerBinaryNode(operatorNodes.AND_NODE, {
 		title: msg`and`,
-		aliases: ["&&"],
+		aliases: msg`&&`,
 		icon: (size) => <Icon width={size} icon="mdi:ampersand" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.OR_NODE, {
+	registerBinaryNode(operatorNodes.OR_NODE, {
 		title: msg`or`,
-		aliases: ["||"],
+		aliases: msg`||`,
 		icon: (size) => <Icon width={size} icon="mdi:drag-vertical-variant" />,
 	});
 
-	registerSymmetricUnaryNode(operatorNodes.NOT_NODE, {
+	registerUnaryNode(operatorNodes.NOT_NODE, {
 		title: msg`not`,
-		aliases: ["!"],
+		aliases: msg`negate, !`,
 		icon: (size) => <Icon width={size} icon="mdi:exclamation" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.LESS_THAN_NODE, {
+	registerBinaryNode(operatorNodes.LESS_THAN_NODE, {
 		title: msg`less than`,
-		aliases: [msg`<`],
+		aliases: msg`<, smaller`,
 		icon: (size) => <Icon width={size} icon="mdi:less-than" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.LESS_OR_EQUAL_TO_NODE, {
+	registerBinaryNode(operatorNodes.LESS_OR_EQUAL_TO_NODE, {
 		title: msg`less or equal to`,
-		aliases: [msg`<=`],
+		aliases: msg`<=`,
 		icon: (size) => <Icon width={size} icon="mdi:less-than-or-equal" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.GREATER_THAN_NODE, {
+	registerBinaryNode(operatorNodes.GREATER_THAN_NODE, {
 		title: msg`greater than`,
-		aliases: [msg`>`],
+		aliases: msg`>, larger`,
 		icon: (size) => <Icon width={size} icon="mdi:greater-than" />,
 	});
 
-	registerSymmetricBinaryNode(operatorNodes.GREATER_OR_EQUAL_TO_NODE, {
+	registerBinaryNode(operatorNodes.GREATER_OR_EQUAL_TO_NODE, {
 		title: msg`greater or equal to`,
-		aliases: [msg`>=`],
+		aliases: msg`>=`,
 		icon: (size) => <Icon width={size} icon="mdi:greater-than-or-equal" />,
 	});
 });

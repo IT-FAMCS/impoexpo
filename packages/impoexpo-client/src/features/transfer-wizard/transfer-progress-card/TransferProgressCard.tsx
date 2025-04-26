@@ -48,8 +48,28 @@ const AnimatedAlert = motion.create(Alert);
 function ProjectStatusCard() {
 	const { jobId } = useTransferProgressCardStore();
 	if (!jobId) throw new Error("invalid state in TransferringCard"); // TODO: improve these messages
-	const { open, error, notifications, setError, setOpen, addNotification } =
-		useProjectStatusCardStore();
+	const {
+		open,
+		reconnecting,
+		message,
+		notifications,
+		setMessage,
+		setReconnecting,
+		setOpen,
+		addNotification,
+		complete,
+		terminate,
+		result,
+	} = useProjectStatusCardStore();
+
+	const error = useMemo(
+		() => !open && !reconnecting && message,
+		[open, reconnecting, message],
+	);
+
+	useEffect(() => {
+		setMessage(t`connecting to the server`);
+	}, [setMessage]);
 
 	// TODO: is this really the case?
 	// biome-ignore lint/correctness/useExhaustiveDependencies: this is called once and only once per project request, so none of the outside variables matter
@@ -58,18 +78,38 @@ function ProjectStatusCard() {
 			route(`${PROJECT_TRANSFER_STATUS_ENDPOINT}/${jobId}`),
 		);
 
-		eventSource.addEventListener("open", () => setOpen(true), false);
 		eventSource.addEventListener(
-			"error",
-			(e) => {
-				console.error(
-					`failed to connect to /project/status/${jobId} (SSE): ${e}`,
-				);
-				setError(t`failed to connect to the server via SSE`);
-				setOpen(false);
+			"open",
+			() => {
+				setReconnecting(false);
+				setOpen(true);
+				setMessage(undefined);
 			},
 			false,
 		);
+
+		eventSource.addEventListener(
+			"error",
+			(e) => {
+				// open shouldn't be used here because it's not specified (and shouldn't be!) in the dependency list
+				if (useProjectStatusCardStore.getState().open) {
+					console.warn(
+						`lost connection to /project/status/${jobId}, attempting to reconnect`,
+					);
+					setMessage(t`reconnecting to the server`);
+					setReconnecting(true);
+				} else {
+					console.error(
+						`failed to connect to /project/status/${jobId} (SSE): ${e}`,
+					);
+					setMessage(t`failed to connect to the server`);
+					setReconnecting(false);
+					setOpen(false);
+				}
+			},
+			false,
+		);
+
 		eventSource.addEventListener(
 			"notification",
 			(e) => {
@@ -79,12 +119,15 @@ function ProjectStatusCard() {
 						JSON.parse(e.data),
 					);
 					addNotification(e.lastEventId, notification);
+					if (notification.type === "error") terminate();
 				} catch (err) {
 					console.error(`notification event sent invalid payload: ${err}`);
 				}
 			},
 			false,
 		);
+
+		eventSource.addEventListener("done", complete);
 
 		return () => eventSource.close();
 	}, []);
@@ -93,18 +136,19 @@ function ProjectStatusCard() {
 		return (
 			<div className="flex flex-col items-center justify-center gap-1">
 				<Icon className="text-danger" width={48} icon="mdi:error-outline" />
-				<p className="text-center">
-					<Trans>
-						failed to connect to the server via SSE
-						<br />
-						<span className="text-small">(check the console)</span>
-					</Trans>
-				</p>
+				<p className="text-center">{message}</p>
 			</div>
 		);
 	}
-	if (!open) {
-		return <div>connecting</div>;
+	if (!error && message) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-2">
+				<CircularProgress size="lg" />
+				<p className="text-3xl">
+					<b>{message}</b>
+				</p>
+			</div>
+		);
 	}
 
 	const convertColor = (
@@ -124,19 +168,50 @@ function ProjectStatusCard() {
 
 	return (
 		<div className="flex flex-col items-center justify-center gap-2">
-			<CircularProgress size="lg" />
-			<p className="text-3xl">
-				<b>
-					<Trans>we're working on your project</Trans>
-				</b>
-			</p>
-			<p className="text-center">
-				<Trans>
-					this shouldn't take too long.
-					<br />
-					updates will appear below.
-				</Trans>
-			</p>
+			{result === undefined && (
+				<>
+					<CircularProgress size="lg" />
+					<p className="text-3xl">
+						<b>
+							<Trans>we're working on your project</Trans>
+						</b>
+					</p>
+					<p className="text-center">
+						<Trans>
+							this shouldn't take too long. updates will appear below:
+						</Trans>
+					</p>
+				</>
+			)}
+
+			{result === false && (
+				<>
+					<Icon width={72} icon="mdi:error-outline" />
+					<p className="text-3xl">
+						<b>
+							<Trans>we couldn't process your project</Trans>
+						</b>
+					</p>
+					<p className="text-center">
+						<Trans>
+							please check the last notification too see what went wrong and try
+							again.
+						</Trans>
+					</p>
+				</>
+			)}
+
+			{result === true && (
+				<>
+					<Icon width={72} icon="mdi:check-bold" />
+					<p className="text-3xl">
+						<b>
+							<Trans>done!</Trans>
+						</b>
+					</p>
+				</>
+			)}
+
 			<ScrollShadow className="max-h-[25vh] max-w-[30vw] w-full mt-2 pb-10">
 				<div className="flex flex-col h-full gap-2">
 					<AnimatePresence>

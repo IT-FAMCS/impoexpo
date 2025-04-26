@@ -39,6 +39,9 @@ export class Job {
 		serverShouldLog = false,
 	) {
 		if (!this.session) return;
+		if (serverShouldLog || type === "error")
+			childLogger(`jobs/${this.id}`)[type](message);
+
 		this.session.push(
 			{
 				type,
@@ -47,14 +50,14 @@ export class Job {
 			} satisfies ProjectStatusNotification,
 			"notification",
 		);
-		if (serverShouldLog) childLogger(`jobs/${this.id}`)[type](message);
+		this.processing = type !== "error";
 	}
 
-	public terminate(message: string) {
+	public complete() {
 		if (!this.session) return;
+		childLogger(`jobs/${this.id}`).info("job was successfully completed");
+		this.session.push({}, "done");
 		this.processing = false;
-		this.session.push(message, "terminate");
-		childLogger(`jobs/${this.id}`).info(`terminating job | reason: ${message}`);
 	}
 
 	public run() {
@@ -64,7 +67,7 @@ export class Job {
 		for (const id of Object.keys(this.project.integrations)) {
 			if (!(id in integrationNodeHandlerRegistrars)) {
 				childLogger(`jobs/${this.id}`).warn(
-					`no integration-specific node handler registrar was found for ${id}, but it's used in the job. this is likely to break things!`,
+					`no node handler registrar was found for integration ${id}, but it's used in the job. this is likely to break things!`,
 				);
 				continue;
 			}

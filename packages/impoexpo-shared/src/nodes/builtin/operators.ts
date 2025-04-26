@@ -16,7 +16,7 @@ export const EQUAL_NODE = new BaseNode({
 		inB: generic("T"),
 	}),
 	outputSchema: v.object({
-		out: v.boolean(),
+		result: v.boolean(),
 	}),
 });
 

@@ -47,7 +47,6 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 				const node: ProjectNode = {
 					id: clientNode.id,
 					type: type,
-					purpose: base.purpose,
 					inputs: {},
 					outputs: {},
 				};

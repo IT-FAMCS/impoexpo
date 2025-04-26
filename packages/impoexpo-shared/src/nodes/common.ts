@@ -14,7 +14,7 @@ export const binaryNode = <TIn extends ObjectEntry>(
 			inB: inType(),
 		}),
 		outputSchema: object({
-			out: inType(),
+			result: inType(),
 		}),
 	});
 
@@ -35,7 +35,7 @@ export const binaryNodeWithDifferentOutput = <
 			inB: inType(),
 		}),
 		outputSchema: object({
-			out: outType(),
+			result: outType(),
 		}),
 	});
 
@@ -51,7 +51,7 @@ export const unaryNode = <TIn extends ObjectEntry>(
 			in: inType(),
 		}),
 		outputSchema: object({
-			out: inType(),
+			result: inType(),
 		}),
 	});
 
@@ -71,6 +71,6 @@ export const unaryNodeWithDifferentOutput = <
 			in: inType(),
 		}),
 		outputSchema: object({
-			out: outType(),
+			result: outType(),
 		}),
 	});

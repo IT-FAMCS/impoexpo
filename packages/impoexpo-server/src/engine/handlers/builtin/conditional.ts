@@ -2,7 +2,7 @@ import { registerHandler } from "../../node-handler-utils";
 import * as conditionalNodes from "@impoexpo/shared/nodes/builtin/conditional";
 
 registerHandler(conditionalNodes.IF_NODE, (data) => ({
-	out: data.condition ? data.trueValue : data.falseValue,
+	value: data.condition ? data.trueValue : data.falseValue,
 }));
 
 registerHandler(conditionalNodes.THROW_ERROR_IF_NULL_NODE, (data, job) => {

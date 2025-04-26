@@ -48,7 +48,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 			}
 
 			try {
-				const client = getAuthenticatedGoogleClient(req);
+				const client = await getAuthenticatedGoogleClient(req);
 				const formsClient = google.forms({
 					version: "v1",
 					auth: client,
@@ -127,7 +127,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 			}
 
 			try {
-				const client = getAuthenticatedGoogleClient(req);
+				const client = await getAuthenticatedGoogleClient(req);
 				const formsClient = google.forms({
 					version: "v1",
 					auth: client,
@@ -164,7 +164,7 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 		defaultCache("1 day", cacheOnlyIfSuccessful),
 		async (req: Request, res: Response) => {
 			try {
-				const client = getAuthenticatedGoogleClient(req);
+				const client = await getAuthenticatedGoogleClient(req);
 				const driveClient = google.drive({
 					version: "v3",
 					auth: client,

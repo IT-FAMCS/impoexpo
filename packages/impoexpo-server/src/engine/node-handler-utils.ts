@@ -5,6 +5,7 @@ import { childLogger } from "../logger";
 import { glob } from "glob";
 import * as path from "node:path";
 import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 export const defaultNodeHandlers: Record<
 	string,
@@ -51,9 +52,19 @@ export const registerIntegrationNodeHandlerRegistrar = (
 	) => Record<string, NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>>,
 ) => {
 	childLogger("nodes").debug(
-		`\t\t-> registering integration-specific node handler registrar for ${id}`,
+		`\t\t-> registering node handler registrar for integration ${id}`,
 	);
 	integrationNodeHandlerRegistrars[id] = loader;
+};
+
+export const prepareNodes = async () => {
+	const start = performance.now();
+	await registerDefaultNodes();
+	await registerIntegrationNodeLoaders();
+	initializeNodes();
+	childLogger("nodes").info(
+		`--- node initialization done in ${Math.round(performance.now() - start)}ms ---`,
+	);
 };
 
 export const registerDefaultNodes = async () => {

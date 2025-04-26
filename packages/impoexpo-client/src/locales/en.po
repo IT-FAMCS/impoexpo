@@ -53,9 +53,40 @@ msgstr "undo"
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:208
+#: src/features/format-editor/FormatEditor.tsx:209
 msgid "done"
 msgstr "done"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:12
+#: src/features/format-editor/nodes/builtin/array.tsx:21
+#: src/features/format-editor/nodes/builtin/array.tsx:32
+msgid "array"
+msgstr "array"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:18
+msgid "length of array"
+msgstr "length of array"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:19
+msgid "size of array"
+msgstr "size of array"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:24
+msgid "length"
+msgstr "length"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:29
+msgid "iterate over elements of the array..."
+msgstr "iterate over elements of the array..."
+
+#: src/features/format-editor/nodes/builtin/array.tsx:30
+msgid "for each item in the array, foreach"
+msgstr "for each item in the array, foreach"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:35
+#: src/features/format-editor/nodes/builtin/conditional.tsx:51
+msgid "object"
+msgstr "object"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:12
 msgid "conditional"
@@ -78,14 +109,8 @@ msgid "value when false"
 msgstr "value when false"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:33
-#: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:38
-#: src/features/format-editor/nodes/builtin/strings.tsx:48
-#: src/features/format-editor/nodes/builtin/strings.tsx:61
-#: src/features/format-editor/nodes/common.tsx:28
-#: src/features/format-editor/nodes/common.tsx:50
-msgid "result"
-msgstr "result"
+msgid "value"
+msgstr "value"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:39
 msgid "throw error if null"
@@ -99,165 +124,87 @@ msgstr "nullable object"
 msgid "error message"
 msgstr "error message"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:51
-msgid "object"
-msgstr "object"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:13
-#~ msgid "console"
-#~ msgstr "console"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:18
-#~ msgid "print to console"
-#~ msgstr "print to console"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:20
-#~ msgid "text"
-#~ msgstr "text"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:25
-#~ msgid "testing input node"
-#~ msgstr "testing input node"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:32
-#~ msgid "test1"
-#~ msgstr "test1"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:33
-#~ msgid "next option won't have a description"
-#~ msgstr "next option won't have a description"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:35
-#~ msgid "no description!"
-#~ msgstr "no description!"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:37
-#~ msgid "test3"
-#~ msgstr "test3"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:38
-#~ msgid "the description is back!"
-#~ msgstr "the description is back!"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:45
-#~ msgid "meow"
-#~ msgstr "meow"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:45
-#~ msgid "kitty"
-#~ msgstr "kitty"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:46
-#~ msgid "bark"
-#~ msgstr "bark"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:46
-#~ msgid "doggy"
-#~ msgstr "doggy"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:51
-#~ msgid "enter a string (at least 5 characters)"
-#~ msgstr "enter a string (at least 5 characters)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:55
-#~ msgid "input a number"
-#~ msgstr "input a number"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:58
-#~ msgid "boolean"
-#~ msgstr "boolean"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:62
-#~ msgid "boolean (optional)"
-#~ msgstr "boolean (optional)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:69
-#~ msgid "testing output node"
-#~ msgstr "testing output node"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:72
-#~ msgid "yeah"
-#~ msgstr "yeah"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:73
-#~ msgid "hell yeah!"
-#~ msgstr "hell yeah!"
-
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
 msgstr "literals"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:17
 #: src/features/format-editor/nodes/builtin/strings.tsx:68
+#: src/features/format-editor/nodes/builtin/strings.tsx:81
 msgid "number"
 msgstr "number"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:23
-#: src/features/format-editor/nodes/builtin/literals.tsx:29
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
 #: src/features/format-editor/nodes/builtin/strings.tsx:71
+#: src/features/format-editor/nodes/builtin/strings.tsx:78
+#: src/features/format-editor/nodes/builtin/strings.tsx:89
 msgid "string"
 msgstr "string"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:13
+#: src/features/format-editor/nodes/builtin/literals.tsx:29
+msgid "boolean"
+msgstr "boolean"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:10
 msgid "math"
 msgstr "math"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:19
+#: src/features/format-editor/nodes/builtin/math.tsx:16
 msgid "add"
 msgstr "add"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:20
+#: src/features/format-editor/nodes/builtin/math.tsx:17
 msgid "sum"
 msgstr "sum"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:24
+#: src/features/format-editor/nodes/builtin/math.tsx:21
 msgid "subtract"
 msgstr "subtract"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:27
+#: src/features/format-editor/nodes/builtin/math.tsx:24
 msgid "multiply"
 msgstr "multiply"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:30
+#: src/features/format-editor/nodes/builtin/math.tsx:27
 msgid "divide"
 msgstr "divide"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:33
+#: src/features/format-editor/nodes/builtin/math.tsx:30
 msgid "modulo"
 msgstr "modulo"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:34
+#: src/features/format-editor/nodes/builtin/math.tsx:31
 msgid "remainder"
 msgstr "remainder"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:37
+#: src/features/format-editor/nodes/builtin/math.tsx:34
 msgid "power"
 msgstr "power"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:41
+#: src/features/format-editor/nodes/builtin/math.tsx:38
 msgid "absolute value"
 msgstr "absolute value"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:42
+#: src/features/format-editor/nodes/builtin/math.tsx:39
 msgid "abs"
 msgstr "abs"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:44
+#: src/features/format-editor/nodes/builtin/math.tsx:41
 msgid "log"
 msgstr "log"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:46
+#: src/features/format-editor/nodes/builtin/math.tsx:43
 msgid "negate"
 msgstr "negate"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:49
+#: src/features/format-editor/nodes/builtin/math.tsx:46
 msgid "square root"
 msgstr "square root"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:50
+#: src/features/format-editor/nodes/builtin/math.tsx:47
 msgid "sqrt"
 msgstr "sqrt"
 
@@ -269,77 +216,91 @@ msgstr "notifications"
 msgid "information"
 msgstr "information"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:24
+#: src/features/format-editor/nodes/builtin/notifications.tsx:22
+#: src/features/format-editor/nodes/builtin/notifications.tsx:31
+#: src/features/format-editor/nodes/builtin/notifications.tsx:40
+msgid "condition (optional)"
+msgstr "condition (optional)"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
 msgstr "warning"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:30
+#: src/features/format-editor/nodes/builtin/notifications.tsx:36
 msgid "error"
 msgstr "error"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:13
+#: src/features/format-editor/nodes/builtin/operators.tsx:10
 msgid "operators"
 msgstr "operators"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:19
+#: src/features/format-editor/nodes/builtin/operators.tsx:16
 msgid "equal"
 msgstr "equal"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:20
+#: src/features/format-editor/nodes/builtin/operators.tsx:17
 msgid "same"
 msgstr "same"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:25
+#: src/features/format-editor/nodes/builtin/operators.tsx:22
 msgid "and"
 msgstr "and"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:31
+#: src/features/format-editor/nodes/builtin/operators.tsx:23
+msgid "&&"
+msgstr "&&"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:28
 msgid "or"
 msgstr "or"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:37
+#: src/features/format-editor/nodes/builtin/operators.tsx:29
+msgid "||"
+msgstr "||"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:34
 msgid "not"
 msgstr "not"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:43
+#: src/features/format-editor/nodes/builtin/operators.tsx:35
+msgid "negate, !"
+msgstr "negate, !"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:40
 msgid "less than"
 msgstr "less than"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:44
-msgid "<"
-msgstr "<"
+#: src/features/format-editor/nodes/builtin/operators.tsx:41
+msgid "<, smaller"
+msgstr "<, smaller"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:49
+#: src/features/format-editor/nodes/builtin/operators.tsx:46
 msgid "less or equal to"
 msgstr "less or equal to"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:50
+#: src/features/format-editor/nodes/builtin/operators.tsx:47
 msgid "<="
 msgstr "<="
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:55
+#: src/features/format-editor/nodes/builtin/operators.tsx:52
 msgid "greater than"
 msgstr "greater than"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:56
-msgid ">"
-msgstr ">"
+#: src/features/format-editor/nodes/builtin/operators.tsx:53
+msgid ">, larger"
+msgstr ">, larger"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:61
+#: src/features/format-editor/nodes/builtin/operators.tsx:58
 msgid "greater or equal to"
 msgstr "greater or equal to"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:62
+#: src/features/format-editor/nodes/builtin/operators.tsx:59
 msgid ">="
 msgstr ">="
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:13
 msgid "strings"
 msgstr "strings"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:18
-#~ msgid "add strings"
-#~ msgstr "add strings"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:19
 msgid "replace in string"
@@ -354,17 +315,22 @@ msgstr "pattern"
 msgid "replacement"
 msgstr "replacement"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:38
+#: src/features/format-editor/nodes/builtin/strings.tsx:48
+#: src/features/format-editor/nodes/builtin/strings.tsx:61
+#: src/features/format-editor/nodes/common.tsx:32
+#: src/features/format-editor/nodes/common.tsx:56
+msgid "result"
+msgstr "result"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:31
 msgid "string contains X?"
 msgstr "string contains X?"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:32
-msgid "search in string"
-msgstr "search in string"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:32
-msgid "find in string"
-msgstr "find in string"
+msgid "search in string, find in string"
+msgstr "search in string, find in string"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:43
 msgid "length of string"
@@ -375,30 +341,38 @@ msgid "join strings"
 msgstr "join strings"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:54
-msgid "combine strings"
-msgstr "combine strings"
+msgid "combine strings, add strings"
+msgstr "combine strings, add strings"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:58
-msgid "delimeter (optional)"
-msgstr "delimeter (optional)"
+msgid "delimiter (optional)"
+msgstr "delimiter (optional)"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:66
 msgid "number -> string"
 msgstr "number -> string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:83
-#~ msgid "boolean -> string"
-#~ msgstr "boolean -> string"
+#: src/features/format-editor/nodes/builtin/strings.tsx:76
+msgid "string -> number"
+msgstr "string -> number"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:88
-#~ msgid "\"true\" string"
-#~ msgstr "\"true\" string"
+#: src/features/format-editor/nodes/builtin/strings.tsx:86
+msgid "split string"
+msgstr "split string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:89
-#~ msgid "\"false\" string"
-#~ msgstr "\"false\" string"
+#: src/features/format-editor/nodes/builtin/strings.tsx:87
+msgid "divide string, explode string"
+msgstr "divide string, explode string"
 
-#: src/features/format-editor/nodes/common.tsx:47
+#: src/features/format-editor/nodes/builtin/strings.tsx:90
+msgid "delimiter"
+msgstr "delimiter"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:93
+msgid "parts"
+msgstr "parts"
+
+#: src/features/format-editor/nodes/common.tsx:53
 msgid "input"
 msgstr "input"
 
@@ -406,36 +380,37 @@ msgstr "input"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:148
+#: src/features/transfer-wizard/TransferWizardPage.tsx:152
 #: src/pages/WelcomePage.tsx:46
 msgid "new data transfer"
 msgstr "new data transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:155
+#: src/features/transfer-wizard/TransferWizardPage.tsx:159
 msgid "select sources"
 msgstr "select sources"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+#: src/features/transfer-wizard/TransferWizardPage.tsx:160
 msgid "where should we read from and where should we write to?"
 msgstr "where should we read from and where should we write to?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/features/transfer-wizard/TransferWizardPage.tsx:162
 msgid "formatting"
 msgstr "formatting"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/features/transfer-wizard/TransferWizardPage.tsx:162
 msgid "how should we transfer?"
 msgstr "how should we transfer?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/transfer-wizard/TransferWizardPage.tsx:163
 msgid "transfer"
 msgstr "transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/transfer-wizard/TransferWizardPage.tsx:163
 msgid "where the magic happens"
 msgstr "where the magic happens"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:160
+#: src/features/transfer-wizard/TransferWizardPage.tsx:164
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "done!"
 msgstr "done!"
 
@@ -456,39 +431,46 @@ msgid "add another"
 msgstr "add another"
 
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
-#: src/integrations/google/GoogleVerificator.tsx:58
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:258
+#: src/integrations/google/GoogleVerifier.tsx:58
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
 msgid "next"
 msgstr "next"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:68
-msgid "failed to connect to the server via SSE"
-msgstr "failed to connect to the server via SSE"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:71
+msgid "connecting to the server"
+msgstr "connecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:97
-msgid "failed to connect to the server via SSE<0/><1>(check the console)</1>"
-msgstr "failed to connect to the server via SSE<0/><1>(check the console)</1>"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:99
+msgid "reconnecting to the server"
+msgstr "reconnecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:130
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:105
+msgid "failed to connect to the server"
+msgstr "failed to connect to the server"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:176
 msgid "we're working on your project"
 msgstr "we're working on your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:134
-msgid "this shouldn't take too long.<0/>updates will appear below."
-msgstr "this shouldn't take too long.<0/>updates will appear below."
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:180
+msgid "this shouldn't take too long. updates will appear below:"
+msgstr "this shouldn't take too long. updates will appear below:"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:192
+msgid "we couldn't process your project"
+msgstr "we couldn't process your project"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:196
+msgid "please check the last notification too see what went wrong and try again."
+msgstr "please check the last notification too see what went wrong and try again."
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:267
 msgid "uploading your project"
 msgstr "uploading your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:276
 msgid "couldn't upload your project"
 msgstr "couldn't upload your project"
-
-#: src/integrations/console/ConsoleIntegration.tsx:12
-#: src/integrations/console/ConsoleIntegration.tsx:39
-#~ msgid "Console"
-#~ msgstr "Console"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -518,57 +500,57 @@ msgstr "login via google"
 msgid "an error occurred during login:"
 msgstr "an error occurred during login:"
 
-#: src/integrations/google/GoogleVerificator.tsx:26
+#: src/integrations/google/GoogleVerifier.tsx:26
 msgid "is this you?"
 msgstr "is this you?"
 
-#: src/integrations/google/GoogleVerificator.tsx:50
+#: src/integrations/google/GoogleVerifier.tsx:50
 msgid "relogin"
 msgstr "relogin"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:84
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:79
 msgid "receiving the form's layout"
 msgstr "receiving the form's layout"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:93
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:88
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "failed to receive the form's layout (and create a node for it)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:95
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:133
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:90
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:128
 msgid "back to form selection"
 msgstr "back to form selection"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:122
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:117
 msgid "checking read permissions for the form"
 msgstr "checking read permissions for the form"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:131
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:126
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "couldn't verify read permissions for the form (or their lack of)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:175
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:170
 msgid "receiving a list of your forms"
 msgstr "receiving a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:184
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:179
 msgid "couldn't receive a list of your forms"
 msgstr "couldn't receive a list of your forms"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:194
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:189
 msgid "select a form:"
 msgstr "select a form:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:201
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:237
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:232
 msgid "back to source selection"
 msgstr "back to source selection"
 
-#: src/integrations/google/google-forms/integration.tsx:16
-#: src/integrations/google/google-forms/integration.tsx:59
+#: src/integrations/google/google-forms/integration.tsx:22
+#: src/integrations/google/google-forms/integration.tsx:71
 msgid "Google Forms"
 msgstr "Google Forms"
 

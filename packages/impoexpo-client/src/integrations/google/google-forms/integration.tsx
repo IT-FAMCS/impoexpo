@@ -40,8 +40,10 @@ registerIntegration({
 
 	async onProjectInformationLoaded(data) {
 		if (!v.is(GoogleFormsProjectIntegrationSchema, data)) return;
-		for (const [id, layout] of Object.entries(data.data.forms))
+		for (const [id, layout] of Object.entries(data.data.forms)) {
+			useGoogleFormsHydratorStore.getState().addUsedForm(id, layout);
 			registerGoogleFormNode(id, layout);
+		}
 	},
 
 	authenticator: (callback) => (

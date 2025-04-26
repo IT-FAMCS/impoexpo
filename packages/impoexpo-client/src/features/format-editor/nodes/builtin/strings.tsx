@@ -23,19 +23,19 @@ nodesScope(() => {
 			replacement: { title: msg`replacement` },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			result: { title: msg`result` },
 		},
 	});
 
 	registerWithDefaultRenderer(stringNodes.CONTAINS_NODE, {
 		title: msg`string contains X?`,
-		aliases: [msg`search in string`, msg`find in string`],
+		aliases: msg`search in string, find in string`,
 		inputs: {
 			string: { title: msg`string` },
 			pattern: { title: msg`pattern` },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			result: { title: msg`result` },
 		},
 	});
 
@@ -45,20 +45,20 @@ nodesScope(() => {
 			string: { title: msg`string` },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			length: { title: msg`result` },
 		},
 	});
 
 	registerWithDefaultRenderer(stringNodes.JOIN_STRINGS_NODE, {
 		title: msg`join strings`,
-		aliases: [msg`combine strings`],
+		aliases: msg`combine strings, add strings`,
 		inputs: {
 			stringA: { title: "A" },
 			stringB: { title: "B" },
-			delimiter: { title: msg`delimeter (optional)` },
+			delimiter: { title: msg`delimiter (optional)` },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			result: { title: msg`result` },
 		},
 	});
 
@@ -68,7 +68,29 @@ nodesScope(() => {
 			number: { title: msg`number` },
 		},
 		outputs: {
-			out: { title: msg`string` },
+			string: { title: msg`string` },
+		},
+	});
+
+	registerWithDefaultRenderer(stringNodes.STRING_TO_NUMBER_NODE, {
+		title: msg`string -> number`,
+		inputs: {
+			string: { title: msg`string` },
+		},
+		outputs: {
+			number: { title: msg`number` },
+		},
+	});
+
+	registerWithDefaultRenderer(stringNodes.SPLIT_STRING_NODE, {
+		title: msg`split string`,
+		aliases: msg`divide string, explode string`,
+		inputs: {
+			string: { title: msg`string` },
+			delimiter: { title: msg`delimiter` },
+		},
+		outputs: {
+			parts: { title: msg`parts` },
 		},
 	});
 });

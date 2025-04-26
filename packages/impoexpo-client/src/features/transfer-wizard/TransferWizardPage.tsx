@@ -31,7 +31,6 @@ import { useQuery } from "@tanstack/react-query";
 import { importBuiltinNodes } from "../format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
-import { allIntegrations } from "@/integrations/integrations";
 
 const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {

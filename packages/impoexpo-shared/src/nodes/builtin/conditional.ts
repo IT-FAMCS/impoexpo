@@ -12,7 +12,7 @@ export const IF_NODE = new BaseNode({
 		falseValue: generic("T"),
 	}),
 	outputSchema: v.object({
-		out: generic("T"),
+		value: generic("T"),
 	}),
 });
 

@@ -8,6 +8,7 @@ export const INFORMATION_NOTIFICATION_NODE = new BaseNode({
 	category: "notifications",
 	inputSchema: v.object({
 		message: v.string(),
+		condition: v.optional(v.boolean(), true),
 	}),
 });
 
@@ -16,6 +17,7 @@ export const WARNING_NOTIFICATION_NODE = new BaseNode({
 	category: "notifications",
 	inputSchema: v.object({
 		message: v.string(),
+		condition: v.optional(v.boolean(), true),
 	}),
 });
 
@@ -24,6 +26,7 @@ export const ERROR_NOTIFICATION_NODE = new BaseNode({
 	category: "notifications",
 	inputSchema: v.object({
 		message: v.string(),
+		condition: v.optional(v.boolean(), true),
 	}),
 });
 

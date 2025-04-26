@@ -5,8 +5,9 @@ import {
 	type NodeOutput,
 	type NodeHandlerFunction,
 } from "./node-handler-utils";
-import type * as v from "valibot";
+import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
+import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 
 export const getNodeHandler = (
 	type: string,
@@ -19,10 +20,15 @@ export const getNodeHandler = (
 
 export const executeJobNodes = async (job: Job) => {
 	const terminators = job.project.nodes.filter(
-		(n) => n.purpose === "terminator",
+		(n) =>
+			Object.keys(baseNodesMap.get(n.type)?.outputSchema?.entries ?? {})
+				.length === 0,
 	);
 	if (terminators.length === 0) {
-		job.terminate("no terminator nodes found; there's nothing to execute");
+		job.notify(
+			"error",
+			"no terminator nodes found; there's nothing to execute",
+		);
 		return;
 	}
 
@@ -31,67 +37,72 @@ export const executeJobNodes = async (job: Job) => {
 		node: ProjectNode,
 	): Promise<{
 		inputs: Record<string, unknown>;
-		generators: [string, number][];
+		iterators: [string, number][];
 	}> => {
-		const generators: [string, number][] = [];
+		const iterators: [string, number][] = [];
 		const inputs: Record<string, unknown> = {};
 
-		for (const [input, meta] of Object.entries(node.inputs)) {
-			switch (meta.type) {
-				case "independent": {
-					if (meta.value === null) {
-						throw new Error(
-							`input "${input}" of node "${node.id}" has an independent value that wasn't set`,
-						);
-					}
-					if (node.purpose === "generator") {
+		const base = baseNodesMap.get(node.type);
+		if (!base) {
+			throw new Error(`no node base was found for node type "${node.type}"`);
+		}
+		for (const [input, schema] of Object.entries(
+			base.inputSchema?.entries ?? {},
+		)) {
+			if (input in node.inputs) {
+				const meta = node.inputs[input];
+				switch (meta.type) {
+					case "independent": {
+						if (meta.value === null) {
+							throw new Error(
+								`input "${input}" of node "${node.id}" has an independent value that wasn't set`,
+							);
+						}
 						inputs[input] = meta.value;
-						generators.push([input, 1]);
-					} else inputs[input] = meta.value;
-					break;
-				}
-				case "dependent": {
-					const sourceNode = job.project.nodes.find(
-						(n) => n.id === meta.source?.node,
-					);
-					if (!meta.source || !sourceNode) {
-						throw new Error(
-							`input "${input}" of node "${node.id}" is dependent but ${!meta.source ? "was not set" : `was pointing to an invalid node (${meta.source.node})`}`,
+						break;
+					}
+					case "dependent": {
+						const sourceNode = job.project.nodes.find(
+							(n) => n.id === meta.source?.node,
 						);
-					}
-					const output = await runNode(sourceNode);
+						if (!meta.source || !sourceNode) {
+							throw new Error(
+								`input "${input}" of node "${node.id}" is dependent but ${!meta.source ? "was not set" : `was pointing to an invalid node (${meta.source.node})`}`,
+							);
+						}
+						const output = await runNode(sourceNode);
 
-					if (Array.isArray(output)) {
-						if (
-							output.some(
-								(o) => !meta.source?.entry || !(meta.source.entry in o),
-							)
-						) {
-							throw new Error(
-								`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`} in one of its outputs`,
-							);
+						if (Array.isArray(output)) {
+							if (
+								output.some(
+									(o) => !meta.source?.entry || !(meta.source.entry in o),
+								)
+							) {
+								throw new Error(
+									`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`} in one of its outputs`,
+								);
+							}
+
+							// biome-ignore lint/style/noNonNullAssertion: checked above
+							inputs[input] = output.map((o) => o[meta.source!.entry]);
+							iterators.push([input, output.length]);
+						} else {
+							if (!meta.source.entry || !(meta.source.entry in output)) {
+								throw new Error(
+									`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`}`,
+								);
+							}
+							inputs[input] = output[meta.source.entry];
 						}
-						inputs[input] =
-							output.length === 1
-								? // biome-ignore lint/style/noNonNullAssertion: checked above
-									output[0][meta.source!.entry]
-								: // biome-ignore lint/style/noNonNullAssertion: checked above
-									output.map((o) => o[meta.source!.entry]);
-						generators.push([input, output.length]);
-					} else {
-						if (!meta.source.entry || !(meta.source.entry in output)) {
-							throw new Error(
-								`input "${input}" of node "${node.id}" is dependent but ${!meta.source.entry ? "the source entry was not set" : `the source node (${meta.source.node}) does not have an output named "${meta.source.entry}"`}`,
-							);
-						}
-						inputs[input] = output[meta.source.entry];
+						break;
 					}
-					break;
 				}
+			} else {
+				inputs[input] = v.getDefault(schema);
 			}
 		}
 
-		return { inputs, generators };
+		return { inputs, iterators };
 	};
 
 	const runNode = async (
@@ -99,7 +110,7 @@ export const executeJobNodes = async (job: Job) => {
 	): Promise<NodeOutput<v.ObjectEntries>> => {
 		if (node.id in resultsCache) return resultsCache[node.id];
 
-		const { inputs, generators } = await resolveNodeInputs(node);
+		const { inputs, iterators } = await resolveNodeInputs(node);
 		const handler = getNodeHandler(node.type, job);
 		if (!handler) {
 			throw new Error(
@@ -107,57 +118,47 @@ export const executeJobNodes = async (job: Job) => {
 			);
 		}
 
-		if (generators.length === 0) {
+		if (iterators.length === 0) {
 			const output = await handler(inputs, job);
 			resultsCache[node.id] = output;
 			return output;
 		}
-		if (generators.filter((g) => Array.isArray(g)).length > 1) {
-			// TODO: terminate, this is one of the "rules" on impoexpo:
-			// "there cannot be two or more generators which output more than one value."
-		}
-
-		const iterableGenerator = generators.find((g) => g[1] > 1)?.[0];
-		if (iterableGenerator) {
-			const otherGenerators = generators.filter(
-				(g) => g[0] !== iterableGenerator,
+		if (
+			iterators.some(([_, length]) =>
+				iterators.find(([_, otherLength]) => length !== otherLength),
+			)
+		) {
+			// "first rule violated" be so fr right now
+			throw new Error(
+				"first rule of impoexpo violated: there cannot be two or more iterators which output different amounts of objects",
 			);
-			if (!Array.isArray(inputs[iterableGenerator])) {
-				throw new Error("meow");
-			}
-
-			const clonedInputs = structuredClone(inputs);
-			for (const [id] of otherGenerators) {
-				console.log(inputs, inputs[id]);
-				clonedInputs[id] = inputs[id];
-			}
-
-			const outputs: NodeOutput<v.ObjectEntries> = [];
-			for (const item of inputs[iterableGenerator]) {
-				clonedInputs[iterableGenerator] = item;
-				const output = await handler(clonedInputs, job);
-				if (Array.isArray(output)) outputs.push(...output);
-				else outputs.push(output);
-			}
-			resultsCache[node.id] = outputs;
-			return outputs;
 		}
-		// biome-ignore lint/style/noUselessElse: not removed for clarity
-		else {
-			const clonedInputs = structuredClone(inputs);
-			for (const [id] of generators) clonedInputs[id] = inputs[id];
+
+		const clonedInputs = structuredClone(inputs);
+		const outputs: NodeOutput<v.ObjectEntries> = [];
+
+		for (let it = 0; it < iterators[0][1]; it++) {
+			for (const [iterator, _] of iterators) {
+				if (!(iterator in inputs) || !Array.isArray(inputs[iterator]))
+					throw new Error("meow");
+				clonedInputs[iterator] = inputs[iterator][it];
+			}
 
 			const output = await handler(clonedInputs, job);
-			resultsCache[node.id] = output;
-			return output;
+			if (Array.isArray(output)) outputs.push(...output);
+			else outputs.push(output);
 		}
+
+		resultsCache[node.id] = outputs;
+		return outputs;
 	};
 
 	try {
 		for (const node of terminators) {
-			runNode(node);
+			await runNode(node);
 		}
+		job.complete();
 	} catch (err) {
-		job.terminate(`${err}`);
+		job.notify("error", `${err}`);
 	}
 };

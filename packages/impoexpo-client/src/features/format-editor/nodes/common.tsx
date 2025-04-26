@@ -1,18 +1,22 @@
 import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { registerWithDefaultRenderer } from "./renderable-node-database";
-import type {
-	symmetricBinaryNode,
-	symmetricUnaryNode,
-} from "@impoexpo/shared/nodes/common";
 import type { IconRenderFunction } from "./renderable-node-types";
+import type {
+	binaryNode,
+	binaryNodeWithDifferentOutput,
+	unaryNode,
+	unaryNodeWithDifferentOutput,
+} from "@impoexpo/shared/nodes/common";
 
-type BinaryNode = ReturnType<typeof symmetricBinaryNode>;
-export const registerSymmetricBinaryNode = (
+type BinaryNode =
+	| ReturnType<typeof binaryNode>
+	| ReturnType<typeof binaryNodeWithDifferentOutput>;
+export const registerBinaryNode = (
 	node: BinaryNode,
 	data: {
 		title: MessageDescriptor | string;
-		aliases?: (MessageDescriptor | string)[];
+		aliases?: MessageDescriptor | string;
 		icon?: IconRenderFunction;
 		header?: string;
 		searchable?: boolean;
@@ -25,17 +29,19 @@ export const registerSymmetricBinaryNode = (
 			inB: { title: "B" },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			result: { title: msg`result` },
 		},
 	});
 };
 
-type UnaryNode = ReturnType<typeof symmetricUnaryNode>;
-export const registerSymmetricUnaryNode = (
+type UnaryNode =
+	| ReturnType<typeof unaryNode>
+	| ReturnType<typeof unaryNodeWithDifferentOutput>;
+export const registerUnaryNode = (
 	node: UnaryNode,
 	data: {
 		title: MessageDescriptor | string;
-		aliases?: (MessageDescriptor | string)[];
+		aliases?: MessageDescriptor | string;
 		icon?: IconRenderFunction;
 		header?: string;
 		searchable?: boolean;
@@ -47,7 +53,7 @@ export const registerSymmetricUnaryNode = (
 			in: { title: msg`input` },
 		},
 		outputs: {
-			out: { title: msg`result` },
+			result: { title: msg`result` },
 		},
 	});
 };

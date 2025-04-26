@@ -12,7 +12,7 @@ export const REPLACE_NODE = new BaseNode({
 		replacement: v.string(),
 	}),
 	outputSchema: v.object({
-		out: v.string(),
+		result: v.string(),
 	}),
 });
 
@@ -24,7 +24,7 @@ export const CONTAINS_NODE = new BaseNode({
 		pattern: v.string(),
 	}),
 	outputSchema: v.object({
-		out: v.boolean(),
+		result: v.boolean(),
 	}),
 });
 
@@ -35,7 +35,7 @@ export const LENGTH_NODE = new BaseNode({
 		string: v.string(),
 	}),
 	outputSchema: v.object({
-		out: v.number(),
+		length: v.number(),
 	}),
 });
 
@@ -48,7 +48,7 @@ export const JOIN_STRINGS_NODE = new BaseNode({
 		delimiter: v.optional(v.string(), ""),
 	}),
 	outputSchema: v.object({
-		out: v.string(),
+		result: v.string(),
 	}),
 });
 
@@ -59,7 +59,30 @@ export const NUMBER_TO_STRING_NODE = new BaseNode({
 		number: v.number(),
 	}),
 	outputSchema: v.object({
-		out: v.string(),
+		string: v.string(),
+	}),
+});
+
+export const STRING_TO_NUMBER_NODE = new BaseNode({
+	category: "string",
+	name: "string-to-number",
+	inputSchema: v.object({
+		string: v.string(),
+	}),
+	outputSchema: v.object({
+		number: v.nullable(v.number()),
+	}),
+});
+
+export const SPLIT_STRING_NODE = new BaseNode({
+	category: "string",
+	name: "split-string",
+	inputSchema: v.object({
+		string: v.string(),
+		delimiter: v.string(),
+	}),
+	outputSchema: v.object({
+		parts: v.array(v.string()),
 	}),
 });
 
@@ -70,5 +93,7 @@ nodesScope(() => {
 		LENGTH_NODE,
 		JOIN_STRINGS_NODE,
 		NUMBER_TO_STRING_NODE,
+		STRING_TO_NUMBER_NODE,
+		SPLIT_STRING_NODE,
 	);
 });

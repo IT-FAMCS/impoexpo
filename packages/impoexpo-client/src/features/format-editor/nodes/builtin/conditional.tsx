@@ -29,8 +29,8 @@ nodesScope(() => {
 			},
 		},
 		outputs: {
-			out: {
-				title: msg`result`,
+			value: {
+				title: msg`value`,
 			},
 		},
 	});

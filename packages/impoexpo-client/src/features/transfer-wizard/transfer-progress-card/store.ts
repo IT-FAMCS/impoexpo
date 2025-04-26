@@ -23,11 +23,17 @@ export const useTransferProgressCardStore =
 
 export type ProjectStatusCardStore = {
 	open: boolean;
-	error?: string;
+	reconnecting: boolean;
+	message?: string;
 	notifications: Record<string, ProjectStatusNotification>;
+	result?: boolean;
+
+	terminate: () => void;
+	complete: () => void;
 
 	setOpen: (open: boolean) => void;
-	setError: (error?: string) => void;
+	setReconnecting: (reconnecting: boolean) => void;
+	setMessage: (message?: string) => void;
 	addNotification: (
 		id: string,
 		notification: ProjectStatusNotification,
@@ -37,11 +43,15 @@ export type ProjectStatusCardStore = {
 export const useProjectStatusCardStore =
 	createResettable<ProjectStatusCardStore>(WIZARD_STORE_CATEGORY)((set) => ({
 		open: false,
-		error: undefined,
+		reconnecting: false,
 		notifications: {},
 
+		terminate: () => set({ result: false }),
+		complete: () => set({ result: true }),
+
 		setOpen: (open) => set({ open }),
-		setError: (error) => set({ error }),
+		setReconnecting: (reconnecting) => set({ reconnecting }),
+		setMessage: (message) => set({ message }),
 		addNotification: (id, notification) =>
 			set((state) => ({
 				notifications: { ...state.notifications, [id]: notification },

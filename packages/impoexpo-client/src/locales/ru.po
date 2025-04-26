@@ -53,9 +53,40 @@ msgstr "отменить"
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:208
+#: src/features/format-editor/FormatEditor.tsx:209
 msgid "done"
 msgstr "далее"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:12
+#: src/features/format-editor/nodes/builtin/array.tsx:21
+#: src/features/format-editor/nodes/builtin/array.tsx:32
+msgid "array"
+msgstr "массив"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:18
+msgid "length of array"
+msgstr "размер массива"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:19
+msgid "size of array"
+msgstr "длина массива"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:24
+msgid "length"
+msgstr "размер"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:29
+msgid "iterate over elements of the array..."
+msgstr "пройтись по каждому элементу массива..."
+
+#: src/features/format-editor/nodes/builtin/array.tsx:30
+msgid "for each item in the array, foreach"
+msgstr "для каждого элемента в массива, для каждого"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:35
+#: src/features/format-editor/nodes/builtin/conditional.tsx:51
+msgid "object"
+msgstr "объект"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:12
 msgid "conditional"
@@ -78,14 +109,8 @@ msgid "value when false"
 msgstr "значение когда \"ложь\""
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:33
-#: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:38
-#: src/features/format-editor/nodes/builtin/strings.tsx:48
-#: src/features/format-editor/nodes/builtin/strings.tsx:61
-#: src/features/format-editor/nodes/common.tsx:28
-#: src/features/format-editor/nodes/common.tsx:50
-msgid "result"
-msgstr "результат"
+msgid "value"
+msgstr "значение"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:39
 msgid "throw error if null"
@@ -99,165 +124,87 @@ msgstr "nullable объект"
 msgid "error message"
 msgstr "сообщение об ошибке"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:51
-msgid "object"
-msgstr "объект"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:13
-#~ msgid "console"
-#~ msgstr "консоль"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:18
-#~ msgid "print to console"
-#~ msgstr "вывести в консоль"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:20
-#~ msgid "text"
-#~ msgstr "текст"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:25
-#~ msgid "testing input node"
-#~ msgstr "тестовый входной граф"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:32
-#~ msgid "test1"
-#~ msgstr "тест1"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:33
-#~ msgid "next option won't have a description"
-#~ msgstr "следующая опция будет без описания"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:35
-#~ msgid "no description!"
-#~ msgstr "без описания!"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:37
-#~ msgid "test3"
-#~ msgstr "тест3"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:38
-#~ msgid "the description is back!"
-#~ msgstr "описание снова есть!"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:45
-#~ msgid "meow"
-#~ msgstr "мяу"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:45
-#~ msgid "kitty"
-#~ msgstr "котик"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:46
-#~ msgid "bark"
-#~ msgstr "гав"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:46
-#~ msgid "doggy"
-#~ msgstr "собакин"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:51
-#~ msgid "enter a string (at least 5 characters)"
-#~ msgstr "введите строку (как минимум 5 символов)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:55
-#~ msgid "input a number"
-#~ msgstr "введите число"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:58
-#~ msgid "boolean"
-#~ msgstr "флаг"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:62
-#~ msgid "boolean (optional)"
-#~ msgstr "флаг (необязательный)"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:69
-#~ msgid "testing output node"
-#~ msgstr "тестовый выходной граф"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:72
-#~ msgid "yeah"
-#~ msgstr "ага"
-
-#: src/features/format-editor/nodes/builtin/console.tsx:73
-#~ msgid "hell yeah!"
-#~ msgstr "hell yeah!"
-
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
 msgstr "литералы"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:17
 #: src/features/format-editor/nodes/builtin/strings.tsx:68
+#: src/features/format-editor/nodes/builtin/strings.tsx:81
 msgid "number"
 msgstr "число"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:23
-#: src/features/format-editor/nodes/builtin/literals.tsx:29
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
 #: src/features/format-editor/nodes/builtin/strings.tsx:71
+#: src/features/format-editor/nodes/builtin/strings.tsx:78
+#: src/features/format-editor/nodes/builtin/strings.tsx:89
 msgid "string"
 msgstr "строка"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:13
+#: src/features/format-editor/nodes/builtin/literals.tsx:29
+msgid "boolean"
+msgstr "флаг"
+
+#: src/features/format-editor/nodes/builtin/math.tsx:10
 msgid "math"
 msgstr "математика"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:19
+#: src/features/format-editor/nodes/builtin/math.tsx:16
 msgid "add"
 msgstr "сложить"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:20
+#: src/features/format-editor/nodes/builtin/math.tsx:17
 msgid "sum"
 msgstr "сумма"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:24
+#: src/features/format-editor/nodes/builtin/math.tsx:21
 msgid "subtract"
 msgstr "вычесть"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:27
+#: src/features/format-editor/nodes/builtin/math.tsx:24
 msgid "multiply"
 msgstr "умножить"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:30
+#: src/features/format-editor/nodes/builtin/math.tsx:27
 msgid "divide"
 msgstr "делить"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:33
+#: src/features/format-editor/nodes/builtin/math.tsx:30
 msgid "modulo"
 msgstr "остаток от деления"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:34
+#: src/features/format-editor/nodes/builtin/math.tsx:31
 msgid "remainder"
 msgstr "деление с остатком"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:37
+#: src/features/format-editor/nodes/builtin/math.tsx:34
 msgid "power"
 msgstr "возвести в степень"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:41
+#: src/features/format-editor/nodes/builtin/math.tsx:38
 msgid "absolute value"
 msgstr "модуль"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:42
+#: src/features/format-editor/nodes/builtin/math.tsx:39
 msgid "abs"
 msgstr "abs"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:44
+#: src/features/format-editor/nodes/builtin/math.tsx:41
 msgid "log"
 msgstr "логарифм"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:46
+#: src/features/format-editor/nodes/builtin/math.tsx:43
 msgid "negate"
 msgstr "отрицать"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:49
+#: src/features/format-editor/nodes/builtin/math.tsx:46
 msgid "square root"
 msgstr "квадратный корень"
 
-#: src/features/format-editor/nodes/builtin/math.tsx:50
+#: src/features/format-editor/nodes/builtin/math.tsx:47
 msgid "sqrt"
 msgstr "sqrt"
 
@@ -269,77 +216,91 @@ msgstr "уведомления"
 msgid "information"
 msgstr "информация"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:24
+#: src/features/format-editor/nodes/builtin/notifications.tsx:22
+#: src/features/format-editor/nodes/builtin/notifications.tsx:31
+#: src/features/format-editor/nodes/builtin/notifications.tsx:40
+msgid "condition (optional)"
+msgstr "условие (необязательно)"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
 msgstr "предупреждение"
 
-#: src/features/format-editor/nodes/builtin/notifications.tsx:30
+#: src/features/format-editor/nodes/builtin/notifications.tsx:36
 msgid "error"
 msgstr "ошибка"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:13
+#: src/features/format-editor/nodes/builtin/operators.tsx:10
 msgid "operators"
 msgstr "операторы"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:19
+#: src/features/format-editor/nodes/builtin/operators.tsx:16
 msgid "equal"
 msgstr "равно..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:20
+#: src/features/format-editor/nodes/builtin/operators.tsx:17
 msgid "same"
 msgstr "одинаковы"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:25
+#: src/features/format-editor/nodes/builtin/operators.tsx:22
 msgid "and"
 msgstr "и..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:31
+#: src/features/format-editor/nodes/builtin/operators.tsx:23
+msgid "&&"
+msgstr "&&, оба"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:28
 msgid "or"
 msgstr "или..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:37
+#: src/features/format-editor/nodes/builtin/operators.tsx:29
+msgid "||"
+msgstr "||"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:34
 msgid "not"
 msgstr "не..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:43
+#: src/features/format-editor/nodes/builtin/operators.tsx:35
+msgid "negate, !"
+msgstr "отрицание, !"
+
+#: src/features/format-editor/nodes/builtin/operators.tsx:40
 msgid "less than"
 msgstr "меньше чем..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:44
-msgid "<"
-msgstr "<"
+#: src/features/format-editor/nodes/builtin/operators.tsx:41
+msgid "<, smaller"
+msgstr "<, строго меньше"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:49
+#: src/features/format-editor/nodes/builtin/operators.tsx:46
 msgid "less or equal to"
 msgstr "меньше или равно..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:50
+#: src/features/format-editor/nodes/builtin/operators.tsx:47
 msgid "<="
 msgstr "<="
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:55
+#: src/features/format-editor/nodes/builtin/operators.tsx:52
 msgid "greater than"
 msgstr "больше чем..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:56
-msgid ">"
-msgstr ">"
+#: src/features/format-editor/nodes/builtin/operators.tsx:53
+msgid ">, larger"
+msgstr ">, строго больше"
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:61
+#: src/features/format-editor/nodes/builtin/operators.tsx:58
 msgid "greater or equal to"
 msgstr "больше или равно..."
 
-#: src/features/format-editor/nodes/builtin/operators.tsx:62
+#: src/features/format-editor/nodes/builtin/operators.tsx:59
 msgid ">="
 msgstr ">="
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:13
 msgid "strings"
 msgstr "строки"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:18
-#~ msgid "add strings"
-#~ msgstr "сложить строки"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:19
 msgid "replace in string"
@@ -354,17 +315,22 @@ msgstr "образец"
 msgid "replacement"
 msgstr "замена"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:38
+#: src/features/format-editor/nodes/builtin/strings.tsx:48
+#: src/features/format-editor/nodes/builtin/strings.tsx:61
+#: src/features/format-editor/nodes/common.tsx:32
+#: src/features/format-editor/nodes/common.tsx:56
+msgid "result"
+msgstr "результат"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:31
 msgid "string contains X?"
 msgstr "строка содержит X?"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:32
-msgid "search in string"
-msgstr "поиск в строке"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:32
-msgid "find in string"
-msgstr "найти в строке"
+msgid "search in string, find in string"
+msgstr "найти в строке, поиск в строке"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:43
 msgid "length of string"
@@ -372,33 +338,41 @@ msgstr "длина строки"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:53
 msgid "join strings"
-msgstr "добавить строки"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:54
-msgid "combine strings"
 msgstr "объединить строки"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:54
+msgid "combine strings, add strings"
+msgstr "добавить строки, сложить строки, добавить строки"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:58
-msgid "delimeter (optional)"
+msgid "delimiter (optional)"
 msgstr "разделитель (необязательно)"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:66
 msgid "number -> string"
 msgstr "число -> строка"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:83
-#~ msgid "boolean -> string"
-#~ msgstr "флаг -> число"
+#: src/features/format-editor/nodes/builtin/strings.tsx:76
+msgid "string -> number"
+msgstr "строка -> число"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:88
-#~ msgid "\"true\" string"
-#~ msgstr "строка \"истина\""
+#: src/features/format-editor/nodes/builtin/strings.tsx:86
+msgid "split string"
+msgstr "разбить строку"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:89
-#~ msgid "\"false\" string"
-#~ msgstr "строка \"ложь\""
+#: src/features/format-editor/nodes/builtin/strings.tsx:87
+msgid "divide string, explode string"
+msgstr "разделить строку, поделить строку на части"
 
-#: src/features/format-editor/nodes/common.tsx:47
+#: src/features/format-editor/nodes/builtin/strings.tsx:90
+msgid "delimiter"
+msgstr "разделитель"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:93
+msgid "parts"
+msgstr "части"
+
+#: src/features/format-editor/nodes/common.tsx:53
 msgid "input"
 msgstr "ввод"
 
@@ -406,36 +380,37 @@ msgstr "ввод"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:148
+#: src/features/transfer-wizard/TransferWizardPage.tsx:152
 #: src/pages/WelcomePage.tsx:46
 msgid "new data transfer"
 msgstr "новый перенос данных"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:155
+#: src/features/transfer-wizard/TransferWizardPage.tsx:159
 msgid "select sources"
 msgstr "выбор источников"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:156
+#: src/features/transfer-wizard/TransferWizardPage.tsx:160
 msgid "where should we read from and where should we write to?"
 msgstr "откуда и куда переносим"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/features/transfer-wizard/TransferWizardPage.tsx:162
 msgid "formatting"
 msgstr "форматирование"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/features/transfer-wizard/TransferWizardPage.tsx:162
 msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/transfer-wizard/TransferWizardPage.tsx:163
 msgid "transfer"
 msgstr "перенесение"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/transfer-wizard/TransferWizardPage.tsx:163
 msgid "where the magic happens"
 msgstr "where the magic happens"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:160
+#: src/features/transfer-wizard/TransferWizardPage.tsx:164
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "done!"
 msgstr "готово!"
 
@@ -456,39 +431,46 @@ msgid "add another"
 msgstr "добавить ещё"
 
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
-#: src/integrations/google/GoogleVerificator.tsx:58
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:258
+#: src/integrations/google/GoogleVerifier.tsx:58
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
 msgid "next"
 msgstr "далее"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:68
-msgid "failed to connect to the server via SSE"
-msgstr "не удалось подключиться к серверу через SSE"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:71
+msgid "connecting to the server"
+msgstr "подключаемся к серверу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:97
-msgid "failed to connect to the server via SSE<0/><1>(check the console)</1>"
-msgstr "не удалось подключиться к серверу через SSE<0/><1>(проверьте консоль)</1>"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:99
+msgid "reconnecting to the server"
+msgstr "пробуем переподключиться к серверу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:130
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:105
+msgid "failed to connect to the server"
+msgstr "не удалось подключиться к серверу"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:176
 msgid "we're working on your project"
 msgstr "работаем над вашим проектом"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:134
-msgid "this shouldn't take too long.<0/>updates will appear below."
-msgstr "это не должно занять слишком долго.<0/>ниже будут отображаться оповещения."
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:180
+msgid "this shouldn't take too long. updates will appear below:"
+msgstr "это не должно занять слишком долго. ниже будут оповещения:"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:192
+msgid "we couldn't process your project"
+msgstr "не удалось обработать ваш проект"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:196
+msgid "please check the last notification too see what went wrong and try again."
+msgstr "пожалуйста, проверьте последнее оповещение и попробуйте снова."
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:267
 msgid "uploading your project"
 msgstr "выкладываем ваш проект"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:276
 msgid "couldn't upload your project"
 msgstr "не удалось выложить ваш проект"
-
-#: src/integrations/console/ConsoleIntegration.tsx:12
-#: src/integrations/console/ConsoleIntegration.tsx:39
-#~ msgid "Console"
-#~ msgstr "Консоль"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -518,57 +500,57 @@ msgstr "войти через гугл"
 msgid "an error occurred during login:"
 msgstr "во время входа произошла ошибка:"
 
-#: src/integrations/google/GoogleVerificator.tsx:26
+#: src/integrations/google/GoogleVerifier.tsx:26
 msgid "is this you?"
 msgstr "всё верно?"
 
-#: src/integrations/google/GoogleVerificator.tsx:50
+#: src/integrations/google/GoogleVerifier.tsx:50
 msgid "relogin"
 msgstr "перезайти"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:84
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:79
 msgid "receiving the form's layout"
 msgstr "получаем макет формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:93
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:88
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "не удалось получить макет формы (и создать для неё граф)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:95
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:133
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:90
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:128
 msgid "back to form selection"
 msgstr "назад к выбору формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:122
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:117
 msgid "checking read permissions for the form"
 msgstr "проверяем наличие прав на чтение формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:131
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:126
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:175
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:170
 msgid "receiving a list of your forms"
 msgstr "получаем список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:184
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:179
 msgid "couldn't receive a list of your forms"
 msgstr "не удалось получить список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:194
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:189
 msgid "select a form:"
 msgstr "выберите форму:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:206
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:201
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:237
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:232
 msgid "back to source selection"
 msgstr "назад к выбору источника"
 
-#: src/integrations/google/google-forms/integration.tsx:16
-#: src/integrations/google/google-forms/integration.tsx:59
+#: src/integrations/google/google-forms/integration.tsx:22
+#: src/integrations/google/google-forms/integration.tsx:71
 msgid "Google Forms"
 msgstr "Google Forms"
 

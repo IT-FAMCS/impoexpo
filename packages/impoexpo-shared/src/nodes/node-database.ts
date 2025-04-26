@@ -12,8 +12,6 @@ export const registerBaseNodes = (
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
-		// TODO: remove this console.log
-		console.log(`registering ${id}`);
 		baseNodesMap.set(id, node);
 	}
 };
@@ -23,8 +21,6 @@ export const unregisterBaseNodes = (
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
-		// TODO: remove this console.log
-		console.log(`unregistering ${id}`);
 		baseNodesMap.delete(id);
 	}
 };

@@ -3,10 +3,7 @@ import { registerCategory } from "../renderable-node-database";
 import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 import * as mathNodes from "@impoexpo/shared/nodes/builtin/math";
-import {
-	registerSymmetricBinaryNode,
-	registerSymmetricUnaryNode,
-} from "../common";
+import { registerBinaryNode, registerUnaryNode } from "../common";
 
 nodesScope(() => {
 	registerCategory("math", {
@@ -15,38 +12,38 @@ nodesScope(() => {
 		icon: (size) => <Icon width={size} icon="mdi:plus-minus-variant" />,
 	});
 
-	registerSymmetricBinaryNode(mathNodes.ADD_NODE, {
+	registerBinaryNode(mathNodes.ADD_NODE, {
 		title: msg`add`,
-		aliases: [msg`sum`],
+		aliases: msg`sum`,
 	});
 
-	registerSymmetricBinaryNode(mathNodes.SUBTRACT_NODE, {
+	registerBinaryNode(mathNodes.SUBTRACT_NODE, {
 		title: msg`subtract`,
 	});
-	registerSymmetricBinaryNode(mathNodes.MULTIPLY_NODE, {
+	registerBinaryNode(mathNodes.MULTIPLY_NODE, {
 		title: msg`multiply`,
 	});
-	registerSymmetricBinaryNode(mathNodes.DIVIDE_NODE, {
+	registerBinaryNode(mathNodes.DIVIDE_NODE, {
 		title: msg`divide`,
 	});
-	registerSymmetricBinaryNode(mathNodes.MODULO_NODE, {
+	registerBinaryNode(mathNodes.MODULO_NODE, {
 		title: msg`modulo`,
-		aliases: [msg`remainder`],
+		aliases: msg`remainder`,
 	});
-	registerSymmetricBinaryNode(mathNodes.POWER_NODE, {
+	registerBinaryNode(mathNodes.POWER_NODE, {
 		title: msg`power`,
 	});
 
-	registerSymmetricUnaryNode(mathNodes.ABS_NODE, {
+	registerUnaryNode(mathNodes.ABS_NODE, {
 		title: msg`absolute value`,
-		aliases: [msg`abs`],
+		aliases: msg`abs`,
 	});
-	registerSymmetricUnaryNode(mathNodes.LOG_NODE, { title: msg`log` });
-	registerSymmetricUnaryNode(mathNodes.NEGATE_NODE, {
+	registerUnaryNode(mathNodes.LOG_NODE, { title: msg`log` });
+	registerUnaryNode(mathNodes.NEGATE_NODE, {
 		title: msg`negate`,
 	});
-	registerSymmetricUnaryNode(mathNodes.SQUARE_ROOT_NODE, {
+	registerUnaryNode(mathNodes.SQUARE_ROOT_NODE, {
 		title: msg`square root`,
-		aliases: [msg`sqrt`],
+		aliases: msg`sqrt`,
 	});
 });

@@ -46,7 +46,7 @@ export const extractGoogleAuth = (
 	return decrypted;
 };
 
-export const getAuthenticatedGoogleClient = (req: Request) => {
+export const getAuthenticatedGoogleClient = async (req: Request) => {
 	const auth = extractGoogleAuth(
 		req.get(GOOGLE_ACCESS_TOKENS_HEADER_NAME) as string,
 	);
@@ -56,5 +56,6 @@ export const getAuthenticatedGoogleClient = (req: Request) => {
 		refresh_token: auth.refreshToken,
 		expiry_date: auth.expiryTimestamp,
 	});
+
 	return client;
 };

@@ -9,7 +9,6 @@ export const ProjectNodeEntrySchema = v.object({
 export const ProjectNodeSchema = v.object({
 	id: v.pipe(v.string(), v.nonEmpty()),
 	type: v.pipe(v.string(), v.nonEmpty()),
-	purpose: v.picklist(["generator", "terminator", "transformer"]),
 	inputs: v.record(v.string(), ProjectNodeEntrySchema),
 	outputs: v.record(v.string(), ProjectNodeEntrySchema),
 });

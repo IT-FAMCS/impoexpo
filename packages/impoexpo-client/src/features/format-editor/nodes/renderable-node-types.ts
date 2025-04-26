@@ -33,7 +33,7 @@ export type RawNodeRenderOptions<
 	icon: IconRenderFunction;
 	header: string;
 	searchable: boolean;
-	aliases: (MessageDescriptor | string)[];
+	aliases: MessageDescriptor | string;
 	title: MessageDescriptor | string;
 }> &
 	(keyof TSInput extends never
