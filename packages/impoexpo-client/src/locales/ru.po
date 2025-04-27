@@ -461,7 +461,7 @@ msgid "we couldn't process your project"
 msgstr "не удалось обработать ваш проект"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:196
-msgid "please check the last notification too see what went wrong and try again."
+msgid "please check the last notification to see what went wrong and try again."
 msgstr "пожалуйста, проверьте последнее оповещение и попробуйте снова."
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:267

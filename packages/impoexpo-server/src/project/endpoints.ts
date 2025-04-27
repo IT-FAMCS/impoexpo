@@ -40,7 +40,7 @@ export const registerProjectEndpoints = (app: Express) => {
 			res.status(400).send({
 				ok: false,
 				internal: false,
-				error: `no job with the id ${req.params.id} is currently running'`,
+				error: `no job with the id "${req.params.id}" is currently running`,
 			} satisfies FaultyAction);
 			return;
 		}

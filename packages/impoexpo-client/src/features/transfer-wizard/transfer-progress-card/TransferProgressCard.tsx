@@ -194,7 +194,7 @@ function ProjectStatusCard() {
 					</p>
 					<p className="text-center">
 						<Trans>
-							please check the last notification too see what went wrong and try
+							please check the last notification to see what went wrong and try
 							again.
 						</Trans>
 					</p>
