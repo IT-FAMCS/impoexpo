@@ -157,10 +157,13 @@ export default function TransferWizardPage() {
 						steps={[
 							{
 								title: t`select sources`,
-								description: t`where should we read from and where should we write to?`,
+								description: t`what should we transfer?`,
 							},
 							{ title: t`formatting`, description: t`how should we transfer?` },
-							{ title: t`transfer`, description: t`where the magic happens` },
+							{
+								title: t`transfer`,
+								description: t`where the magic happens...`,
+							},
 							{ title: t`done!` },
 						]}
 						onStepChange={(idx) => setStage(idx as TransferWizardStage)}

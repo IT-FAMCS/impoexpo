@@ -390,8 +390,8 @@ msgid "select sources"
 msgstr "выбор источников"
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:160
-msgid "where should we read from and where should we write to?"
-msgstr "откуда и куда переносим"
+msgid "what should we transfer?"
+msgstr "что будем перемещать?"
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:162
 msgid "formatting"
@@ -402,12 +402,12 @@ msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:163
-msgid "transfer"
-msgstr "перенесение"
+msgid "where the magic happens..."
+msgstr "где творится магия..."
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:163
-msgid "where the magic happens"
-msgstr "where the magic happens"
+msgid "transfer"
+msgstr "перенесение"
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:164
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209

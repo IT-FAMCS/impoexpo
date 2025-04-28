@@ -502,6 +502,8 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 								},
 					),
 				}));
+
+				get().removeNodeEntry(fromNodeId, fromHandleId);
 			},
 
 			resolveGenericNode(base, resolvedEntry, resolver, node) {
