@@ -9,7 +9,6 @@ import { extractGoogleAuth } from "../../../../integrations/google/middlewares";
 import { getGoogleClient } from "../../../../integrations/google/helpers";
 import { google } from "googleapis";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
-import e from "express";
 
 registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 	const integration = project.integrations["google-forms"];
@@ -54,35 +53,42 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 					);
 				}
 				const outputs: Record<string, unknown> = {};
-				for (const [answerId, answer] of Object.entries(response.answers)) {
-					const isNumberQuestion = integration.data.forms[id].items
-						.find((i) => i.id === answerId)
-						?.type.includes("number");
-					const isArray = base.type(answerId).type.includes("Array");
+				for (const item of integration.data.forms[id].items) {
+					const answerId = item.id;
+					if (item.id in response.answers) {
+						const answer = response.answers[item.id];
+						const isNumberQuestion = integration.data.forms[id].items
+							.find((i) => i.id === answerId)
+							?.type.includes("number");
+						const isArray = base.type(answerId).type.includes("Array");
 
-					if (
-						!answer.textAnswers?.answers ||
-						answer.textAnswers.answers.length === 0
-					)
-						continue;
+						if (
+							!answer.textAnswers?.answers ||
+							answer.textAnswers.answers.length === 0
+						)
+							continue;
 
-					if (isArray) {
-						outputs[answerId] = answer.textAnswers.answers
-							.filter((ans) => ans.value)
-							.map((ans) =>
-								isNumberQuestion
-									? // biome-ignore lint/style/noNonNullAssertion: filtered out
-										Number.parseInt(ans.value!)
-									: // biome-ignore lint/style/noNonNullAssertion: filtered out
-										ans.value!,
-							);
+						if (isArray) {
+							outputs[answerId] = answer.textAnswers.answers
+								.filter((ans) => ans.value)
+								.map((ans) =>
+									isNumberQuestion
+										? // biome-ignore lint/style/noNonNullAssertion: filtered out
+											Number.parseInt(ans.value!)
+										: // biome-ignore lint/style/noNonNullAssertion: filtered out
+											ans.value!,
+								);
+						} else {
+							outputs[answerId] = isNumberQuestion
+								? // biome-ignore lint/style/noNonNullAssertion: checked above
+									Number.parseInt(answer.textAnswers.answers[0].value!)
+								: answer.textAnswers.answers[0].value;
+						}
 					} else {
-						outputs[answerId] = isNumberQuestion
-							? // biome-ignore lint/style/noNonNullAssertion: checked above
-								Number.parseInt(answer.textAnswers.answers[0].value!)
-							: answer.textAnswers.answers[0].value;
+						outputs[answerId] = null;
 					}
 				}
+
 				return outputs;
 			});
 

@@ -139,6 +139,9 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				nodes={nodes}
 				nodeTypes={nodeRenderers}
 				edges={edges}
+				proOptions={{ hideAttribution: true }}
+				colorMode={colorMode}
+				deleteKeyCode={["Delete", "Backspace"]}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
@@ -149,10 +152,8 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				onNodesDelete={onNodesDelete}
 				onEdgesDelete={onEdgesDelete}
 				isValidConnection={isValidConnection}
-				proOptions={{ hideAttribution: true }}
-				colorMode={colorMode}
 			>
-				<Controls showFitView={false} />
+				<Controls />
 				<Background size={2} />
 				<Panel position="top-left">
 					<div className="flex flex-row gap-2">

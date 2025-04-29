@@ -9,6 +9,7 @@ import {
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { childLogger } from "../logger";
 
 export const getNodeHandler = (
 	type: string,
@@ -20,6 +21,10 @@ export const getNodeHandler = (
 };
 
 export const executeJobNodes = async (job: Job) => {
+	const logger = childLogger(`jobs/${job.id}`);
+	logger.level =
+		process.env.VERBOSE_NODE_EXECUTOR === "true" ? "debug" : "info";
+
 	const terminators = job.project.nodes.filter(
 		(n) =>
 			Object.keys(baseNodesMap.get(n.type)?.outputSchema?.entries ?? {})
@@ -94,6 +99,8 @@ export const executeJobNodes = async (job: Job) => {
 				actualDepth = Math.max(actualDepth, path.depth);
 			});
 		}
+
+		logger.debug(`running ${node.id} at depth ${actualDepth}`);
 
 		const inputPaths: InputPath[] = [];
 		const pathOutputs: Record<string, NodeOutput<v.ObjectEntries>> = {};
@@ -171,7 +178,10 @@ export const executeJobNodes = async (job: Job) => {
 					`no handler found for node with type "${sourceNode.type}"`,
 				);
 
+			const inputs = resolveInputs(sourceNode);
+			logger.debug(`resolving node ${path.node} with inputs: %o`, inputs);
 			const output = await handler(resolveInputs(sourceNode), job);
+			logger.debug("received: %o", output);
 			pathOutputs[sourceNode.id] = output;
 		}
 
@@ -189,7 +199,9 @@ export const executeJobNodes = async (job: Job) => {
 			if (!handler)
 				throw new Error(`no handler found for node type "${node.type}"`);
 
-			await handler(resolveInputs(node), job);
+			const inputs = resolveInputs(node);
+			logger.debug(`executing ${node.id} with inputs: %o`, inputs);
+			await handler(inputs, job);
 		} else {
 			const iterators: Iterator[] = Object.entries(pathOutputs)
 				.filter((o) => Array.isArray(o[1]))
@@ -215,17 +227,26 @@ export const executeJobNodes = async (job: Job) => {
 					{} as Record<string, ResolveEntries<v.ObjectEntries>>,
 				);
 
+			if (iterators.length !== 0)
+				logger.debug("found iterators: %o", iterators);
+			if (Object.keys(nonIterators).length !== 0)
+				logger.debug("immediate values: %o", nonIterators);
+
 			for (const [node, data] of Object.entries(nonIterators))
 				actualPreviousData[node] = data;
 
-			if (iterators.length === 0)
+			if (iterators.length === 0) {
+				logger.debug(
+					`no iterators found at depth ${actualDepth}, resolved values: %o`,
+					actualPreviousData,
+				);
 				await runNode(
 					node,
 					paths,
 					actualDepth - 1,
 					structuredClone(actualPreviousData),
 				);
-			else {
+			} else {
 				if (
 					iterators.some(
 						(it, idx) =>
@@ -239,8 +260,13 @@ export const executeJobNodes = async (job: Job) => {
 				}
 
 				for (let idx = 0; idx < iterators[0].length; idx++) {
-					for (const it of iterators)
+					for (const it of iterators) {
+						logger.debug(
+							`(depth ${actualDepth}) iterating ${it.node} (${idx + 1}/${iterators[0].length}): %o`,
+							it.items[idx],
+						);
 						actualPreviousData[it.node] = it.items[idx];
+					}
 					await runNode(
 						node,
 						paths,
@@ -254,7 +280,9 @@ export const executeJobNodes = async (job: Job) => {
 
 	try {
 		for (const node of terminators) {
-			await runNode(node, resolveInputPaths(node));
+			const paths = resolveInputPaths(node);
+			logger.debug(`input paths for ${node.id}: %o`, paths);
+			await runNode(node, paths);
 		}
 		job.complete();
 	} catch (err) {

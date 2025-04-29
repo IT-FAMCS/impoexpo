@@ -1,6 +1,8 @@
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type { Connection, Edge } from "@xyflow/react";
 import type { ProjectNode } from "./renderable-node-types";
+import { isArray, isNullable } from "@impoexpo/shared/nodes/node-utils";
+import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
@@ -22,7 +24,29 @@ export const nodeSchemasCompatible = (
 	if (
 		(sourceEntry.generic && !targetEntry.generic) ||
 		(!sourceEntry.generic && targetEntry.generic)
-	)
-		return true;
+	) {
+		const genericEntry = sourceEntry.generic ? sourceEntry : targetEntry;
+		const nonGenericEntry = sourceEntry.generic ? targetEntry : sourceEntry;
+
+		const compatibleWithGenericEntry = (
+			generic: ObjectEntry,
+			nonGeneric: ObjectEntry,
+		): boolean => {
+			if (isNullable(generic) && !isNullable(nonGeneric)) return false;
+			if (isNullable(generic) && isNullable(nonGeneric))
+				return compatibleWithGenericEntry(generic.wrapped, nonGeneric.wrapped);
+
+			if (isArray(generic) && !isArray(nonGeneric)) return false;
+			if (isArray(generic) && isArray(nonGeneric))
+				return compatibleWithGenericEntry(generic.item, nonGeneric.item);
+
+			return true;
+		};
+
+		return compatibleWithGenericEntry(
+			genericEntry.schema,
+			nonGenericEntry.schema,
+		);
+	}
 	return sourceEntry.type === targetEntry.type;
 };
