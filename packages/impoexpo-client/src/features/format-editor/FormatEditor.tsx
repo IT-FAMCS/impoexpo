@@ -116,7 +116,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 
 	const isValidConnection = useCallback(
 		(connection: Connection | Edge) =>
-			nodeSchemasCompatible(connection, nodes) &&
+			nodeSchemasCompatible(connection, nodes, edges) &&
 			!connectionHasCycles(connection, nodes, edges),
 		[nodes, edges],
 	);

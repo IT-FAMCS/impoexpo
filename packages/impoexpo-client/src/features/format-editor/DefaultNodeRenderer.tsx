@@ -16,6 +16,8 @@ import {
 	type NodeProps,
 	Position,
 	type BuiltInNode,
+	useConnection,
+	useUpdateNodeInternals,
 } from "@xyflow/react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
@@ -34,14 +36,24 @@ import {
 	type ValidatorFunction,
 	isPicklist,
 	isEnum,
+	isFlow,
+	FLOW_MARKER,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 
 export default function DefaultNodeRenderer({
 	type,
 	id,
+	data,
 }: NodeProps<BuiltInNode>) {
 	const { t } = useLingui();
+
+	const updateNodeInternals = useUpdateNodeInternals();
+	const connection = useConnection();
+	// biome-ignore lint/correctness/useExhaustiveDependencies: node internals should update when the connection progress changes
+	useEffect(() => {
+		updateNodeInternals(id);
+	}, [connection.inProgress, id, updateNodeInternals]);
 
 	const nodeData = useMemo(() => getBaseNode(type), [type]);
 	const [nodeRenderOptions, categoryRenderOptions] = useRenderableNodesStore(
@@ -50,17 +62,45 @@ export default function DefaultNodeRenderer({
 			state.categoryRenderOptions.get(nodeData.category),
 		]),
 	);
-
 	if (nodeRenderOptions === undefined) return <>meow</>;
 
+	const { getBaseNodeFromId } = useFormatEditorStore();
+	const shouldShowFlowHandle = useMemo(() => {
+		if ("flow" in data && data.flow) return true;
+
+		const sourceNode = connection.fromNode?.id;
+		if (!sourceNode) return false;
+		const base = getBaseNodeFromId(sourceNode);
+		if (!base || !connection.fromHandle?.id) return false;
+		return (
+			connection.inProgress &&
+			connection.fromNode.id !== id &&
+			isFlow(base.entry(connection.fromHandle.id).schema)
+		);
+	}, [getBaseNodeFromId, id, connection, data]);
+
 	return (
-		<Card classNames={{ body: "p-0", base: "overflow-visible" }}>
+		<Card classNames={{ body: "p-0", base: "overflow-visible relative" }}>
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",
 					nodeRenderOptions.raw.header ?? categoryRenderOptions?.header,
 				)}
 			>
+				{shouldShowFlowHandle && (
+					<Handle
+						type="target"
+						id={FLOW_MARKER}
+						position={Position.Left}
+						style={{
+							borderRadius: 0,
+							clipPath: "polygon(0 50%, 100% 0, 100% 100%)",
+							right: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
 				{nodeRenderOptions.raw.icon?.(16) ?? categoryRenderOptions?.icon?.(16)}
 				<p className="overflow-hidden overflow-ellipsis max-w-64">
 					{nodeRenderOptions.raw.title !== undefined
@@ -292,18 +332,33 @@ function NodePropertyRenderer(props: {
 						</p>
 					</div>
 				)}
-				<Handle
-					type="source"
-					id={props.name}
-					position={Position.Right}
-					style={{
-						top: 0,
-						transform: "translate(50%, 75%)",
-						right: 0,
-						width: 10,
-						height: 10,
-					}}
-				/>
+				{isFlow(props.property) ? (
+					<Handle
+						type="source"
+						id={props.name}
+						position={Position.Right}
+						style={{
+							borderRadius: 0,
+							clipPath: "polygon(0 0, 100% 50%, 0 100%)",
+							right: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				) : (
+					<Handle
+						type="source"
+						id={props.name}
+						position={Position.Right}
+						style={{
+							top: 0,
+							transform: "translate(50%, 75%)",
+							right: 0,
+							width: 10,
+							height: 10,
+						}}
+					/>
+				)}
 			</div>
 		</div>
 	);

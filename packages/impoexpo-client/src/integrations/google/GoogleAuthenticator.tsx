@@ -1,5 +1,5 @@
 import { postWithSchema } from "@/api/common";
-import { Button, CircularProgress, Code } from "@heroui/react";
+import { Button, Spinner, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
@@ -110,7 +110,7 @@ export default function GoogleAuthenticator(props: {
 
 	return (
 		<div className="flex flex-col items-center justify-center w-full gap-2">
-			<CircularProgress />
+			<Spinner />
 			<p className="text-foreground-500">{loadingState}</p>
 		</div>
 	);

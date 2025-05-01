@@ -61,6 +61,15 @@ export const getGenericEntries = (
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
+export const FLOW_MARKER: string = "__ptr__";
+export const flow = () =>
+	v.pipe(v.nullable(v.string()), v.metadata({ metadataType: "flow" }));
+export const isFlow = (
+	schema: ObjectEntry,
+): schema is ReturnType<typeof flow> => {
+	return hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "flow";
+};
+
 export const named = (
 	name: string,
 	child: v.ObjectSchema<v.ObjectEntries, undefined>,

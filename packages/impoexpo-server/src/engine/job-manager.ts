@@ -42,14 +42,20 @@ export class Job {
 		if (serverShouldLog || type === "error")
 			childLogger(`jobs/${this.id}`)[type](message);
 
-		this.session.push(
-			{
-				type,
-				message:
-					typeof message === "object" ? JSON.stringify(message) : message,
-			} satisfies ProjectStatusNotification,
-			"notification",
-		);
+		try {
+			this.session.push(
+				{
+					type,
+					message:
+						typeof message === "object" ? JSON.stringify(message) : message,
+				} satisfies ProjectStatusNotification,
+				"notification",
+			);
+		} catch (err) {
+			childLogger(`jobs/${this.id}`).warn(
+				"failed to send event to the SSE client, perhaps they disconnected abruptly?",
+			);
+		}
 		this.processing = type !== "error";
 	}
 

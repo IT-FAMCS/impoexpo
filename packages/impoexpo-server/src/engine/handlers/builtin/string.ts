@@ -1,32 +1,32 @@
 import { registerHandler } from "../../node-handler-utils";
 import * as stringNodes from "@impoexpo/shared/nodes/builtin/strings";
 
-registerHandler(stringNodes.CONTAINS_NODE, (data) => ({
-	result: data.string.includes(data.pattern),
+registerHandler(stringNodes.CONTAINS_NODE, (ctx) => ({
+	result: ctx.string.includes(ctx.pattern),
 }));
 
-registerHandler(stringNodes.JOIN_STRINGS_NODE, (data) => ({
-	result: data.stringA + data.delimiter + data.stringB,
+registerHandler(stringNodes.JOIN_STRINGS_NODE, (ctx) => ({
+	result: ctx.stringA + ctx.delimiter + ctx.stringB,
 }));
 
-registerHandler(stringNodes.LENGTH_NODE, (data) => ({
-	length: data.string.length,
+registerHandler(stringNodes.LENGTH_NODE, (ctx) => ({
+	length: ctx.string.length,
 }));
 
-registerHandler(stringNodes.NUMBER_TO_STRING_NODE, (data) => ({
-	string: data.number.toString(),
+registerHandler(stringNodes.NUMBER_TO_STRING_NODE, (ctx) => ({
+	string: ctx.number.toString(),
 }));
 
-registerHandler(stringNodes.REPLACE_NODE, (data) => ({
-	result: data.string.replaceAll(data.pattern, data.replacement),
+registerHandler(stringNodes.REPLACE_NODE, (ctx) => ({
+	result: ctx.string.replaceAll(ctx.pattern, ctx.replacement),
 }));
 
-registerHandler(stringNodes.STRING_TO_NUMBER_NODE, (data) => ({
-	number: Number.isNaN(Number.parseInt(data.string))
+registerHandler(stringNodes.STRING_TO_NUMBER_NODE, (ctx) => ({
+	number: Number.isNaN(Number.parseInt(ctx.string))
 		? null
-		: Number.parseInt(data.string),
+		: Number.parseInt(ctx.string),
 }));
 
-registerHandler(stringNodes.SPLIT_STRING_NODE, (data) => ({
-	parts: data.string.split(data.delimiter),
+registerHandler(stringNodes.SPLIT_STRING_NODE, (ctx) => ({
+	parts: ctx.string.split(ctx.delimiter),
 }));

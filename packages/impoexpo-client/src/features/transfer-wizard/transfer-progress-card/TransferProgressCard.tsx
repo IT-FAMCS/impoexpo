@@ -1,4 +1,4 @@
-import { Alert, Card, CircularProgress, ScrollShadow } from "@heroui/react";
+import { Alert, Card, Spinner, ScrollShadow } from "@heroui/react";
 import {
 	TransferProgressCardState,
 	useProjectStatusCardStore,
@@ -143,7 +143,7 @@ function ProjectStatusCard() {
 	if (!error && message) {
 		return (
 			<div className="flex flex-col items-center justify-center gap-2">
-				<CircularProgress size="lg" />
+				<Spinner size="lg" />
 				<p className="text-3xl">
 					<b>{message}</b>
 				</p>
@@ -170,7 +170,7 @@ function ProjectStatusCard() {
 		<div className="flex flex-col items-center justify-center gap-2">
 			{result === undefined && (
 				<>
-					<CircularProgress size="lg" />
+					<Spinner size="lg" />
 					<p className="text-3xl">
 						<b>
 							<Trans>we're working on your project</Trans>
@@ -265,7 +265,7 @@ function UploadingProjectCard() {
 		return (
 			<div className="flex flex-col items-center justify-center gap-2">
 				<Trans>uploading your project</Trans>
-				<CircularProgress />
+				<Spinner />
 			</div>
 		);
 	}

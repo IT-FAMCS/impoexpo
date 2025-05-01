@@ -6,6 +6,7 @@ import { glob } from "glob";
 import * as path from "node:path";
 import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
+import type { flow } from "@impoexpo/shared/nodes/node-utils";
 
 export const defaultNodeHandlers: Record<
 	string,
@@ -19,30 +20,68 @@ export const integrationNodeHandlerRegistrars: Record<
 	) => Record<string, NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>>
 > = {};
 
+type InternalNodeOutput<TOut extends v.ObjectEntries> = Omit<
+	ResolveEntries<TOut>,
+	keyof IncludeFlows<TOut>
+>;
 export type NodeOutput<TOut extends v.ObjectEntries> =
-	| ResolveEntries<TOut>
-	| ResolveEntries<TOut>[];
+	| InternalNodeOutput<TOut>
+	| InternalNodeOutput<TOut>[];
+
+export type NodeExecutorContext<
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+> = {
+	"~job": Job;
+	"~run": (node: string, values?: NodeOutput<TOut>) => Promise<void>;
+} & ResolveEntries<TIn> &
+	IncludeFlows<TOut>;
+
 export type NodeHandlerFunction<
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
-> = (data: ResolveEntries<TIn>, job: Job) => Promise<NodeOutput<TOut>>;
+> = (ctx: NodeExecutorContext<TIn, TOut>) => Promise<NodeOutput<TOut>>;
+
+type HandlerReturnType<TOut extends v.ObjectEntries> =
+	InternalNodeOutput<TOut> extends Record<string, never>
+		? // biome-ignore lint/suspicious/noConfusingVoidType: this type is used exclusively for return types
+			void
+		: NodeOutput<TOut>;
 
 export const registerHandler = <
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
 >(
 	node: BaseNode<TIn, TOut>,
-	handler: (data: ResolveEntries<TIn>, job: Job) => NodeOutput<TOut>,
+	handler: (ctx: NodeExecutorContext<TIn, TOut>) => HandlerReturnType<TOut>,
 ) => {
 	const id = `${node.category}-${node.name}`;
 	if (id in defaultNodeHandlers)
 		throw new Error(`a handler for node "${id}" has already been registered`);
 	childLogger("nodes").debug(`\t\t-> registering handler for ${id}`);
-	defaultNodeHandlers[id] = async (data, job) =>
-		(handler as NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>)(
-			data,
-			job,
-		);
+	defaultNodeHandlers[id] = async (ctx) => {
+		const result = handler(ctx as NodeExecutorContext<TIn, TOut>);
+		return result === undefined ? {} : result;
+	};
+};
+
+export const registerAsyncHandler = <
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+>(
+	node: BaseNode<TIn, TOut>,
+	handler: (
+		ctx: NodeExecutorContext<TIn, TOut>,
+	) => Promise<HandlerReturnType<TOut>>,
+) => {
+	const id = `${node.category}-${node.name}`;
+	if (id in defaultNodeHandlers)
+		throw new Error(`a handler for node "${id}" has already been registered`);
+	childLogger("nodes").debug(`\t\t-> registering handler (async) for ${id}`);
+	defaultNodeHandlers[id] = async (ctx) => {
+		const result = await handler(ctx as NodeExecutorContext<TIn, TOut>);
+		return result === undefined ? {} : result;
+	};
 };
 
 export const registerIntegrationNodeHandlerRegistrar = (
@@ -96,3 +135,11 @@ export const registerIntegrationNodeLoaders = async () => {
 export type ResolveEntries<T extends v.ObjectEntries> = {
 	[key in keyof T]: v.InferOutput<T[key]>;
 };
+
+export type IncludeFlows<T extends v.ObjectEntries> = {
+	[key in keyof T]: T[key] extends ReturnType<typeof flow>
+		? v.InferOutput<T[key]>
+		: never;
+} extends infer O
+	? { [K in keyof O as O[K] extends never ? never : K]: O[K] }
+	: never;

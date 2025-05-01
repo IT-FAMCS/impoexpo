@@ -23,7 +23,9 @@ import { persistStoreOnReload } from "@/stores/hot-reload";
 import {
 	type DefaultBaseNode,
 	findCompatibleEntry,
+	FLOW_MARKER,
 	isArray,
+	isFlow,
 	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
 import {
@@ -98,6 +100,9 @@ export type FormatEditorStore = {
 	getNodeEntryValue: (id: string, entry: string) => unknown;
 	setNodeEntry: (id: string, entry: string, value: unknown) => void;
 	removeNodeEntry: (id: string, entry: string) => void;
+
+	setNodeFlow: (source: string, sourceHandle: string, target: string) => void;
+	removeNodeFlow: (target: string) => void;
 
 	attachNewNode: (
 		fromNodeId: string,
@@ -187,6 +192,17 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					isReconnecting: false,
 					edges: reconnectEdge(oldEdge, newConnection, get().edges),
 				}));
+
+				if (
+					oldEdge.targetHandle === FLOW_MARKER &&
+					oldEdge.target !== newConnection.target &&
+					!get().edges.some(
+						(e) =>
+							e.target === oldEdge.target && e.targetHandle === FLOW_MARKER,
+					)
+				) {
+					get().removeNodeFlow(oldEdge.target);
+				}
 			},
 
 			onConnectEnd: (
@@ -210,6 +226,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const node = getBaseNode(connectionState.fromNode.type);
 					const handleId = connectionState.fromHandle.id;
 					const handle = node.entry(handleId);
+
+					// no search modal for flow fields
+					if (isFlow(handle.schema)) return;
 
 					const filters = [
 						`${handle.source === "input" ? "outputs" : "accepts"}${handle.generic ? "" : `:${handle.type}`}`,
@@ -241,6 +260,19 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				) {
 					const fromNode = getBaseNode(connectionState.fromNode.type);
 					const toNode = getBaseNode(connectionState.toNode.type);
+
+					if (
+						isFlow(fromNode.entry(connectionState.fromHandle.id).schema) &&
+						connectionState.toHandle.id === FLOW_MARKER
+					) {
+						get().setNodeFlow(
+							connectionState.fromNode.id,
+							connectionState.fromHandle.id,
+							connectionState.toNode.id,
+						);
+						return;
+					}
+
 					const fromEntry = fromNode.entry(connectionState.fromHandle.id);
 					const toEntry = toNode.entry(connectionState.toHandle.id);
 
@@ -301,8 +333,20 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const source = get().getBaseNodeFromId(edge.source);
 					const target = get().getBaseNodeFromId(edge.target);
 
-					if (!source || !target || (!isGeneric(source) && !isGeneric(target)))
+					if (!source || !target) return;
+					if (
+						edge.targetHandle === FLOW_MARKER &&
+						!get()
+							.edges.filter((e) => edges.indexOf(e) === -1)
+							.some(
+								(e) =>
+									e.target === edge.target && e.targetHandle === FLOW_MARKER,
+							)
+					) {
+						get().removeNodeFlow(edge.target);
 						return;
+					}
+					if (!isGeneric(source) && !isGeneric(target)) return;
 
 					const checkNode = (id: string, node: DefaultBaseNode) => {
 						if (!isGeneric(node)) return;
@@ -427,6 +471,24 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const entries = get().nodes[nodeIndex].data.entries;
 				if (!entries || !(entry in entries)) return undefined;
 				return entries[entry].value;
+			},
+
+			setNodeFlow(source, sourceHandle, target) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === target);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					state.nodes[nodeIndex].data.flow = {
+						node: source,
+						entry: sourceHandle,
+					};
+				});
+			},
+			removeNodeFlow(target) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === target);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					state.nodes[nodeIndex].data.flow = undefined;
+				});
 			},
 
 			attachNewNode(

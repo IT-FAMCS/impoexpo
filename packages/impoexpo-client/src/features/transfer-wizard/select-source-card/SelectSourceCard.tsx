@@ -7,7 +7,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
-	CircularProgress,
+	Spinner,
 	Divider,
 	Listbox,
 } from "@heroui/react";
@@ -211,7 +211,7 @@ function SourceAuthenticator() {
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{isLoading && <CircularProgress />}
+			{isLoading && <Spinner />}
 			{!isLoading &&
 				!isAuthenticated &&
 				currentIntegration?.authenticator(continueFlow)}

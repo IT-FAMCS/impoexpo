@@ -45,15 +45,15 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/FormatEditor.tsx:165
+#: src/features/format-editor/FormatEditor.tsx:166
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:181
+#: src/features/format-editor/FormatEditor.tsx:182
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:209
+#: src/features/format-editor/FormatEditor.tsx:210
 msgid "done"
 msgstr "далее"
 
@@ -84,7 +84,7 @@ msgid "for each item in the array, foreach"
 msgstr "для каждого элемента в массива, для каждого"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:35
-#: src/features/format-editor/nodes/builtin/conditional.tsx:51
+#: src/features/format-editor/nodes/builtin/conditional.tsx:82
 msgid "object"
 msgstr "объект"
 
@@ -97,6 +97,7 @@ msgid "if..."
 msgstr "если..."
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:22
+#: src/features/format-editor/nodes/builtin/conditional.tsx:43
 msgid "condition"
 msgstr "условие"
 
@@ -113,14 +114,46 @@ msgid "value"
 msgstr "значение"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:39
+msgid "execute, if..."
+msgstr "выполнить, если..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:48
+msgid "if true..."
+msgstr "если истина..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:51
+msgid "if false..."
+msgstr "если ложь..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:57
+msgid "repeat X times..."
+msgstr "повторить X раз..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:60
+msgid "amount of times"
+msgstr "кол-во раз"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:64
+msgid "body..."
+msgstr "тело..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:65
+msgid "iteration"
+msgstr "итерация"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:65
+msgid "starting from 1"
+msgstr "начиная с 1"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:70
 msgid "throw error if null"
 msgstr "выдать ошибку если null"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:42
+#: src/features/format-editor/nodes/builtin/conditional.tsx:73
 msgid "nullable object"
 msgstr "nullable объект"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:45
+#: src/features/format-editor/nodes/builtin/conditional.tsx:76
 msgid "error message"
 msgstr "сообщение об ошибке"
 
@@ -219,8 +252,14 @@ msgstr "информация"
 #: src/features/format-editor/nodes/builtin/notifications.tsx:22
 #: src/features/format-editor/nodes/builtin/notifications.tsx:31
 #: src/features/format-editor/nodes/builtin/notifications.tsx:40
-msgid "condition (optional)"
-msgstr "условие (необязательно)"
+msgid "message"
+msgstr "сообщение"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:22
+#: src/features/format-editor/nodes/builtin/notifications.tsx:31
+#: src/features/format-editor/nodes/builtin/notifications.tsx:40
+#~ msgid "condition (optional)"
+#~ msgstr "условие (необязательно)"
 
 #: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
@@ -401,15 +440,15 @@ msgstr "форматирование"
 msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:163
-msgid "where the magic happens..."
-msgstr "где творится магия..."
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:163
+#: src/features/transfer-wizard/TransferWizardPage.tsx:164
 msgid "transfer"
 msgstr "перенесение"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:164
+#: src/features/transfer-wizard/TransferWizardPage.tsx:165
+msgid "where the magic happens..."
+msgstr "где творится магия..."
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:167
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "done!"
 msgstr "готово!"

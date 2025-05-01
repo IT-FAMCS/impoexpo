@@ -9,9 +9,12 @@ import type { ObjectEntries } from "valibot";
 import { useRenderableNodesStore } from "./renderable-node-database";
 import type { Node } from "@xyflow/react";
 import type { ProjectNodeEntry } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import { isFlow } from "@impoexpo/shared/nodes/node-utils";
 
+export type FlowParent = { node: string; entry: string };
 export type ProjectNode = Node<{
 	entries?: Record<string, ProjectNodeEntry>;
+	flow?: FlowParent;
 }>;
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
@@ -144,6 +147,7 @@ export class NodeRenderOptions<
 	): string {
 		const property = this.property(key);
 		if (property?.description) return localizableString(property.description);
+		if (isFlow(this.node.entry(String(key)).schema)) return "";
 
 		return this.node.entry(String(key)).type;
 	}

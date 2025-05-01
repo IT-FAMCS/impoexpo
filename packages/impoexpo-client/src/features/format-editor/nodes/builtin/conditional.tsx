@@ -35,6 +35,37 @@ nodesScope(() => {
 		},
 	});
 
+	registerWithDefaultRenderer(conditionalNodes.EXECUTE_IF_NODE, {
+		title: msg`execute, if...`,
+		inputs: {
+			condition: {
+				mode: "dependentOnly",
+				title: msg`condition`,
+			},
+		},
+		outputs: {
+			trueFlow: {
+				title: msg`if true...`,
+			},
+			falseFlow: {
+				title: msg`if false...`,
+			},
+		},
+	});
+
+	registerWithDefaultRenderer(conditionalNodes.REPEAT_NODE, {
+		title: msg`repeat X times...`,
+		inputs: {
+			times: {
+				title: msg`amount of times`,
+			},
+		},
+		outputs: {
+			flow: { title: msg`body...` },
+			iteration: { title: msg`iteration`, description: msg`starting from 1` },
+		},
+	});
+
 	registerWithDefaultRenderer(conditionalNodes.THROW_ERROR_IF_NULL_NODE, {
 		title: msg`throw error if null`,
 		inputs: {

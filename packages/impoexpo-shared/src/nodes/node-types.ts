@@ -35,10 +35,8 @@ export type BaseNodeEntry = {
 };
 
 export class BaseNode<
-	// biome-ignore lint/complexity/noBannedTypes: empty type required here
-	TIn extends v.ObjectEntries = {},
-	// biome-ignore lint/complexity/noBannedTypes: empty type required here
-	TOut extends v.ObjectEntries = {},
+	TIn extends v.ObjectEntries = Record<string, never>,
+	TOut extends v.ObjectEntries = Record<string, never>,
 	TInMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 	TOutMessages extends v.ErrorMessage<v.ObjectIssue> | undefined = undefined,
 > {

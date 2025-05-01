@@ -14,7 +14,7 @@ import {
 	CardBody,
 	CardFooter,
 	CardHeader,
-	CircularProgress,
+	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -88,7 +88,7 @@ export default function TransferWizardPage() {
 			return (
 				<Card>
 					<CardBody>
-						<CircularProgress />
+						<Spinner />
 					</CardBody>
 				</Card>
 			);

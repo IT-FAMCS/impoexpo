@@ -7,7 +7,7 @@ import {
 } from "@/features/transfer-wizard/select-source-card/store";
 import {
 	Button,
-	CircularProgress,
+	Spinner,
 	Listbox,
 	ListboxItem,
 	ScrollShadow,
@@ -77,7 +77,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 		return (
 			<div className="flex flex-col items-center justify-center gap-2">
 				<Trans>receiving the form's layout</Trans>
-				<CircularProgress />
+				<Spinner />
 			</div>
 		);
 	}
@@ -115,7 +115,7 @@ function GoogleFormsVerificator() {
 		return (
 			<div className="flex flex-col items-center justify-center gap-2">
 				<Trans>checking read permissions for the form</Trans>
-				<CircularProgress />
+				<Spinner />
 			</div>
 		);
 	}
@@ -168,7 +168,7 @@ function GoogleFormsSelector() {
 		return (
 			<div className="flex flex-col items-center justify-center gap-2">
 				<Trans>receiving a list of your forms</Trans>
-				<CircularProgress />
+				<Spinner />
 			</div>
 		);
 	}

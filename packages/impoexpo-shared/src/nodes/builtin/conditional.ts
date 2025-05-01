@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { generic } from "../node-utils";
+import { flow, generic } from "../node-utils";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",
@@ -13,6 +13,30 @@ export const IF_NODE = new BaseNode({
 	}),
 	outputSchema: v.object({
 		value: generic("T"),
+	}),
+});
+
+export const EXECUTE_IF_NODE = new BaseNode({
+	category: "conditional",
+	name: "execute-if",
+	inputSchema: v.object({
+		condition: v.boolean(),
+	}),
+	outputSchema: v.object({
+		trueFlow: flow(),
+		falseFlow: flow(),
+	}),
+});
+
+export const REPEAT_NODE = new BaseNode({
+	category: "conditional",
+	name: "repeat",
+	inputSchema: v.object({
+		times: v.number(),
+	}),
+	outputSchema: v.object({
+		flow: flow(),
+		iteration: v.number(),
 	}),
 });
 
@@ -29,5 +53,10 @@ export const THROW_ERROR_IF_NULL_NODE = new BaseNode({
 });
 
 nodesScope(() => {
-	registerBaseNodes(IF_NODE, THROW_ERROR_IF_NULL_NODE);
+	registerBaseNodes(
+		IF_NODE,
+		EXECUTE_IF_NODE,
+		REPEAT_NODE,
+		THROW_ERROR_IF_NULL_NODE,
+	);
 });
