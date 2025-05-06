@@ -54,10 +54,9 @@ export default function GoogleAuthenticator(props: {
 							GoogleExchangeResponseSchema,
 							{ query: { code: response.code } },
 						)
-							.then(async (data) => {
-								saveAuthToDatabase("google", data);
-								props.onSuccess();
-							})
+							.then((data) =>
+								saveAuthToDatabase("google", data).then(props.onSuccess),
+							)
 							.catch((err) => {
 								console.error(
 									`couldn't exchange tokens with the server: ${err}`,

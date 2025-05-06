@@ -36,7 +36,7 @@ export const parseDuration = (duration: Duration): number => {
 		const durationUnit = split[1] as DurationUnit;
 		const unitConversionFactor = unitConversion[durationUnit];
 		if (unitConversionFactor === undefined) {
-			throw new Error(`invalud unit found in duration: ${duration}`);
+			throw new Error(`invalid unit found in duration: ${duration}`);
 		}
 		ms = durationNumber * unitConversionFactor;
 	}

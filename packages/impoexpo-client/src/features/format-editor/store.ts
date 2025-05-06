@@ -142,29 +142,18 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			edges: [],
 			genericNodes: {},
 
-			onNodesChange: (changes) => {
-				try {
-					set({
-						nodes: applyNodeChanges(changes, get().nodes),
-					});
-				} catch (err) {
-					console.warn(`failed to apply node changes: ${err}`);
-				}
-			},
-			onEdgesChange: (changes) => {
-				try {
-					set({
-						edges: applyEdgeChanges(changes, get().edges),
-					});
-				} catch (err) {
-					console.warn(`failed to apply edge changes: ${err}`);
-				}
-			},
-			onConnect: (connection) => {
-				set({
-					edges: addEdge(connection, get().edges),
-				});
-			},
+			onNodesChange: (changes) =>
+				set((state) => {
+					state.nodes = applyNodeChanges(changes, state.nodes);
+				}),
+			onEdgesChange: (changes) =>
+				set((state) => {
+					state.edges = applyEdgeChanges(changes, state.edges);
+				}),
+			onConnect: (connection) =>
+				set((state) => {
+					state.edges = addEdge(connection, state.edges);
+				}),
 			setNodes: (nodes) => {
 				set({ nodes });
 			},
@@ -188,10 +177,10 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				}
 			},
 			onReconnect(oldEdge, newConnection) {
-				set(() => ({
+				set({
 					isReconnecting: false,
 					edges: reconnectEdge(oldEdge, newConnection, get().edges),
-				}));
+				});
 
 				if (
 					oldEdge.targetHandle === FLOW_MARKER &&
@@ -435,9 +424,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					data: {},
 					type: type,
 				} satisfies ProjectNode;
-				set(() => ({
-					nodes: get().nodes.concat(newNode),
-				}));
+				set((state) => {
+					state.nodes.push(newNode);
+				});
 			},
 
 			setNodeEntry(id, entry, value) {
@@ -544,9 +533,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					);
 				}
 
-				set(() => ({
-					nodes: get().nodes.concat(newNode),
-					edges: get().edges.concat(
+				set((state) => {
+					state.nodes.push(newNode);
+					state.edges.push(
 						fromEntry.source === "output"
 							? {
 									id: id,
@@ -562,10 +551,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 									target: fromNodeId,
 									targetHandle: fromHandleId,
 								},
-					),
-				}));
-
-				get().removeNodeEntry(fromNodeId, fromHandleId);
+					);
+					state.removeNodeEntry(fromNodeId, fromHandleId);
+				});
 			},
 
 			resolveGenericNode(base, resolvedEntry, resolver, node) {

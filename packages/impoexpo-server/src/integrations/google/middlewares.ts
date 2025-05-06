@@ -38,6 +38,7 @@ export const extractGoogleAuth = (
 	const decrypted = JSON.parse(
 		decryptString(encryptedTokens, "base64", "utf8"),
 	);
+	console.log(decrypted);
 	if (!v.is(GoogleAccessTokensSchema, decrypted)) {
 		throw new Error(
 			"the decrypted access tokens header does not satisfy the GoogleAccessTokensSchema",
@@ -54,6 +55,7 @@ export const getAuthenticatedGoogleClient = async (req: Request) => {
 	client.setCredentials({
 		access_token: auth.accessToken,
 		refresh_token: auth.refreshToken,
+		token_type: auth.tokenType,
 		expiry_date: auth.expiryTimestamp,
 	});
 

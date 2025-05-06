@@ -5,14 +5,19 @@ import { google } from "googleapis";
 import { registerGoogleFormsEndpoints } from "./forms/endpoints";
 import { getGoogleClient } from "./helpers";
 
-import {
-	type GoogleAccessTokensSchema,
-	type GoogleExchangeResponse,
-	GoogleExchangeResponseSchema,
+import type {
+	GoogleAccessTokensSchema,
+	GoogleExchangeResponse,
 } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
-import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
+import type { GoogleRefreshResponse } from "@impoexpo/shared/schemas/integrations/google/GoogleRefreshResponseSchema";
+import {
+	GOOGLE_EXCHANGE_ROUTE,
+	GOOGLE_REFRESH_ROUTE,
+} from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 import { encryptObject } from "../../helpers/crypto-utils";
+import { getAuthenticatedGoogleClient, requireGoogleAuth } from "./middlewares";
+import { defaultRatelimiter } from "../../common";
 
 export const registerGoogleEndpoints = (app: Express) => {
 	if (
@@ -28,9 +33,54 @@ export const registerGoogleEndpoints = (app: Express) => {
 	logger.info("\t-> registering google endpoints");
 	registerGoogleFormsEndpoints(app);
 
+	app.get(
+		GOOGLE_REFRESH_ROUTE,
+		requireGoogleAuth,
+		defaultRatelimiter("10 seconds", 1),
+		async (req, res) => {
+			try {
+				const client = await getAuthenticatedGoogleClient(req);
+				const newToken = await client.getAccessToken();
+				if (!newToken.token) {
+					res.status(502).send({
+						ok: false,
+						internal: false,
+						error: `google api failed to return a new access token (HTTP/${newToken.res?.status})`,
+					} satisfies FaultyAction);
+					return;
+				}
+
+				client.credentials.access_token = newToken.token;
+				const encryptedTokens = encryptObject(
+					{
+						// biome-ignore lint/style/noNonNullAssertion: request would've failed if it wasn't set
+						accessToken: client.credentials.access_token!,
+						// biome-ignore lint/style/noNonNullAssertion: request would've failed if it wasn't set
+						refreshToken: client.credentials.refresh_token!,
+						// biome-ignore lint/style/noNonNullAssertion: request would've failed if it wasn't set
+						tokenType: client.credentials.token_type!,
+						// biome-ignore lint/style/noNonNullAssertion: request would've failed if it wasn't set
+						expiryTimestamp: client.credentials.expiry_date!,
+					} satisfies GoogleAccessTokensSchema,
+					"base64",
+				);
+
+				res.send({ tokens: encryptedTokens } satisfies GoogleRefreshResponse);
+			} catch (err) {
+				res.status(500).send({
+					ok: false,
+					internal: true,
+					error: `failed to refresh an access token: ${err}`,
+				} satisfies FaultyAction);
+				childLogger("integration/google").error(err);
+			}
+		},
+	);
+
 	app.post(
 		GOOGLE_EXCHANGE_ROUTE,
 		query("code").notEmpty(),
+		defaultRatelimiter("10 seconds", 1),
 		async (req, res) => {
 			const result = validationResult(req);
 			if (!result.isEmpty()) {
@@ -44,7 +94,7 @@ export const registerGoogleEndpoints = (app: Express) => {
 
 			try {
 				const client = getGoogleClient();
-				const { tokens } = await client.getToken(req.query?.code);
+				const { tokens } = await client.getToken(req.query?.code as string);
 				client.setCredentials(tokens);
 
 				const auth = google.oauth2({
@@ -65,10 +115,10 @@ export const registerGoogleEndpoints = (app: Express) => {
 				if (!info.data.name) throw new Error("received null instead of name");
 				if (!tokens.access_token)
 					throw new Error("received null instead of access_token");
+				if (!tokens.expiry_date)
+					throw new Error("received null instead of expiry_date");
 				if (!tokens.refresh_token)
 					throw new Error("received null instead of refresh_token");
-				if (!tokens.expiry_date)
-					throw new Error("received null instead of token expiry timestamp");
 				if (!tokens.token_type)
 					throw new Error("received null instead of token type");
 

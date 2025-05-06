@@ -28,6 +28,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Trans } from "@lingui/react/macro";
 import type { ProjectNode } from "./nodes/renderable-node-types";
 import { useProjectStore } from "@/stores/project";
+import dagre from "@dagrejs/dagre";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -65,12 +66,13 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		onNodesDelete,
 		onEdgesDelete,
 		onConnectEnd,
+		setNodes,
 	} = useFormatEditorStore();
 	const { undo, redo, futureStates, pastStates } = useFormatEditorTemporalStore(
 		(state) => state,
 	);
 
-	const { screenToFlowPosition } = useReactFlow();
+	const { screenToFlowPosition, fitView } = useReactFlow();
 	const {
 		onOpen: openSearchModal,
 		isOpen: isSearchModalOpen,
@@ -133,6 +135,32 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		[onConnectEnd, screenToFlowPosition, openSearchModal],
 	);
 
+	const layoutNodes = useCallback(() => {
+		const g = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+		g.setGraph({ rankdir: "LR" });
+
+		for (const e of edges) g.setEdge(e.source, e.target);
+		for (const n of nodes) {
+			g.setNode(n.id, {
+				...n,
+				width: n.measured?.width ?? 0,
+				height: n.measured?.height ?? 0,
+			});
+		}
+		dagre.layout(g);
+
+		setNodes(
+			nodes.map((n) => {
+				const position = g.node(n.id);
+				const x = position.x - (n.measured?.width ?? 0) / 2;
+				const y = position.y - (n.measured?.height ?? 0) / 2;
+				return { ...n, position: { x, y } };
+			}),
+		);
+
+		fitView();
+	}, [nodes, edges, fitView, setNodes]);
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<ReactFlow
@@ -155,6 +183,15 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 			>
 				<Controls />
 				<Background size={2} />
+				<Panel position="top-right">
+					<Tooltip content={<Trans>layout nodes</Trans>}>
+						<Button
+							onPress={layoutNodes}
+							isIconOnly
+							startContent={<Icon width={18} icon="mdi:stars" />}
+						/>
+					</Tooltip>
+				</Panel>
 				<Panel position="top-left">
 					<div className="flex flex-row gap-2">
 						{/* TODO */}
@@ -172,7 +209,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 								onPress={() => undo()}
 								isIconOnly
 								isDisabled={pastStates.length === 0}
-								startContent={<Icon icon="mdi:undo" />}
+								startContent={<Icon width={18} icon="mdi:undo" />}
 							/>
 						</Tooltip>
 						<Tooltip
@@ -188,7 +225,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 								onPress={() => redo()}
 								isIconOnly
 								isDisabled={futureStates.length === 0}
-								startContent={<Icon icon="mdi:redo" />}
+								startContent={<Icon width={18} icon="mdi:redo" />}
 							/>
 						</Tooltip>
 					</div>

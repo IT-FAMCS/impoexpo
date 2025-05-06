@@ -20,7 +20,9 @@ export const defaultRatelimiter = (
 		standardHeaders: true,
 		legacyHeaders: false,
 		skipFailedRequests: options?.skipFailedRequests ?? true,
-		skip: (req, res) => req.headers["cache-control"] !== "no-cache", // do not count cached requests into the ratelimit
+		skip: (req, res) =>
+			"cache-control" in req.headers &&
+			req.headers["cache-control"] !== "no-cache", // do not count cached requests into the ratelimit
 		handler: (req, res, next, options) => {
 			res
 				.status(options.statusCode)

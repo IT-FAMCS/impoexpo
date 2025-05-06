@@ -26,6 +26,8 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
+import { useQuery } from "@tanstack/react-query";
+import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -187,34 +189,36 @@ function SourceVerificator() {
 }
 
 function SourceAuthenticator() {
-	const [isLoading, setIsLoading] = useState(true);
-	const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
-		undefined,
-	);
+	const { t } = useLingui();
 	const { currentIntegration, setState } = useSourceCardStore();
+	if (!currentIntegration)
+		throw new Error(
+			"attempted to render SourceAuthenticator without currentIntegration set",
+		);
 
-	useEffect(() => {
-		currentIntegration
-			?.checkAuthenticated()
-			.then((value) => setIsAuthenticated(value));
+	const { isFetching, isError, error, data, refetch } = useQuery({
+		queryKey: [`check-authenticated-${currentIntegration}`],
+		queryFn: currentIntegration.checkAuthenticated,
 	});
-	useEffect(() => {
-		if (isAuthenticated === undefined) return;
-		if (isAuthenticated) {
-			continueFlow();
-			return;
-		}
-		setIsLoading(false);
-	}, [isAuthenticated]);
 
-	const continueFlow = () => setState(SourceCardState.VERIFY_SOURCE);
+	useEffect(() => {
+		if (data === true) setState(SourceCardState.VERIFY_SOURCE);
+	}, [data, setState]);
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{isLoading && <Spinner />}
-			{!isLoading &&
-				!isAuthenticated &&
-				currentIntegration?.authenticator(continueFlow)}
+			{isFetching && <Spinner />}
+			{isError && (
+				<NetworkErrorCard
+					error={error}
+					retry={refetch}
+					title={t`failed to check integration authentication status`}
+				/>
+			)}
+			{data === false &&
+				currentIntegration?.authenticator(() =>
+					setState(SourceCardState.VERIFY_SOURCE),
+				)}
 		</div>
 	);
 }

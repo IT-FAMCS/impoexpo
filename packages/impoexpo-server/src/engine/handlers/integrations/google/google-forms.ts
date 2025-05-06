@@ -25,7 +25,7 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 		const base = createGoogleFormsBaseNode(id, layout);
 
 		registerBaseNodes(base);
-		handlers[`${base.category}-${base.name}`] = async (data, job) => {
+		handlers[`${base.category}-${base.name}`] = async (ctx) => {
 			const auth = extractGoogleAuth(integration.auth.tokens);
 			const client = getGoogleClient();
 			client.setCredentials({

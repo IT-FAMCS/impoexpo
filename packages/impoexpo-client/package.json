@@ -11,6 +11,7 @@
 		"lint": "biome check"
 	},
 	"dependencies": {
+		"@dagrejs/dagre": "^1.1.4",
 		"@heroui/react": "^2.7.6",
 		"@heroui/theme": "^2.4.13",
 		"@heroui/use-theme": "^2.1.6",

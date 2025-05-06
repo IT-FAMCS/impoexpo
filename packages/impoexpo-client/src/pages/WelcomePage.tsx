@@ -11,6 +11,7 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	Tooltip,
 	useDisclosure,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
@@ -93,11 +94,23 @@ export default function WelcomePage() {
 			</div>
 
 			<div className="absolute flex flex-row items-center justify-center gap-2 bottom-3">
-				<Code className="flex flex-row items-center justify-center gap-2">
-					v{import.meta.env.VITE_APP_VERSION}{" "}
-					<Icon icon="mdi:circle" width={4} />
-					{import.meta.env.VITE_APP_HASH}
-				</Code>
+				<Tooltip
+					content={
+						<Link
+							isExternal
+							showAnchorIcon
+							href={import.meta.env.VITE_APP_LAST_COMMIT_LINK}
+						>
+							{import.meta.env.VITE_APP_LAST_COMMIT_MESSAGE}
+						</Link>
+					}
+				>
+					<Code className="flex flex-row items-center justify-center gap-2">
+						v{import.meta.env.VITE_APP_VERSION}{" "}
+						<Icon icon="mdi:circle" width={4} />
+						{import.meta.env.VITE_APP_HASH}
+					</Code>
+				</Tooltip>
 				<Icon icon="mdi:circle" width={6} />
 				<ThemeSwitcher />
 				<Icon icon="mdi:circle" width={6} />
