@@ -63,13 +63,16 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 
 						if (options.property(entry)?.mode === "independentOnly") continue;
 
-						const edge = clientEdges.find(
+						const edges = clientEdges.filter(
 							(e) => e.target === clientNode.id && e.targetHandle === entry,
 						);
-						if (edge?.source && edge.sourceHandle) {
+						if (edges.length !== 0) {
 							node.inputs[entry] = {
 								type: "dependent",
-								source: { node: edge.source, entry: edge.sourceHandle },
+								sources: edges.map((e) => ({
+									node: e.source,
+									entry: e.sourceHandle ?? "",
+								})),
 							};
 							continue;
 						}
@@ -90,13 +93,16 @@ export const useProjectStore = create<Project & ProjectStoreActions>(
 							continue;
 						}
 
-						const edge = clientEdges.find(
+						const edges = clientEdges.filter(
 							(e) => e.source === clientNode.id && e.sourceHandle === entry,
 						);
-						if (edge?.target && edge.targetHandle) {
+						if (edges.length !== 0) {
 							node.outputs[entry] = {
 								type: "dependent",
-								source: { node: edge.target, entry: edge.targetHandle },
+								sources: edges.map((e) => ({
+									node: e.target,
+									entry: e.targetHandle ?? "",
+								})),
 							};
 							continue;
 						}

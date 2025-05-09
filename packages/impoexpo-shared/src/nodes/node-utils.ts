@@ -63,11 +63,22 @@ export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 
 export const FLOW_MARKER: string = "__ptr__";
 export const flow = () =>
-	v.pipe(v.nullable(v.string()), v.metadata({ metadataType: "flow" }));
+	v.pipe(v.nullable(v.array(v.string())), v.metadata({ metadataType: "flow" }));
 export const isFlow = (
 	schema: ObjectEntry,
 ): schema is ReturnType<typeof flow> => {
 	return hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "flow";
+};
+
+export const unavailableInSubflows = <TSInput>() =>
+	v.metadata<TSInput, { metadataType: string }>({
+		metadataType: "unavailableInSubflows",
+	});
+export const isAvailableInSubflows = (schema: ObjectEntry): boolean => {
+	return !(
+		hasMetadata(schema) &&
+		schema.pipe[1].metadata.metadataType === "unavailableInSublows"
+	);
 };
 
 export const named = (
@@ -113,6 +124,16 @@ export const isArray = (
 	schema: ObjectEntry,
 ): schema is v.ArraySchema<ObjectEntry, undefined> => {
 	return schema.type === "array";
+};
+
+export const isRecord = (
+	schema: ObjectEntry,
+): schema is v.RecordSchema<
+	v.GenericSchema<string, string | number | symbol>,
+	ObjectEntry,
+	undefined
+> => {
+	return schema.type === "record";
 };
 
 export const isPicklist = (

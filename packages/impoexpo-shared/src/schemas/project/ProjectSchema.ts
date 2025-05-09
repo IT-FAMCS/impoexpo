@@ -2,7 +2,9 @@ import * as v from "valibot";
 
 export const ProjectNodeEntrySchema = v.object({
 	type: v.picklist(["independent", "dependent"]),
-	source: v.optional(v.object({ node: v.string(), entry: v.string() })),
+	sources: v.optional(
+		v.array(v.object({ node: v.string(), entry: v.string() })),
+	),
 	value: v.optional(v.unknown()),
 });
 

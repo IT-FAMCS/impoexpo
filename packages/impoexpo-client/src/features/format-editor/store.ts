@@ -118,10 +118,7 @@ export type FormatEditorStore = {
 			options: DefaultNodeRenderOptions;
 		},
 		resolvedEntry: BaseNodeEntry,
-		resolver: {
-			type: string;
-			schema: ObjectEntry;
-		},
+		resolver: BaseNodeEntry,
 		node: ProjectNode,
 	) => ProjectNode;
 	getBaseNodeFromId: (id: string) => DefaultBaseNode | undefined;
@@ -510,10 +507,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							),
 						},
 						toEntry,
-						{
-							schema: fromEntry.schema,
-							type: fromEntry.type,
-						},
+						fromEntry,
 						newNode,
 					);
 				} else if (fromEntry.generic) {
@@ -525,10 +519,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							),
 						},
 						fromEntry,
-						{
-							schema: toEntry.schema,
-							type: toEntry.type,
-						},
+						toEntry,
 						newNode,
 					);
 				}
@@ -556,17 +547,19 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				});
 			},
 
-			resolveGenericNode(base, resolvedEntry, resolver, node) {
-				const resolvedType = resolvedEntry.generic;
-				if (!resolvedType) return node;
+			resolveGenericNode(base, resolved, resolver, node) {
+				const types = resolved.generic;
+				if (!types) return node;
 
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
 				copy.name = `${base.node.name}-${Object.keys(base.node.genericTypes)
-					.map((p) =>
-						(p === resolvedType ? resolver.type : p).replaceAll(" ", ""),
-					)
+					.map((p) => {
+						//(p === resolvedType ? resolver.type : p).replaceAll(" ", "")
+						const resolvedType = (resolver.generic ?? []).find((t) => t === p);
+						return resolvedType ? resolvedType : p;
+					})
 					.join("-")}`;
 
 				// TODO: should this be here or in BaseNode?
@@ -583,7 +576,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 				copy.resolveGenericType(
 					resolvedType,
-					simplifyResolver(resolvedEntry.schema, resolver.schema),
+					simplifyResolver(resolved.schema, resolver.schema),
 				);
 
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();

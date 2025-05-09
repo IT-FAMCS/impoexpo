@@ -1,14 +1,21 @@
 import {
+	genericRegisterAsyncHandler,
+	genericRegisterHandler,
+	NodeExecutorContext,
 	type NodeHandlerFunction,
 	registerIntegrationNodeHandlerRegistrar,
 } from "../../../node-handler-utils";
 import * as v from "valibot";
 import { GoogleFormsProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsProjectIntegrationSchema";
-import { createGoogleFormsBaseNode } from "@impoexpo/shared/nodes/integrations/google/google-forms";
+import {
+	createGoogleFormsBaseNode,
+	createGoogleFormsResponseBaseNode,
+} from "@impoexpo/shared/nodes/integrations/google/google-forms";
 import { extractGoogleAuth } from "../../../../integrations/google/middlewares";
 import { getGoogleClient } from "../../../../integrations/google/helpers";
 import { google } from "googleapis";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
+import { isArray } from "@impoexpo/shared/nodes/node-utils";
 
 registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 	const integration = project.integrations["google-forms"];
@@ -23,9 +30,14 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 
 	for (const [id, layout] of Object.entries(integration.data.forms)) {
 		const base = createGoogleFormsBaseNode(id, layout);
+		const responseBase = createGoogleFormsResponseBaseNode(id, layout);
+		registerBaseNodes(base, responseBase);
 
-		registerBaseNodes(base);
-		handlers[`${base.category}-${base.name}`] = async (ctx) => {
+		genericRegisterHandler(handlers, responseBase, (ctx) => {
+			return { ...ctx.response };
+		});
+
+		genericRegisterAsyncHandler(handlers, base, async (ctx) => {
 			const auth = extractGoogleAuth(integration.auth.tokens);
 			const client = getGoogleClient();
 			client.setCredentials({
@@ -60,7 +72,9 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 						const isNumberQuestion = integration.data.forms[id].items
 							.find((i) => i.id === answerId)
 							?.type.includes("number");
-						const isArray = base.type(answerId).type.includes("Array");
+						const questionOutputsArray = isArray(
+							responseBase.entry(answerId).schema,
+						);
 
 						if (
 							!answer.textAnswers?.answers ||
@@ -68,7 +82,7 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 						)
 							continue;
 
-						if (isArray) {
+						if (questionOutputsArray) {
 							outputs[answerId] = answer.textAnswers.answers
 								.filter((ans) => ans.value)
 								.map((ans) =>
@@ -92,8 +106,8 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 				return outputs;
 			});
 
-			return responses;
-		};
+			return { responses };
+		});
 	}
 	return handlers;
 });

@@ -33,7 +33,7 @@ export type NodeExecutorContext<
 	TOut extends v.ObjectEntries,
 > = {
 	"~job": Job;
-	"~run": (node: string, values?: NodeOutput<TOut>) => Promise<void>;
+	"~run": (nodes: string[], values?: NodeOutput<TOut>) => Promise<void>;
 } & ResolveEntries<TIn> &
 	IncludeFlows<TOut>;
 
@@ -54,16 +54,7 @@ export const registerHandler = <
 >(
 	node: BaseNode<TIn, TOut>,
 	handler: (ctx: NodeExecutorContext<TIn, TOut>) => HandlerReturnType<TOut>,
-) => {
-	const id = `${node.category}-${node.name}`;
-	if (id in defaultNodeHandlers)
-		throw new Error(`a handler for node "${id}" has already been registered`);
-	childLogger("nodes").debug(`\t\t-> registering handler for ${id}`);
-	defaultNodeHandlers[id] = async (ctx) => {
-		const result = handler(ctx as NodeExecutorContext<TIn, TOut>);
-		return result === undefined ? {} : result;
-	};
-};
+) => genericRegisterHandler(defaultNodeHandlers, node, handler);
 
 export const registerAsyncHandler = <
 	TIn extends v.ObjectEntries,
@@ -73,12 +64,47 @@ export const registerAsyncHandler = <
 	handler: (
 		ctx: NodeExecutorContext<TIn, TOut>,
 	) => Promise<HandlerReturnType<TOut>>,
+) => genericRegisterAsyncHandler(defaultNodeHandlers, node, handler);
+
+export const genericRegisterHandler = <
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+>(
+	registry: Record<
+		string,
+		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+	>,
+	node: BaseNode<TIn, TOut>,
+	handler: (ctx: NodeExecutorContext<TIn, TOut>) => HandlerReturnType<TOut>,
 ) => {
 	const id = `${node.category}-${node.name}`;
-	if (id in defaultNodeHandlers)
+	if (id in registry)
+		throw new Error(`a handler for node "${id}" has already been registered`);
+	childLogger("nodes").debug(`\t\t-> registering handler for ${id}`);
+	registry[id] = async (ctx) => {
+		const result = handler(ctx as NodeExecutorContext<TIn, TOut>);
+		return result === undefined ? {} : result;
+	};
+};
+
+export const genericRegisterAsyncHandler = <
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+>(
+	registry: Record<
+		string,
+		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+	>,
+	node: BaseNode<TIn, TOut>,
+	handler: (
+		ctx: NodeExecutorContext<TIn, TOut>,
+	) => Promise<HandlerReturnType<TOut>>,
+) => {
+	const id = `${node.category}-${node.name}`;
+	if (id in registry)
 		throw new Error(`a handler for node "${id}" has already been registered`);
 	childLogger("nodes").debug(`\t\t-> registering handler (async) for ${id}`);
-	defaultNodeHandlers[id] = async (ctx) => {
+	registry[id] = async (ctx) => {
 		const result = await handler(ctx as NodeExecutorContext<TIn, TOut>);
 		return result === undefined ? {} : result;
 	};

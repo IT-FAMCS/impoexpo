@@ -12,7 +12,7 @@ import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { childLogger } from "../logger";
-import { FLOW_MARKER } from "@impoexpo/shared/nodes/node-utils";
+import { FLOW_MARKER, isArray } from "@impoexpo/shared/nodes/node-utils";
 
 export const getNodeHandler = (
 	type: string,
@@ -25,11 +25,14 @@ export const getNodeHandler = (
 
 export const getFlowInformation = (
 	node: ProjectNode,
-): Record<string, string> | null => {
-	const result = Object.entries(node.outputs).reduce<Record<string, string>>(
+): Record<string, string[]> | null => {
+	const result = Object.entries(node.outputs).reduce<Record<string, string[]>>(
 		(acc, cur) => {
-			if (cur[1].source?.entry === FLOW_MARKER)
-				acc[cur[0]] = cur[1].source.node;
+			const flowOutputs = (cur[1].sources ?? []).filter(
+				(o) => o.entry === FLOW_MARKER,
+			);
+			if (flowOutputs.length !== 0)
+				acc[cur[0]] = flowOutputs.map((o) => o.node);
 			return acc;
 		},
 		{},
@@ -42,7 +45,9 @@ export const getFlowNodes = (nodes: ProjectNode[]): ProjectNode[] =>
 export const getFlowNodeEntryFromPointer = (node: ProjectNode, ptr: string) => {
 	const info = getFlowInformation(node);
 	if (!info) return null;
-	const pair = Object.entries(info).find((p) => p[1] === ptr);
+	const pair = Object.entries(info).find((p) =>
+		p[1].find((node) => node === ptr),
+	);
 	return pair ? pair[0] : null;
 };
 
@@ -69,9 +74,11 @@ export const executeJobNodes = async (job: Job) => {
 			}
 
 			for (const entry of Object.values(targetNode.inputs)) {
-				if (entry.type === "independent" || !entry.source) continue;
-				const sourceNode = nodes.find((n) => n.id === entry.source?.node);
-				if (sourceNode) {
+				if (entry.type === "independent" || !entry.sources) continue;
+				const sourceNodes = nodes.filter((n) =>
+					entry.sources?.some((s) => s.node === n.id),
+				);
+				for (const sourceNode of sourceNodes) {
 					const parent = check(sourceNode);
 					if (parent) return parent;
 				}
@@ -86,7 +93,7 @@ export const executeJobNodes = async (job: Job) => {
 		node: string;
 		entry: string;
 		depth: number;
-		parent?: Record<string, InputPath>;
+		parent?: Record<string, InputPath[]>;
 	};
 
 	const resolveInputPaths = (
@@ -94,26 +101,29 @@ export const executeJobNodes = async (job: Job) => {
 		nodes: ProjectNode[],
 		depth = 1,
 	) => {
-		const paths: Record<string, InputPath> = {};
+		const paths: Record<string, InputPath[]> = {};
 		const base = baseNodesMap.get(node.type);
 		if (!base) {
 			throw new Error(`no node base was found for node type "${node.type}"`);
 		}
 
 		for (const [input, meta] of Object.entries(node.inputs)) {
-			if (meta.type === "independent" || !meta.source) continue;
+			if (meta.type === "independent" || !meta.sources) continue;
 
-			const sourceNode = nodes.find((n) => n.id === meta.source?.node);
-			if (!sourceNode) continue;
+			paths[input] = [];
+			for (const source of meta.sources) {
+				const sourceNode = nodes.find((n) => source.node === n.id);
+				if (!sourceNode) continue;
 
-			const path: InputPath = {
-				node: meta.source.node,
-				entry: meta.source.entry,
-				depth: depth,
-			};
-			const parentPaths = resolveInputPaths(sourceNode, nodes, depth + 1);
-			if (Object.keys(parentPaths).length !== 0) path.parent = parentPaths;
-			paths[input] = path;
+				const path: InputPath = {
+					node: source.node,
+					entry: source.entry,
+					depth: depth,
+				};
+				const parentPaths = resolveInputPaths(sourceNode, nodes, depth + 1);
+				if (Object.keys(parentPaths).length !== 0) path.parent = parentPaths;
+				paths[input].push(path);
+			}
 		}
 
 		return paths;
@@ -122,17 +132,19 @@ export const executeJobNodes = async (job: Job) => {
 	const runNode = async (
 		node: ProjectNode,
 		nodes: ProjectNode[],
-		paths: Record<string, InputPath>,
+		paths: Record<string, InputPath[]>,
 		depth?: number,
 		previousData?: Record<string, NodeOutput<v.ObjectEntries>>,
 	) => {
 		const lookupPaths = (
-			all: Record<string, InputPath>,
+			all: Record<string, InputPath[]>,
 			callback: (path: InputPath) => void,
 		) => {
-			for (const [, path] of Object.entries(all)) {
-				callback(path);
-				if (path.parent) lookupPaths(path.parent, callback);
+			for (const [, paths] of Object.entries(all)) {
+				for (const path of paths) {
+					callback(path);
+					if (path.parent) lookupPaths(path.parent, callback);
+				}
 			}
 		};
 
@@ -177,33 +189,41 @@ export const executeJobNodes = async (job: Job) => {
 							break;
 						}
 						case "dependent": {
-							if (!meta.source)
+							if (!meta.sources)
 								throw new Error(
 									`node "${sourceNode.id}" has a dependent input "${input}" which wasn't connected to anything`,
 								);
-							if (!(meta.source.node in actualPreviousData))
-								throw new Error(
-									`node "${sourceNode.id}" has a dependent input "${input}" connected to "${meta.source.node}", but it wasn't previously computed`,
-								);
-							if (Array.isArray(actualPreviousData[meta.source.node]))
-								throw new Error(
-									`unexpected iterator in "${meta.source.node}", which was connected to "${sourceNode.id}" (${meta.source.entry} -> ${input})`,
-								);
-							if (
-								!(
-									meta.source.entry in
-									(actualPreviousData[meta.source.node] as Record<
-										string,
-										unknown
-									>)
+							for (const source of meta.sources) {
+								if (!(source.node in actualPreviousData))
+									throw new Error(
+										`node "${sourceNode.id}" has a dependent input "${input}" connected to "${source.node}", but it wasn't previously computed`,
+									);
+								if (Array.isArray(actualPreviousData[source.node]))
+									throw new Error(
+										`unexpected iterator in "${source.node}", which was connected to "${sourceNode.id}" (${source.entry} -> ${input})`,
+									);
+								if (
+									!(
+										source.entry in
+										(actualPreviousData[source.node] as Record<string, unknown>)
+									)
 								)
-							)
-								throw new Error(
-									`node "${sourceNode.id}" has a dependent input "${input}" connected to "${meta.source.node}", but it doesn't have an output named "${meta.source.entry}"`,
-								);
-							inputs[input] = (
-								actualPreviousData[meta.source.node] as Record<string, unknown>
-							)[meta.source.entry];
+									throw new Error(
+										`node "${sourceNode.id}" has a dependent input "${input}" connected to "${source.node}", but it doesn't have an output named "${source.entry}"`,
+									);
+
+								const value = (
+									actualPreviousData[source.node] as Record<string, unknown>
+								)[source.entry];
+								inputs[input] = isArray(schema)
+									? [
+											...(input in inputs
+												? (inputs[input] as Array<unknown>)
+												: []),
+											...(Array.isArray(value) ? value : [value]),
+										]
+									: value;
+							}
 							break;
 						}
 					}
@@ -216,16 +236,13 @@ export const executeJobNodes = async (job: Job) => {
 		};
 
 		const proxyRun = (caller: ProjectNode) => {
-			return async (callee: string, values?: NodeOutput<v.ObjectEntries>) => {
+			return async (
+				callees: string[],
+				values?: NodeOutput<v.ObjectEntries>,
+			) => {
 				if (!getFlowInformation(caller)) {
 					throw new Error(
 						`${caller.id} attempted to call ~run(), which isn't allowed in non-flow nodes`,
-					);
-				}
-				const calleeNode = nodes.find((n) => n.id === callee);
-				if (!calleeNode) {
-					throw new Error(
-						`requested to run node ${callee}, which doesn't exist in the project`,
 					);
 				}
 
@@ -237,24 +254,33 @@ export const executeJobNodes = async (job: Job) => {
 					return parent === null ? current : findRootFlowParent(parent);
 				};
 
-				const newNodes = nodes.filter((n) => {
-					if (n.id === caller.id) return false;
-					const parent = findRootFlowParent(findFlowParent(n, nodes));
-					const result =
-						parent === null ||
-						(parent.node.id === caller.id &&
-							parent.entry === getFlowNodeEntryFromPointer(caller, callee));
-					return result;
-				});
+				for (const callee of callees) {
+					const calleeNode = nodes.find((n) => n.id === callee);
+					if (!calleeNode) {
+						throw new Error(
+							`requested to run node ${callee}, which doesn't exist in the project`,
+						);
+					}
 
-				if (Array.isArray(values)) {
-					for (const value of values) {
-						actualPreviousData[caller.id] = value;
+					const newNodes = nodes.filter((n) => {
+						if (n.id === caller.id) return false;
+						const parent = findRootFlowParent(findFlowParent(n, nodes));
+						const result =
+							parent === null ||
+							(parent.node.id === caller.id &&
+								parent.entry === getFlowNodeEntryFromPointer(caller, callee));
+						return result;
+					});
+
+					if (Array.isArray(values)) {
+						for (const value of values) {
+							actualPreviousData[caller.id] = value;
+							await runNodes(newNodes, structuredClone(actualPreviousData));
+						}
+					} else {
+						if (values !== undefined) actualPreviousData[caller.id] = values;
 						await runNodes(newNodes, structuredClone(actualPreviousData));
 					}
-				} else {
-					if (values !== undefined) actualPreviousData[caller.id] = values;
-					await runNodes(newNodes, structuredClone(actualPreviousData));
 				}
 			};
 		};

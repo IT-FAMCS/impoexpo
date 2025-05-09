@@ -30,7 +30,7 @@ export type BaseNodeEntry = {
 	name: string;
 	source: "input" | "output";
 	type: string;
-	generic?: string;
+	generic?: Record<string, string | null>;
 	schema: ObjectEntry;
 };
 
@@ -93,7 +93,7 @@ export class BaseNode<
 			...Object.keys(this.outputSchema?.entries ?? {}),
 		]) {
 			const entry = this.entry(key);
-			if (entry.generic === resolvedType) {
+			if (Object.keys(entry.generic ?? {}).some((t) => t === resolvedType)) {
 				Object.assign(
 					entry.source === "input"
 						? // biome-ignore lint/style/noNonNullAssertion: this.entry will throw if entry is not found
@@ -157,7 +157,7 @@ export class BaseNode<
 
 	type(key: string): {
 		type: string;
-		generic?: string;
+		generic?: Record<string, string | null>;
 	} {
 		const basic = this.basicEntry(key);
 		const unwrapped = unwrapNodeIfNeeded(basic.schema);
@@ -165,7 +165,13 @@ export class BaseNode<
 
 		return {
 			type: schemaString.type,
-			generic: schemaString.generic,
+			generic: schemaString.generic?.reduce<Record<string, string | null>>(
+				(acc, cur) => {
+					acc[cur] = this.genericTypes[cur];
+					return acc;
+				},
+				{},
+			),
 		};
 	}
 }

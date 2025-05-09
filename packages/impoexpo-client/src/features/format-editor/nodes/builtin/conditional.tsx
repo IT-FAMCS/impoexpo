@@ -62,7 +62,10 @@ nodesScope(() => {
 		},
 		outputs: {
 			flow: { title: msg`body...` },
-			iteration: { title: msg`iteration`, description: msg`starting from 1` },
+			iteration: {
+				title: msg`iteration`,
+				description: msg`starting from 1`,
+			},
 		},
 	});
 

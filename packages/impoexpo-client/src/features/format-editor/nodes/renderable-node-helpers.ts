@@ -6,8 +6,10 @@ import type { Connection, Edge } from "@xyflow/react";
 import type { FlowParent, ProjectNode } from "./renderable-node-types";
 import {
 	FLOW_MARKER,
+	getRootSchema,
 	isArray,
 	isFlow,
+	isGeneric,
 	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
@@ -78,6 +80,15 @@ export const nodeSchemasCompatible = (
 					return false;
 			}
 		}
+		return true;
+	}
+
+	// allows connecting multiple output of the same type to an array input
+	if (
+		isArray(targetEntry.schema) &&
+		(targetEntry.schema.item === sourceEntry.schema ||
+			isGeneric(getRootSchema(targetEntry.schema.item)))
+	) {
 		return true;
 	}
 

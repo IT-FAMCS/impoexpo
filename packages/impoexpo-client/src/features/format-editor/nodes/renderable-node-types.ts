@@ -18,6 +18,8 @@ export type ProjectNode = Node<{
 }>;
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
+export type NodePropertySeparator = "before" | "after" | "both" | "none";
+
 export type IconRenderFunction = (size: number) => React.ReactNode;
 export const localizableString = (
 	str: MessageDescriptor | string,
@@ -63,6 +65,7 @@ export type NodePropertyMetadata<
 	{
 		title: MessageDescriptor | string;
 		description: MessageDescriptor | string;
+		separate: NodePropertySeparator;
 	} & (TIsInput extends true
 		? { placeholder: MessageDescriptor | string; mode: NodePropertyMode }
 		: // biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -150,6 +153,12 @@ export class NodeRenderOptions<
 		if (isFlow(this.node.entry(String(key)).schema)) return "";
 
 		return this.node.entry(String(key)).type;
+	}
+
+	public separate<TKey extends keyof TSInput | keyof TSOutput>(
+		key: TKey,
+	): NodePropertySeparator {
+		return this.property(key)?.separate ?? "none";
 	}
 
 	public placeholder<TKey extends keyof TSInput | keyof TSOutput>(

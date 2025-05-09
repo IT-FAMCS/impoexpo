@@ -8,6 +8,7 @@ import {
 	generic,
 	getGenericName,
 	getObjectName,
+	isRecord,
 } from "./node-utils";
 
 const schemaConverterMap: Record<string, () => ObjectEntry> = {
@@ -30,10 +31,21 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 export const schemaToString = (
 	schema: ObjectEntry,
-): { type: string; generic?: string } => {
+): { type: string; generic?: string[] } => {
 	if (isArray(schema)) {
 		const item = schemaToString(schema.item);
 		return { type: `Array<${item.type}>`, generic: item.generic };
+	}
+
+	if (isRecord(schema)) {
+		const key = schemaToString(schema.key);
+		const value = schemaToString(schema.value);
+
+		const generic = [...(key.generic ?? []), ...(value.generic ?? [])];
+		return {
+			type: `Dictionary<${key}, ${value}>`,
+			generic: generic.length === 0 ? undefined : generic,
+		};
 	}
 
 	if (isNullable(schema)) {
@@ -46,6 +58,6 @@ export const schemaToString = (
 
 	if (isNamed(schema)) return { type: getObjectName(schema) };
 	if (isGeneric(schema))
-		return { type: getGenericName(schema), generic: getGenericName(schema) };
+		return { type: getGenericName(schema), generic: [getGenericName(schema)] };
 	return { type: schema.expects };
 };

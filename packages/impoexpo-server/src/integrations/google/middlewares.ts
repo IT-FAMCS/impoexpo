@@ -38,7 +38,6 @@ export const extractGoogleAuth = (
 	const decrypted = JSON.parse(
 		decryptString(encryptedTokens, "base64", "utf8"),
 	);
-	console.log(decrypted);
 	if (!v.is(GoogleAccessTokensSchema, decrypted)) {
 		throw new Error(
 			"the decrypted access tokens header does not satisfy the GoogleAccessTokensSchema",
