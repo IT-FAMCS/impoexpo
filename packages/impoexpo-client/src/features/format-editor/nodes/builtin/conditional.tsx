@@ -86,4 +86,11 @@ nodesScope(() => {
 			},
 		},
 	});
+
+	registerWithDefaultRenderer(conditionalNodes.RETURN_NODE, {
+		title: msg`return value`,
+		inputs: {
+			value: { title: msg`value`, mode: "dependentOnly" },
+		},
+	});
 });

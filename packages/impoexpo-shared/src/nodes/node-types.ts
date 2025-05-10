@@ -3,8 +3,10 @@ import {
 	getGenericEntries,
 	getGenericName,
 	isArray,
+	isEntryGeneric,
 	isGeneric,
 	isNullable,
+	isRecord,
 	unwrapNodeIfNeeded,
 } from "./node-utils";
 import { schemaToString } from "./schema-string-conversions";
@@ -30,7 +32,7 @@ export type BaseNodeEntry = {
 	name: string;
 	source: "input" | "output";
 	type: string;
-	generic?: Record<string, string | null>;
+	generic: boolean;
 	schema: ObjectEntry;
 };
 
@@ -42,7 +44,6 @@ export class BaseNode<
 > {
 	public name!: string;
 	public category!: string;
-	public iterable = false;
 
 	public inputSchema?: v.ObjectSchema<TIn, TInMessages> = undefined;
 	public outputSchema?: v.ObjectSchema<TOut, TOutMessages> = undefined;
@@ -78,14 +79,20 @@ export class BaseNode<
 			if (isGeneric(root) && getGenericName(root) === name) return resolver;
 			if (isArray(root))
 				return v.array(replaceGenericWithSchema(root.item, resolver, name));
+			if (isRecord(root))
+				return v.record(
+					replaceGenericWithSchema(root.key, resolver, name) as v.GenericSchema<
+						string,
+						string | number | symbol
+					>,
+					replaceGenericWithSchema(root.value, resolver, name),
+				);
 			if (isNullable(root))
 				return v.nullable(
 					replaceGenericWithSchema(root.wrapped, resolver, name),
 				);
 
-			throw new Error(
-				`BaseNode.resolveGenericEntry.replaceUnknownWithSchema failed: couldn't process node: ${JSON.stringify(root)}`,
-			);
+			return root;
 		};
 
 		for (const key of [
@@ -93,7 +100,7 @@ export class BaseNode<
 			...Object.keys(this.outputSchema?.entries ?? {}),
 		]) {
 			const entry = this.entry(key);
-			if (Object.keys(entry.generic ?? {}).some((t) => t === resolvedType)) {
+			if (entry.generic) {
 				Object.assign(
 					entry.source === "input"
 						? // biome-ignore lint/style/noNonNullAssertion: this.entry will throw if entry is not found
@@ -111,7 +118,7 @@ export class BaseNode<
 			}
 		}
 
-		this.genericTypes[resolvedType] = schemaToString(resolvedWith).type;
+		this.genericTypes[resolvedType] = schemaToString(resolvedWith);
 	}
 
 	public hasEntry(key: string) {
@@ -147,31 +154,11 @@ export class BaseNode<
 
 	public entry(key: string): BaseNodeEntry {
 		const basic = this.basicEntry(key);
-		const typeData = this.type(key);
+		const type = schemaToString(unwrapNodeIfNeeded(basic.schema));
 		return {
 			...basic,
-			type: typeData.type,
-			generic: typeData.generic,
-		};
-	}
-
-	type(key: string): {
-		type: string;
-		generic?: Record<string, string | null>;
-	} {
-		const basic = this.basicEntry(key);
-		const unwrapped = unwrapNodeIfNeeded(basic.schema);
-		const schemaString = schemaToString(unwrapped);
-
-		return {
-			type: schemaString.type,
-			generic: schemaString.generic?.reduce<Record<string, string | null>>(
-				(acc, cur) => {
-					acc[cur] = this.genericTypes[cur];
-					return acc;
-				},
-				{},
-			),
+			type: type,
+			generic: isEntryGeneric(basic.schema),
 		};
 	}
 }

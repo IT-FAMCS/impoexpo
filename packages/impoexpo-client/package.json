@@ -12,9 +12,9 @@
 	},
 	"dependencies": {
 		"@dagrejs/dagre": "^1.1.4",
-		"@heroui/react": "^2.7.6",
-		"@heroui/theme": "^2.4.13",
-		"@heroui/use-theme": "^2.1.6",
+		"@heroui/react": "^2.7.8",
+		"@heroui/theme": "^2.4.15",
+		"@heroui/use-theme": "^2.1.8",
 		"@impoexpo/shared": "workspace:^",
 		"@lingui/core": "^5.3.1",
 		"@lingui/detect-locale": "^5.3.1",
@@ -27,9 +27,9 @@
 		"@react-aria/utils": "3.28.0",
 		"@react-aria/visually-hidden": "3.8.19",
 		"@react-stately/utils": "^3.10.6",
-		"@tanstack/react-query": "^5.74.3",
+		"@tanstack/react-query": "^5.75.7",
 		"@valibot/i18n": "^1.0.0",
-		"@xyflow/react": "^12.5.6",
+		"@xyflow/react": "^12.6.0",
 		"clsx": "2.1.1",
 		"deep-copy-ts": "^0.5.4",
 		"dexie": "^4.0.11",
@@ -37,17 +37,17 @@
 		"fflate": "^0.8.2",
 		"framer-motion": "11.15.0",
 		"gapi": "^0.0.3",
-		"idb-keyval": "^6.2.1",
+		"idb-keyval": "^6.2.2",
 		"react": "18.3.0",
 		"react-dom": "18.3.0",
 		"react-hotkeys-hook": "^5.0.1",
-		"react-router": "^7.5.0",
+		"react-router": "^7.6.0",
 		"tailwind-variants": "0.3.0",
 		"tailwindcss": "3.4.16",
 		"usehooks-ts": "^3.1.1",
-		"valibot": "^1.0.0",
+		"valibot": "^1.1.0",
 		"zundo": "^2.3.0",
-		"zustand": "^5.0.3"
+		"zustand": "^5.0.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
@@ -65,7 +65,7 @@
 		"autoprefixer": "10.4.19",
 		"postcss": "8.4.38",
 		"typescript": "5.6.3",
-		"vite": "^5.4.18",
+		"vite": "^5.4.19",
 		"vite-tsconfig-paths": "^4.3.2"
 	}
 }

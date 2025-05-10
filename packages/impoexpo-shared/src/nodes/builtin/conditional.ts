@@ -52,11 +52,20 @@ export const THROW_ERROR_IF_NULL_NODE = new BaseNode({
 	}),
 });
 
+export const RETURN_NODE = new BaseNode({
+	category: "conditional",
+	name: "return",
+	inputSchema: v.object({
+		value: generic("T"),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		IF_NODE,
 		EXECUTE_IF_NODE,
 		REPEAT_NODE,
 		THROW_ERROR_IF_NULL_NODE,
+		RETURN_NODE,
 	);
 });

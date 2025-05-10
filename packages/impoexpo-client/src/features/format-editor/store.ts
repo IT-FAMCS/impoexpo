@@ -24,9 +24,13 @@ import {
 	type DefaultBaseNode,
 	findCompatibleEntry,
 	FLOW_MARKER,
+	getGenericName,
 	isArray,
+	isEntryGeneric,
 	isFlow,
+	isGeneric,
 	isNullable,
+	isRecord,
 } from "@impoexpo/shared/nodes/node-utils";
 import {
 	BaseNode,
@@ -48,7 +52,10 @@ import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
 import { useStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
+import {
+	schemaFromString,
+	schemaToString,
+} from "@impoexpo/shared/nodes/schema-string-conversions";
 
 export type PersistentGenericNodeData = Record<
 	string,
@@ -548,36 +555,52 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			},
 
 			resolveGenericNode(base, resolved, resolver, node) {
-				const types = resolved.generic;
-				if (!types) return node;
+				if (!resolved.generic)
+					throw new Error(
+						`resolveGenericNode was called on a non-generic entry "${resolved.name}" (node "${node.id}")`,
+					);
+
+				const findResolvedTypes = (
+					source: ObjectEntry,
+					target: ObjectEntry,
+				): Record<string, ObjectEntry> => {
+					if (!isEntryGeneric(source))
+						throw new Error(
+							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
+						);
+
+					if (isArray(source) && isArray(target))
+						return findResolvedTypes(source.item, target.item);
+					if (isRecord(source) && isRecord(target))
+						return {
+							...findResolvedTypes(source.key, target.key),
+							...findResolvedTypes(source.value, target.value),
+						};
+					if (isNullable(source) && isNullable(target))
+						return findResolvedTypes(source.wrapped, target.wrapped);
+
+					if (isGeneric(source)) return { [getGenericName(source)]: target };
+					return {};
+				};
+				const resolvedTypes = findResolvedTypes(
+					resolved.schema,
+					resolver.schema,
+				);
 
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
 				copy.name = `${base.node.name}-${Object.keys(base.node.genericTypes)
-					.map((p) => {
-						//(p === resolvedType ? resolver.type : p).replaceAll(" ", "")
-						const resolvedType = (resolver.generic ?? []).find((t) => t === p);
-						return resolvedType ? resolvedType : p;
-					})
+					.map((p) =>
+						p in resolvedTypes ? schemaToString(resolvedTypes[p]).trim() : p,
+					)
 					.join("-")}`;
 
-				// TODO: should this be here or in BaseNode?
-				const simplifyResolver = (
-					entry: ObjectEntry,
-					resolver: ObjectEntry,
-				): ObjectEntry => {
-					if (isArray(entry) && isArray(resolver))
-						return simplifyResolver(entry.item, resolver.item);
-					if (isNullable(entry) && isNullable(resolver))
-						return simplifyResolver(entry.wrapped, resolver.wrapped);
-					return resolver;
-				};
-
-				copy.resolveGenericType(
-					resolvedType,
-					simplifyResolver(resolved.schema, resolver.schema),
-				);
+				for (const [resolvedType, resolverSchema] of Object.entries(
+					resolvedTypes,
+				)) {
+					copy.resolveGenericType(resolvedType, resolverSchema);
+				}
 
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 				addGenericNodeInstance(base.node, copy);

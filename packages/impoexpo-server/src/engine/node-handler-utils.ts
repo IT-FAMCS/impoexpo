@@ -20,13 +20,10 @@ export const integrationNodeHandlerRegistrars: Record<
 	) => Record<string, NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>>
 > = {};
 
-type InternalNodeOutput<TOut extends v.ObjectEntries> = Omit<
+export type NodeOutput<TOut extends v.ObjectEntries> = Omit<
 	ResolveEntries<TOut>,
-	keyof IncludeFlows<TOut>
+	keyof IncludeFlows<TOut> | keyof IncludeSubfowArguments<TOut>
 >;
-export type NodeOutput<TOut extends v.ObjectEntries> =
-	| InternalNodeOutput<TOut>
-	| InternalNodeOutput<TOut>[];
 
 export type NodeExecutorContext<
 	TIn extends v.ObjectEntries,
@@ -43,7 +40,7 @@ export type NodeHandlerFunction<
 > = (ctx: NodeExecutorContext<TIn, TOut>) => Promise<NodeOutput<TOut>>;
 
 type HandlerReturnType<TOut extends v.ObjectEntries> =
-	InternalNodeOutput<TOut> extends Record<string, never>
+	NodeOutput<TOut> extends Record<string, never>
 		? // biome-ignore lint/suspicious/noConfusingVoidType: this type is used exclusively for return types
 			void
 		: NodeOutput<TOut>;
@@ -165,6 +162,16 @@ export type ResolveEntries<T extends v.ObjectEntries> = {
 export type IncludeFlows<T extends v.ObjectEntries> = {
 	[key in keyof T]: T[key] extends ReturnType<typeof flow>
 		? v.InferOutput<T[key]>
+		: never;
+} extends infer O
+	? { [K in keyof O as O[K] extends never ? never : K]: O[K] }
+	: never;
+
+export type IncludeSubfowArguments<T extends v.ObjectEntries> = {
+	[key in keyof T]: "metadataType" extends keyof v.InferMetadata<T[key]>
+		? v.InferMetadata<T[key]>["metadataType"] extends "subflowArgument"
+			? v.InferOutput<T[key]>
+			: never
 		: never;
 } extends infer O
 	? { [K in keyof O as O[K] extends never ? never : K]: O[K] }

@@ -198,10 +198,6 @@ export const executeJobNodes = async (job: Job) => {
 									throw new Error(
 										`node "${sourceNode.id}" has a dependent input "${input}" connected to "${source.node}", but it wasn't previously computed`,
 									);
-								if (Array.isArray(actualPreviousData[source.node]))
-									throw new Error(
-										`unexpected iterator in "${source.node}", which was connected to "${sourceNode.id}" (${source.entry} -> ${input})`,
-									);
 								if (
 									!(
 										source.entry in
@@ -306,12 +302,6 @@ export const executeJobNodes = async (job: Job) => {
 			pathOutputs[sourceNode.id] = output;
 		}
 
-		type Iterator = {
-			node: string;
-			length: number;
-			items: ResolveEntries<v.ObjectEntries>[];
-		};
-
 		if (actualDepth === 0) {
 			const base = baseNodesMap.get(node.type);
 			if (!base)
@@ -331,80 +321,16 @@ export const executeJobNodes = async (job: Job) => {
 				"~run": proxyRun(node),
 			});
 		} else {
-			const iterators: Iterator[] = Object.entries(pathOutputs)
-				.filter((o) => Array.isArray(o[1]))
-				.map((o) => [o[0], o[1] as ResolveEntries<v.ObjectEntries>[]] as const)
-				.map(
-					(p) =>
-						({
-							node: p[0],
-							length: p[1].length,
-							items: p[1],
-						}) satisfies Iterator,
-				);
-			const nonIterators: Record<
-				string,
-				ResolveEntries<v.ObjectEntries>
-			> = Object.entries(pathOutputs)
-				.filter((o) => iterators.find((i) => i.node === o[0]) === undefined)
-				.reduce(
-					(acc, out) => {
-						acc[out[0]] = out[1] as ResolveEntries<v.ObjectEntries>;
-						return acc;
-					},
-					{} as Record<string, ResolveEntries<v.ObjectEntries>>,
-				);
-
-			if (iterators.length !== 0)
-				logger.debug("found iterators: %o", iterators);
-			if (Object.keys(nonIterators).length !== 0)
-				logger.debug("immediate values: %o", nonIterators);
-
-			for (const [node, data] of Object.entries(nonIterators))
+			for (const [node, data] of Object.entries(pathOutputs))
 				actualPreviousData[node] = data;
 
-			if (iterators.length === 0) {
-				logger.debug(
-					`no iterators found at depth ${actualDepth}, resolved values: %o`,
-					actualPreviousData,
-				);
-				await runNode(
-					node,
-					nodes,
-					paths,
-					actualDepth - 1,
-					structuredClone(actualPreviousData),
-				);
-			} else {
-				if (
-					iterators.some(
-						(it, idx) =>
-							iterators.findIndex((other) => other.length === it.length) !==
-							idx,
-					)
-				) {
-					throw new Error(
-						"first rule of impoexpo violated: there cannot be two or more iterators of the same depth with different amounts of items",
-					);
-				}
-
-				for (let idx = 0; idx < iterators[0].length; idx++) {
-					for (const it of iterators) {
-						logger.debug(
-							`(depth ${actualDepth}) iterating ${it.node} (${idx + 1}/${iterators[0].length}): %o`,
-							it.items[idx],
-						);
-						actualPreviousData[it.node] = it.items[idx];
-					}
-					await runNode(
-						node,
-						nodes,
-						paths,
-						actualDepth - 1,
-						structuredClone(actualPreviousData),
-					);
-				}
-			}
+			await runNode(
+				node,
+				nodes,
+				paths,
+				actualDepth - 1,
+				structuredClone(actualPreviousData),
+			);
 		}
 	};
 

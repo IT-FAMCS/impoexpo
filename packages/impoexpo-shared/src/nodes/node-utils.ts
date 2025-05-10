@@ -6,38 +6,6 @@ import type {
 } from "./node-types";
 import * as v from "valibot";
 
-const hasMetadata = (
-	schema: ObjectEntry,
-): schema is v.SchemaWithPipe<
-	[
-		ObjectEntry,
-		v.MetadataAction<
-			ObjectEntry,
-			{
-				metadataType: string;
-			}
-		>,
-	]
-> => {
-	const isPipe = (
-		schema: ObjectEntry,
-	): schema is v.SchemaWithPipe<[ObjectEntry, v.GenericPipeAction]> =>
-		"pipe" in schema;
-
-	const isMetadataAction = (
-		item: v.GenericPipeAction,
-	): item is v.MetadataAction<ObjectEntry, Record<string, unknown>> => {
-		return item.type === "metadata";
-	};
-
-	return (
-		isPipe(schema) &&
-		schema.pipe.length > 1 &&
-		isMetadataAction(schema.pipe[1]) &&
-		"metadataType" in schema.pipe[1].metadata
-	);
-};
-
 export const generic = <T extends string>(name: T) =>
 	v.pipe(v.unknown(), v.metadata({ metadataType: "generic", typeName: name }));
 export const isGeneric = (
@@ -45,9 +13,8 @@ export const isGeneric = (
 ): schema is ReturnType<typeof generic> => {
 	if (isObject(schema))
 		return Object.values(schema.entries).some((entry) => isGeneric(entry));
-	return (
-		hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "generic"
-	);
+	const metadata = v.getMetadata(schema);
+	return "metadataType" in metadata && metadata.metadataType === "generic";
 };
 export const getGenericEntries = (
 	schema: ObjectEntry,
@@ -67,17 +34,18 @@ export const flow = () =>
 export const isFlow = (
 	schema: ObjectEntry,
 ): schema is ReturnType<typeof flow> => {
-	return hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "flow";
+	const metadata = v.getMetadata(schema);
+	return "metadataType" in metadata && metadata.metadataType === "flow";
 };
 
-export const unavailableInSubflows = <TSInput>() =>
-	v.metadata<TSInput, { metadataType: string }>({
-		metadataType: "unavailableInSubflows",
+export const subflowArgument = <TSInput>() =>
+	v.metadata<TSInput, { metadataType: "subflowArgument" }>({
+		metadataType: "subflowArgument",
 	});
-export const isAvailableInSubflows = (schema: ObjectEntry): boolean => {
-	return !(
-		hasMetadata(schema) &&
-		schema.pipe[1].metadata.metadataType === "unavailableInSublows"
+export const isSubflowArgument = (schema: ObjectEntry): boolean => {
+	const metadata = v.getMetadata(schema);
+	return (
+		"metadataType" in metadata && metadata.metadataType === "subflowArgument"
 	);
 };
 
@@ -88,9 +56,8 @@ export const named = (
 export const isNamed = (
 	schema: ObjectEntry,
 ): schema is ReturnType<typeof named> => {
-	return (
-		hasMetadata(schema) && schema.pipe[1].metadata.metadataType === "named"
-	);
+	const metadata = v.getMetadata(schema);
+	return "metadataType" in metadata && metadata.metadataType === "named";
 };
 export const getObjectName = (schema: ReturnType<typeof named>) =>
 	schema.pipe[1].metadata.objectName;
@@ -188,4 +155,15 @@ export const findCompatibleEntry = (
 	throw new Error(
 		`couldn't find a compatible entry between ${fromNode.category}-${fromNode.name} <=> ${toNode.category}-${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.type})`,
 	);
+};
+
+export const isEntryGeneric = (entry: ObjectEntry): boolean => {
+	if (isArray(entry)) return isEntryGeneric(entry.item);
+	if (isRecord(entry))
+		return isEntryGeneric(entry.key) || isEntryGeneric(entry.value);
+	if (isNullable(entry)) return isEntryGeneric(entry.wrapped);
+	if (isObject(entry))
+		return Object.values(entry.entries).some((v) => isEntryGeneric(v));
+	if (isGeneric(entry)) return true;
+	return false;
 };

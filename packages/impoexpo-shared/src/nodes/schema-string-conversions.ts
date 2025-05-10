@@ -1,11 +1,18 @@
-import { array, boolean, nullable, number, string } from "valibot";
+import {
+	type GenericSchema,
+	array,
+	boolean,
+	nullable,
+	number,
+	record,
+	string,
+} from "valibot";
 import type { ObjectEntry } from "./node-types";
 import {
 	isArray,
 	isNullable,
 	isNamed,
 	isGeneric,
-	generic,
 	getGenericName,
 	getObjectName,
 	isRecord,
@@ -22,42 +29,31 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 	const nullRegexMatches = /(.*\S)\s*\|\s?null/.exec(str);
 	if (nullRegexMatches) return nullable(schemaFromString(nullRegexMatches[1]));
+
 	const arrayRegexMatches = /Array<(.+)>/.exec(str);
 	if (arrayRegexMatches) return array(schemaFromString(arrayRegexMatches[1]));
-	if (str in schemaConverterMap) return schemaConverterMap[str]();
 
+	const dictionaryRegexMatches = /Dictionary<(.+),\s?(.+)>/.exec(str);
+	if (dictionaryRegexMatches)
+		return record(
+			schemaFromString(dictionaryRegexMatches[1]) as GenericSchema<
+				string,
+				string | number | symbol
+			>,
+			schemaFromString(dictionaryRegexMatches[2]),
+		);
+
+	if (str in schemaConverterMap) return schemaConverterMap[str]();
 	throw new Error(`failed to convert ${str} into a schema object`);
 };
 
-export const schemaToString = (
-	schema: ObjectEntry,
-): { type: string; generic?: string[] } => {
-	if (isArray(schema)) {
-		const item = schemaToString(schema.item);
-		return { type: `Array<${item.type}>`, generic: item.generic };
-	}
-
-	if (isRecord(schema)) {
-		const key = schemaToString(schema.key);
-		const value = schemaToString(schema.value);
-
-		const generic = [...(key.generic ?? []), ...(value.generic ?? [])];
-		return {
-			type: `Dictionary<${key}, ${value}>`,
-			generic: generic.length === 0 ? undefined : generic,
-		};
-	}
-
-	if (isNullable(schema)) {
-		const wrapped = schemaToString(schema.wrapped);
-		return {
-			type: `${wrapped.type}${isNullable(schema.wrapped) ? "" : " | null"}`,
-			generic: wrapped.generic,
-		};
-	}
-
-	if (isNamed(schema)) return { type: getObjectName(schema) };
-	if (isGeneric(schema))
-		return { type: getGenericName(schema), generic: [getGenericName(schema)] };
-	return { type: schema.expects };
+export const schemaToString = (schema: ObjectEntry): string => {
+	if (isArray(schema)) return `Array<${schemaToString(schema.item)}>`;
+	if (isRecord(schema))
+		return `Dictionary<${schemaToString(schema.key)}, ${schemaToString(schema.value)}>`;
+	if (isNullable(schema))
+		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
+	if (isNamed(schema)) return getObjectName(schema);
+	if (isGeneric(schema)) return getGenericName(schema);
+	return schema.expects;
 };
