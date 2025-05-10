@@ -16,6 +16,7 @@ import {
 	getGenericName,
 	getObjectName,
 	isRecord,
+	isPipe,
 } from "./node-utils";
 
 const schemaConverterMap: Record<string, () => ObjectEntry> = {
@@ -53,7 +54,9 @@ export const schemaToString = (schema: ObjectEntry): string => {
 		return `Dictionary<${schemaToString(schema.key)}, ${schemaToString(schema.value)}>`;
 	if (isNullable(schema))
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
+
 	if (isNamed(schema)) return getObjectName(schema);
 	if (isGeneric(schema)) return getGenericName(schema);
+	if (isPipe(schema)) return schemaToString(schema.pipe[0]);
 	return schema.expects;
 };

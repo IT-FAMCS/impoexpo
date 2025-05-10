@@ -6,6 +6,7 @@ import {
 	isEntryGeneric,
 	isGeneric,
 	isNullable,
+	isPipe,
 	isRecord,
 	unwrapNodeIfNeeded,
 } from "./node-utils";
@@ -76,6 +77,7 @@ export class BaseNode<
 			resolver: ObjectEntry,
 			name: string,
 		): ObjectEntry => {
+			console.log(root);
 			if (isGeneric(root) && getGenericName(root) === name) return resolver;
 			if (isArray(root))
 				return v.array(replaceGenericWithSchema(root.item, resolver, name));
@@ -90,6 +92,11 @@ export class BaseNode<
 			if (isNullable(root))
 				return v.nullable(
 					replaceGenericWithSchema(root.wrapped, resolver, name),
+				);
+			if (isPipe(root))
+				return v.pipe(
+					replaceGenericWithSchema(root.pipe[0], resolver, name),
+					...root.pipe.slice(1),
 				);
 
 			return root;

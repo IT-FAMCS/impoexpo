@@ -14,14 +14,13 @@ registerAsyncHandler(conditionalNodes.EXECUTE_IF_NODE, async (ctx) => {
 });
 
 registerAsyncHandler(conditionalNodes.REPEAT_NODE, async (ctx) => {
-	const result: { iteration: number }[] = [];
 	for (let i = 1; i <= ctx.times; i++) {
 		if (ctx.flow) await ctx["~run"](ctx.flow, { iteration: i });
-		result.push({ iteration: i });
 	}
-	// since the iteration field can be assigned to any node,
-	// the repeat node will behave like an iterator to nodes which aren't in the flow
-	return result;
+});
+
+registerHandler(conditionalNodes.RETURN_NODE, (ctx) => {
+	ctx["~return"](ctx.value);
 });
 
 registerHandler(conditionalNodes.THROW_ERROR_IF_NULL_NODE, (ctx) => {

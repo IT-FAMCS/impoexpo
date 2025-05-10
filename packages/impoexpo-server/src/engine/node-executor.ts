@@ -6,7 +6,7 @@ import {
 	defaultNodeHandlers,
 	type NodeOutput,
 	type NodeHandlerFunction,
-	type ResolveEntries,
+	type NodeReturnType,
 } from "./node-handler-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
@@ -135,7 +135,8 @@ export const executeJobNodes = async (job: Job) => {
 		paths: Record<string, InputPath[]>,
 		depth?: number,
 		previousData?: Record<string, NodeOutput<v.ObjectEntries>>,
-	) => {
+	): Promise<NodeReturnType> => {
+		let returnValue: NodeReturnType = null;
 		const lookupPaths = (
 			all: Record<string, InputPath[]>,
 			callback: (path: InputPath) => void,
@@ -235,7 +236,7 @@ export const executeJobNodes = async (job: Job) => {
 			return async (
 				callees: string[],
 				values?: NodeOutput<v.ObjectEntries>,
-			) => {
+			): Promise<NodeReturnType[]> => {
 				if (!getFlowInformation(caller)) {
 					throw new Error(
 						`${caller.id} attempted to call ~run(), which isn't allowed in non-flow nodes`,
@@ -250,6 +251,7 @@ export const executeJobNodes = async (job: Job) => {
 					return parent === null ? current : findRootFlowParent(parent);
 				};
 
+				const returnValues: NodeReturnType[] = [];
 				for (const callee of callees) {
 					const calleeNode = nodes.find((n) => n.id === callee);
 					if (!calleeNode) {
@@ -271,13 +273,19 @@ export const executeJobNodes = async (job: Job) => {
 					if (Array.isArray(values)) {
 						for (const value of values) {
 							actualPreviousData[caller.id] = value;
-							await runNodes(newNodes, structuredClone(actualPreviousData));
+							returnValues.push(
+								await runNodes(newNodes, structuredClone(actualPreviousData)),
+							);
 						}
 					} else {
 						if (values !== undefined) actualPreviousData[caller.id] = values;
-						await runNodes(newNodes, structuredClone(actualPreviousData));
+						returnValues.push(
+							await runNodes(newNodes, structuredClone(actualPreviousData)),
+						);
 					}
 				}
+
+				return returnValues;
 			};
 		};
 
@@ -297,6 +305,9 @@ export const executeJobNodes = async (job: Job) => {
 				...resolveInputs(sourceNode),
 				"~job": job,
 				"~run": proxyRun(sourceNode),
+				"~return": (value) => {
+					returnValue = value;
+				},
 			});
 			logger.debug("received: %o", output);
 			pathOutputs[sourceNode.id] = output;
@@ -319,6 +330,9 @@ export const executeJobNodes = async (job: Job) => {
 				...inputs,
 				"~job": job,
 				"~run": proxyRun(node),
+				"~return": (value) => {
+					returnValue = value;
+				},
 			});
 		} else {
 			for (const [node, data] of Object.entries(pathOutputs))
@@ -332,12 +346,14 @@ export const executeJobNodes = async (job: Job) => {
 				structuredClone(actualPreviousData),
 			);
 		}
+
+		return returnValue;
 	};
 
 	const runNodes = async (
 		nodes: ProjectNode[],
 		previousData?: Record<string, NodeOutput<v.ObjectEntries>>,
-	) => {
+	): Promise<NodeReturnType[]> => {
 		// terminating nodes which don't depend on any flow nodes
 		const independentTerminatingNodes = nodes.filter(
 			(n) =>
@@ -348,12 +364,20 @@ export const executeJobNodes = async (job: Job) => {
 			(n) => getFlowInformation(n) && findFlowParent(n, nodes) === null,
 		);
 
+		const returnValues: NodeReturnType[] = [];
 		if (rootFlows.length !== 0) {
 			logger.info(`running ${rootFlows.length} independent flow node(s)`);
 			for (const node of rootFlows) {
 				const paths = resolveInputPaths(node, nodes);
 				logger.debug(`input paths for ${node.id}: %o`, paths);
-				await runNode(node, nodes, paths, undefined, previousData);
+				const value = await runNode(
+					node,
+					nodes,
+					paths,
+					undefined,
+					previousData,
+				);
+				if (value) returnValues.push(value);
 			}
 		}
 		if (independentTerminatingNodes.length !== 0) {
@@ -363,9 +387,18 @@ export const executeJobNodes = async (job: Job) => {
 			for (const node of independentTerminatingNodes) {
 				const paths = resolveInputPaths(node, nodes);
 				logger.debug(`input paths for ${node.id}: %o`, paths);
-				await runNode(node, nodes, paths, undefined, previousData);
+				const value = await runNode(
+					node,
+					nodes,
+					paths,
+					undefined,
+					previousData,
+				);
+				if (value) returnValues.push(value);
 			}
 		}
+
+		return returnValues;
 	};
 
 	try {

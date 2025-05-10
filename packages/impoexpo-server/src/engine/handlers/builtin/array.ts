@@ -13,3 +13,11 @@ registerAsyncHandler(arrayNodes.ARRAY_FOREACH_NODE, async (ctx) => {
 		await ctx["~run"](ctx.flow ?? [], { object });
 	}
 });
+
+registerAsyncHandler(arrayNodes.ARRAY_TRANSFORM_NODE, async (ctx) => {
+	const result: unknown[] = [];
+	for (const object of ctx.array) {
+		result.push(await ctx["~run"](ctx.flow ?? [], { object }));
+	}
+	return { result };
+});

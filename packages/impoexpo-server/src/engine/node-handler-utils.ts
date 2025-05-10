@@ -25,12 +25,19 @@ export type NodeOutput<TOut extends v.ObjectEntries> = Omit<
 	keyof IncludeFlows<TOut> | keyof IncludeSubfowArguments<TOut>
 >;
 
+// null here signifies "void"
+export type NodeReturnType = unknown | null;
+
 export type NodeExecutorContext<
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
 > = {
 	"~job": Job;
-	"~run": (nodes: string[], values?: NodeOutput<TOut>) => Promise<void>;
+	"~run": (
+		nodes: string[],
+		values?: IncludeSubfowArguments<TOut>,
+	) => Promise<NodeReturnType[]>;
+	"~return": (value: unknown) => void;
 } & ResolveEntries<TIn> &
 	IncludeFlows<TOut>;
 

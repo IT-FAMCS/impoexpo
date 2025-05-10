@@ -65,7 +65,8 @@ export const getObjectName = (schema: ReturnType<typeof named>) =>
 export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
 	// NOTE: do not unwrap nullable types here! they must be handled by the user
 	// with special nodes.
-	return isOptional(node) ? unwrapNodeIfNeeded(node.wrapped) : node;
+	if (isOptional(node)) return unwrapNodeIfNeeded(node.wrapped);
+	return node;
 };
 
 export const getRootSchema = (node: ObjectEntry): ObjectEntry => {
@@ -74,6 +75,11 @@ export const getRootSchema = (node: ObjectEntry): ObjectEntry => {
 	if (isNullable(node)) return getRootSchema(node.wrapped);
 	return node;
 };
+
+export const isPipe = (
+	schema: ObjectEntry,
+): schema is v.SchemaWithPipe<[ObjectEntry, v.GenericPipeAction]> =>
+	"pipe" in schema;
 
 export const isOptional = (
 	schema: ObjectEntry,
@@ -165,5 +171,6 @@ export const isEntryGeneric = (entry: ObjectEntry): boolean => {
 	if (isObject(entry))
 		return Object.values(entry.entries).some((v) => isEntryGeneric(v));
 	if (isGeneric(entry)) return true;
+	if (isPipe(entry)) return isEntryGeneric(entry.pipe[0]);
 	return false;
 };

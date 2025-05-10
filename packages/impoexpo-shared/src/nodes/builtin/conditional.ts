@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { flow, generic } from "../node-utils";
+import { flow, generic, subflowArgument } from "../node-utils";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",
@@ -36,7 +36,7 @@ export const REPEAT_NODE = new BaseNode({
 	}),
 	outputSchema: v.object({
 		flow: flow(),
-		iteration: v.number(),
+		iteration: v.pipe(v.number(), subflowArgument()),
 	}),
 });
 

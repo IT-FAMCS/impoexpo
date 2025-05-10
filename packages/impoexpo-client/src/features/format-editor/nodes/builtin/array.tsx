@@ -35,4 +35,17 @@ nodesScope(() => {
 			object: { title: msg`object` },
 		},
 	});
+
+	registerWithDefaultRenderer(arrayNodes.ARRAY_TRANSFORM_NODE, {
+		title: msg`transform elements in the array...`,
+		aliases: msg`modify elements, transform array`,
+		inputs: {
+			array: { title: msg`array` },
+		},
+		outputs: {
+			flow: { title: msg`transformer` },
+			object: { title: msg`object` },
+			result: { title: msg`result` },
+		},
+	});
 });
