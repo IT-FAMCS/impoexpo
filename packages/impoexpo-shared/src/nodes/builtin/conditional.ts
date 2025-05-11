@@ -36,7 +36,7 @@ export const REPEAT_NODE = new BaseNode({
 	}),
 	outputSchema: v.object({
 		flow: flow(),
-		iteration: v.pipe(v.number(), subflowArgument()),
+		iteration: v.pipe(v.number(), subflowArgument("flow")),
 	}),
 });
 

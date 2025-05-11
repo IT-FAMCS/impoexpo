@@ -1,4 +1,4 @@
-import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
+import type { BaseNode, ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import type * as v from "valibot";
 import type { Job } from "./job-manager";
 import { childLogger } from "../logger";
@@ -20,10 +20,15 @@ export const integrationNodeHandlerRegistrars: Record<
 	) => Record<string, NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>>
 > = {};
 
-export type NodeOutput<TOut extends v.ObjectEntries> = Omit<
-	ResolveEntries<TOut>,
-	keyof IncludeFlows<TOut> | keyof IncludeSubfowArguments<TOut>
->;
+export type NodeOutput<TOut extends v.ObjectEntries> = TOut extends Record<
+	string,
+	never
+>
+	? Record<string, never>
+	: Omit<
+			ResolveEntries<TOut>,
+			keyof IncludeFlows<TOut> | keyof IncludeSubfowArguments<TOut>
+		>;
 
 // null here signifies "void"
 export type NodeReturnType = unknown | null;
@@ -33,9 +38,11 @@ export type NodeExecutorContext<
 	TOut extends v.ObjectEntries,
 > = {
 	"~job": Job;
-	"~run": (
-		nodes: string[],
-		values?: IncludeSubfowArguments<TOut>,
+	"~run": <TFlow extends keyof IncludeFlows<TOut>>(
+		flow: TFlow,
+		...args: IncludeSubfowArguments<TOut, TFlow> extends Record<string, never>
+			? []
+			: [args: IncludeSubfowArguments<TOut, TFlow>]
 	) => Promise<NodeReturnType[]>;
 	"~return": (value: unknown) => void;
 } & ResolveEntries<TIn> &
@@ -86,7 +93,7 @@ export const genericRegisterHandler = <
 		throw new Error(`a handler for node "${id}" has already been registered`);
 	childLogger("nodes").debug(`\t\t-> registering handler for ${id}`);
 	registry[id] = async (ctx) => {
-		const result = handler(ctx as NodeExecutorContext<TIn, TOut>);
+		const result = handler(ctx as unknown as NodeExecutorContext<TIn, TOut>);
 		return result === undefined ? {} : result;
 	};
 };
@@ -109,7 +116,9 @@ export const genericRegisterAsyncHandler = <
 		throw new Error(`a handler for node "${id}" has already been registered`);
 	childLogger("nodes").debug(`\t\t-> registering handler (async) for ${id}`);
 	registry[id] = async (ctx) => {
-		const result = await handler(ctx as NodeExecutorContext<TIn, TOut>);
+		const result = await handler(
+			ctx as unknown as NodeExecutorContext<TIn, TOut>,
+		);
 		return result === undefined ? {} : result;
 	};
 };
@@ -166,20 +175,32 @@ export type ResolveEntries<T extends v.ObjectEntries> = {
 	[key in keyof T]: v.InferOutput<T[key]>;
 };
 
-export type IncludeFlows<T extends v.ObjectEntries> = {
+export type IsFlow<T extends ObjectEntry> =
+	"metadataType" extends keyof v.InferMetadata<T>
+		? v.InferMetadata<T>["metadataType"] extends "flow"
+			? true
+			: false
+		: false;
+
+export type IncludeFlows<T extends v.ObjectEntries> = OmitNever<{
 	[key in keyof T]: T[key] extends ReturnType<typeof flow>
 		? v.InferOutput<T[key]>
 		: never;
-} extends infer O
-	? { [K in keyof O as O[K] extends never ? never : K]: O[K] }
-	: never;
+}>;
 
-export type IncludeSubfowArguments<T extends v.ObjectEntries> = {
+export type IncludeSubfowArguments<
+	T extends v.ObjectEntries,
+	TParent extends keyof IncludeFlows<T> | string = string,
+> = OmitNever<{
 	[key in keyof T]: "metadataType" extends keyof v.InferMetadata<T[key]>
 		? v.InferMetadata<T[key]>["metadataType"] extends "subflowArgument"
-			? v.InferOutput<T[key]>
+			? "parent" extends keyof v.InferMetadata<T[key]>
+				? v.InferMetadata<T[key]>["parent"] extends TParent
+					? v.InferOutput<T[key]>
+					: never
+				: never
 			: never
 		: never;
-} extends infer O
-	? { [K in keyof O as O[K] extends never ? never : K]: O[K] }
-	: never;
+}>;
+
+type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };

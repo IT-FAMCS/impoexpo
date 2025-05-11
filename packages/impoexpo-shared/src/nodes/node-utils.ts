@@ -29,24 +29,48 @@ export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
 export const FLOW_MARKER: string = "__ptr__";
-export const flow = () =>
-	v.pipe(v.nullable(v.array(v.string())), v.metadata({ metadataType: "flow" }));
+export const flow = (returnType?: ObjectEntry) =>
+	v.pipe(
+		v.nullable(v.array(v.string())),
+		v.metadata({ metadataType: "flow", returnType }),
+	);
 export const isFlow = (
 	schema: ObjectEntry,
 ): schema is ReturnType<typeof flow> => {
 	const metadata = v.getMetadata(schema);
 	return "metadataType" in metadata && metadata.metadataType === "flow";
 };
+export const getFlowReturnType = (
+	schema: ReturnType<typeof flow>,
+): ObjectEntry | ObjectEntry[] | undefined => {
+	const type = schema.pipe[1].metadata.returnType;
+	if (!type) return undefined;
+	return isUnion(type) ? type.options : type;
+};
 
-export const subflowArgument = <TSInput>() =>
-	v.metadata<TSInput, { metadataType: "subflowArgument" }>({
+export const subflowArgument = <TSInput, TParent extends string>(
+	parent: TParent,
+) =>
+	v.metadata<TSInput, { metadataType: "subflowArgument"; parent: TParent }>({
 		metadataType: "subflowArgument",
+		parent,
 	});
-export const isSubflowArgument = (schema: ObjectEntry): boolean => {
+export const isSubflowArgument = (
+	schema: ObjectEntry,
+): schema is v.SchemaWithPipe<
+	[ObjectEntry, ReturnType<typeof subflowArgument>]
+> => {
 	const metadata = v.getMetadata(schema);
 	return (
 		"metadataType" in metadata && metadata.metadataType === "subflowArgument"
 	);
+};
+export const getSubflowArgumentParent = (schema: ObjectEntry) => {
+	if (!isSubflowArgument(schema))
+		throw new Error(
+			`attempted to get a subflow's argument parent on a non-subflow-argument schema: ${JSON.stringify(schema)}`,
+		);
+	return schema.pipe[1].metadata.parent;
 };
 
 export const named = (
@@ -74,6 +98,12 @@ export const getRootSchema = (node: ObjectEntry): ObjectEntry => {
 	if (isArray(node)) return getRootSchema(node.item);
 	if (isNullable(node)) return getRootSchema(node.wrapped);
 	return node;
+};
+
+export const isUnion = (
+	schema: ObjectEntry,
+): schema is v.UnionSchema<ObjectEntry[], undefined> => {
+	return schema.type === "union";
 };
 
 export const isPipe = (

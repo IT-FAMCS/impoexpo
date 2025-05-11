@@ -569,6 +569,11 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
 						);
 
+					// that one use case where multiple non-array nodes can be connected to an array input
+					if (isArray(source) && isGeneric(source.item) && !isArray(target)) {
+						return { [getGenericName(source.item)]: target };
+					}
+
 					if (isArray(source) && isArray(target))
 						return findResolvedTypes(source.item, target.item);
 					if (isRecord(source) && isRecord(target))

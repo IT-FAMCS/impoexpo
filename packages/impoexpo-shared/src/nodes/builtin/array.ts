@@ -22,7 +22,7 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 	}),
 	outputSchema: v.object({
 		flow: flow(),
-		object: v.pipe(generic("T"), subflowArgument()),
+		object: v.pipe(generic("T"), subflowArgument("flow")),
 	}),
 });
 
@@ -33,8 +33,8 @@ export const ARRAY_TRANSFORM_NODE = new BaseNode({
 		array: v.array(generic("TIn")),
 	}),
 	outputSchema: v.object({
-		flow: flow(),
-		object: v.pipe(generic("TIn"), subflowArgument()),
+		flow: flow(generic("TOut")),
+		object: v.pipe(generic("TIn"), subflowArgument("flow")),
 		result: v.array(generic("TOut")),
 	}),
 });

@@ -9,13 +9,13 @@ registerHandler(conditionalNodes.IF_NODE, (ctx) => ({
 }));
 
 registerAsyncHandler(conditionalNodes.EXECUTE_IF_NODE, async (ctx) => {
-	if (ctx.condition && ctx.trueFlow) await ctx["~run"](ctx.trueFlow);
-	else if (ctx.falseFlow) await ctx["~run"](ctx.falseFlow);
+	if (ctx.condition && ctx.trueFlow) await ctx["~run"]("trueFlow");
+	else if (ctx.falseFlow) await ctx["~run"]("falseFlow");
 });
 
 registerAsyncHandler(conditionalNodes.REPEAT_NODE, async (ctx) => {
 	for (let i = 1; i <= ctx.times; i++) {
-		if (ctx.flow) await ctx["~run"](ctx.flow, { iteration: i });
+		if (ctx.flow) await ctx["~run"]("flow", { iteration: i });
 	}
 });
 

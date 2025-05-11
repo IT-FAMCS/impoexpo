@@ -12,7 +12,11 @@ import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { childLogger } from "../logger";
-import { FLOW_MARKER, isArray } from "@impoexpo/shared/nodes/node-utils";
+import {
+	FLOW_MARKER,
+	isArray,
+	isFlow,
+} from "@impoexpo/shared/nodes/node-utils";
 
 export const getNodeHandler = (
 	type: string,
@@ -234,12 +238,17 @@ export const executeJobNodes = async (job: Job) => {
 
 		const proxyRun = (caller: ProjectNode) => {
 			return async (
-				callees: string[],
+				flow: string,
 				values?: NodeOutput<v.ObjectEntries>,
 			): Promise<NodeReturnType[]> => {
 				if (!getFlowInformation(caller)) {
 					throw new Error(
 						`${caller.id} attempted to call ~run(), which isn't allowed in non-flow nodes`,
+					);
+				}
+				if (!(flow in caller.outputs)) {
+					throw new Error(
+						`${caller.id} attempted to call ~run("${flow}"), but flow "${flow}" does not exist or is not a flow`,
 					);
 				}
 
@@ -252,7 +261,9 @@ export const executeJobNodes = async (job: Job) => {
 				};
 
 				const returnValues: NodeReturnType[] = [];
-				for (const callee of callees) {
+				for (const callee of (caller.outputs[flow].sources ?? []).map(
+					(s) => s.node,
+				)) {
 					const calleeNode = nodes.find((n) => n.id === callee);
 					if (!calleeNode) {
 						throw new Error(
@@ -366,7 +377,7 @@ export const executeJobNodes = async (job: Job) => {
 
 		const returnValues: NodeReturnType[] = [];
 		if (rootFlows.length !== 0) {
-			logger.info(`running ${rootFlows.length} independent flow node(s)`);
+			logger.debug(`running ${rootFlows.length} independent flow node(s)`);
 			for (const node of rootFlows) {
 				const paths = resolveInputPaths(node, nodes);
 				logger.debug(`input paths for ${node.id}: %o`, paths);
@@ -381,7 +392,7 @@ export const executeJobNodes = async (job: Job) => {
 			}
 		}
 		if (independentTerminatingNodes.length !== 0) {
-			logger.info(
+			logger.debug(
 				`running ${independentTerminatingNodes.length} independent terminating node(s)`,
 			);
 			for (const node of independentTerminatingNodes) {
