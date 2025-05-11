@@ -24,6 +24,7 @@ import {
 	type DefaultBaseNode,
 	findCompatibleEntry,
 	FLOW_MARKER,
+	getFlowReturnTypes,
 	getGenericName,
 	isArray,
 	isEntryGeneric,
@@ -56,6 +57,7 @@ import {
 	schemaFromString,
 	schemaToString,
 } from "@impoexpo/shared/nodes/schema-string-conversions";
+import { findReturnType } from "./nodes/renderable-node-helpers";
 
 export type PersistentGenericNodeData = Record<
 	string,
@@ -263,6 +265,29 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							connectionState.fromHandle.id,
 							connectionState.toNode.id,
 						);
+
+						const flowEntry = fromNode.entry(connectionState.fromHandle.id);
+						const resolverEntry = findReturnType(
+							get().nodes,
+							get().edges,
+							connectionState.toNode,
+						);
+						if (isEntryGeneric(flowEntry.schema) && resolverEntry) {
+							const newNode = get().resolveGenericNode(
+								{
+									node: fromNode,
+									options: getNodeRenderOptions(connectionState.fromNode.type),
+								},
+								flowEntry,
+								resolverEntry,
+								connectionState.fromNode,
+							);
+							set((state) => ({
+								nodes: state.nodes.map((n) =>
+									n.id === connectionState.fromNode?.id ? newNode : n,
+								),
+							}));
+						}
 						return;
 					}
 
@@ -337,7 +362,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							)
 					) {
 						get().removeNodeFlow(edge.target);
-						return;
 					}
 					if (!isGeneric(source) && !isGeneric(target)) return;
 
@@ -568,6 +592,15 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						throw new Error(
 							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
 						);
+
+					if (isFlow(source)) {
+						return (getFlowReturnTypes(source) ?? []).reduce<
+							Record<string, ObjectEntry>
+						>((acc, cur) => {
+							// biome-ignore lint/performance/noAccumulatingSpread: sorry biome
+							return { ...acc, ...findResolvedTypes(cur, target) };
+						}, {});
+					}
 
 					// that one use case where multiple non-array nodes can be connected to an array input
 					if (isArray(source) && isGeneric(source.item) && !isArray(target)) {

@@ -6,13 +6,19 @@ import type { Connection, Edge } from "@xyflow/react";
 import type { FlowParent, ProjectNode } from "./renderable-node-types";
 import {
 	FLOW_MARKER,
+	getFlowReturnTypes,
 	getRootSchema,
 	isArray,
+	isEntryGeneric,
 	isFlow,
 	isGeneric,
 	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
-import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import type {
+	BaseNodeEntry,
+	ObjectEntry,
+} from "@impoexpo/shared/nodes/node-types";
+import { RETURN_NODE } from "@impoexpo/shared/nodes/builtin/conditional";
 
 export const findFlowParent = (
 	nodes: ProjectNode[],
@@ -50,13 +56,25 @@ export const nodeSchemasCompatible = (
 	const source = getBaseNode(sourceNode.type);
 	const target = getBaseNode(targetNode.type);
 
-	if (
-		isFlow(source.entry(connection.sourceHandle).schema) &&
-		connection.targetHandle === FLOW_MARKER
-	) {
+	const sourceSchema = source.entry(connection.sourceHandle).schema;
+	if (isFlow(sourceSchema) && connection.targetHandle === FLOW_MARKER) {
 		// if we're attaching a flow node (source) to a regular node (target),
 		// the target node should not have anything connected to it, as it can break flows
-		return !edges.some((e) => e.source === connection.target);
+		if (edges.some((e) => e.source === connection.target)) return false;
+
+		const sourceReturnTypes = getFlowReturnTypes(sourceSchema);
+		const targetReturnType = findReturnType(nodes, edges, targetNode);
+		if (!targetReturnType) return !sourceReturnTypes;
+		if (!sourceReturnTypes) return !targetReturnType;
+
+		if (
+			isEntryGeneric(sourceSchema) &&
+			!isEntryGeneric(targetReturnType.schema)
+		) {
+			return true;
+		}
+
+		return sourceReturnTypes.includes(targetReturnType.schema);
 	}
 
 	const sourceEntry = source.entry(connection.sourceHandle);
@@ -121,4 +139,28 @@ export const nodeSchemasCompatible = (
 		);
 	}
 	return sourceEntry.type === targetEntry.type;
+};
+
+export const findReturnType = (
+	nodes: ProjectNode[],
+	edges: Edge[],
+	source: ProjectNode,
+): BaseNodeEntry | undefined => {
+	if (!source.type) return undefined;
+	if (source.type.startsWith(`${RETURN_NODE.category}-${RETURN_NODE.name}`)) {
+		const base = getBaseNode(source.type);
+		return base.entry("value");
+	}
+
+	const outputNodes = edges
+		.filter((e) => e.source === source.id)
+		.map((e) => e.target);
+	for (const id of outputNodes) {
+		const node = nodes.find((n) => n.id === id);
+		if (!node) continue;
+		const type = findReturnType(nodes, edges, node);
+		if (type) return type;
+	}
+
+	return undefined;
 };

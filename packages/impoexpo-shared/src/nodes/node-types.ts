@@ -1,9 +1,12 @@
 import * as v from "valibot";
 import {
+	flow,
+	getFlowReturnTypes,
 	getGenericEntries,
 	getGenericName,
 	isArray,
 	isEntryGeneric,
+	isFlow,
 	isGeneric,
 	isNullable,
 	isPipe,
@@ -77,8 +80,13 @@ export class BaseNode<
 			resolver: ObjectEntry,
 			name: string,
 		): ObjectEntry => {
-			console.log(root);
 			if (isGeneric(root) && getGenericName(root) === name) return resolver;
+			if (isFlow(root)) {
+				let types = getFlowReturnTypes(root);
+				if (!types) return root;
+				types = types.map((t) => replaceGenericWithSchema(t, resolver, name));
+				return flow(types.length === 1 ? types[0] : v.union(types));
+			}
 			if (isArray(root))
 				return v.array(replaceGenericWithSchema(root.item, resolver, name));
 			if (isRecord(root))

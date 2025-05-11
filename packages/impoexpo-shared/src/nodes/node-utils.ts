@@ -19,6 +19,7 @@ export const isGeneric = (
 export const getGenericEntries = (
 	schema: ObjectEntry,
 ): ReturnType<typeof generic>[] => {
+	// TODO: broken here
 	return isObject(schema)
 		? Object.values(schema.entries).filter((entry) => isGeneric(entry))
 		: isGeneric(schema)
@@ -40,12 +41,12 @@ export const isFlow = (
 	const metadata = v.getMetadata(schema);
 	return "metadataType" in metadata && metadata.metadataType === "flow";
 };
-export const getFlowReturnType = (
+export const getFlowReturnTypes = (
 	schema: ReturnType<typeof flow>,
-): ObjectEntry | ObjectEntry[] | undefined => {
+): ObjectEntry[] | undefined => {
 	const type = schema.pipe[1].metadata.returnType;
 	if (!type) return undefined;
-	return isUnion(type) ? type.options : type;
+	return isUnion(type) ? type.options : [type];
 };
 
 export const subflowArgument = <TSInput, TParent extends string>(
@@ -194,6 +195,9 @@ export const findCompatibleEntry = (
 };
 
 export const isEntryGeneric = (entry: ObjectEntry): boolean => {
+	// NOTE: do not change the order of checks here!
+	if (isFlow(entry) && getFlowReturnTypes(entry))
+		return (getFlowReturnTypes(entry) ?? []).some((t) => isEntryGeneric(t));
 	if (isArray(entry)) return isEntryGeneric(entry.item);
 	if (isRecord(entry))
 		return isEntryGeneric(entry.key) || isEntryGeneric(entry.value);
