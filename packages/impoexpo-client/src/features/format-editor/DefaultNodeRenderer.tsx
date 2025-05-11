@@ -256,6 +256,11 @@ function NodePropertyRenderer(props: {
 }) {
 	const { edges } = useFormatEditorStore();
 
+	const separate = useMemo(
+		() => props.renderOptions.separate(props.name),
+		[props.name, props.renderOptions],
+	);
+
 	const shouldHideEntryComponent = useMemo(() => {
 		if (!props.input) return true;
 		if (props.renderOptions.input(props.name)?.mode === "dependentOnly")
@@ -288,79 +293,90 @@ function NodePropertyRenderer(props: {
 	);
 
 	return props.input ? (
-		<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
-			<div className="relative flex flex-row items-start gap-4">
-				{!shouldHideLabel(props.property) && (
-					<div className="flex flex-col items-start gap-1 pl-4">
-						<p className="max-w-64 text-start">
-							{props.renderOptions.title(props.name)}
-						</p>
-						<p className="text-foreground-400 text-tiny">
-							{props.renderOptions.description(props.name)}
-						</p>
-					</div>
-				)}
-				{!isIndependent && (
-					<Handle
-						type="target"
-						id={props.name}
-						position={Position.Left}
-						style={{
-							top: 0,
-							transform: "translate(-50%, 75%)",
-							left: 0,
-							width: 10,
-							height: 10,
-						}}
-					/>
-				)}
+		<>
+			{(separate === "before" || separate === "both") && <Divider />}
+			<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
+				<div className="relative flex flex-row items-start gap-4">
+					{!shouldHideLabel(props.property) && (
+						<div className="flex flex-col items-start gap-1 pl-4">
+							<p className="max-w-64 text-start">
+								{props.renderOptions.title(props.name)}
+							</p>
+							<p className="text-foreground-400 text-tiny">
+								{props.renderOptions.description(props.name)}
+							</p>
+						</div>
+					)}
+					{!isIndependent && (
+						<Handle
+							type="target"
+							id={props.name}
+							position={Position.Left}
+							style={{
+								top: 0,
+								transform: "translate(-50%, 75%)",
+								left: 0,
+								width: 10,
+								height: 10,
+							}}
+						/>
+					)}
+				</div>
+				<div className="flex-grow">
+					{!shouldHideEntryComponent && entryComponent}
+				</div>
 			</div>
-			<div className="flex-grow">
-				{!shouldHideEntryComponent && entryComponent}
-			</div>
-		</div>
+			{(separate === "after" || separate === "both") && <Divider />}
+		</>
 	) : (
-		<div key={props.name} className="flex flex-row justify-end gap-4 py-2 pl-4">
-			<div className="relative flex flex-row items-start gap-4 w-fit">
-				{!shouldHideLabel(props.property) && (
-					<div className="flex flex-col items-end gap-1 pr-4">
-						<p className="max-w-64 text-end">
-							{props.renderOptions.title(props.name)}
-						</p>
-						<p className="text-foreground-400 text-tiny">
-							{props.renderOptions.description(props.name)}
-						</p>
-					</div>
-				)}
-				{isFlow(props.property) ? (
-					<Handle
-						type="source"
-						id={props.name}
-						position={Position.Right}
-						style={{
-							borderRadius: 0,
-							clipPath: "polygon(0 0, 100% 50%, 0 100%)",
-							right: 0,
-							width: 10,
-							height: 10,
-						}}
-					/>
-				) : (
-					<Handle
-						type="source"
-						id={props.name}
-						position={Position.Right}
-						style={{
-							top: 0,
-							transform: "translate(50%, 75%)",
-							right: 0,
-							width: 10,
-							height: 10,
-						}}
-					/>
-				)}
+		<>
+			{(separate === "before" || separate === "both") && <Divider />}
+			<div
+				key={props.name}
+				className="flex flex-row justify-end gap-4 py-2 pl-4"
+			>
+				<div className="relative flex flex-row items-start gap-4 w-fit">
+					{!shouldHideLabel(props.property) && (
+						<div className="flex flex-col items-end gap-1 pr-4">
+							<p className="max-w-64 text-end">
+								{props.renderOptions.title(props.name)}
+							</p>
+							<p className="text-foreground-400 text-tiny">
+								{props.renderOptions.description(props.name)}
+							</p>
+						</div>
+					)}
+					{isFlow(props.property) ? (
+						<Handle
+							type="source"
+							id={props.name}
+							position={Position.Right}
+							style={{
+								borderRadius: 0,
+								clipPath: "polygon(0 0, 100% 50%, 0 100%)",
+								right: 0,
+								width: 10,
+								height: 10,
+							}}
+						/>
+					) : (
+						<Handle
+							type="source"
+							id={props.name}
+							position={Position.Right}
+							style={{
+								top: 0,
+								transform: "translate(50%, 75%)",
+								right: 0,
+								width: 10,
+								height: 10,
+							}}
+						/>
+					)}
+				</div>
 			</div>
-		</div>
+			{(separate === "after" || separate === "both") && <Divider />}
+		</>
 	);
 }
 

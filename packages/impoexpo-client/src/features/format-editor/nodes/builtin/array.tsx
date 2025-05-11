@@ -45,7 +45,7 @@ nodesScope(() => {
 		outputs: {
 			flow: { title: msg`transformer` },
 			object: { title: msg`object` },
-			result: { title: msg`result` },
+			result: { title: msg`result`, separate: "before" },
 		},
 	});
 });
