@@ -27,7 +27,7 @@ import {
 	getFlowReturnTypes,
 	getGenericName,
 	isArray,
-	isEntryGeneric,
+	genericEntries,
 	isFlow,
 	isGeneric,
 	isNullable,
@@ -272,7 +272,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							get().edges,
 							connectionState.toNode,
 						);
-						if (isEntryGeneric(flowEntry.schema) && resolverEntry) {
+						if (genericEntries(flowEntry.schema) && resolverEntry) {
 							const newNode = get().resolveGenericNode(
 								{
 									node: fromNode,
@@ -588,7 +588,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					source: ObjectEntry,
 					target: ObjectEntry,
 				): Record<string, ObjectEntry> => {
-					if (!isEntryGeneric(source))
+					if (!genericEntries(source))
 						throw new Error(
 							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
 						);

@@ -2,10 +2,9 @@ import * as v from "valibot";
 import {
 	flow,
 	getFlowReturnTypes,
-	getGenericEntries,
 	getGenericName,
 	isArray,
-	isEntryGeneric,
+	genericEntries,
 	isFlow,
 	isGeneric,
 	isNullable,
@@ -68,7 +67,7 @@ export class BaseNode<
 			...Object.values(this.inputSchema?.entries ?? {}),
 			...Object.values(this.outputSchema?.entries ?? {}),
 		]) {
-			const types = getGenericEntries(entry).map((ge) => getGenericName(ge));
+			const types = genericEntries(entry) ?? [];
 			for (const type of types) genericTypes[type] = null;
 		}
 		this.genericTypes = genericTypes;
@@ -173,7 +172,7 @@ export class BaseNode<
 		return {
 			...basic,
 			type: type,
-			generic: isEntryGeneric(basic.schema),
+			generic: genericEntries(basic.schema) !== undefined,
 		};
 	}
 }

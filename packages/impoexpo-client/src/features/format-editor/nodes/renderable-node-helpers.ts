@@ -9,7 +9,7 @@ import {
 	getFlowReturnTypes,
 	getRootSchema,
 	isArray,
-	isEntryGeneric,
+	genericEntries,
 	isFlow,
 	isGeneric,
 	isNullable,
@@ -68,8 +68,8 @@ export const nodeSchemasCompatible = (
 		if (!sourceReturnTypes) return !targetReturnType;
 
 		if (
-			isEntryGeneric(sourceSchema) &&
-			!isEntryGeneric(targetReturnType.schema)
+			genericEntries(sourceSchema) &&
+			!genericEntries(targetReturnType.schema)
 		) {
 			return true;
 		}

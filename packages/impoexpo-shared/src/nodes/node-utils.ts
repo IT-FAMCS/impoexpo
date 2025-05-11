@@ -16,16 +16,6 @@ export const isGeneric = (
 	const metadata = v.getMetadata(schema);
 	return "metadataType" in metadata && metadata.metadataType === "generic";
 };
-export const getGenericEntries = (
-	schema: ObjectEntry,
-): ReturnType<typeof generic>[] => {
-	// TODO: broken here
-	return isObject(schema)
-		? Object.values(schema.entries).filter((entry) => isGeneric(entry))
-		: isGeneric(schema)
-			? [schema]
-			: [];
-};
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
@@ -194,17 +184,24 @@ export const findCompatibleEntry = (
 	);
 };
 
-export const isEntryGeneric = (entry: ObjectEntry): boolean => {
+export const genericEntries = (entry: ObjectEntry): string[] | undefined => {
 	// NOTE: do not change the order of checks here!
 	if (isFlow(entry) && getFlowReturnTypes(entry))
-		return (getFlowReturnTypes(entry) ?? []).some((t) => isEntryGeneric(t));
-	if (isArray(entry)) return isEntryGeneric(entry.item);
+		return (getFlowReturnTypes(entry) ?? [])
+			.flatMap((t) => genericEntries(t))
+			.filter((t) => t !== undefined);
+	if (isArray(entry)) return genericEntries(entry.item);
 	if (isRecord(entry))
-		return isEntryGeneric(entry.key) || isEntryGeneric(entry.value);
-	if (isNullable(entry)) return isEntryGeneric(entry.wrapped);
+		return [
+			...(genericEntries(entry.key) ?? []),
+			...(genericEntries(entry.value) ?? []),
+		].filter((e) => e !== undefined);
+	if (isNullable(entry)) return genericEntries(entry.wrapped);
 	if (isObject(entry))
-		return Object.values(entry.entries).some((v) => isEntryGeneric(v));
-	if (isGeneric(entry)) return true;
-	if (isPipe(entry)) return isEntryGeneric(entry.pipe[0]);
-	return false;
+		return Object.values(entry.entries)
+			.flatMap((v) => genericEntries(v))
+			.filter((v) => v !== undefined);
+	if (isGeneric(entry)) return [getGenericName(entry)];
+	if (isPipe(entry)) return genericEntries(entry.pipe[0]);
+	return undefined;
 };
