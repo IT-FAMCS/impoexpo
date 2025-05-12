@@ -1,16 +1,11 @@
 import {
 	genericRegisterAsyncHandler,
-	genericRegisterHandler,
-	NodeExecutorContext,
 	type NodeHandlerFunction,
 	registerIntegrationNodeHandlerRegistrar,
 } from "../../../node-handler-utils";
 import * as v from "valibot";
 import { GoogleFormsProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsProjectIntegrationSchema";
-import {
-	createGoogleFormsBaseNode,
-	createGoogleFormsResponseBaseNode,
-} from "@impoexpo/shared/nodes/integrations/google/google-forms";
+import { createGoogleFormsBaseNode } from "@impoexpo/shared/nodes/integrations/google/google-forms";
 import { extractGoogleAuth } from "../../../../integrations/google/middlewares";
 import { getGoogleClient } from "../../../../integrations/google/helpers";
 import { google } from "googleapis";
@@ -30,12 +25,7 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 
 	for (const [id, layout] of Object.entries(integration.data.forms)) {
 		const base = createGoogleFormsBaseNode(id, layout);
-		const responseBase = createGoogleFormsResponseBaseNode(id, layout);
-		registerBaseNodes(base, responseBase);
-
-		genericRegisterHandler(handlers, responseBase, (ctx) => {
-			return { ...ctx.response };
-		});
+		registerBaseNodes(base);
 
 		genericRegisterAsyncHandler(handlers, base, async (ctx) => {
 			const auth = extractGoogleAuth(integration.auth.tokens);
@@ -72,9 +62,7 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 						const isNumberQuestion = integration.data.forms[id].items
 							.find((i) => i.id === answerId)
 							?.type.includes("number");
-						const questionOutputsArray = isArray(
-							responseBase.entry(answerId).schema,
-						);
+						const questionOutputsArray = isArray(base.entry(answerId).schema);
 
 						if (
 							!answer.textAnswers?.answers ||
@@ -106,7 +94,7 @@ registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 				return outputs;
 			});
 
-			return { responses };
+			return responses;
 		});
 	}
 	return handlers;

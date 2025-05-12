@@ -19,51 +19,6 @@ export const isGeneric = (
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
-export const FLOW_MARKER: string = "__ptr__";
-export const flow = (returnType?: ObjectEntry) =>
-	v.pipe(
-		v.nullable(v.array(v.string())),
-		v.metadata({ metadataType: "flow", returnType }),
-	);
-export const isFlow = (
-	schema: ObjectEntry,
-): schema is ReturnType<typeof flow> => {
-	const metadata = v.getMetadata(schema);
-	return "metadataType" in metadata && metadata.metadataType === "flow";
-};
-export const getFlowReturnTypes = (
-	schema: ReturnType<typeof flow>,
-): ObjectEntry[] | undefined => {
-	const type = schema.pipe[1].metadata.returnType;
-	if (!type) return undefined;
-	return isUnion(type) ? type.options : [type];
-};
-
-export const subflowArgument = <TSInput, TParent extends string>(
-	parent: TParent,
-) =>
-	v.metadata<TSInput, { metadataType: "subflowArgument"; parent: TParent }>({
-		metadataType: "subflowArgument",
-		parent,
-	});
-export const isSubflowArgument = (
-	schema: ObjectEntry,
-): schema is v.SchemaWithPipe<
-	[ObjectEntry, ReturnType<typeof subflowArgument>]
-> => {
-	const metadata = v.getMetadata(schema);
-	return (
-		"metadataType" in metadata && metadata.metadataType === "subflowArgument"
-	);
-};
-export const getSubflowArgumentParent = (schema: ObjectEntry) => {
-	if (!isSubflowArgument(schema))
-		throw new Error(
-			`attempted to get a subflow's argument parent on a non-subflow-argument schema: ${JSON.stringify(schema)}`,
-		);
-	return schema.pipe[1].metadata.parent;
-};
-
 export const named = (
 	name: string,
 	child: v.ObjectSchema<v.ObjectEntries, undefined>,
@@ -186,10 +141,6 @@ export const findCompatibleEntry = (
 
 export const genericEntries = (entry: ObjectEntry): string[] | undefined => {
 	// NOTE: do not change the order of checks here!
-	if (isFlow(entry) && getFlowReturnTypes(entry))
-		return (getFlowReturnTypes(entry) ?? [])
-			.flatMap((t) => genericEntries(t))
-			.filter((t) => t !== undefined);
 	if (isArray(entry)) return genericEntries(entry.item);
 	if (isRecord(entry))
 		return [

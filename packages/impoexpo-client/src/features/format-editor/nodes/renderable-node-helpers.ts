@@ -1,46 +1,13 @@
-import {
-	baseNodesMap,
-	getBaseNode,
-} from "@impoexpo/shared/nodes/node-database";
+import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type { Connection, Edge } from "@xyflow/react";
-import type { FlowParent, ProjectNode } from "./renderable-node-types";
+import type { ProjectNode } from "./renderable-node-types";
 import {
-	FLOW_MARKER,
-	getFlowReturnTypes,
 	getRootSchema,
 	isArray,
-	genericEntries,
-	isFlow,
 	isGeneric,
 	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
-import type {
-	BaseNodeEntry,
-	ObjectEntry,
-} from "@impoexpo/shared/nodes/node-types";
-import { RETURN_NODE } from "@impoexpo/shared/nodes/builtin/conditional";
-
-export const findFlowParent = (
-	nodes: ProjectNode[],
-	edges: Edge[],
-	node: ProjectNode,
-): FlowParent | null => {
-	const check = (id: string): FlowParent | null => {
-		if (node.data.flow) return node.data.flow;
-
-		const base = baseNodesMap.get(nodes.find((n) => n.id === id)?.type ?? "");
-		if (!base) throw new Error(`couldn't get node base for "${id}"`);
-
-		for (const key of Object.keys(base.inputSchema?.entries ?? {})) {
-			const edge = edges.find((e) => e.target === id && e.targetHandle === key);
-			if (edge) return check(edge.source);
-		}
-
-		return null;
-	};
-
-	return check(node.id);
-};
+import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
@@ -56,50 +23,9 @@ export const nodeSchemasCompatible = (
 	const source = getBaseNode(sourceNode.type);
 	const target = getBaseNode(targetNode.type);
 
-	const sourceSchema = source.entry(connection.sourceHandle).schema;
-	if (isFlow(sourceSchema) && connection.targetHandle === FLOW_MARKER) {
-		// if we're attaching a flow node (source) to a regular node (target),
-		// the target node should not have anything connected to it, as it can break flows
-		if (edges.some((e) => e.source === connection.target)) return false;
-
-		const sourceReturnTypes = getFlowReturnTypes(sourceSchema);
-		const targetReturnType = findReturnType(nodes, edges, targetNode);
-		if (!targetReturnType) return !sourceReturnTypes;
-		if (!sourceReturnTypes) return !targetReturnType;
-
-		if (
-			genericEntries(sourceSchema) &&
-			!genericEntries(targetReturnType.schema)
-		) {
-			return true;
-		}
-
-		return sourceReturnTypes.includes(targetReturnType.schema);
-	}
-
 	const sourceEntry = source.entry(connection.sourceHandle);
 	const targetEntry = target.entry(connection.targetHandle);
 	if (!sourceEntry || !targetEntry) return false;
-
-	const newEntryFlowParent = findFlowParent(nodes, edges, sourceNode);
-	if (newEntryFlowParent) {
-		for (const key of Object.keys(target.inputSchema?.entries ?? {})) {
-			const edge = edges.find(
-				(e) => e.target === targetNode.id && e.targetHandle === key,
-			);
-			const node = nodes.find((n) => n.id === edge?.source);
-			if (edge && node) {
-				const entryFlowParent = findFlowParent(nodes, edges, node);
-				if (
-					entryFlowParent &&
-					(newEntryFlowParent.node !== entryFlowParent.node ||
-						newEntryFlowParent.entry !== entryFlowParent.entry)
-				)
-					return false;
-			}
-		}
-		return true;
-	}
 
 	// allows connecting multiple output of the same type to an array input
 	if (
@@ -139,28 +65,4 @@ export const nodeSchemasCompatible = (
 		);
 	}
 	return sourceEntry.type === targetEntry.type;
-};
-
-export const findReturnType = (
-	nodes: ProjectNode[],
-	edges: Edge[],
-	source: ProjectNode,
-): BaseNodeEntry | undefined => {
-	if (!source.type) return undefined;
-	if (source.type.startsWith(`${RETURN_NODE.category}-${RETURN_NODE.name}`)) {
-		const base = getBaseNode(source.type);
-		return base.entry("value");
-	}
-
-	const outputNodes = edges
-		.filter((e) => e.source === source.id)
-		.map((e) => e.target);
-	for (const id of outputNodes) {
-		const node = nodes.find((n) => n.id === id);
-		if (!node) continue;
-		const type = findReturnType(nodes, edges, node);
-		if (type) return type;
-	}
-
-	return undefined;
 };

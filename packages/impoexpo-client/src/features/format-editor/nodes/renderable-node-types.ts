@@ -9,14 +9,9 @@ import type { ObjectEntries } from "valibot";
 import { useRenderableNodesStore } from "./renderable-node-database";
 import type { Node } from "@xyflow/react";
 import type { ProjectNodeEntry } from "@impoexpo/shared/schemas/project/ProjectSchema";
-import { getFlowReturnTypes, isFlow } from "@impoexpo/shared/nodes/node-utils";
-import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
-import { msg, t } from "@lingui/core/macro";
 
-export type FlowParent = { node: string; entry: string };
 export type ProjectNode = Node<{
 	entries?: Record<string, ProjectNodeEntry>;
-	flow?: FlowParent;
 }>;
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
@@ -152,19 +147,7 @@ export class NodeRenderOptions<
 	): string {
 		const property = this.property(key);
 		if (property?.description) return localizableString(property.description);
-
-		const entry = this.node.entry(String(key));
-		if (isFlow(entry.schema)) {
-			const returnTypes = getFlowReturnTypes(entry.schema);
-			if (!returnTypes) return "";
-			return localizableString(
-				msg`expecting ${returnTypes
-					.map((s) => schemaToString(s))
-					.join(t` OR `)}`,
-			);
-		}
-
-		return entry.type;
+		return this.node.entry(String(key)).type;
 	}
 
 	public separate<TKey extends keyof TSInput | keyof TSOutput>(

@@ -82,6 +82,11 @@ export const registerGoogleFormsEndpoints = (app: Express) => {
 						type: "unknown",
 					};
 					if (
+						rawItem.questionItem.question.dateQuestion ||
+						rawItem.questionItem.question.timeQuestion
+					)
+						item.type = "string";
+					if (
 						rawItem.questionItem.question.scaleQuestion ||
 						rawItem.questionItem.question.ratingQuestion
 					)

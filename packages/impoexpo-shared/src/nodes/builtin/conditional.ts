@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { flow, generic, subflowArgument } from "../node-utils";
+import { generic } from "../node-utils";
 
 export const IF_NODE = new BaseNode({
 	category: "conditional",
@@ -16,18 +16,6 @@ export const IF_NODE = new BaseNode({
 	}),
 });
 
-export const EXECUTE_IF_NODE = new BaseNode({
-	category: "conditional",
-	name: "execute-if",
-	inputSchema: v.object({
-		condition: v.boolean(),
-	}),
-	outputSchema: v.object({
-		trueFlow: flow(),
-		falseFlow: flow(),
-	}),
-});
-
 export const REPEAT_NODE = new BaseNode({
 	category: "conditional",
 	name: "repeat",
@@ -35,8 +23,7 @@ export const REPEAT_NODE = new BaseNode({
 		times: v.number(),
 	}),
 	outputSchema: v.object({
-		flow: flow(),
-		iteration: v.pipe(v.number(), subflowArgument("flow")),
+		iteration: v.pipe(v.number()),
 	}),
 });
 
@@ -52,20 +39,6 @@ export const THROW_ERROR_IF_NULL_NODE = new BaseNode({
 	}),
 });
 
-export const RETURN_NODE = new BaseNode({
-	category: "conditional",
-	name: "return",
-	inputSchema: v.object({
-		value: generic("T"),
-	}),
-});
-
 nodesScope(() => {
-	registerBaseNodes(
-		IF_NODE,
-		EXECUTE_IF_NODE,
-		REPEAT_NODE,
-		THROW_ERROR_IF_NULL_NODE,
-		RETURN_NODE,
-	);
+	registerBaseNodes(IF_NODE, REPEAT_NODE, THROW_ERROR_IF_NULL_NODE);
 });

@@ -23,12 +23,9 @@ import { persistStoreOnReload } from "@/stores/hot-reload";
 import {
 	type DefaultBaseNode,
 	findCompatibleEntry,
-	FLOW_MARKER,
-	getFlowReturnTypes,
 	getGenericName,
 	isArray,
 	genericEntries,
-	isFlow,
 	isGeneric,
 	isNullable,
 	isRecord,
@@ -57,7 +54,6 @@ import {
 	schemaFromString,
 	schemaToString,
 } from "@impoexpo/shared/nodes/schema-string-conversions";
-import { findReturnType } from "./nodes/renderable-node-helpers";
 
 export type PersistentGenericNodeData = Record<
 	string,
@@ -109,9 +105,6 @@ export type FormatEditorStore = {
 	getNodeEntryValue: (id: string, entry: string) => unknown;
 	setNodeEntry: (id: string, entry: string, value: unknown) => void;
 	removeNodeEntry: (id: string, entry: string) => void;
-
-	setNodeFlow: (source: string, sourceHandle: string, target: string) => void;
-	removeNodeFlow: (target: string) => void;
 
 	attachNewNode: (
 		fromNodeId: string,
@@ -187,17 +180,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					isReconnecting: false,
 					edges: reconnectEdge(oldEdge, newConnection, get().edges),
 				});
-
-				if (
-					oldEdge.targetHandle === FLOW_MARKER &&
-					oldEdge.target !== newConnection.target &&
-					!get().edges.some(
-						(e) =>
-							e.target === oldEdge.target && e.targetHandle === FLOW_MARKER,
-					)
-				) {
-					get().removeNodeFlow(oldEdge.target);
-				}
 			},
 
 			onConnectEnd: (
@@ -221,9 +203,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const node = getBaseNode(connectionState.fromNode.type);
 					const handleId = connectionState.fromHandle.id;
 					const handle = node.entry(handleId);
-
-					// no search modal for flow fields
-					if (isFlow(handle.schema)) return;
 
 					const filters = [
 						`${handle.source === "input" ? "outputs" : "accepts"}${handle.generic ? "" : `:${handle.type}`}`,
@@ -255,41 +234,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				) {
 					const fromNode = getBaseNode(connectionState.fromNode.type);
 					const toNode = getBaseNode(connectionState.toNode.type);
-
-					if (
-						isFlow(fromNode.entry(connectionState.fromHandle.id).schema) &&
-						connectionState.toHandle.id === FLOW_MARKER
-					) {
-						get().setNodeFlow(
-							connectionState.fromNode.id,
-							connectionState.fromHandle.id,
-							connectionState.toNode.id,
-						);
-
-						const flowEntry = fromNode.entry(connectionState.fromHandle.id);
-						const resolverEntry = findReturnType(
-							get().nodes,
-							get().edges,
-							connectionState.toNode,
-						);
-						if (genericEntries(flowEntry.schema) && resolverEntry) {
-							const newNode = get().resolveGenericNode(
-								{
-									node: fromNode,
-									options: getNodeRenderOptions(connectionState.fromNode.type),
-								},
-								flowEntry,
-								resolverEntry,
-								connectionState.fromNode,
-							);
-							set((state) => ({
-								nodes: state.nodes.map((n) =>
-									n.id === connectionState.fromNode?.id ? newNode : n,
-								),
-							}));
-						}
-						return;
-					}
 
 					const fromEntry = fromNode.entry(connectionState.fromHandle.id);
 					const toEntry = toNode.entry(connectionState.toHandle.id);
@@ -352,17 +296,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const target = get().getBaseNodeFromId(edge.target);
 
 					if (!source || !target) return;
-					if (
-						edge.targetHandle === FLOW_MARKER &&
-						!get()
-							.edges.filter((e) => edges.indexOf(e) === -1)
-							.some(
-								(e) =>
-									e.target === edge.target && e.targetHandle === FLOW_MARKER,
-							)
-					) {
-						get().removeNodeFlow(edge.target);
-					}
 					if (!isGeneric(source) && !isGeneric(target)) return;
 
 					const checkNode = (id: string, node: DefaultBaseNode) => {
@@ -490,24 +423,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				return entries[entry].value;
 			},
 
-			setNodeFlow(source, sourceHandle, target) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === target);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					state.nodes[nodeIndex].data.flow = {
-						node: source,
-						entry: sourceHandle,
-					};
-				});
-			},
-			removeNodeFlow(target) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === target);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					state.nodes[nodeIndex].data.flow = undefined;
-				});
-			},
-
 			attachNewNode(
 				fromNodeId,
 				fromNodeType,
@@ -592,15 +507,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						throw new Error(
 							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
 						);
-
-					if (isFlow(source)) {
-						return (getFlowReturnTypes(source) ?? []).reduce<
-							Record<string, ObjectEntry>
-						>((acc, cur) => {
-							// biome-ignore lint/performance/noAccumulatingSpread: sorry biome
-							return { ...acc, ...findResolvedTypes(cur, target) };
-						}, {});
-					}
 
 					// that one use case where multiple non-array nodes can be connected to an array input
 					if (isArray(source) && isGeneric(source.item) && !isArray(target)) {

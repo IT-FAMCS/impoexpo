@@ -1,6 +1,6 @@
 import { BaseNode } from "../node-types";
 import * as v from "valibot";
-import { flow, generic, subflowArgument } from "../node-utils";
+import { generic } from "../node-utils";
 import { nodesScope, registerBaseNodes } from "../node-database";
 
 export const ARRAY_LENGTH_NODE = new BaseNode({
@@ -21,28 +21,10 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 		array: v.array(generic("T")),
 	}),
 	outputSchema: v.object({
-		flow: flow(),
-		object: v.pipe(generic("T"), subflowArgument("flow")),
-	}),
-});
-
-export const ARRAY_TRANSFORM_NODE = new BaseNode({
-	category: "array",
-	name: "transform",
-	inputSchema: v.object({
-		array: v.array(generic("TIn")),
-	}),
-	outputSchema: v.object({
-		flow: flow(generic("TOut")),
-		object: v.pipe(generic("TIn"), subflowArgument("flow")),
-		result: v.array(generic("TOut")),
+		object: generic("T"),
 	}),
 });
 
 nodesScope(() => {
-	registerBaseNodes(
-		ARRAY_LENGTH_NODE,
-		ARRAY_FOREACH_NODE,
-		ARRAY_TRANSFORM_NODE,
-	);
+	registerBaseNodes(ARRAY_LENGTH_NODE, ARRAY_FOREACH_NODE);
 });
