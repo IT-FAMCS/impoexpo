@@ -11,12 +11,12 @@ export type Integration = {
 	getProjectInformation?: () => Promise<ProjectIntegration>;
 	onProjectInformationLoaded?: (data: ProjectIntegration) => Promise<void>;
 
-	checkAuthenticated: () => Promise<boolean>;
-	verifier: (
+	checkAuthenticated?: () => Promise<boolean>;
+	verifier?: (
 		successCallback: () => void,
 		resetCallback: () => void,
 	) => React.ReactNode;
-	authenticator: (callback: () => void) => React.ReactNode;
-	hydrator: (callback: () => void) => React.ReactNode;
-	selectedItemsRenderer: () => React.ReactNode[];
+	authenticator?: (callback: () => void) => React.ReactNode;
+	hydrator?: (callback: () => void) => React.ReactNode;
+	selectedItemsRenderer?: () => React.ReactNode[];
 };

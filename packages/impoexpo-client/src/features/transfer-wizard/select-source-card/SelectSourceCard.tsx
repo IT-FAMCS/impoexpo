@@ -23,11 +23,16 @@ import {
 } from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
 import { useQuery } from "@tanstack/react-query";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
+import {
+	DefaultIntegrationAuthenticator,
+	DefaultIntegrationHydrator,
+	DefaultIntegrationVerifier,
+} from "@/integrations/common";
+import { motion } from "motion/react";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -91,7 +96,7 @@ function SourceChecker() {
 
 	const items = (
 		integrationType === "read" ? readIntegrations() : writeIntegrations()
-	).flatMap((integration) => integration.selectedItemsRenderer());
+	).flatMap((integration) => integration.selectedItemsRenderer?.() ?? []);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -136,7 +141,7 @@ function SourceSelector() {
 		useSourceCardStore();
 
 	return (
-		<div className="flex flex-col items-center justify-center">
+		<div className="flex flex-col items-center justify-center gap-2">
 			{(integrationType === "read"
 				? readIntegrations()
 				: writeIntegrations()
@@ -164,8 +169,14 @@ function SourceHydrator() {
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{currentIntegration?.hydrator(() =>
-				setState(SourceCardState.CHECK_ADDED_SOURCES),
+			{currentIntegration?.hydrator ? (
+				currentIntegration?.hydrator(() =>
+					setState(SourceCardState.CHECK_ADDED_SOURCES),
+				)
+			) : (
+				<DefaultIntegrationHydrator
+					callback={() => setState(SourceCardState.CHECK_ADDED_SOURCES)}
+				/>
 			)}
 		</div>
 	);
@@ -176,13 +187,24 @@ function SourceVerificator() {
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{currentIntegration?.verifier(
-				() => {
-					setState(SourceCardState.HYDRATE_SOURCE);
-				},
-				() => {
-					setState(SourceCardState.AUTHENTICATE_SOURCE);
-				},
+			{currentIntegration?.verifier ? (
+				currentIntegration?.verifier(
+					() => {
+						setState(SourceCardState.HYDRATE_SOURCE);
+					},
+					() => {
+						setState(SourceCardState.AUTHENTICATE_SOURCE);
+					},
+				)
+			) : (
+				<DefaultIntegrationVerifier
+					successCallback={() => {
+						setState(SourceCardState.HYDRATE_SOURCE);
+					}}
+					resetCallback={() => {
+						setState(SourceCardState.AUTHENTICATE_SOURCE);
+					}}
+				/>
 			)}
 		</div>
 	);
@@ -198,7 +220,8 @@ function SourceAuthenticator() {
 
 	const { isFetching, isError, error, data, refetch } = useQuery({
 		queryKey: [`check-authenticated-${currentIntegration}`],
-		queryFn: currentIntegration.checkAuthenticated,
+		queryFn:
+			currentIntegration.checkAuthenticated ?? (() => Promise.resolve(true)),
 	});
 
 	useEffect(() => {
@@ -216,9 +239,15 @@ function SourceAuthenticator() {
 				/>
 			)}
 			{data === false &&
-				currentIntegration?.authenticator(() =>
-					setState(SourceCardState.VERIFY_SOURCE),
-				)}
+				(currentIntegration?.authenticator ? (
+					currentIntegration?.authenticator(() =>
+						setState(SourceCardState.VERIFY_SOURCE),
+					)
+				) : (
+					<DefaultIntegrationAuthenticator
+						callback={() => setState(SourceCardState.VERIFY_SOURCE)}
+					/>
+				))}
 		</div>
 	);
 }

@@ -1,11 +1,11 @@
 import { ListboxItem } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
-import { useEffect } from "react";
 import { usePlaceholderIntegrationStore } from "./store";
 
 import { Trans } from "@lingui/react/macro";
 import { registerIntegration } from "../integrations";
+import { DefaultIntegrationHydrator } from "../common";
 
 registerIntegration({
 	id: "placeholder",
@@ -13,21 +13,13 @@ registerIntegration({
 	icon: <Icon icon="mdi:border-none-variant" />,
 	read: false,
 	write: true,
-	checkAuthenticated: () => Promise.resolve(true),
 
-	authenticator: (callback) => {
-		useEffect(callback, []);
-		return <></>;
-	},
-	verifier: (callback) => {
-		useEffect(callback, []);
-		return <></>;
-	},
-	hydrator: (callback) => {
-		usePlaceholderIntegrationStore.setState({ enabled: true });
-		useEffect(callback, []);
-		return <></>;
-	},
+	hydrator: (callback) => (
+		<DefaultIntegrationHydrator
+			init={() => usePlaceholderIntegrationStore.setState({ enabled: true })}
+			callback={callback}
+		/>
+	),
 	selectedItemsRenderer: () =>
 		usePlaceholderIntegrationStore.getState().enabled
 			? [

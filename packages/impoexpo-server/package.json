@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@impoexpo/shared": "workspace:^",
+		"@zip.js/zip.js": "^2.7.61",
 		"apicache": "^1.6.3",
 		"better-sse": "^0.14.1",
 		"compression": "^1.8.0",
