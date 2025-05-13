@@ -35,7 +35,7 @@ export function GoogleFormsHydrator(props: { callback: () => void }) {
 		case GoogleFormsHydratorState.SELECT:
 			return <GoogleFormsSelector />;
 		case GoogleFormsHydratorState.VERIFY:
-			return <GoogleFormsVerificator />;
+			return <GoogleFormsVerifier />;
 		case GoogleFormsHydratorState.CREATE_LAYOUT_NODE:
 			return <GoogleFormsNodeCreator successCallback={props.callback} />;
 	}
@@ -94,7 +94,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	}
 }
 
-function GoogleFormsVerificator() {
+function GoogleFormsVerifier() {
 	const { t } = useLingui();
 	const { currentForm, setState } = useGoogleFormsHydratorStore();
 	const { isFetching, isError, data, error } = useQuery({

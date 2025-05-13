@@ -19,7 +19,7 @@ import {
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {

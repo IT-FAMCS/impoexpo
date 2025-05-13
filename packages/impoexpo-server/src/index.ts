@@ -7,6 +7,7 @@ import { registerGoogleEndpoints } from "./integrations/google/endpoints";
 import { loadOrCreateKey } from "./helpers/crypto-utils";
 import { registerProjectEndpoints } from "./project/endpoints";
 import { prepareNodes } from "./engine/node-handler-utils";
+import { registerMicrosoftEndpoints } from "./integrations/microsoft/endpoints";
 
 dotenv.config();
 if (!process.env.PORT) {
@@ -28,6 +29,7 @@ try {
 	logger.info("registering endpoints");
 	registerProjectEndpoints(app);
 	registerGoogleEndpoints(app);
+	registerMicrosoftEndpoints(app);
 } catch (err) {
 	logger.error(`failed to register endpoints: ${err}`);
 	process.exit(1);

@@ -20,9 +20,9 @@ registerIntegration({
 				className="p-3"
 				startContent={<Icon icon="mdi:microsoft-word" />}
 				description={<Trans>Microsoft Word</Trans>}
-				key={d.filename}
+				key={d.name}
 			>
-				{d.filename}
+				{d.name}
 			</ListboxItem>
 		)),
 });

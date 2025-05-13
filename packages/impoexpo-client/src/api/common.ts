@@ -32,6 +32,13 @@ export const postWithSchema = async <const TSchema extends v.GenericSchema>(
 			},
 		})
 	).json();
+export const postFormWithResult = async <const TSchema extends v.GenericSchema>(
+	path: string,
+	body: FormData,
+	outSchema: TSchema,
+	other?: OtherRequestData,
+): Promise<v.InferOutput<TSchema>> =>
+	v.parse(outSchema, await (await request("POST", path, body, other)).json());
 export const postWithSchemaAndResult = async <
 	const TInSchema extends v.GenericSchema,
 	const TOutSchema extends v.GenericSchema,
@@ -65,7 +72,7 @@ export const post = async (
 const request = async (
 	method: RequestMethod,
 	path: string,
-	body?: string,
+	body?: string | FormData,
 	other?: OtherRequestData,
 ): Promise<Response> => {
 	const response = await fetch(route(path, other?.query), {

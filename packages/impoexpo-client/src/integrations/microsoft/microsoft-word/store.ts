@@ -2,23 +2,18 @@ import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 
 export enum MicrosoftWordHydratorState {
 	UPLOAD = 0,
-	EXTRACT = 1,
+	LAYOUT = 1,
 	VERIFY = 2,
 }
-
-export type MicrosoftWordDocumentPreview = {
-	filename: string;
-	data: ArrayBuffer;
-};
 
 export type MicrosoftWordHydratorStore = {
 	state: MicrosoftWordHydratorState;
 	setState: (newState: MicrosoftWordHydratorState) => void;
 
-	documents: Array<MicrosoftWordDocumentPreview>;
-	currentDocument?: MicrosoftWordDocumentPreview;
-	addDocument: (filename: string, data: ArrayBuffer) => void;
-	setCurrentDocument: (document?: MicrosoftWordDocumentPreview) => void;
+	documents: Array<File>;
+	currentDocument?: File;
+	addDocument: (document: File) => void;
+	setCurrentDocument: (document?: File) => void;
 };
 
 export const useMicrosoftWordHydratorStore =
@@ -28,9 +23,9 @@ export const useMicrosoftWordHydratorStore =
 			setState: (ns) => set({ state: ns }),
 
 			documents: [],
-			addDocument: (filename, data) =>
+			addDocument: (document) =>
 				set((state) => ({
-					documents: state.documents.concat({ filename, data }),
+					documents: state.documents.concat(document),
 				})),
 			setCurrentDocument: (document) => set({ currentDocument: document }),
 		}),

@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { header } from "express-validator";
 import { getGoogleClient } from "./helpers";
 import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
-import { GOOGLE_ACCESS_TOKENS_HEADER_NAME } from "@impoexpo/shared/schemas/integrations/google/static";
+import { GOOGLE_ACCESS_TOKENS_HEADER_NAME } from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import { GoogleAccessTokensSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { decryptString } from "../../helpers/crypto-utils";
 import * as v from "valibot";

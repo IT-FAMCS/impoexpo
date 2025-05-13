@@ -23,7 +23,7 @@ import {
 	type ProjectStatusNotification,
 } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
 import { parse } from "valibot";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function TransferProgressCard() {
 	const { state } = useTransferProgressCardStore();

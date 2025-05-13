@@ -1,8 +1,10 @@
 import { getWithSchema } from "@/api/common";
 import { getAuthFromDatabase, saveAuthToDatabase } from "@/db/auth";
-import { GOOGLE_REFRESH_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
+import {
+	GOOGLE_REFRESH_ROUTE,
+	GOOGLE_ACCESS_TOKENS_HEADER_NAME,
+} from "@impoexpo/shared/schemas/integrations/google/endpoints";
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
-import { GOOGLE_ACCESS_TOKENS_HEADER_NAME } from "@impoexpo/shared/schemas/integrations/google/static";
 import { GoogleRefreshResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleRefreshResponseSchema";
 
 export const GOOGLE_AUTH_KEY = "google_auth";
