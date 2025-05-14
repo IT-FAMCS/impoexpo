@@ -19,10 +19,8 @@ export const isGeneric = (
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
-export const named = (
-	name: string,
-	child: v.ObjectSchema<v.ObjectEntries, undefined>,
-) => v.pipe(child, v.metadata({ metadataType: "named", objectName: name }));
+export const named = <T extends v.GenericSchema>(name: string, child: T) =>
+	v.pipe(child, v.metadata({ metadataType: "named", objectName: name }));
 export const isNamed = (
 	schema: ObjectEntry,
 ): schema is ReturnType<typeof named> => {

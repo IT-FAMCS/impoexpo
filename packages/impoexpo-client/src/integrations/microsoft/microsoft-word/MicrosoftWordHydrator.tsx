@@ -79,10 +79,13 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 						className="p-2"
 						startContent={getIconFromType(p.type, 24)}
 						key={p.originalName}
-						description={p.type}
+						description={p.description}
 						classNames={{ title: "ml-1", description: "ml-1" }}
 					>
-						{p.formattedName}
+						<p>
+							{p.formattedName}{" "}
+							<span className="text-foreground-500 text-tiny">({p.type})</span>
+						</p>
 					</ListboxItem>
 				))}
 			</Listbox>

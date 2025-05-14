@@ -15,7 +15,8 @@ const documentTypeMap: Record<string, DocumentType> = {
 	"application/vnd.openxmlformats-officedocument.presentationml.presentation":
 		DocumentType.POWERPOINT,
 };
-const PLACEHOLDER_REGEX = /\{\{(.*)\}\}/gu;
+const PLACEHOLDER_REGEX =
+	/\{\{\s*([a-zA-Z0-9\-_]+)\s*(?:\[([a-zA-Z<>]*)\])?\s*(?::([^{}]*))?\s*\}\}/gu;
 
 export const extractOfficePlaceholders = async (
 	file: Express.Multer.File,
@@ -39,19 +40,18 @@ export const extractOfficePlaceholders = async (
 
 	const processText = (data: string) => {
 		for (const match of data.matchAll(PLACEHOLDER_REGEX)) {
-			const split = match[1].split(":");
-			if (split.length > 2)
-				throw new Error("colons are not allowed in placeholder names");
-
-			const placeholderType = split.length === 2 ? split[1] : "string";
+			const name = match[1];
+			const placeholderType = match[2] ?? "string";
+			const description = match[3];
 			// TODO: support arrays?
 			if (placeholderType !== "string" && placeholderType !== "number")
 				throw new Error(`unsupported placeholder type "${placeholderType}"`);
 
 			layout.placeholders.push({
-				originalName: match[1],
-				formattedName: split[0],
+				originalName: match[0].slice(2, match[0].length - 2),
+				formattedName: name,
 				type: placeholderType,
+				description: description ? description.trim() : null,
 			});
 		}
 	};

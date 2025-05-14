@@ -1,4 +1,3 @@
-import { ListboxItem } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
