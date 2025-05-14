@@ -1,3 +1,4 @@
+import type { ListboxItemProps } from "@heroui/react";
 import type { ProjectIntegration } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { MessageDescriptor } from "@lingui/core";
 
@@ -18,5 +19,5 @@ export type Integration = {
 	) => React.ReactNode;
 	authenticator?: (callback: () => void) => React.ReactNode;
 	hydrator?: (callback: () => void) => React.ReactNode;
-	selectedItemsRenderer?: () => React.ReactNode[];
+	selectedItemsRenderer?: () => ListboxItemProps[];
 };

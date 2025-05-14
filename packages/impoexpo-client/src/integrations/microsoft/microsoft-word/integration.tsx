@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import { msg } from "@lingui/core/macro";
 import { MicrosoftWordHydrator } from "./MicrosoftWordHydrator";
 import { useMicrosoftWordHydratorStore } from "./store";
-import { ListboxItem } from "@heroui/react";
 import { Trans } from "@lingui/react/macro";
 
 registerIntegration({
@@ -15,14 +14,11 @@ registerIntegration({
 
 	hydrator: (callback) => <MicrosoftWordHydrator callback={callback} />,
 	selectedItemsRenderer: () =>
-		useMicrosoftWordHydratorStore.getState().documents.map((d) => (
-			<ListboxItem
-				className="p-3"
-				startContent={<Icon icon="mdi:microsoft-word" />}
-				description={<Trans>Microsoft Word</Trans>}
-				key={d.name}
-			>
-				{d.name}
-			</ListboxItem>
-		)),
+		useMicrosoftWordHydratorStore.getState().documents.map((d) => ({
+			className: "p-2",
+			startContent: <Icon width={24} icon="mdi:microsoft-word" />,
+			title: d.file.name,
+			description: <Trans>Microsoft Word</Trans>,
+			key: d.file.name,
+		})),
 });

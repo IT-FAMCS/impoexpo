@@ -64,15 +64,12 @@ registerIntegration({
 	hydrator: (callback) => <GoogleFormsHydrator callback={callback} />,
 	selectedItemsRenderer: () =>
 		Object.entries(useGoogleFormsHydratorStore.getState().usedForms).map(
-			(form) => (
-				<ListboxItem
-					className="p-3"
-					startContent={<Icon icon="simple-icons:googleforms" />}
-					description={<Trans>Google Forms</Trans>}
-					key={form[0]}
-				>
-					{form[1].title ?? form[1].documentTitle}
-				</ListboxItem>
-			),
+			(form) => ({
+				className: "p-2",
+				startContent: <Icon width={24} icon="simple-icons:googleforms" />,
+				title: form[1].title ?? form[1].documentTitle,
+				description: <Trans>Google Forms</Trans>,
+				key: form[0],
+			}),
 		),
 });

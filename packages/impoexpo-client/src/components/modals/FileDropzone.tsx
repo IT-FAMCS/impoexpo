@@ -1,10 +1,7 @@
 import { Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import {
-	useDropzone,
-	type DropzoneOptions,
-} from "react-dropzone";
+import { useDropzone, type DropzoneOptions } from "react-dropzone";
 
 export default function FileDropzone(props: {
 	options: DropzoneOptions;

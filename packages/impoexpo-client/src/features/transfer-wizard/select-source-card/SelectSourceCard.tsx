@@ -10,6 +10,7 @@ import {
 	Spinner,
 	Divider,
 	Listbox,
+	ListboxItem,
 } from "@heroui/react";
 import ActionCard from "../../../components/external/ActionCard";
 
@@ -52,7 +53,7 @@ export default function SelectSourceCard() {
 			case SourceCardState.AUTHENTICATE_SOURCE:
 				return <SourceAuthenticator />;
 			case SourceCardState.VERIFY_SOURCE:
-				return <SourceVerificator />;
+				return <SourceVerifier />;
 			case SourceCardState.HYDRATE_SOURCE:
 				return <SourceHydrator />;
 			case SourceCardState.CHECK_ADDED_SOURCES:
@@ -96,16 +97,19 @@ function SourceChecker() {
 
 	const items = (
 		integrationType === "read" ? readIntegrations() : writeIntegrations()
-	).flatMap((integration) => integration.selectedItemsRenderer?.() ?? []);
+	)
+		.filter((i) => i.selectedItemsRenderer)
+		// biome-ignore lint/style/noNonNullAssertion: filtered out
+		.flatMap((i) => i.selectedItemsRenderer!());
 
 	return (
 		<div className="flex flex-col gap-2">
 			<Listbox
 				className="border-small rounded-small border-default"
 				selectionMode="none"
+				items={items}
 			>
-				{/*biome-ignore lint/complexity/noUselessFragments: doesn't update, no rerenders will happen*/}
-				<>{items}</>
+				{(props) => <ListboxItem {...props} key={props.key} />}
 			</Listbox>
 			<div className="flex flex-row items-center justify-center gap-2">
 				<Button
@@ -182,7 +186,7 @@ function SourceHydrator() {
 	);
 }
 
-function SourceVerificator() {
+function SourceVerifier() {
 	const { currentIntegration, setState } = useSourceCardStore();
 
 	return (

@@ -1,4 +1,5 @@
 import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import type { MicrosoftOfficeDocumentLayout } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
 
 export enum MicrosoftWordHydratorState {
 	UPLOAD = 0,
@@ -6,14 +7,19 @@ export enum MicrosoftWordHydratorState {
 	VERIFY = 2,
 }
 
+export type MicrosoftOfficeDocument = {
+	file: File;
+	layout?: MicrosoftOfficeDocumentLayout;
+};
+
 export type MicrosoftWordHydratorStore = {
 	state: MicrosoftWordHydratorState;
 	setState: (newState: MicrosoftWordHydratorState) => void;
 
-	documents: Array<File>;
-	currentDocument?: File;
-	addDocument: (document: File) => void;
-	setCurrentDocument: (document?: File) => void;
+	documents: Array<MicrosoftOfficeDocument>;
+	currentDocument?: MicrosoftOfficeDocument;
+	addDocument: (document: MicrosoftOfficeDocument) => void;
+	setCurrentDocument: (document?: MicrosoftOfficeDocument) => void;
 };
 
 export const useMicrosoftWordHydratorStore =

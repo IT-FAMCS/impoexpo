@@ -9,8 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import { postFormWithResult } from "@/api/common";
 import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/schemas/integrations/microsoft/endpoints";
 import { MicrosoftOfficeDocumentLayoutSchema } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
-import { Spinner } from "@heroui/react";
+import { Button, Listbox, ListboxItem, Spinner } from "@heroui/react";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
+import { Icon } from "@iconify/react";
 
 export function MicrosoftWordHydrator(props: { callback: () => void }) {
 	const { state } = useMicrosoftWordHydratorStore();
@@ -20,8 +21,95 @@ export function MicrosoftWordHydrator(props: { callback: () => void }) {
 		case MicrosoftWordHydratorState.LAYOUT:
 			return <MicrosoftWordLayouter />;
 		case MicrosoftWordHydratorState.VERIFY:
-			return <>VERIFY</>;
+			return <MicrosoftWordVerifier callback={props.callback} />;
 	}
+}
+
+export function MicrosoftWordVerifier(props: { callback: () => void }) {
+	const { currentDocument, setCurrentDocument, setState, addDocument } =
+		useMicrosoftWordHydratorStore();
+	if (!currentDocument?.layout)
+		throw new Error(
+			"attempted to render MicrosoftWordVerifier without currentDocument.layout initialized",
+		);
+
+	const getIconFromType = (type: string, width: number) => {
+		switch (type) {
+			case "string": {
+				return <Icon width={width} icon="mdi:text" />;
+			}
+			case "number": {
+				return <Icon width={width} icon="mdi:123" />;
+			}
+			default: {
+				return <Icon width={width} icon="mdi:selection" />;
+			}
+		}
+	};
+
+	if (currentDocument.layout.placeholders.length === 0) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-2">
+				<p className="text-center">
+					<Trans>
+						no placeholder were found in the document.
+						<br />
+						please check the document and try uploading it again.
+					</Trans>
+				</p>
+				<Button
+					startContent={<Icon width={18} icon="mdi:arrow-left" />}
+					onPress={() => setState(MicrosoftWordHydratorState.UPLOAD)}
+				>
+					<Trans>go back to file upload</Trans>
+				</Button>
+			</div>
+		);
+	}
+
+	return (
+		<div className="flex flex-col items-center justify-center gap-2">
+			<Trans>the following placeholders were found:</Trans>
+			<Listbox
+				selectionMode="none"
+				className="border-small rounded-small border-default"
+			>
+				{currentDocument.layout.placeholders.map((p) => (
+					<ListboxItem
+						className="p-2"
+						startContent={getIconFromType(p.type, 24)}
+						key={p.originalName}
+						description={p.type}
+						classNames={{ title: "ml-1", description: "ml-1" }}
+					>
+						{p.formattedName}
+					</ListboxItem>
+				))}
+			</Listbox>
+			<Trans>is everything correct?</Trans>
+			<div className="flex flex-row gap-2">
+				<Button
+					color="danger"
+					startContent={<Icon width={18} icon="mdi:arrow-left" />}
+					onPress={() => setState(MicrosoftWordHydratorState.UPLOAD)}
+				>
+					<Trans>no, go back to file upload</Trans>
+				</Button>
+				<Button
+					color="success"
+					endContent={<Icon width={18} icon="mdi:arrow-right" />}
+					onPress={() => {
+						addDocument(currentDocument);
+						setCurrentDocument(undefined);
+						setState(MicrosoftWordHydratorState.UPLOAD);
+						props.callback();
+					}}
+				>
+					<Trans>yes, proceed</Trans>
+				</Button>
+			</div>
+		</div>
+	);
 }
 
 export function MicrosoftWordLayouter() {
@@ -34,11 +122,11 @@ export function MicrosoftWordLayouter() {
 		);
 
 	const { isFetching, isError, data, error } = useQuery({
-		queryKey: ["get-microsoft-word-layout", currentDocument.lastModified],
+		queryKey: ["get-microsoft-word-layout", currentDocument.file.lastModified],
 		refetchOnWindowFocus: false,
 		queryFn: async () => {
 			const form = new FormData();
-			form.append("file", currentDocument);
+			form.append("file", currentDocument.file);
 			return await postFormWithResult(
 				MICROSOFT_OFFICE_LAYOUT_ROUTE,
 				form,
@@ -46,6 +134,13 @@ export function MicrosoftWordLayouter() {
 			);
 		},
 	});
+
+	useEffect(() => {
+		if (data) {
+			currentDocument.layout = data;
+			setState(MicrosoftWordHydratorState.VERIFY);
+		}
+	}, [data, currentDocument, setState]);
 
 	if (isFetching) {
 		return (
@@ -66,12 +161,9 @@ export function MicrosoftWordLayouter() {
 			/>
 		);
 	}
-
-	return <>{JSON.stringify(data)}</>;
 }
 
 export function MicrosoftWordUploader() {
-	const { t } = useLingui();
 	const { setState, setCurrentDocument } = useMicrosoftWordHydratorStore();
 
 	useEffect(() => setCurrentDocument(undefined), [setCurrentDocument]);
@@ -83,7 +175,7 @@ export function MicrosoftWordUploader() {
 						[".docx"],
 				},
 				onDropAccepted(files) {
-					setCurrentDocument(files[0]);
+					setCurrentDocument({ file: files[0] });
 					setState(MicrosoftWordHydratorState.LAYOUT);
 				},
 			}}
