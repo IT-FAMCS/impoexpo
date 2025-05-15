@@ -36,7 +36,6 @@ export const nodeSchemasCompatible = (
 		return true;
 	}
 
-	if (sourceEntry.generic && targetEntry.generic) return false;
 	if (
 		(sourceEntry.generic && !targetEntry.generic) ||
 		(!sourceEntry.generic && targetEntry.generic)

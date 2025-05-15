@@ -14,9 +14,8 @@ import { isArray } from "@impoexpo/shared/nodes/node-utils";
 
 registerIntegrationNodeHandlerRegistrar("google-forms", (project) => {
 	const integration = project.integrations["google-forms"];
-	if (!integration || !v.is(GoogleFormsProjectIntegrationSchema, integration)) {
+	if (!integration || !v.is(GoogleFormsProjectIntegrationSchema, integration))
 		throw new Error();
-	}
 
 	const handlers: Record<
 		string,

@@ -29,6 +29,7 @@ registerIntegration({
 						clientIdentifier: d.id,
 						// biome-ignore lint/style/noNonNullAssertion: filtered out
 						layout: d.layout!,
+						filename: d.file.name,
 					})),
 			},
 		} satisfies MicrosoftWordProjectIntegration;

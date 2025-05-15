@@ -23,6 +23,7 @@ export const ProjectIntegrationSchema = v.object({
 export const ProjectSchema = v.object({
 	integrations: v.record(v.string(), ProjectIntegrationSchema),
 	nodes: v.array(ProjectNodeSchema),
+	files: v.array(v.string()),
 });
 
 export type ProjectIntegration = v.InferOutput<typeof ProjectIntegrationSchema>;

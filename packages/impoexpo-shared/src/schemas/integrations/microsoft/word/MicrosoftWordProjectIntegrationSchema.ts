@@ -6,6 +6,7 @@ export const MicrosoftWordProjectIntegrationSchema = v.object({
 		documents: v.array(
 			v.object({
 				layout: MicrosoftOfficeDocumentLayoutSchema,
+				filename: v.string(),
 				clientIdentifier: v.string(),
 			}),
 		),

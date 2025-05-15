@@ -1,4 +1,4 @@
-import { BaseNode } from "../../node-types";
+import { BaseNode as word } from "../../node-types";
 import { nodesScope } from "../../node-database";
 import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
@@ -10,12 +10,16 @@ import {
 } from "../../schema-string-conversions";
 import { generic } from "../../node-utils";
 
-registerCustomType("WordRun", () => ({
+export type WordRunType = v.InferOutput<
+	v.ObjectSchema<typeof wordRunEntries, undefined>
+>;
+const wordRunEntries = {
 	type: generic("T"),
-	native: v.unknown(),
-}));
+	index: v.number(),
+} satisfies v.ObjectEntries;
+registerCustomType("WordRun", () => wordRunEntries);
 
-export const WORD_TEXT_NODE = new BaseNode({
+export const WORD_TEXT_NODE = new word({
 	category: "microsoft-word",
 	name: "text",
 	inputSchema: v.object({
@@ -30,7 +34,7 @@ export const WORD_TEXT_NODE = new BaseNode({
 	}),
 });
 
-export const WORD_LIST_NODE = new BaseNode({
+export const WORD_LIST_NODE = new word({
 	category: "microsoft-word",
 	name: "list",
 	inputSchema: v.object({
@@ -41,7 +45,7 @@ export const WORD_LIST_NODE = new BaseNode({
 	}),
 });
 
-export const WORD_GROUPED_LIST_NODE = new BaseNode({
+export const WORD_GROUPED_LIST_NODE = new word({
 	category: "microsoft-word",
 	name: "grouped-list",
 	inputSchema: v.object({
@@ -63,7 +67,7 @@ export const createWordDocumentBaseNode = (
 			`WordRun<${placeholder.type}>`,
 		);
 
-	return new BaseNode({
+	return new word({
 		category: "microsoft-word",
 		name: `document-${filename}`,
 		inputSchema: v.object(entries),

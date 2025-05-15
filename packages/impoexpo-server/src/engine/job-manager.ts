@@ -18,6 +18,7 @@ export class Job {
 	public id: string;
 	public project: Project;
 	public processing = false;
+	public files: Record<string, Buffer> = {};
 	public customNodes: Record<
 		string,
 		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>

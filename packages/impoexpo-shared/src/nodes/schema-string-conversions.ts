@@ -23,9 +23,7 @@ import {
 	isUnion,
 	replaceGenericWithSchema,
 	genericEntries,
-	generic,
 	resolveCustomType,
-	getCustomTypeResolvedGenerics,
 	customType as externalCustomType,
 	getCustomTypeGenerics,
 } from "./node-utils";
@@ -112,9 +110,8 @@ export const schemaToString = (schema: ObjectEntry): string => {
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
 
 	if (isCustomType(schema)) {
-		const generic = getCustomTypeGenerics(schema);
-		const resolved = getCustomTypeResolvedGenerics(schema);
-		return `${getCustomTypeName(schema)}${generic.length !== 0 ? `<${generic.map((s) => (s in resolved ? schemaToString(resolved[s]) : s))}>` : ""}`;
+		const generics = Object.entries(getCustomTypeGenerics(schema));
+		return `${getCustomTypeName(schema)}${generics.length !== 0 ? `<${generics.map(([key, schema]) => (schema ? schemaToString(schema) : key)).join(", ")}>` : ""}`;
 	}
 	if (isGeneric(schema)) return getGenericName(schema);
 	if (isUnion(schema))

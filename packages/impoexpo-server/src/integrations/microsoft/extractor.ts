@@ -26,7 +26,6 @@ export const extractOfficePlaceholders = async (
 
 	const type = documentTypeMap[file.mimetype];
 	const layout: MicrosoftOfficeDocumentLayout = {
-		filename: file.originalname,
 		placeholders: [],
 	};
 

@@ -25,10 +25,12 @@ export const customType = (name: string, child: v.ObjectEntries) =>
 		v.metadata({
 			metadataType: "custom",
 			name,
-			generics: Array.from(
-				new Set(Object.values(child).flatMap((c) => genericEntries(c) ?? [])),
-			),
-			resolvedGenerics: {} as Record<string, ObjectEntry>,
+			generics: Object.values(child)
+				.flatMap((c) => genericEntries(c) ?? [])
+				.reduce<Record<string, ObjectEntry | null>>((acc, cur) => {
+					acc[cur] = null;
+					return acc;
+				}, {}),
 		}),
 	);
 export const isCustomType = (
@@ -42,17 +44,25 @@ export const resolveCustomType = (
 	name: string,
 	resolvedWith: ObjectEntry,
 ) => {
-	if (!schema.pipe[1].metadata.generics.includes(name))
-		schema.pipe[1].metadata.generics.push(name);
-	schema.pipe[1].metadata.resolvedGenerics[name] = resolvedWith;
+	schema.pipe[1].metadata.generics[name] = resolvedWith;
 };
 export const getCustomTypeGenerics = (schema: ReturnType<typeof customType>) =>
 	schema.pipe[1].metadata.generics;
-export const getCustomTypeResolvedGenerics = (
-	schema: ReturnType<typeof customType>,
-) => schema.pipe[1].metadata.resolvedGenerics;
 export const getCustomTypeName = (schema: ReturnType<typeof customType>) =>
 	schema.pipe[1].metadata.name;
+export const createCustomTypeReplica = (
+	schema: ReturnType<typeof customType>,
+	newEntries: v.ObjectEntries,
+) => {
+	return v.pipe(
+		v.object(newEntries),
+		v.metadata({
+			metadataType: "custom",
+			name: schema.pipe[1].metadata.name,
+			generics: schema.pipe[1].metadata.generics,
+		}),
+	);
+};
 
 export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
 	// NOTE: do not unwrap nullable types here! they must be handled by the user
@@ -189,15 +199,15 @@ export const replaceGenericWithSchema = (
 	if (isGeneric(root) && getGenericName(root) === name) return resolver;
 
 	if (isCustomType(root)) {
-		const replaced = customType(
-			getCustomTypeName(root),
+		const replica = createCustomTypeReplica(
+			root,
 			Object.entries(root.entries).reduce<v.ObjectEntries>((acc, cur) => {
 				acc[cur[0]] = replaceGenericWithSchema(cur[1], resolver, name);
 				return acc;
 			}, {}),
 		);
-		resolveCustomType(replaced, name, resolver);
-		return replaced;
+		resolveCustomType(replica, name, resolver);
+		return replica;
 	}
 
 	if (isArray(root))

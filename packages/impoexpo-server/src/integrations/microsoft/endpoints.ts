@@ -1,11 +1,10 @@
 import type { Express } from "express";
 import { logger } from "../../logger";
 import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/schemas/integrations/microsoft/endpoints";
-import type { MicrosoftOfficeDocumentLayout } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
 import { defaultRatelimiter } from "../../common";
 import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
-import multer from "multer";
 import { extractOfficePlaceholders } from "./extractor";
+import multer from "multer";
 const upload = multer();
 
 export const registerMicrosoftEndpoints = (app: Express) => {

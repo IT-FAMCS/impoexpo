@@ -11,7 +11,7 @@ import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { postWithSchemaAndResult, route } from "@/api/common";
 import {
 	PROJECT_TRANSFER_STATUS_ENDPOINT,
-	UPLOAD_PROJECT_ENDPOINT,
+	CREATE_PROJECT_ENDPOINT,
 } from "@impoexpo/shared/schemas/project/endpoints";
 import { Trans, useLingui } from "@lingui/react/macro";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -247,7 +247,7 @@ function UploadingProjectCard() {
 		queryKey: ["upload-project", project],
 		queryFn: async () =>
 			postWithSchemaAndResult(
-				UPLOAD_PROJECT_ENDPOINT,
+				CREATE_PROJECT_ENDPOINT,
 				project,
 				UploadProjectResponseSchema,
 			),
