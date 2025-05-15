@@ -19,16 +19,33 @@ export const isGeneric = (
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
-export const named = <T extends v.GenericSchema>(name: string, child: T) =>
-	v.pipe(child, v.metadata({ metadataType: "named", objectName: name }));
-export const isNamed = (
+export const customType = (name: string, child: v.ObjectEntries) =>
+	v.pipe(
+		v.object(child),
+		v.metadata({
+			metadataType: "custom",
+			name,
+			generic: {} as Record<string, ObjectEntry>,
+		}),
+	);
+export const isCustomType = (
 	schema: ObjectEntry,
-): schema is ReturnType<typeof named> => {
+): schema is ReturnType<typeof customType> => {
 	const metadata = v.getMetadata(schema);
-	return "metadataType" in metadata && metadata.metadataType === "named";
+	return "metadataType" in metadata && metadata.metadataType === "custom";
 };
-export const getObjectName = (schema: ReturnType<typeof named>) =>
-	schema.pipe[1].metadata.objectName;
+export const resolveCustomType = (
+	schema: ReturnType<typeof customType>,
+	name: string,
+	resolvedWith: ObjectEntry,
+) => {
+	schema.pipe[1].metadata.generic[name] = resolvedWith;
+};
+export const getCustomTypeResolvedGenerics = (
+	schema: ReturnType<typeof customType>,
+) => schema.pipe[1].metadata.generic;
+export const getCustomTypeName = (schema: ReturnType<typeof customType>) =>
+	schema.pipe[1].metadata.name;
 
 export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
 	// NOTE: do not unwrap nullable types here! they must be handled by the user
@@ -46,7 +63,7 @@ export const getRootSchema = (node: ObjectEntry): ObjectEntry => {
 
 export const isUnion = (
 	schema: ObjectEntry,
-): schema is v.UnionSchema<ObjectEntry[], undefined> => {
+): schema is ReturnType<typeof v.union> => {
 	return schema.type === "union";
 };
 
@@ -152,5 +169,44 @@ export const genericEntries = (entry: ObjectEntry): string[] | undefined => {
 			.filter((v) => v !== undefined);
 	if (isGeneric(entry)) return [getGenericName(entry)];
 	if (isPipe(entry)) return genericEntries(entry.pipe[0]);
+	if (isUnion(entry))
+		return entry.options.flatMap((o) => genericEntries(o) ?? []);
 	return undefined;
+};
+
+export const replaceGenericWithSchema = (
+	root: ObjectEntry,
+	resolver: ObjectEntry,
+	name: string,
+): ObjectEntry => {
+	if (isGeneric(root) && getGenericName(root) === name) return resolver;
+
+	if (isCustomType(root)) {
+		return customType(
+			getCustomTypeName(root),
+			Object.entries(root.entries).reduce<v.ObjectEntries>((acc, cur) => {
+				acc[cur[0]] = replaceGenericWithSchema(cur[1], resolver, name);
+				return acc;
+			}, {}),
+		);
+	}
+	if (isArray(root))
+		return v.array(replaceGenericWithSchema(root.item, resolver, name));
+	if (isRecord(root))
+		return v.record(
+			replaceGenericWithSchema(root.key, resolver, name) as v.GenericSchema<
+				string,
+				string | number | symbol
+			>,
+			replaceGenericWithSchema(root.value, resolver, name),
+		);
+	if (isNullable(root))
+		return v.nullable(replaceGenericWithSchema(root.wrapped, resolver, name));
+	if (isPipe(root))
+		return v.pipe(
+			replaceGenericWithSchema(root.pipe[0], resolver, name),
+			...root.pipe.slice(1),
+		);
+
+	return root;
 };

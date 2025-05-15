@@ -2,26 +2,33 @@ import { BaseNode } from "../../node-types";
 import { nodesScope } from "../../node-database";
 import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
-import { named } from "../../node-utils";
 import type { MicrosoftOfficeDocumentLayout } from "../../../schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
-import { schemaFromString } from "../../schema-string-conversions";
+import {
+	customType,
+	registerCustomType,
+	schemaFromString,
+} from "../../schema-string-conversions";
+import { generic } from "../../node-utils";
 
-const wordRun = () => named("WordRun", v.unknown());
+registerCustomType("WordRun", () =>
+	v.object({
+		type: generic("T"),
+		native: v.unknown(),
+	}),
+);
 
 export const WORD_TEXT_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "text",
 	inputSchema: v.object({
-		text: v.string(),
+		text: generic("T"),
 		bold: v.optional(v.boolean(), false),
 		italics: v.optional(v.boolean(), false),
 		strikethrough: v.optional(v.boolean(), false),
 		underline: v.optional(v.boolean(), false),
 	}),
 	outputSchema: v.object({
-		// TODO: currently, this skips some type checks, but it would probably be better to actually
-		// handle this in the future
-		run: wordRun(),
+		run: customType("WordRun"),
 	}),
 });
 
@@ -29,10 +36,10 @@ export const WORD_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "list",
 	inputSchema: v.object({
-		runs: v.array(wordRun()),
+		runs: v.array(customType("WordRun")),
 	}),
 	outputSchema: v.object({
-		run: wordRun(),
+		run: customType("WordRun"),
 	}),
 });
 
@@ -41,10 +48,10 @@ export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	name: "grouped-list",
 	inputSchema: v.object({
 		groupBy: v.string(),
-		runs: v.array(wordRun()),
+		runs: v.array(customType("WordRun")),
 	}),
 	outputSchema: v.object({
-		run: wordRun(),
+		run: customType("WordRun"),
 	}),
 });
 

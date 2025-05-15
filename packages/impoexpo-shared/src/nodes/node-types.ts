@@ -1,13 +1,8 @@
-import * as v from "valibot";
+import type * as v from "valibot";
 import {
-	getGenericName,
-	isArray,
 	genericEntries,
-	isGeneric,
-	isNullable,
-	isPipe,
-	isRecord,
 	unwrapNodeIfNeeded,
+	replaceGenericWithSchema,
 } from "./node-utils";
 import { schemaToString } from "./schema-string-conversions";
 
@@ -71,35 +66,6 @@ export class BaseNode<
 	}
 
 	public resolveGenericType(resolvedType: string, resolvedWith: ObjectEntry) {
-		const replaceGenericWithSchema = (
-			root: ObjectEntry,
-			resolver: ObjectEntry,
-			name: string,
-		): ObjectEntry => {
-			if (isGeneric(root) && getGenericName(root) === name) return resolver;
-			if (isArray(root))
-				return v.array(replaceGenericWithSchema(root.item, resolver, name));
-			if (isRecord(root))
-				return v.record(
-					replaceGenericWithSchema(root.key, resolver, name) as v.GenericSchema<
-						string,
-						string | number | symbol
-					>,
-					replaceGenericWithSchema(root.value, resolver, name),
-				);
-			if (isNullable(root))
-				return v.nullable(
-					replaceGenericWithSchema(root.wrapped, resolver, name),
-				);
-			if (isPipe(root))
-				return v.pipe(
-					replaceGenericWithSchema(root.pipe[0], resolver, name),
-					...root.pipe.slice(1),
-				);
-
-			return root;
-		};
-
 		for (const key of [
 			...Object.keys(this.inputSchema?.entries ?? {}),
 			...Object.keys(this.outputSchema?.entries ?? {}),
