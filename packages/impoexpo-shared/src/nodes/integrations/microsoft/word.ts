@@ -10,12 +10,10 @@ import {
 } from "../../schema-string-conversions";
 import { generic } from "../../node-utils";
 
-registerCustomType("WordRun", () =>
-	v.object({
-		type: generic("T"),
-		native: v.unknown(),
-	}),
-);
+registerCustomType("WordRun", () => ({
+	type: generic("T"),
+	native: v.unknown(),
+}));
 
 export const WORD_TEXT_NODE = new BaseNode({
 	category: "microsoft-word",
@@ -61,7 +59,9 @@ export const createWordDocumentBaseNode = (
 ) => {
 	const entries: v.ObjectEntries = {};
 	for (const placeholder of layout.placeholders)
-		entries[placeholder.formattedName] = schemaFromString(placeholder.type);
+		entries[placeholder.formattedName] = schemaFromString(
+			`WordRun<${placeholder.type}>`,
+		);
 
 	return new BaseNode({
 		category: "microsoft-word",

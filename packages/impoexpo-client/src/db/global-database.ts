@@ -6,12 +6,12 @@ import type { GlobalFilesTableEntry } from "./files";
 export const globalDatabase = new Dexie("impoexpo") as Dexie & {
 	auth: EntityTable<GlobalAuthTableEntry, "integration">;
 	persisted: EntityTable<GlobalPersistedStateTable, "type">;
-	files: EntityTable<GlobalFilesTableEntry, "id">;
+	files: EntityTable<GlobalFilesTableEntry, "hash">;
 };
 
 globalDatabase.version(1).stores({
 	// do not index data here
 	auth: "integration",
 	persisted: "type",
-	files: "id,mimeType",
+	files: "hash,filename,mimeType",
 });

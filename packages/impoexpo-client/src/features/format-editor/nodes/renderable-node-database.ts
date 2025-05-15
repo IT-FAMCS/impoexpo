@@ -23,6 +23,15 @@ export const importBuiltinNodes = async () => {
 	);
 };
 
+export const importIntegrationNodes = async () => {
+	console.log("importing integration nodes");
+	await Promise.all(
+		Object.values(import.meta.glob("../../../integrations/**/nodes.tsx")).map(
+			(v) => v(),
+		),
+	);
+};
+
 const searchInitializers: Array<
 	(database: Orama<typeof nodesDatabaseSchema>) => void
 > = new Array();

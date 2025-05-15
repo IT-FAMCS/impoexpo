@@ -12,6 +12,8 @@ import { MicrosoftOfficeDocumentLayoutSchema } from "@impoexpo/shared/schemas/in
 import { Button, Listbox, ListboxItem, Spinner } from "@heroui/react";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 import { Icon } from "@iconify/react";
+import { saveFile } from "@/db/files";
+import { registerMicrosoftWordNode } from "./nodes";
 
 export function MicrosoftWordHydrator(props: { callback: () => void }) {
 	const { state } = useMicrosoftWordHydratorStore();
@@ -103,6 +105,11 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 					endContent={<Icon width={18} icon="mdi:arrow-right" />}
 					onPress={() => {
 						addDocument(currentDocument);
+						registerMicrosoftWordNode(
+							currentDocument.file.name,
+							// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
+							currentDocument.layout!,
+						);
 						setCurrentDocument(undefined);
 						setState(MicrosoftWordHydratorState.UPLOAD);
 						props.callback();
@@ -177,8 +184,9 @@ export function MicrosoftWordUploader() {
 					"application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 						[".docx"],
 				},
-				onDropAccepted(files) {
-					setCurrentDocument({ file: files[0] });
+				async onDropAccepted(files) {
+					const id = await saveFile(files[0]);
+					setCurrentDocument({ file: files[0], id });
 					setState(MicrosoftWordHydratorState.LAYOUT);
 				},
 			}}

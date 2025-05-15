@@ -8,7 +8,6 @@ export const MicrosoftOfficeDocumentPlaceholderSchema = v.object({
 });
 
 export const MicrosoftOfficeDocumentLayoutSchema = v.object({
-	filename: v.string(),
 	placeholders: v.array(MicrosoftOfficeDocumentPlaceholderSchema),
 });
 

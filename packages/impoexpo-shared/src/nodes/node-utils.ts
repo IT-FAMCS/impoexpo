@@ -25,7 +25,10 @@ export const customType = (name: string, child: v.ObjectEntries) =>
 		v.metadata({
 			metadataType: "custom",
 			name,
-			generic: {} as Record<string, ObjectEntry>,
+			generics: Array.from(
+				new Set(Object.values(child).flatMap((c) => genericEntries(c) ?? [])),
+			),
+			resolvedGenerics: {} as Record<string, ObjectEntry>,
 		}),
 	);
 export const isCustomType = (
@@ -39,11 +42,15 @@ export const resolveCustomType = (
 	name: string,
 	resolvedWith: ObjectEntry,
 ) => {
-	schema.pipe[1].metadata.generic[name] = resolvedWith;
+	if (!schema.pipe[1].metadata.generics.includes(name))
+		schema.pipe[1].metadata.generics.push(name);
+	schema.pipe[1].metadata.resolvedGenerics[name] = resolvedWith;
 };
+export const getCustomTypeGenerics = (schema: ReturnType<typeof customType>) =>
+	schema.pipe[1].metadata.generics;
 export const getCustomTypeResolvedGenerics = (
 	schema: ReturnType<typeof customType>,
-) => schema.pipe[1].metadata.generic;
+) => schema.pipe[1].metadata.resolvedGenerics;
 export const getCustomTypeName = (schema: ReturnType<typeof customType>) =>
 	schema.pipe[1].metadata.name;
 
@@ -182,14 +189,17 @@ export const replaceGenericWithSchema = (
 	if (isGeneric(root) && getGenericName(root) === name) return resolver;
 
 	if (isCustomType(root)) {
-		return customType(
+		const replaced = customType(
 			getCustomTypeName(root),
 			Object.entries(root.entries).reduce<v.ObjectEntries>((acc, cur) => {
 				acc[cur[0]] = replaceGenericWithSchema(cur[1], resolver, name);
 				return acc;
 			}, {}),
 		);
+		resolveCustomType(replaced, name, resolver);
+		return replaced;
 	}
+
 	if (isArray(root))
 		return v.array(replaceGenericWithSchema(root.item, resolver, name));
 	if (isRecord(root))

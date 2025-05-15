@@ -9,6 +9,7 @@ export enum MicrosoftWordHydratorState {
 
 export type MicrosoftOfficeDocument = {
 	file: File;
+	id: string;
 	layout?: MicrosoftOfficeDocumentLayout;
 };
 

@@ -28,7 +28,10 @@ import {
 	saveStatesToDatabase,
 } from "@/db/persisted";
 import { useQuery } from "@tanstack/react-query";
-import { importBuiltinNodes } from "../format-editor/nodes/renderable-node-database";
+import {
+	importBuiltinNodes,
+	importIntegrationNodes,
+} from "../format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
 
@@ -38,11 +41,14 @@ export default function TransferWizardPage() {
 		queryKey: ["import-nodes"],
 		queryFn: async () => {
 			await importBuiltinNodes();
+			await importIntegrationNodes();
 			initializeNodes();
 			return true;
 		},
 	});
 	const importNodesSuccessful = importNodesQuery.data;
+	if (!importNodesSuccessful) console.error(importNodesQuery.error);
+
 	const loadPersistentDataQuery = useQuery({
 		queryKey: ["load-persistent-data"],
 		queryFn: async () => {

@@ -7,6 +7,8 @@ import {
 	record,
 	string,
 	union,
+	pipe,
+	type ObjectEntries,
 } from "valibot";
 import type { ObjectEntry } from "./node-types";
 import {
@@ -24,6 +26,8 @@ import {
 	generic,
 	resolveCustomType,
 	getCustomTypeResolvedGenerics,
+	customType as externalCustomType,
+	getCustomTypeGenerics,
 } from "./node-utils";
 
 const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
@@ -31,17 +35,17 @@ const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
 	number: number,
 	boolean: boolean,
 };
-const customTypeSchemaConverters: Record<string, () => ObjectEntry> = {};
+const customTypeSchemaConverters: Record<string, () => ObjectEntries> = {};
 export const registerCustomType = (
 	name: string,
-	generator: () => ObjectEntry,
+	generator: () => ObjectEntries,
 ) => {
 	customTypeSchemaConverters[name] = generator;
 };
 export const customType = (name: string) => {
 	const generator = customTypeSchemaConverters[name];
 	if (!generator) throw new Error(`unknown custom type "${name}"`);
-	return generator();
+	return externalCustomType(name, generator());
 };
 
 export const schemaFromString = (raw: string): ObjectEntry => {
@@ -72,14 +76,13 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 	}
 
 	// custom type
-	if (str in customTypeSchemaConverters)
-		return customTypeSchemaConverters[str]();
+	if (str in customTypeSchemaConverters) return customType(str);
 
 	// generic custom type
 	const genericRegexMatches = /([\w\-\$@#]+)<(.*)>/.exec(str);
 	if (genericRegexMatches) {
 		const schema = schemaFromString(genericRegexMatches[1]);
-		const resolvers = genericRegexMatches[2];
+		const resolvers = genericRegexMatches[2].split(",");
 		const entries = genericEntries(schema);
 		if (!entries || entries.length !== resolvers.length)
 			throw new Error(
@@ -108,12 +111,12 @@ export const schemaToString = (schema: ObjectEntry): string => {
 	if (isNullable(schema))
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
 
-	if (isGeneric(schema)) return getGenericName(schema);
 	if (isCustomType(schema)) {
-		const generic = genericEntries(schema) ?? [];
+		const generic = getCustomTypeGenerics(schema);
 		const resolved = getCustomTypeResolvedGenerics(schema);
 		return `${getCustomTypeName(schema)}${generic.length !== 0 ? `<${generic.map((s) => (s in resolved ? schemaToString(resolved[s]) : s))}>` : ""}`;
 	}
+	if (isGeneric(schema)) return getGenericName(schema);
 	if (isUnion(schema))
 		return schema.options.map((o) => schemaToString(o)).join(" | ");
 	if (isPipe(schema)) return schemaToString(schema.pipe[0]);

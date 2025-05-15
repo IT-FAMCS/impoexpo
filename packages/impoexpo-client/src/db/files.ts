@@ -1,28 +1,33 @@
 import { globalDatabase } from "./global-database";
-import * as uuid from "uuid";
+import { sha512 } from "hash-wasm";
 
 export interface GlobalFilesTableEntry {
-	id: string;
+	hash: string;
 	filename?: string;
 	mimeType: string;
 	data: ArrayBuffer;
 }
 
 export const saveFile = async (file: File): Promise<string> => {
-	const id = uuid.v4();
-	await globalDatabase.files.put({
-		id: id,
-		filename: file.name,
-		data: await file.bytes(),
-		mimeType: file.type,
-	});
-	return id;
+	const hash = await sha512(new Uint8Array(await file.arrayBuffer()));
+
+	// TODO: this is probably prone to errors
+	const existingFile = await globalDatabase.files.get({ hash });
+	if (!existingFile) {
+		await globalDatabase.files.put({
+			hash: hash,
+			filename: file.name,
+			data: await file.arrayBuffer(),
+			mimeType: file.type,
+		});
+	}
+	return hash;
 };
 
 export const getFile = async (
-	id: string,
+	hash: string,
 ): Promise<GlobalFilesTableEntry | undefined> =>
-	await globalDatabase.files.get(id);
+	await globalDatabase.files.get(hash);
 
-export const removeFile = async (id: string) =>
-	await globalDatabase.files.delete(id);
+export const removeFile = async (hash: string) =>
+	await globalDatabase.files.delete(hash);

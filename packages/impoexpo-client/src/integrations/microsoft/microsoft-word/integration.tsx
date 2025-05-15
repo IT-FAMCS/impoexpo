@@ -9,6 +9,8 @@ import {
 	type MicrosoftWordProjectIntegration,
 } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
 import * as v from "valibot";
+import { getFile } from "@/db/files";
+import { registerMicrosoftWordNode } from "./nodes";
 
 registerIntegration({
 	id: "microsoft-word",
@@ -16,6 +18,35 @@ registerIntegration({
 	icon: <Icon icon="mdi:microsoft-word" />,
 	read: false,
 	write: true,
+
+	async getProjectInformation() {
+		const documents = useMicrosoftWordHydratorStore.getState().documents;
+		return {
+			data: {
+				documents: documents
+					.filter((d) => d.layout)
+					.map((d) => ({
+						clientIdentifier: d.id,
+						// biome-ignore lint/style/noNonNullAssertion: filtered out
+						layout: d.layout!,
+					})),
+			},
+		} satisfies MicrosoftWordProjectIntegration;
+	},
+
+	async onProjectInformationLoaded(data) {
+		if (!v.is(MicrosoftWordProjectIntegrationSchema, data)) return;
+		for (const document of data.data.documents) {
+			const file = await getFile(document.clientIdentifier);
+			if (!file || !file.filename) continue;
+			useMicrosoftWordHydratorStore.getState().addDocument({
+				id: document.clientIdentifier,
+				file: new File([file.data], file.filename, { type: file.mimeType }),
+				layout: document.layout,
+			});
+			registerMicrosoftWordNode(file.filename, document.layout);
+		}
+	},
 
 	hydrator: (callback) => <MicrosoftWordHydrator callback={callback} />,
 	selectedItemsRenderer: () =>
