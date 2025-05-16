@@ -11,6 +11,7 @@ export const MicrosoftWordProjectIntegrationSchema = v.object({
 			}),
 		),
 	}),
+	files: v.array(v.string()),
 });
 
 export type MicrosoftWordProjectIntegration = v.InferOutput<

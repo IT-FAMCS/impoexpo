@@ -32,6 +32,7 @@ registerIntegration({
 						filename: d.file.name,
 					})),
 			},
+			files: documents.filter((d) => d.layout).map((d) => d.id),
 		} satisfies MicrosoftWordProjectIntegration;
 	},
 

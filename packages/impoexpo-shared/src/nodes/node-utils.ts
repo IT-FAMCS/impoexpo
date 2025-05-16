@@ -19,7 +19,10 @@ export const isGeneric = (
 export const getGenericName = (schema: ReturnType<typeof generic>): string =>
 	schema.pipe[1].metadata.typeName;
 
-export const customType = (name: string, child: v.ObjectEntries) =>
+export const customType = <T extends v.ObjectEntries = v.ObjectEntries>(
+	name: string,
+	child: T,
+) =>
 	v.pipe(
 		v.object(child),
 		v.metadata({
@@ -58,8 +61,8 @@ export const createCustomTypeReplica = (
 		v.object(newEntries),
 		v.metadata({
 			metadataType: "custom",
-			name: schema.pipe[1].metadata.name,
-			generics: schema.pipe[1].metadata.generics,
+			name: structuredClone(schema.pipe[1].metadata.name),
+			generics: structuredClone(schema.pipe[1].metadata.generics),
 		}),
 	);
 };
@@ -196,6 +199,11 @@ export const replaceGenericWithSchema = (
 	resolver: ObjectEntry,
 	name: string,
 ): ObjectEntry => {
+	console.log(root, resolver.type, name);
+	console.log(
+		isGeneric(root),
+		isGeneric(root) ? getGenericName(root) : "not generic",
+	);
 	if (isGeneric(root) && getGenericName(root) === name) return resolver;
 
 	if (isCustomType(root)) {
@@ -207,6 +215,7 @@ export const replaceGenericWithSchema = (
 			}, {}),
 		);
 		resolveCustomType(replica, name, resolver);
+		console.log(replica);
 		return replica;
 	}
 
@@ -220,6 +229,14 @@ export const replaceGenericWithSchema = (
 			>,
 			replaceGenericWithSchema(root.value, resolver, name),
 		);
+	if (isObject(root)) {
+		return v.object(
+			Object.entries(root.entries).reduce<v.ObjectEntries>((acc, cur) => {
+				acc[cur[0]] = replaceGenericWithSchema(cur[1], resolver, name);
+				return acc;
+			}, {}),
+		);
+	}
 	if (isNullable(root))
 		return v.nullable(replaceGenericWithSchema(root.wrapped, resolver, name));
 	if (isPipe(root))

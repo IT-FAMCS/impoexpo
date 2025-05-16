@@ -4,20 +4,20 @@ import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
 import type { MicrosoftOfficeDocumentLayout } from "../../../schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
 import {
-	customType,
 	registerCustomType,
 	schemaFromString,
 } from "../../schema-string-conversions";
 import { generic } from "../../node-utils";
 
-export type WordRunType = v.InferOutput<
-	v.ObjectSchema<typeof wordRunEntries, undefined>
->;
-const wordRunEntries = {
-	type: generic("T"),
-	index: v.number(),
-} satisfies v.ObjectEntries;
-registerCustomType("WordRun", () => wordRunEntries);
+const WordRunSchema = registerCustomType(
+	"WordRun",
+	() =>
+		({
+			type: generic("T"),
+			native: v.array(v.unknown()), // unknown is actually ParagraphChild
+		}) satisfies v.ObjectEntries,
+);
+export type WordRun = v.InferOutput<typeof WordRunSchema>;
 
 export const WORD_TEXT_NODE = new word({
 	category: "microsoft-word",
@@ -30,7 +30,7 @@ export const WORD_TEXT_NODE = new word({
 		underline: v.optional(v.boolean(), false),
 	}),
 	outputSchema: v.object({
-		run: customType("WordRun"),
+		run: WordRunSchema,
 	}),
 });
 
@@ -38,10 +38,10 @@ export const WORD_LIST_NODE = new word({
 	category: "microsoft-word",
 	name: "list",
 	inputSchema: v.object({
-		runs: v.array(customType("WordRun")),
+		runs: v.array(WordRunSchema),
 	}),
 	outputSchema: v.object({
-		run: customType("WordRun"),
+		run: WordRunSchema,
 	}),
 });
 
@@ -50,10 +50,10 @@ export const WORD_GROUPED_LIST_NODE = new word({
 	name: "grouped-list",
 	inputSchema: v.object({
 		groupBy: v.string(),
-		runs: v.array(customType("WordRun")),
+		runs: v.array(WordRunSchema),
 	}),
 	outputSchema: v.object({
-		run: customType("WordRun"),
+		run: WordRunSchema,
 	}),
 });
 

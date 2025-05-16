@@ -2,7 +2,7 @@ import {
 	genericRegisterAsyncHandler,
 	type NodeHandlerFunction,
 	registerIntegrationNodeHandlerRegistrar,
-} from "../../../node-handler-utils";
+} from "../../../node-executor-utils";
 import * as v from "valibot";
 import { GoogleFormsProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsProjectIntegrationSchema";
 import { createGoogleFormsBaseNode } from "@impoexpo/shared/nodes/integrations/google/google-forms";

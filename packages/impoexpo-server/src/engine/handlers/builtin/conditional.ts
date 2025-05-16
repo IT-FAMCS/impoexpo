@@ -1,7 +1,7 @@
 import {
 	registerAsyncHandler,
 	registerHandler,
-} from "../../node-handler-utils";
+} from "../../node-executor-utils";
 import * as conditionalNodes from "@impoexpo/shared/nodes/builtin/conditional";
 
 registerHandler(conditionalNodes.IF_NODE, (ctx) => ({

@@ -534,31 +534,28 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
-				copy.name = `${base.node.name}-${Object.keys(base.node.genericTypes)
-					.map((p) =>
-						p in resolvedTypes ? schemaToString(resolvedTypes[p]).trim() : p,
-					)
-					.join("-")}`;
-
 				for (const [resolvedType, resolverSchema] of Object.entries(
 					resolvedTypes,
 				)) {
 					copy.resolveGenericType(resolvedType, resolverSchema);
 				}
+				copy.name = `${base.node.name}-${Object.entries(copy.genericTypes)
+					.map(([key, type]) => (type ? type : key))
+					.join("-")}`;
 
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 				addGenericNodeInstance(base.node, copy);
-				registerBaseNodes(copy);
-				registerWithDefaultRenderer(copy, {
-					...base.options.raw,
-					searchable: false,
-				});
 				set((state) => {
 					state.genericNodes[node.id] = {
 						base: `${base.node.category}-${base.node.name}`,
 						name: copy.name,
 						resolvedTypes: copy.genericTypes,
 					};
+				});
+				registerBaseNodes(copy);
+				registerWithDefaultRenderer(copy, {
+					...base.options.raw,
+					searchable: false,
 				});
 
 				return { ...node, type: `${copy.category}-${copy.name}` };

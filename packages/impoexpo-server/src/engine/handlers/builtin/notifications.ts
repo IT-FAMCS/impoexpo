@@ -1,4 +1,4 @@
-import { registerHandler } from "../../node-handler-utils";
+import { registerHandler } from "../../node-executor-utils";
 import * as notificationsNodes from "@impoexpo/shared/nodes/builtin/notifications";
 
 registerHandler(notificationsNodes.ERROR_NOTIFICATION_NODE, (ctx) => {

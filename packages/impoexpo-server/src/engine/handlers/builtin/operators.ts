@@ -1,4 +1,4 @@
-import { registerHandler } from "../../node-handler-utils";
+import { registerHandler } from "../../node-executor-utils";
 import * as operatorsNodes from "@impoexpo/shared/nodes/builtin/operators";
 
 registerHandler(operatorsNodes.AND_NODE, (ctx) => ({

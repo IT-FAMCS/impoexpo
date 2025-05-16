@@ -11,6 +11,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@types/apicache": "^1.6.7",
+		"@types/clone": "^2.1.4",
 		"@types/compression": "^1.7.5",
 		"@types/cors": "^2.8.18",
 		"@types/express": "5.0.0",
@@ -24,9 +25,11 @@
 	},
 	"dependencies": {
 		"@impoexpo/shared": "workspace:^",
+		"@isaacs/ttlcache": "^1.4.1",
 		"@zip.js/zip.js": "^2.7.61",
 		"apicache": "^1.6.3",
 		"better-sse": "^0.14.1",
+		"clone": "^2.1.2",
 		"compression": "^1.8.0",
 		"cors": "^2.8.5",
 		"docx": "^9.5.0",

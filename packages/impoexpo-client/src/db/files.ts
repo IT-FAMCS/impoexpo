@@ -10,7 +10,6 @@ export interface GlobalFilesTableEntry {
 
 export const saveFile = async (file: File): Promise<string> => {
 	const hash = await sha512(new Uint8Array(await file.arrayBuffer()));
-
 	// TODO: this is probably prone to errors
 	const existingFile = await globalDatabase.files.get({ hash });
 	if (!existingFile) {

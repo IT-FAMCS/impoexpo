@@ -33,6 +33,7 @@
 		"clsx": "2.1.1",
 		"deep-copy-ts": "^0.5.4",
 		"dexie": "^4.0.11",
+		"enhanced-ms": "^4.1.0",
 		"fast-equals": "^5.2.2",
 		"fflate": "^0.8.2",
 		"gapi": "^0.0.3",

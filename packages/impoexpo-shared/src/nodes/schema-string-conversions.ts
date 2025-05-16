@@ -7,8 +7,9 @@ import {
 	record,
 	string,
 	union,
-	pipe,
 	type ObjectEntries,
+	type ObjectSchema,
+	object,
 } from "valibot";
 import type { ObjectEntry } from "./node-types";
 import {
@@ -24,7 +25,7 @@ import {
 	replaceGenericWithSchema,
 	genericEntries,
 	resolveCustomType,
-	customType as externalCustomType,
+	customType,
 	getCustomTypeGenerics,
 } from "./node-utils";
 
@@ -34,16 +35,12 @@ const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
 	boolean: boolean,
 };
 const customTypeSchemaConverters: Record<string, () => ObjectEntries> = {};
-export const registerCustomType = (
+export const registerCustomType = <T extends ObjectEntries>(
 	name: string,
-	generator: () => ObjectEntries,
+	generator: () => T,
 ) => {
 	customTypeSchemaConverters[name] = generator;
-};
-export const customType = (name: string) => {
-	const generator = customTypeSchemaConverters[name];
-	if (!generator) throw new Error(`unknown custom type "${name}"`);
-	return externalCustomType(name, generator());
+	return customType(name, generator());
 };
 
 export const schemaFromString = (raw: string): ObjectEntry => {
@@ -74,12 +71,13 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 	}
 
 	// custom type
-	if (str in customTypeSchemaConverters) return customType(str);
+	if (str in customTypeSchemaConverters)
+		return customType(str, customTypeSchemaConverters[str]());
 
 	// generic custom type
 	const genericRegexMatches = /([\w\-\$@#]+)<(.*)>/.exec(str);
 	if (genericRegexMatches) {
-		const schema = schemaFromString(genericRegexMatches[1]);
+		let schema = schemaFromString(genericRegexMatches[1]);
 		const resolvers = genericRegexMatches[2].split(",");
 		const entries = genericEntries(schema);
 		if (!entries || entries.length !== resolvers.length)
@@ -89,9 +87,7 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 		for (let i = 0; i < entries.length; i++) {
 			try {
 				const resolver = schemaFromString(resolvers[i]);
-				replaceGenericWithSchema(schema, resolver, entries[i]);
-				if (isCustomType(schema))
-					resolveCustomType(schema, entries[i], resolver);
+				schema = replaceGenericWithSchema(schema, resolver, entries[i]);
 			} catch {}
 		}
 		return schema;

@@ -188,12 +188,13 @@ export const useRenderableNodesStore = create<RenderableNodesStore>(
 
 		addGenericNodeInstance: (base, instance) =>
 			set((state) => ({
-				genericNodes: Object.assign(state.genericNodes, {
+				genericNodes: {
+					...state.genericNodes,
 					[`${instance.category}-${instance.name}`]: {
 						base: base,
 						node: instance,
 					},
-				}),
+				},
 			})),
 
 		removeGenericNodeInstance: (key) =>

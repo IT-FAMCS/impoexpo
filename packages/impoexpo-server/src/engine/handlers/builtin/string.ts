@@ -1,4 +1,4 @@
-import { registerHandler } from "../../node-handler-utils";
+import { registerHandler } from "../../node-executor-utils";
 import * as stringNodes from "@impoexpo/shared/nodes/builtin/strings";
 
 registerHandler(stringNodes.CONTAINS_NODE, (ctx) => ({

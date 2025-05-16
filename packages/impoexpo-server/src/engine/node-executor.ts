@@ -7,12 +7,13 @@ import {
 	type NodeOutput,
 	type NodeHandlerFunction,
 	type ResolveEntries,
-} from "./node-handler-utils";
+} from "./node-executor-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { childLogger } from "../logger";
 import { isArray } from "@impoexpo/shared/nodes/node-utils";
+import clone from "clone";
 
 export const getNodeHandler = (
 	type: string,
@@ -247,12 +248,7 @@ export const executeJobNodes = async (job: Job) => {
 					`no iterators found at depth ${actualDepth}, resolved values: %o`,
 					actualPreviousData,
 				);
-				await runNode(
-					node,
-					paths,
-					actualDepth - 1,
-					structuredClone(actualPreviousData),
-				);
+				await runNode(node, paths, actualDepth - 1, clone(actualPreviousData));
 			} else {
 				if (
 					iterators.some(
@@ -278,7 +274,7 @@ export const executeJobNodes = async (job: Job) => {
 						node,
 						paths,
 						actualDepth - 1,
-						structuredClone(actualPreviousData),
+						clone(actualPreviousData),
 					);
 				}
 			}

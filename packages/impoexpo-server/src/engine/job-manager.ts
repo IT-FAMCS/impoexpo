@@ -1,4 +1,7 @@
-import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import type {
+	Project,
+	ProjectOutput,
+} from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { Session } from "better-sse";
 import * as uuid from "uuid";
 import type * as v from "valibot";
@@ -8,7 +11,8 @@ import { executeJobNodes } from "./node-executor";
 import {
 	integrationNodeHandlerRegistrars,
 	type NodeHandlerFunction,
-} from "./node-handler-utils";
+} from "./node-executor-utils";
+import { projectOutputFilesCache } from "../project/endpoints";
 
 const logger = childLogger("jobs");
 export const jobs: Map<string, Job> = new Map();
@@ -18,11 +22,13 @@ export class Job {
 	public id: string;
 	public project: Project;
 	public processing = false;
-	public files: Record<string, Buffer> = {};
 	public customNodes: Record<
 		string,
 		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
 	> = {};
+
+	public files: Record<string, Buffer> = {};
+	public outputs: Array<ProjectOutput> = [];
 
 	constructor(id: string, project: Project) {
 		this.id = id;
@@ -63,7 +69,7 @@ export class Job {
 	public complete() {
 		if (!this.session) return;
 		childLogger(`jobs/${this.id}`).info("job was successfully completed");
-		this.session.push({}, "done");
+		this.session.push(this.outputs, "done");
 		this.processing = false;
 	}
 
@@ -83,6 +89,21 @@ export class Job {
 			this.customNodes = { ...this.customNodes, ...registrar(this.project) };
 		}
 		executeJobNodes(this);
+	}
+
+	public file(filename: string, type: string, data: Buffer): string {
+		let id = uuid.v4();
+		while (projectOutputFilesCache.has(id)) id = uuid.v4();
+
+		projectOutputFilesCache.set(id, new File([data], filename, { type }));
+		this.outputs.push({
+			type: "file",
+			name: filename,
+			mimeType: type,
+			identifier: id,
+			ttl: projectOutputFilesCache.getRemainingTTL(id),
+		});
+		return id;
 	}
 }
 

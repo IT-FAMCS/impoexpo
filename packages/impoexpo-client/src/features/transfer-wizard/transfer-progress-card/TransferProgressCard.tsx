@@ -1,17 +1,35 @@
-import { Alert, Card, Spinner, ScrollShadow } from "@heroui/react";
+import {
+	Alert,
+	Card,
+	Spinner,
+	ScrollShadow,
+	Listbox,
+	ListboxItem,
+	Button,
+} from "@heroui/react";
 import {
 	TransferProgressCardState,
 	useProjectStatusCardStore,
 	useTransferProgressCardStore,
 } from "./store";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/stores/project";
-import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
-import { postWithSchemaAndResult, route } from "@/api/common";
+import {
+	ProjectOutputSchema,
+	type Project,
+} from "@impoexpo/shared/schemas/project/ProjectSchema";
+import {
+	postForm,
+	postFormWithResult,
+	postWithSchemaAndResult,
+	route,
+} from "@/api/common";
 import {
 	PROJECT_TRANSFER_STATUS_ENDPOINT,
 	CREATE_PROJECT_ENDPOINT,
+	UPLOAD_PROJECT_FILE_ENDPOINT,
+	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
 } from "@impoexpo/shared/schemas/project/endpoints";
 import { Trans, useLingui } from "@lingui/react/macro";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -22,8 +40,9 @@ import {
 	ProjectStatusNotificationSchema,
 	type ProjectStatusNotification,
 } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
-import { parse } from "valibot";
+import { array, parse } from "valibot";
 import { AnimatePresence, motion } from "motion/react";
+import { getFile } from "@/db/files";
 
 export default function TransferProgressCard() {
 	const { state } = useTransferProgressCardStore();
@@ -32,8 +51,12 @@ export default function TransferProgressCard() {
 		switch (state) {
 			case TransferProgressCardState.UPLOADING_PROJECT:
 				return <UploadingProjectCard />;
+			case TransferProgressCardState.UPLOADING_PROJECT_FILES:
+				return <UploadingProjectFilesCard />;
 			case TransferProgressCardState.TRANSFERRING:
 				return <ProjectStatusCard />;
+			case TransferProgressCardState.DONE:
+				return <ProjectOutputsCard />;
 		}
 	}, [state]);
 
@@ -42,6 +65,139 @@ export default function TransferProgressCard() {
 			{stateComponent}
 		</Card>
 	);
+}
+
+function ProjectOutputsCard() {
+	const { outputs } = useTransferProgressCardStore();
+	return (
+		<>
+			<Icon width={72} icon="mdi:check-bold" />
+			<p className="text-3xl">
+				<b>
+					<Trans>done!</Trans>
+				</b>
+			</p>
+			<Listbox items={outputs}>
+				{(output) => (
+					<ListboxItem
+						key={output.identifier}
+						startContent={<Icon icon="mdi:microsoft-word" />}
+						endContent={
+							<Button
+								onPress={() => {
+									window.location.href = route(
+										`${RETRIEVE_PROJECT_OUTPUT_ENDPOINT}/${output.identifier}`,
+									).href;
+								}}
+								isIconOnly
+								startContent={<Icon icon="mdi:download" />}
+							/>
+						}
+						title={output.name}
+					/>
+				)}
+			</Listbox>
+		</>
+	);
+}
+
+function UploadingProjectFilesCard() {
+	const project = useProjectStore() as Project;
+	const files = Object.values(project.integrations).flatMap(
+		(i) => i.files ?? [],
+	);
+
+	const { jobId, setState } = useTransferProgressCardStore();
+	if (!jobId)
+		throw new Error(
+			"attempted to render UploadingProjectFilesCard without initializing jobId",
+		);
+
+	const queries = useQueries({
+		queries: files.map((f) => {
+			return {
+				queryKey: ["upload-project-file", f],
+				queryFn: async () => {
+					const file = await getFile(f);
+					if (!file)
+						throw new Error(
+							`no file with identifier "${f}" was found in the local database`,
+						);
+
+					const formData = new FormData();
+					formData.append("file", new Blob([file.data]));
+					formData.append("identifier", f);
+					return postForm(`${UPLOAD_PROJECT_FILE_ENDPOINT}/${jobId}`, formData);
+				},
+			};
+		}),
+	});
+
+	const completedCount = useMemo(
+		() => queries.filter((q) => q.isSuccess).length,
+		[...queries, queries.filter],
+	);
+	useEffect(() => {
+		if (completedCount === files.length)
+			setState(TransferProgressCardState.TRANSFERRING);
+	}, [completedCount, setState, files]);
+
+	return (
+		<div className="flex flex-col items-center justify-center gap-2">
+			<Trans>uploading project files</Trans>
+			<Spinner />
+		</div>
+	);
+}
+
+function UploadingProjectCard() {
+	const project = useProjectStore() as Project;
+	const {
+		isFetching,
+		isError,
+		isRefetchError,
+		isSuccess,
+		data,
+		error,
+		refetch,
+	} = useQuery({
+		queryKey: ["upload-project", project],
+		queryFn: async () =>
+			postWithSchemaAndResult(
+				CREATE_PROJECT_ENDPOINT,
+				project,
+				UploadProjectResponseSchema,
+			),
+	});
+	const { t } = useLingui();
+	const { setJobId, setState } = useTransferProgressCardStore();
+
+	useEffect(() => {
+		if (!isSuccess) return;
+		setJobId(data.job);
+		setState(TransferProgressCardState.UPLOADING_PROJECT_FILES);
+	}, [isSuccess, data, setJobId, setState]);
+
+	if (isFetching) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-2">
+				<Trans>uploading your project</Trans>
+				<Spinner />
+			</div>
+		);
+	}
+
+	if (isError || isRefetchError) {
+		return (
+			<NetworkErrorCard
+				title={t`couldn't upload your project`}
+				retry={refetch}
+				error={error}
+			/>
+		);
+	}
+
+	return <></>;
 }
 
 const AnimatedAlert = motion.create(Alert);
@@ -61,6 +217,7 @@ function ProjectStatusCard() {
 		terminate,
 		result,
 	} = useProjectStatusCardStore();
+	const { setState, setOutputs } = useTransferProgressCardStore();
 
 	const error = useMemo(
 		() => !open && !reconnecting && message,
@@ -70,6 +227,10 @@ function ProjectStatusCard() {
 	useEffect(() => {
 		setMessage(t`connecting to the server`);
 	}, [setMessage]);
+
+	useEffect(() => {
+		if (result === true) setState(TransferProgressCardState.DONE);
+	}, [result, setState]);
 
 	// TODO: is this really the case?
 	// biome-ignore lint/correctness/useExhaustiveDependencies: this is called once and only once per project request, so none of the outside variables matter
@@ -127,7 +288,15 @@ function ProjectStatusCard() {
 			false,
 		);
 
-		eventSource.addEventListener("done", complete);
+		eventSource.addEventListener("done", (e) => {
+			try {
+				const outputs = parse(array(ProjectOutputSchema), JSON.parse(e.data));
+				setOutputs(outputs);
+				complete();
+			} catch (err) {
+				console.error(`done event sent invalid payload: ${err}`);
+			}
+		});
 
 		return () => eventSource.close();
 	}, []);
@@ -201,17 +370,6 @@ function ProjectStatusCard() {
 				</>
 			)}
 
-			{result === true && (
-				<>
-					<Icon width={72} icon="mdi:check-bold" />
-					<p className="text-3xl">
-						<b>
-							<Trans>done!</Trans>
-						</b>
-					</p>
-				</>
-			)}
-
 			<ScrollShadow className="max-h-[25vh] max-w-[30vw] w-full mt-2 pb-10">
 				<div className="flex flex-col h-full gap-2">
 					<AnimatePresence>
@@ -231,54 +389,4 @@ function ProjectStatusCard() {
 			</ScrollShadow>
 		</div>
 	);
-}
-
-function UploadingProjectCard() {
-	const project = useProjectStore() as Project;
-	const {
-		isFetching,
-		isError,
-		isRefetchError,
-		isSuccess,
-		data,
-		error,
-		refetch,
-	} = useQuery({
-		queryKey: ["upload-project", project],
-		queryFn: async () =>
-			postWithSchemaAndResult(
-				CREATE_PROJECT_ENDPOINT,
-				project,
-				UploadProjectResponseSchema,
-			),
-	});
-	const { t } = useLingui();
-	const { setJobId, setState } = useTransferProgressCardStore();
-
-	useEffect(() => {
-		if (!isSuccess) return;
-		setJobId(data.job);
-		setState(TransferProgressCardState.TRANSFERRING);
-	}, [isSuccess, data, setJobId, setState]);
-
-	if (isFetching) {
-		return (
-			<div className="flex flex-col items-center justify-center gap-2">
-				<Trans>uploading your project</Trans>
-				<Spinner />
-			</div>
-		);
-	}
-
-	if (isError || isRefetchError) {
-		return (
-			<NetworkErrorCard
-				title={t`couldn't upload your project`}
-				retry={refetch}
-				error={error}
-			/>
-		);
-	}
-
-	return <></>;
 }

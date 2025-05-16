@@ -18,16 +18,28 @@ export const ProjectNodeSchema = v.object({
 export const ProjectIntegrationSchema = v.object({
 	auth: v.optional(v.record(v.string(), v.unknown())),
 	data: v.optional(v.record(v.string(), v.unknown())),
+	files: v.optional(v.array(v.string())),
 });
 
 export const ProjectSchema = v.object({
 	integrations: v.record(v.string(), ProjectIntegrationSchema),
 	nodes: v.array(ProjectNodeSchema),
-	files: v.array(v.string()),
 });
+
+// TODO: other output types?
+export const ProjectOutputSchema = v.variant("type", [
+	v.object({
+		type: v.literal("file"),
+		name: v.string(),
+		mimeType: v.string(),
+		identifier: v.string(),
+		ttl: v.number(),
+	}),
+]);
 
 export type ProjectIntegration = v.InferOutput<typeof ProjectIntegrationSchema>;
 export type Project = v.InferOutput<typeof ProjectSchema>;
 
 export type ProjectNode = v.InferOutput<typeof ProjectNodeSchema>;
 export type ProjectNodeEntry = v.InferOutput<typeof ProjectNodeEntrySchema>;
+export type ProjectOutput = v.InferOutput<typeof ProjectOutputSchema>;

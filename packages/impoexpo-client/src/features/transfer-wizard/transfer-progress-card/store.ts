@@ -1,24 +1,31 @@
 import { createResettable, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import type { ProjectOutput } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
 
 export enum TransferProgressCardState {
 	UPLOADING_PROJECT = 0,
-	TRANSFERRING = 1,
+	UPLOADING_PROJECT_FILES = 1,
+	TRANSFERRING = 2,
+	DONE = 3,
 }
 
 export type TransferProgressCardStore = {
 	state: TransferProgressCardState;
 	jobId?: string;
+	outputs: Array<ProjectOutput>;
 	setState: (ns: TransferProgressCardState) => void;
 	setJobId: (id: string) => void;
+	setOutputs: (outputs: Array<ProjectOutput>) => void;
 };
 
 export const useTransferProgressCardStore =
 	createResettable<TransferProgressCardStore>(WIZARD_STORE_CATEGORY)((set) => ({
 		state: TransferProgressCardState.UPLOADING_PROJECT,
 		jobId: undefined,
+		outputs: [],
 		setState: (ns) => set({ state: ns }),
 		setJobId: (id) => set({ jobId: id }),
+		setOutputs: (outputs) => set({ outputs }),
 	}));
 
 export type ProjectStatusCardStore = {
@@ -45,6 +52,7 @@ export const useProjectStatusCardStore =
 		open: false,
 		reconnecting: false,
 		notifications: {},
+		outputs: [],
 
 		terminate: () => set({ result: false }),
 		complete: () => set({ result: true }),

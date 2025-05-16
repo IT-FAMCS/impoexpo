@@ -12,10 +12,18 @@ import { createJob, jobs } from "../engine/job-manager";
 import {
 	CREATE_PROJECT_ENDPOINT,
 	PROJECT_TRANSFER_STATUS_ENDPOINT,
+	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
 	UPLOAD_PROJECT_FILE_ENDPOINT,
 } from "@impoexpo/shared/schemas/project/endpoints";
 import multer from "multer";
 const upload = multer();
+import TTLCache from "@isaacs/ttlcache";
+
+// TODO: a defaults.json file would be nice!
+export const projectOutputFilesCache = new TTLCache<string, File>({
+	max: Number.parseInt(process.env.IN_MEMORY_PROJECT_OUTPUTS_MAX ?? "100"), // 100 entries by default
+	ttl: Number.parseInt(process.env.IN_MEMORY_PROJECT_OUTPUTS_TTL ?? "60000"), // a minute by default
+});
 
 export const registerProjectEndpoints = (app: Express) => {
 	logger.info("\t-> registering project endpoints");
@@ -43,6 +51,31 @@ export const registerProjectEndpoints = (app: Express) => {
 		}
 
 		res.send({ job: createJob(req.body) });
+	});
+
+	app.get(`${RETRIEVE_PROJECT_OUTPUT_ENDPOINT}/:id`, async (req, res) => {
+		if (!req.params.id) {
+			res.status(400).json({
+				ok: false,
+				internal: false,
+				error: "no output identifier was specified",
+			} satisfies FaultyAction);
+			return;
+		}
+
+		const file = projectOutputFilesCache.get(req.params.id);
+		if (!file) {
+			res.status(400).json({
+				ok: false,
+				internal: false,
+				error: `no output with identifier ${req.params.id} was found`,
+			} satisfies FaultyAction);
+			return;
+		}
+
+		res.set("Content-Disposition", `attachment; filename=${file.name}`);
+		res.set("Content-Type", file.type);
+		res.end(await file.bytes());
 	});
 
 	app.post(
@@ -101,7 +134,10 @@ export const registerProjectEndpoints = (app: Express) => {
 			return;
 		}
 
-		if (Object.keys(job.files).some((f) => !job.project.files.includes(f))) {
+		const allFiles = Object.values(job.project.integrations).flatMap(
+			(i) => i.files ?? [],
+		);
+		if (allFiles.some((f) => !Object.keys(job.files).includes(f))) {
 			res.status(400).send({
 				ok: false,
 				internal: false,

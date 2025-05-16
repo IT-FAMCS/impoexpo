@@ -32,6 +32,11 @@ export const postWithSchema = async <const TSchema extends v.GenericSchema>(
 			},
 		})
 	).json();
+export const postForm = async (
+	path: string,
+	body: FormData,
+	other?: OtherRequestData,
+) => await request("POST", path, body, other);
 export const postFormWithResult = async <const TSchema extends v.GenericSchema>(
 	path: string,
 	body: FormData,

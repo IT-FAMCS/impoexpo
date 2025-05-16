@@ -4,7 +4,10 @@ import type { Job } from "./job-manager";
 import { childLogger } from "../logger";
 import { glob } from "glob";
 import * as path from "node:path";
-import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import type {
+	Project,
+	ProjectOutput,
+} from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 export const defaultNodeHandlers: Record<

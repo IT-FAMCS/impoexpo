@@ -1,5 +1,5 @@
 import * as literalNodes from "@impoexpo/shared/nodes/builtin/literals";
-import { registerHandler } from "../../node-handler-utils";
+import { registerHandler } from "../../node-executor-utils";
 
 // NOTE: literals weren't initially intended to added,
 // but this poses an issue with generic nodes, where one would

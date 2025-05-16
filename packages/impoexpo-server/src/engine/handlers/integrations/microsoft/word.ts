@@ -3,32 +3,35 @@ import {
 	type NodeHandlerFunction,
 	registerHandler,
 	registerIntegrationNodeHandlerRegistrar,
-} from "../../../node-handler-utils";
+} from "../../../node-executor-utils";
 import * as v from "valibot";
 import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
-import { type IPatch, type Run, TextRun, patchDocument } from "docx";
+import {
+	type IPatch,
+	type Paragraph,
+	type ParagraphChild,
+	TextRun,
+	patchDocument,
+} from "docx";
 import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
 import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
-
-const runs: Array<Run> = [];
+import * as path from "node:path";
 
 registerHandler(word.WORD_TEXT_NODE, (ctx) => {
-	runs.push(
-		new TextRun({
-			bold: ctx.bold,
-			italics: ctx.italics,
-			strike: ctx.strikethrough,
-			underline: ctx.underline ? { type: "single" } : undefined,
-			text: `${ctx.text}`,
-		}),
-	);
-
 	return {
 		run: {
 			type: "text",
-			index: runs.length - 1,
-		} satisfies word.WordRunType,
+			native: [
+				new TextRun({
+					bold: ctx.bold,
+					italics: ctx.italics,
+					strike: ctx.strikethrough,
+					underline: ctx.underline ? { type: "single" } : undefined,
+					text: `${ctx.text}`,
+				}),
+			] satisfies ParagraphChild[],
+		},
 	};
 });
 
@@ -42,31 +45,36 @@ registerIntegrationNodeHandlerRegistrar("microsoft-word", (project) => {
 		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
 	> = {};
 
+	const generated: Record<string, boolean> = {};
 	for (const document of integration.data.documents) {
 		const base = createWordDocumentBaseNode(document.filename, document.layout);
 		registerBaseNodes(base);
 
 		genericRegisterAsyncHandler(handlers, base, async (ctx) => {
+			if (document.clientIdentifier in generated) return;
+
 			const patches: Record<string, IPatch> = {};
 			for (const placeholder of document.layout.placeholders) {
 				if (ctx[placeholder.formattedName]) {
-					console.log(ctx[placeholder.formattedName] as word.WordRunType);
 					patches[placeholder.formattedName] = {
 						type: "paragraph",
-						children: [
-							runs[
-								(ctx[placeholder.formattedName] as word.WordRunType).index
-							] as Run,
-						],
+						children: (ctx[placeholder.formattedName] as word.WordRun)
+							.native as ParagraphChild[],
 					};
 				}
 			}
+
 			const buffer = await patchDocument({
 				data: ctx["~job"].files[document.clientIdentifier],
 				outputType: "nodebuffer",
 				patches,
 			});
-			// TODO: actually save the file
+			ctx["~job"].file(
+				document.filename.replaceAll(".docx", "-patched.docx"),
+				"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				buffer,
+			);
+			generated[document.clientIdentifier] = true;
 		});
 	}
 
