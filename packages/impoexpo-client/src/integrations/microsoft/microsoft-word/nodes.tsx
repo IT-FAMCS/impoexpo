@@ -20,9 +20,10 @@ import {
 
 export const registerMicrosoftWordNode = (
 	filename: string,
+	identifier: string,
 	layout: MicrosoftOfficeDocumentLayout,
 ) => {
-	const base = createWordDocumentBaseNode(filename, layout);
+	const base = createWordDocumentBaseNode(identifier, layout);
 	const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
 		searchable: false,
 		title: filename,
@@ -68,7 +69,17 @@ nodesScope(() => {
 			underline: { title: msg`underline?` },
 		},
 		outputs: {
-			run: { title: msg`object`, separate: "before" },
+			run: { title: msg`text run`, separate: "before" },
+		},
+	});
+
+	registerWithDefaultRenderer(wordNodes.WORD_LIST_NODE, {
+		title: msg`unordered list`,
+		inputs: {
+			runs: { title: msg`runs` },
+		},
+		outputs: {
+			run: { title: msg`list run` },
 		},
 	});
 });

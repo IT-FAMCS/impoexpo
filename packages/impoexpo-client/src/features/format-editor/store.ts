@@ -29,6 +29,9 @@ import {
 	isGeneric,
 	isNullable,
 	isRecord,
+	isCustomType,
+	getCustomTypeName,
+	getCustomTypeGenerics,
 } from "@impoexpo/shared/nodes/node-utils";
 import {
 	BaseNode,
@@ -54,6 +57,7 @@ import {
 	schemaFromString,
 	schemaToString,
 } from "@impoexpo/shared/nodes/schema-string-conversions";
+import { filterObject } from "@impoexpo/shared/nodes/node-utils";
 
 export type PersistentGenericNodeData = Record<
 	string,
@@ -256,6 +260,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					if (!affectedNode) return;
 
 					if (fromEntry.generic) {
+						console.log(fromEntry, genericEntries(fromEntry.schema));
 						newNode = get().resolveGenericNode(
 							{
 								node: fromNode,
@@ -508,10 +513,24 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							`something went very wrong in resolveGenericNodes.findResolvedTypes: source: ${source} | target: ${target} | resovled: ${resolved} | resolver: ${resolver}`,
 						);
 
-					// that one use case where multiple non-array nodes can be connected to an array input
-					if (isArray(source) && isGeneric(source.item) && !isArray(target)) {
-						return { [getGenericName(source.item)]: target };
+					if (isCustomType(source) && isCustomType(target)) {
+						const sourceName = getCustomTypeName(source);
+						const [targetName, targetGenerics] = [
+							getCustomTypeName(target),
+							getCustomTypeGenerics(target),
+						];
+
+						if (sourceName === targetName) {
+							return filterObject(targetGenerics, (v) => v != null) as Record<
+								string,
+								ObjectEntry
+							>;
+						}
 					}
+
+					// that one use case where multiple non-array nodes can be connected to an array input
+					if (isArray(source) && isGeneric(source.item) && !isArray(target))
+						return findResolvedTypes(source.item, target);
 
 					if (isArray(source) && isArray(target))
 						return findResolvedTypes(source.item, target.item);
@@ -530,10 +549,12 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					resolved.schema,
 					resolver.schema,
 				);
+				if (Object.keys(resolvedTypes).length === 0) return node;
 
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
+				console.log(copy.genericTypes, resolvedTypes);
 				for (const [resolvedType, resolverSchema] of Object.entries(
 					resolvedTypes,
 				)) {

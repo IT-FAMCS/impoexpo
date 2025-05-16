@@ -199,11 +199,6 @@ export const replaceGenericWithSchema = (
 	resolver: ObjectEntry,
 	name: string,
 ): ObjectEntry => {
-	console.log(root, resolver.type, name);
-	console.log(
-		isGeneric(root),
-		isGeneric(root) ? getGenericName(root) : "not generic",
-	);
 	if (isGeneric(root) && getGenericName(root) === name) return resolver;
 
 	if (isCustomType(root)) {
@@ -215,7 +210,6 @@ export const replaceGenericWithSchema = (
 			}, {}),
 		);
 		resolveCustomType(replica, name, resolver);
-		console.log(replica);
 		return replica;
 	}
 
@@ -247,3 +241,8 @@ export const replaceGenericWithSchema = (
 
 	return root;
 };
+
+export const filterObject = <V>(
+	obj: Record<string, V>,
+	fn: (x: V) => boolean,
+) => Object.fromEntries(Object.entries(obj).filter(([, val]) => fn(val)));

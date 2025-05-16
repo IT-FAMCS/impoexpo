@@ -129,7 +129,7 @@ export class BaseNode<
 		return {
 			...basic,
 			type: type,
-			generic: genericEntries(basic.schema) !== undefined,
+			generic: (genericEntries(basic.schema) ?? []).length !== 0,
 		};
 	}
 }

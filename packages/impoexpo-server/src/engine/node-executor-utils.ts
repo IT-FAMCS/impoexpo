@@ -24,6 +24,10 @@ export const integrationNodeHandlerRegistrars: Record<
 
 export type NodeExecutorContext<TIn extends v.ObjectEntries> = {
 	"~job": Job;
+	"~reduce": <T>(
+		reducer: (acc: T, cur: ResolveEntries<TIn>) => T,
+		initial: T,
+	) => T;
 } & ResolveEntries<TIn>;
 
 export type NodeOutput<TOut extends v.ObjectEntries> =
@@ -90,8 +94,12 @@ export const genericRegisterAsyncHandler = <
 	handler: (ctx: NodeExecutorContext<TIn>) => Promise<HandlerReturnType<TOut>>,
 ) => {
 	const id = `${node.category}-${node.name}`;
-	if (id in registry)
-		throw new Error(`a handler for node "${id}" has already been registered`);
+	if (id in registry) {
+		childLogger("nodes").warn(
+			`a handler for node "${id}" has already been registered`,
+		);
+		return;
+	}
 	childLogger("nodes").debug(`\t\t-> registering handler (async) for ${id}`);
 	registry[id] = async (ctx) => {
 		const result = await handler(ctx as unknown as NodeExecutorContext<TIn>);

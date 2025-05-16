@@ -7,6 +7,7 @@ import {
 	type NodeOutput,
 	type NodeHandlerFunction,
 	type ResolveEntries,
+	type NodeExecutorContext,
 } from "./node-executor-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
@@ -36,6 +37,15 @@ export const executeJobNodes = async (job: Job) => {
 		parent?: Record<string, InputPath[]>;
 	};
 
+	type Iterator = {
+		node: string;
+		length: number;
+		items: ResolveEntries<v.ObjectEntries>[];
+	};
+
+	// this will be used for ~reduce
+	let globalIterators: Array<Iterator> = [];
+
 	const resolveInputPaths = (node: ProjectNode, depth = 1) => {
 		const paths: Record<string, InputPath[]> = {};
 		const base = baseNodesMap.get(node.type);
@@ -63,6 +73,16 @@ export const executeJobNodes = async (job: Job) => {
 		}
 
 		return paths;
+	};
+
+	const createReducer = (
+		node: ProjectNode,
+	): NodeExecutorContext<ObjectEntries>["~reduce"] => {
+		return <T>(reducer: (acc: T, cur: ObjectEntries) => T, initial: T) => {
+			let current = initial;
+			console.log(globalIterators);
+			return current;
+		};
 	};
 
 	const runNode = async (
@@ -185,16 +205,11 @@ export const executeJobNodes = async (job: Job) => {
 			const output = await handler({
 				...resolveInputs(sourceNode),
 				"~job": job,
+				"~reduce": createReducer(sourceNode),
 			});
 			logger.debug("received: %o", output);
 			pathOutputs[sourceNode.id] = output;
 		}
-
-		type Iterator = {
-			node: string;
-			length: number;
-			items: ResolveEntries<v.ObjectEntries>[];
-		};
 
 		if (actualDepth === 0) {
 			const base = baseNodesMap.get(node.type);
@@ -209,6 +224,7 @@ export const executeJobNodes = async (job: Job) => {
 			await handler({
 				...inputs,
 				"~job": job,
+				"~reduce": createReducer(node),
 			});
 		} else {
 			const iterators: Iterator[] = Object.entries(pathOutputs)
@@ -262,6 +278,7 @@ export const executeJobNodes = async (job: Job) => {
 					);
 				}
 
+				globalIterators = iterators; // this is used for ~reduce
 				for (let idx = 0; idx < iterators[0].length; idx++) {
 					for (const it of iterators) {
 						logger.debug(

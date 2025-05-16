@@ -46,7 +46,11 @@ registerIntegration({
 				file: new File([file.data], file.filename, { type: file.mimeType }),
 				layout: document.layout,
 			});
-			registerMicrosoftWordNode(file.filename, document.layout);
+			registerMicrosoftWordNode(
+				file.filename,
+				document.clientIdentifier,
+				document.layout,
+			);
 		}
 	},
 

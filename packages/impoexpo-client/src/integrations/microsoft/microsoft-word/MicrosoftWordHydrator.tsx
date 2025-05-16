@@ -107,6 +107,7 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 						addDocument(currentDocument);
 						registerMicrosoftWordNode(
 							currentDocument.file.name,
+							currentDocument.id,
 							// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
 							currentDocument.layout!,
 						);

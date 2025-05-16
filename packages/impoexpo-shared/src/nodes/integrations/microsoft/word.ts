@@ -58,7 +58,7 @@ export const WORD_GROUPED_LIST_NODE = new word({
 });
 
 export const createWordDocumentBaseNode = (
-	filename: string,
+	identifier: string,
 	layout: MicrosoftOfficeDocumentLayout,
 ) => {
 	const entries: v.ObjectEntries = {};
@@ -69,7 +69,7 @@ export const createWordDocumentBaseNode = (
 
 	return new word({
 		category: "microsoft-word",
-		name: `document-${filename}`,
+		name: `document-${identifier}`,
 		inputSchema: v.object(entries),
 	});
 };

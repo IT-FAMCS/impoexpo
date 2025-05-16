@@ -1,5 +1,5 @@
 import { globalDatabase } from "./global-database";
-import { sha512 } from "hash-wasm";
+import { sha256 } from "hash-wasm";
 
 export interface GlobalFilesTableEntry {
 	hash: string;
@@ -9,7 +9,7 @@ export interface GlobalFilesTableEntry {
 }
 
 export const saveFile = async (file: File): Promise<string> => {
-	const hash = await sha512(new Uint8Array(await file.arrayBuffer()));
+	const hash = await sha256(new Uint8Array(await file.arrayBuffer()));
 	// TODO: this is probably prone to errors
 	const existingFile = await globalDatabase.files.get({ hash });
 	if (!existingFile) {

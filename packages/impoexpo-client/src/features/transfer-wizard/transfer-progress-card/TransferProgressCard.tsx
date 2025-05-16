@@ -70,34 +70,42 @@ export default function TransferProgressCard() {
 function ProjectOutputsCard() {
 	const { outputs } = useTransferProgressCardStore();
 	return (
-		<>
+		<div className="flex flex-col justify-center items-center gap-2">
 			<Icon width={72} icon="mdi:check-bold" />
 			<p className="text-3xl">
 				<b>
 					<Trans>done!</Trans>
 				</b>
 			</p>
-			<Listbox items={outputs}>
+			<Listbox
+				className="border-small rounded-small border-default"
+				disallowEmptySelection
+				selectionMode="none"
+				items={outputs}
+			>
 				{(output) => (
 					<ListboxItem
 						key={output.identifier}
-						startContent={<Icon icon="mdi:microsoft-word" />}
+						startContent={<Icon width={18} icon="mdi:microsoft-word" />}
+						className="p-2"
 						endContent={
 							<Button
+								color="primary"
+								size="sm"
 								onPress={() => {
 									window.location.href = route(
 										`${RETRIEVE_PROJECT_OUTPUT_ENDPOINT}/${output.identifier}`,
 									).href;
 								}}
 								isIconOnly
-								startContent={<Icon icon="mdi:download" />}
+								startContent={<Icon width={18} icon="mdi:download" />}
 							/>
 						}
 						title={output.name}
 					/>
 				)}
 			</Listbox>
-		</>
+		</div>
 	);
 }
 
