@@ -75,14 +75,26 @@ export const executeJobNodes = async (job: Job) => {
 		return paths;
 	};
 
-	const createReducer = (
-		node: ProjectNode,
-	): NodeExecutorContext<ObjectEntries>["~reduce"] => {
-		return <T>(reducer: (acc: T, cur: ObjectEntries) => T, initial: T) => {
-			let current = initial;
-			console.log(globalIterators);
-			return current;
-		};
+	const traversePaths = (
+		all: Record<string, InputPath[]>,
+		callback: (path: InputPath) => void,
+	) => {
+		for (const [, paths] of Object.entries(all)) {
+			for (const path of paths) {
+				callback(path);
+				if (path.parent) traversePaths(path.parent, callback);
+			}
+		}
+	};
+
+	const persisted: Record<string, unknown> = {};
+	const persist = <T = unknown>(key: string, initial?: T): (() => T) => {
+		if (!(key in persisted) && !initial)
+			throw new Error(
+				`attempted to create a ~persist() store with key "${key}", but the initial value wasn't provided`,
+			);
+		persisted[key] ??= initial;
+		return () => persisted[key] as T;
 	};
 
 	const runNode = async (
@@ -90,35 +102,77 @@ export const executeJobNodes = async (job: Job) => {
 		paths: Record<string, InputPath[]>,
 		depth?: number,
 		previousData?: Record<string, NodeOutput<v.ObjectEntries>>,
+		customHandler?: (inputs: ObjectEntries) => Promise<void>,
 	) => {
-		const lookupPaths = (
-			all: Record<string, InputPath[]>,
-			callback: (path: InputPath) => void,
-		) => {
-			for (const [, paths] of Object.entries(all)) {
-				for (const path of paths) {
-					callback(path);
-					if (path.parent) lookupPaths(path.parent, callback);
-				}
-			}
-		};
-
 		let actualDepth = depth ?? 0;
 		const actualPreviousData: Record<
 			string,
 			NodeOutput<v.ObjectEntries>
 		> = previousData ?? {};
 		if (depth === undefined) {
-			lookupPaths(paths, (path) => {
+			traversePaths(paths, (path) => {
 				actualDepth = Math.max(actualDepth, path.depth);
 			});
 		}
 
 		logger.debug(`running ${node.id} at depth ${actualDepth}`);
 
+		const reducerCache: Record<string, unknown> = {};
+		const createReducer = (
+			node: ProjectNode,
+		): NodeExecutorContext<ObjectEntries>["~reduce"] => {
+			return async <T>(
+				reducer: (acc: T, cur: ObjectEntries) => T,
+				initial: T,
+			) => {
+				if (node.id in reducerCache) return reducerCache[node.id] as T;
+
+				let current = initial;
+				const paths = resolveInputPaths(node);
+
+				const iterators: Iterator[] = [];
+				traversePaths(paths, (p) => {
+					const iterator = globalIterators.find((i) => i.node === p.node);
+					if (iterator && !iterators.some((i) => i.node === iterator.node))
+						iterators.push(iterator);
+				});
+				if (iterators.length === 0) {
+					await runNode(
+						node,
+						paths,
+						actualDepth - 1,
+						clone(actualPreviousData),
+						async (entries) => {
+							current = reducer(current, entries);
+						},
+					);
+				} else {
+					for (let idx = 0; idx < iterators[0].length; idx++) {
+						// literally everything has to be recalculated from scratch so
+						const cleanData: Record<string, NodeOutput<v.ObjectEntries>> = {};
+						for (const it of iterators) {
+							cleanData[it.node] = it.items[idx];
+						}
+						await runNode(
+							node,
+							paths,
+							undefined,
+							cleanData,
+							async (entries) => {
+								current = reducer(current, entries);
+							},
+						);
+					}
+				}
+
+				reducerCache[node.id] = current;
+				return current;
+			};
+		};
+
 		const inputPaths: InputPath[] = [];
 		const pathOutputs: Record<string, NodeOutput<v.ObjectEntries>> = {};
-		lookupPaths(paths, (path) => {
+		traversePaths(paths, (path) => {
 			if (path.depth === actualDepth && !(path.node in actualPreviousData))
 				inputPaths.push(path);
 		});
@@ -206,6 +260,7 @@ export const executeJobNodes = async (job: Job) => {
 				...resolveInputs(sourceNode),
 				"~job": job,
 				"~reduce": createReducer(sourceNode),
+				"~persist": persist,
 			});
 			logger.debug("received: %o", output);
 			pathOutputs[sourceNode.id] = output;
@@ -220,12 +275,22 @@ export const executeJobNodes = async (job: Job) => {
 				throw new Error(`no handler found for node type "${node.type}"`);
 
 			const inputs = resolveInputs(node);
-			logger.debug(`calling handler for ${node.id} with inputs: %o`, inputs);
-			await handler({
-				...inputs,
-				"~job": job,
-				"~reduce": createReducer(node),
-			});
+
+			if (customHandler) {
+				logger.debug(
+					`calling custom handler (likely a reducer) for ${node.id} with inputs: %o`,
+					inputs,
+				);
+				await customHandler(inputs as ObjectEntries);
+			} else {
+				logger.debug(`calling handler for ${node.id} with inputs: %o`, inputs);
+				await handler({
+					...inputs,
+					"~job": job,
+					"~reduce": createReducer(node),
+					"~persist": persist,
+				});
+			}
 		} else {
 			const iterators: Iterator[] = Object.entries(pathOutputs)
 				.filter((o) => Array.isArray(o[1]))
@@ -264,7 +329,13 @@ export const executeJobNodes = async (job: Job) => {
 					`no iterators found at depth ${actualDepth}, resolved values: %o`,
 					actualPreviousData,
 				);
-				await runNode(node, paths, actualDepth - 1, clone(actualPreviousData));
+				await runNode(
+					node,
+					paths,
+					actualDepth - 1,
+					clone(actualPreviousData),
+					customHandler,
+				);
 			} else {
 				if (
 					iterators.some(
@@ -292,6 +363,7 @@ export const executeJobNodes = async (job: Job) => {
 						paths,
 						actualDepth - 1,
 						clone(actualPreviousData),
+						customHandler,
 					);
 				}
 			}

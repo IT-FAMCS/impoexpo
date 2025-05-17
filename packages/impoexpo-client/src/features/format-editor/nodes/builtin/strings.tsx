@@ -93,4 +93,17 @@ nodesScope(() => {
 			parts: { title: msg`parts` },
 		},
 	});
+
+	registerWithDefaultRenderer(stringNodes.TRIM_STRING_NODE, {
+		title: msg`trim string`,
+		aliases: msg`cut string, remove spaces`,
+		inputs: {
+			string: { title: msg`string` },
+			trimStart: { title: msg`trim start?` },
+			trimEnd: { title: msg`trim end?` },
+		},
+		outputs: {
+			result: { title: msg`result` },
+		},
+	});
 });

@@ -19,6 +19,25 @@ const WordRunSchema = registerCustomType(
 );
 export type WordRun = v.InferOutput<typeof WordRunSchema>;
 
+const WordListStyleSchema = v.optional(
+	v.picklist([
+		"digit-dot",
+		"digit-parentheses",
+		"roman-uppercase",
+		"roman-lowercase",
+		"alpha-uppercase-dot",
+		"alpha-lowercase-dot",
+		"alpha-uppercase-parentheses",
+		"alpha-lowercase-parentheses",
+
+		"bullet-dot",
+		"bullet-triangle",
+		"bullet-hyphen",
+	]),
+	"digit-dot",
+);
+export type WordListType = v.InferOutput<typeof WordListStyleSchema>;
+
 export const WORD_TEXT_NODE = new word({
 	category: "microsoft-word",
 	name: "text",
@@ -39,6 +58,8 @@ export const WORD_LIST_NODE = new word({
 	name: "list",
 	inputSchema: v.object({
 		runs: v.array(WordRunSchema),
+		style: WordListStyleSchema,
+		alignment: v.optional(v.picklist(["start", "center", "end"]), "start"),
 	}),
 	outputSchema: v.object({
 		run: WordRunSchema,

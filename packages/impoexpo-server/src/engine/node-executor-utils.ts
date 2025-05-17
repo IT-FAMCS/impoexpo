@@ -24,10 +24,11 @@ export const integrationNodeHandlerRegistrars: Record<
 
 export type NodeExecutorContext<TIn extends v.ObjectEntries> = {
 	"~job": Job;
+	"~persist": <T>(key: string, initial?: T) => () => T;
 	"~reduce": <T>(
 		reducer: (acc: T, cur: ResolveEntries<TIn>) => T,
 		initial: T,
-	) => T;
+	) => Promise<T>;
 } & ResolveEntries<TIn>;
 
 export type NodeOutput<TOut extends v.ObjectEntries> =
@@ -37,7 +38,7 @@ export type NodeOutput<TOut extends v.ObjectEntries> =
 export type NodeHandlerFunction<
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
-> = (ctx: NodeExecutorContext<TIn>) => Promise<NodeOutput<TOut>>;
+> = (ctx: NodeExecutorContext<TIn>) => Promise<HandlerReturnType<TOut>>;
 
 type HandlerReturnType<TOut extends v.ObjectEntries> =
 	ResolveEntries<TOut> extends Record<string, never>

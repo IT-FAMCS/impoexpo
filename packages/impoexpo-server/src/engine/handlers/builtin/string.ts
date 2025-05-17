@@ -30,3 +30,10 @@ registerHandler(stringNodes.STRING_TO_NUMBER_NODE, (ctx) => ({
 registerHandler(stringNodes.SPLIT_STRING_NODE, (ctx) => ({
 	parts: ctx.string.split(ctx.delimiter),
 }));
+
+registerHandler(stringNodes.TRIM_STRING_NODE, (ctx) => {
+	let result = ctx.string;
+	if (ctx.trimStart) result = result.trimStart();
+	if (ctx.trimEnd) result = result.trimEnd();
+	return { result };
+});

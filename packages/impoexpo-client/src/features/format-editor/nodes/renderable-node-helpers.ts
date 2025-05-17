@@ -8,6 +8,7 @@ import {
 	isNullable,
 } from "@impoexpo/shared/nodes/node-utils";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
 
 export const nodeSchemasCompatible = (
 	connection: Connection | Edge,
@@ -30,7 +31,8 @@ export const nodeSchemasCompatible = (
 	// allows connecting multiple output of the same type to an array input
 	if (
 		isArray(targetEntry.schema) &&
-		(targetEntry.schema.item === sourceEntry.schema ||
+		(schemaToString(targetEntry.schema.item) ===
+			schemaToString(sourceEntry.schema) ||
 			isGeneric(getRootSchema(targetEntry.schema.item)))
 	) {
 		return true;

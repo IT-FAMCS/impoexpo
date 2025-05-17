@@ -31,9 +31,11 @@ export const useMicrosoftWordHydratorStore =
 
 			documents: [],
 			addDocument: (document) =>
-				set((state) => ({
-					documents: state.documents.concat(document),
-				})),
+				set((state) =>
+					state.documents.some((d) => d.id === document.id)
+						? state
+						: { documents: state.documents.concat(document) },
+				),
 			setCurrentDocument: (document) => set({ currentDocument: document }),
 		}),
 	);

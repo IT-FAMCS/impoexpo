@@ -77,6 +77,39 @@ nodesScope(() => {
 		title: msg`unordered list`,
 		inputs: {
 			runs: { title: msg`runs` },
+			alignment: {
+				title: msg`alignment`,
+				description: msg`alignment of the text inside the list`,
+				mode: "independentOnly",
+				options: {
+					start: { title: msg`start` },
+					end: { title: msg`end` },
+					center: { title: msg`center` },
+				},
+			},
+			style: {
+				title: "level format",
+				description: msg`style of numbers/bullet points`,
+				mode: "independentOnly",
+				options: {
+					"alpha-lowercase-dot": { title: "a. Lorem ipsum dolor sit amet..." },
+					"alpha-uppercase-dot": { title: "A. Lorem ipsum dolor sit amet..." },
+					"alpha-lowercase-parentheses": {
+						title: "a) Lorem ipsum dolor sit amet...",
+					},
+					"alpha-uppercase-parentheses": {
+						title: "A) Lorem ipsum dolor sit amet...",
+					},
+					"digit-dot": { title: "1. Lorem ipsum dolor sit amet..." },
+					"digit-parentheses": { title: "1) Lorem ipsum dolor sit amet..." },
+					"roman-lowercase": { title: "i. Lorem ipsum dolor sit amet..." },
+					"roman-uppercase": { title: "I. Lorem ipsum dolor sit amet..." },
+
+					"bullet-dot": { title: "• Lorem ipsum dolor sit amet..." },
+					"bullet-triangle": { title: "‣ Lorem ipsum dolor sit amet..." },
+					"bullet-hyphen": { title: "⁃ Lorem ipsum dolor sit amet..." },
+				},
+			},
 		},
 		outputs: {
 			run: { title: msg`list run` },

@@ -86,6 +86,19 @@ export const SPLIT_STRING_NODE = new BaseNode({
 	}),
 });
 
+export const TRIM_STRING_NODE = new BaseNode({
+	category: "string",
+	name: "trim-string",
+	inputSchema: v.object({
+		string: v.string(),
+		trimStart: v.optional(v.boolean(), true),
+		trimEnd: v.optional(v.boolean(), true),
+	}),
+	outputSchema: v.object({
+		result: v.string(),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		REPLACE_NODE,
@@ -95,5 +108,6 @@ nodesScope(() => {
 		NUMBER_TO_STRING_NODE,
 		STRING_TO_NUMBER_NODE,
 		SPLIT_STRING_NODE,
+		TRIM_STRING_NODE,
 	);
 });

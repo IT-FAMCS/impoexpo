@@ -187,6 +187,12 @@ const getEntryComponent = <TDefault,>(
 				aria-label={renderOptions.placeholder(handleName)}
 				placeholder={renderOptions.placeholder(handleName)}
 				className="nodrag"
+				onSelectionChange={(selection) => {
+					if (selection.currentKey)
+						useFormatEditorStore
+							.getState()
+							.setNodeEntry(node, handleName, selection.currentKey);
+				}}
 				defaultSelectedKeys={
 					defaultValue === undefined
 						? undefined
