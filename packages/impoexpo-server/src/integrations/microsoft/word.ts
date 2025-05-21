@@ -1,13 +1,21 @@
 import type { Express } from "express";
 import { logger } from "../../logger";
-import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/schemas/integrations/microsoft/endpoints";
+import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/schemas/integrations/microsoft/static";
 import { defaultRatelimiter } from "../../common";
 import type { FaultyAction } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
-import { extractOfficePlaceholders } from "./extractor";
+//import { extractOfficePlaceholders } from "./extractor";
 import multer from "multer";
+import { registerIntegration } from "../../registry";
 const upload = multer();
+import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
 
-export const registerMicrosoftEndpoints = (app: Express) => {
+registerIntegration({
+	id: MICROSOFT_WORD_INTEGRATION_ID,
+	dependencies: ["microsoft-shared"],
+	async registerEndpoints(app) {},
+});
+
+/* export const registerMicrosoftEndpoints = (app: Express) => {
 	logger.info("\t-> registering microsoft endpoints");
 
 	app.post(
@@ -36,3 +44,4 @@ export const registerMicrosoftEndpoints = (app: Express) => {
 		},
 	);
 };
+ */

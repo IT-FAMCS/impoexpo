@@ -3,18 +3,16 @@ import express from "express";
 import compression from "compression";
 import { httpLogger, logger } from "./logger";
 import cors from "cors";
-import { registerGoogleEndpoints } from "./integrations/google/endpoints";
 import { loadOrCreateKey } from "./helpers/crypto-utils";
-import { registerProjectEndpoints } from "./project/endpoints";
 import { prepareNodes } from "./engine/node-executor-utils";
-import { registerMicrosoftEndpoints } from "./integrations/microsoft/endpoints";
+import { importIntegrations, prepareIntegrations } from "./registry";
+import { registerProjectEndpoints } from "./project/endpoints";
 
 if (!process.env.PORT) {
 	logger.error("couldn't find PORT in .env, exiting");
 	process.exit(1);
 }
 await loadOrCreateKey();
-await prepareNodes();
 
 const app = express();
 app.use(express.json());
@@ -23,15 +21,20 @@ app.use(httpLogger);
 app.use(cors());
 app.disable("x-powered-by");
 
+// nodes
+await prepareNodes();
+
+// integrations
 try {
-	logger.info("registering endpoints");
-	registerProjectEndpoints(app);
-	registerGoogleEndpoints(app);
-	registerMicrosoftEndpoints(app);
+	await importIntegrations();
+	await prepareIntegrations(app);
 } catch (err) {
-	logger.error(`failed to register endpoints: ${err}`);
+	logger.error(`failed to initialize integrations: ${err}`);
 	process.exit(1);
 }
+
+// misc
+await registerProjectEndpoints(app);
 
 app.listen(process.env.PORT, () => {
 	logger.info(`server started listening on port ${process.env.PORT}`);

@@ -20,7 +20,7 @@ import {
 	GOOGLE_FORMS_LAYOUT_ROUTE,
 	GOOGLE_FORMS_LIST_ROUTE,
 	GOOGLE_FORMS_VERIFY_ROUTE,
-} from "@impoexpo/shared/schemas/integrations/google/forms/endpoints";
+} from "@impoexpo/shared/schemas/integrations/google/forms/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";

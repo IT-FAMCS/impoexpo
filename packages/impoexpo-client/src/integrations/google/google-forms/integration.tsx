@@ -15,9 +15,10 @@ import {
 import { getAuthFromDatabase } from "@/db/auth";
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import * as v from "valibot";
+import { GOOGLE_FORMS_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/google/forms/static";
 
 registerIntegration({
-	id: "google-forms",
+	id: GOOGLE_FORMS_INTEGRATION_ID,
 	title: msg`Google Forms`,
 	icon: <Icon icon="simple-icons:googleforms" />,
 	read: true,

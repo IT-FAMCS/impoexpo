@@ -21,7 +21,6 @@ import {
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import {
 	postForm,
-	postFormWithResult,
 	postWithSchemaAndResult,
 	route,
 } from "@/api/common";
@@ -30,7 +29,7 @@ import {
 	CREATE_PROJECT_ENDPOINT,
 	UPLOAD_PROJECT_FILE_ENDPOINT,
 	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
-} from "@impoexpo/shared/schemas/project/endpoints";
+} from "@impoexpo/shared/schemas/project/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 import { UploadProjectResponseSchema } from "@impoexpo/shared/schemas/project/UploadProjectResponseSchema";

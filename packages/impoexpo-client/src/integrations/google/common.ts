@@ -3,7 +3,7 @@ import { getAuthFromDatabase, saveAuthToDatabase } from "@/db/auth";
 import {
 	GOOGLE_REFRESH_ROUTE,
 	GOOGLE_ACCESS_TOKENS_HEADER_NAME,
-} from "@impoexpo/shared/schemas/integrations/google/endpoints";
+} from "@impoexpo/shared/schemas/integrations/google/static";
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
 import { GoogleRefreshResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleRefreshResponseSchema";
 

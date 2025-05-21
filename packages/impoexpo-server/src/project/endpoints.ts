@@ -14,7 +14,7 @@ import {
 	PROJECT_TRANSFER_STATUS_ENDPOINT,
 	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
 	UPLOAD_PROJECT_FILE_ENDPOINT,
-} from "@impoexpo/shared/schemas/project/endpoints";
+} from "@impoexpo/shared/schemas/project/static";
 import multer from "multer";
 const upload = multer();
 import TTLCache from "@isaacs/ttlcache";

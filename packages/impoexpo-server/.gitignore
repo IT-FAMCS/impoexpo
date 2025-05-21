@@ -3,3 +3,6 @@ logs
 .env
 data.db
 data.db-*
+
+# SimpleOfficePatchers (186 files in one folder, yuck!)
+src/integrations/microsoft/_framework

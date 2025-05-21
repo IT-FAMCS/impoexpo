@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
 import { GoogleExchangeResponseSchema } from "@impoexpo/shared/schemas/integrations/google/GoogleExchangeResponseSchema";
-import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/endpoints";
+import { GOOGLE_EXCHANGE_ROUTE } from "@impoexpo/shared/schemas/integrations/google/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { saveAuthToDatabase } from "@/db/auth";
 

@@ -7,7 +7,7 @@ import FileDropzone from "@/components/modals/FileDropzone";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { postFormWithResult } from "@/api/common";
-import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/schemas/integrations/microsoft/endpoints";
+import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/src/schemas/integrations/microsoft/static";
 import { MicrosoftOfficeDocumentLayoutSchema } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
 import { Button, Listbox, ListboxItem, Spinner } from "@heroui/react";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";

@@ -2,6 +2,7 @@ import * as v from "valibot";
 import type { GoogleFormsLayout } from "../../../schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import { BaseNode } from "../../node-types";
 import { schemaFromString } from "../../schema-string-conversions";
+import { GOOGLE_FORMS_INTEGRATION_ID } from "../../../schemas/integrations/google/forms/static";
 
 export const createGoogleFormsBaseNode = (
 	id: string,
@@ -12,7 +13,7 @@ export const createGoogleFormsBaseNode = (
 		entries[item.id] = schemaFromString(item.type);
 
 	return new BaseNode({
-		category: "google-forms",
+		category: GOOGLE_FORMS_INTEGRATION_ID,
 		name: `form-${id}`,
 		outputSchema: v.object(entries),
 	});
