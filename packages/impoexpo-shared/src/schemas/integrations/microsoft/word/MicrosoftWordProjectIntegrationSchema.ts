@@ -1,11 +1,11 @@
 import * as v from "valibot";
-import { MicrosoftOfficeDocumentLayoutSchema } from "../MicrosoftOfficeLayoutSchema";
+import { MicrosoftWordDocumentLayoutSchema } from "./MicrosoftWordLayoutSchema";
 
 export const MicrosoftWordProjectIntegrationSchema = v.object({
 	data: v.object({
 		documents: v.array(
 			v.object({
-				layout: MicrosoftOfficeDocumentLayoutSchema,
+				layout: MicrosoftWordDocumentLayoutSchema,
 				filename: v.string(),
 				clientIdentifier: v.string(),
 			}),

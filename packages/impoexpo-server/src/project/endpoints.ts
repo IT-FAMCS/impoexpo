@@ -10,10 +10,10 @@ import * as v from "valibot";
 import { ProjectSchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { createJob, jobs } from "../engine/job-manager";
 import {
-	CREATE_PROJECT_ENDPOINT,
-	PROJECT_TRANSFER_STATUS_ENDPOINT,
-	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
-	UPLOAD_PROJECT_FILE_ENDPOINT,
+	CREATE_PROJECT_ROUTE,
+	PROJECT_TRANSFER_STATUS_ROUTE,
+	RETRIEVE_PROJECT_OUTPUT_ROUTE,
+	UPLOAD_PROJECT_FILE_ROUTE,
 } from "@impoexpo/shared/schemas/project/static";
 import multer from "multer";
 const upload = multer();
@@ -28,7 +28,7 @@ export const projectOutputFilesCache = new TTLCache<string, File>({
 export const registerProjectEndpoints = (app: Express) => {
 	logger.info("\t-> registering project endpoints");
 
-	app.post(CREATE_PROJECT_ENDPOINT, body(), async (req, res) => {
+	app.post(CREATE_PROJECT_ROUTE, body(), async (req, res) => {
 		const result = validationResult(req);
 		if (!result.isEmpty()) {
 			res.status(400).send({
@@ -53,7 +53,7 @@ export const registerProjectEndpoints = (app: Express) => {
 		res.send({ job: createJob(req.body) });
 	});
 
-	app.get(`${RETRIEVE_PROJECT_OUTPUT_ENDPOINT}/:id`, async (req, res) => {
+	app.get(`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/:id`, async (req, res) => {
 		if (!req.params.id) {
 			res.status(400).json({
 				ok: false,
@@ -79,7 +79,7 @@ export const registerProjectEndpoints = (app: Express) => {
 	});
 
 	app.post(
-		`${UPLOAD_PROJECT_FILE_ENDPOINT}/:id`,
+		`${UPLOAD_PROJECT_FILE_ROUTE}/:id`,
 		upload.single("file"),
 		async (req, res) => {
 			if (!req.file) {
@@ -123,7 +123,7 @@ export const registerProjectEndpoints = (app: Express) => {
 		},
 	);
 
-	app.get(`${PROJECT_TRANSFER_STATUS_ENDPOINT}/:id`, async (req, res) => {
+	app.get(`${PROJECT_TRANSFER_STATUS_ROUTE}/:id`, async (req, res) => {
 		const job = jobs.get(req.params.id);
 		if (!job) {
 			res.status(400).send({

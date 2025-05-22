@@ -19,11 +19,7 @@ import {
 	ProjectOutputSchema,
 	type Project,
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
-import {
-	postForm,
-	postWithSchemaAndResult,
-	route,
-} from "@/api/common";
+import { postForm, postWithSchemaAndResult, route } from "@/api/common";
 import {
 	PROJECT_TRANSFER_STATUS_ENDPOINT,
 	CREATE_PROJECT_ENDPOINT,

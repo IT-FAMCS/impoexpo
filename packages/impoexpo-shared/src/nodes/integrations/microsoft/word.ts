@@ -2,8 +2,8 @@ import { BaseNode as word } from "../../node-types";
 import { nodesScope } from "../../node-database";
 import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
-import type { MicrosoftOfficeDocumentLayout } from "../../../schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
-import {
+
+/* import {
 	registerCustomType,
 	schemaFromString,
 } from "../../schema-string-conversions";
@@ -13,30 +13,10 @@ const WordRunSchema = registerCustomType(
 	"WordRun",
 	() =>
 		({
-			type: generic("T"),
-			native: v.array(v.unknown()), // unknown is actually ParagraphChild
+			text
 		}) satisfies v.ObjectEntries,
 );
 export type WordRun = v.InferOutput<typeof WordRunSchema>;
-
-const WordListStyleSchema = v.optional(
-	v.picklist([
-		"digit-dot",
-		"digit-parentheses",
-		"roman-uppercase",
-		"roman-lowercase",
-		"alpha-uppercase-dot",
-		"alpha-lowercase-dot",
-		"alpha-uppercase-parentheses",
-		"alpha-lowercase-parentheses",
-
-		"bullet-dot",
-		"bullet-triangle",
-		"bullet-hyphen",
-	]),
-	"digit-dot",
-);
-export type WordListType = v.InferOutput<typeof WordListStyleSchema>;
 
 export const WORD_TEXT_NODE = new word({
 	category: "microsoft-word",
@@ -98,3 +78,4 @@ export const createWordDocumentBaseNode = (
 nodesScope(() => {
 	registerBaseNodes(WORD_TEXT_NODE, WORD_LIST_NODE, WORD_GROUPED_LIST_NODE);
 });
+ */

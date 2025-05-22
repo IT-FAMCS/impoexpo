@@ -7,17 +7,10 @@ import {
 } from "../../../node-executor-utils";
 import * as v from "valibot";
 import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
-import {
-	type IPatch,
-	Paragraph,
-	type ParagraphChild,
-	TextRun,
-	patchDocument,
-} from "docx";
 import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
 import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
-
+/* 
 registerHandler(word.WORD_TEXT_NODE, (ctx) => {
 	return {
 		run: {
@@ -174,3 +167,4 @@ registerIntegrationNodeHandlerRegistrar("microsoft-word", (project) => {
 
 	return handlers;
 });
+ */
