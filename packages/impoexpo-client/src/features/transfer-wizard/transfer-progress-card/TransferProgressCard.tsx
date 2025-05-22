@@ -21,10 +21,10 @@ import {
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { postForm, postWithSchemaAndResult, route } from "@/api/common";
 import {
-	PROJECT_TRANSFER_STATUS_ENDPOINT,
-	CREATE_PROJECT_ENDPOINT,
-	UPLOAD_PROJECT_FILE_ENDPOINT,
-	RETRIEVE_PROJECT_OUTPUT_ENDPOINT,
+	PROJECT_TRANSFER_STATUS_ROUTE,
+	CREATE_PROJECT_ROUTE,
+	UPLOAD_PROJECT_FILE_ROUTE,
+	RETRIEVE_PROJECT_OUTPUT_ROUTE,
 } from "@impoexpo/shared/schemas/project/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -89,7 +89,7 @@ function ProjectOutputsCard() {
 								size="sm"
 								onPress={() => {
 									window.location.href = route(
-										`${RETRIEVE_PROJECT_OUTPUT_ENDPOINT}/${output.identifier}`,
+										`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
 									).href;
 								}}
 								isIconOnly
@@ -130,7 +130,7 @@ function UploadingProjectFilesCard() {
 					const formData = new FormData();
 					formData.append("file", new Blob([file.data]));
 					formData.append("identifier", f);
-					return postForm(`${UPLOAD_PROJECT_FILE_ENDPOINT}/${jobId}`, formData);
+					return postForm(`${UPLOAD_PROJECT_FILE_ROUTE}/${jobId}`, formData);
 				},
 			};
 		}),
@@ -167,7 +167,7 @@ function UploadingProjectCard() {
 		queryKey: ["upload-project", project],
 		queryFn: async () =>
 			postWithSchemaAndResult(
-				CREATE_PROJECT_ENDPOINT,
+				CREATE_PROJECT_ROUTE,
 				project,
 				UploadProjectResponseSchema,
 			),
@@ -239,7 +239,7 @@ function ProjectStatusCard() {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: this is called once and only once per project request, so none of the outside variables matter
 	useEffect(() => {
 		const eventSource = new EventSource(
-			route(`${PROJECT_TRANSFER_STATUS_ENDPOINT}/${jobId}`),
+			route(`${PROJECT_TRANSFER_STATUS_ROUTE}/${jobId}`),
 		);
 
 		eventSource.addEventListener(

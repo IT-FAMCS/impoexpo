@@ -1,74 +1,95 @@
-import { BaseNode as word } from "../../node-types";
+import { BaseNode, type ObjectEntry } from "../../node-types";
 import { nodesScope } from "../../node-database";
 import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
+import { registerCustomType } from "../../schema-string-conversions";
+import {
+	type MicrosoftWordDocumentLayout,
+	MicrosoftWordPlaceholderType,
+} from "../../../schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 
-/* import {
-	registerCustomType,
-	schemaFromString,
-} from "../../schema-string-conversions";
-import { generic } from "../../node-utils";
-
-const WordRunSchema = registerCustomType(
-	"WordRun",
+const WordTextSchema = registerCustomType(
+	"WordText",
 	() =>
 		({
-			text
+			text: v.string(),
 		}) satisfies v.ObjectEntries,
 );
-export type WordRun = v.InferOutput<typeof WordRunSchema>;
+export type WordText = v.InferOutput<typeof WordTextSchema>;
 
-export const WORD_TEXT_NODE = new word({
+const WordListSchema = registerCustomType(
+	"WordList",
+	() =>
+		({
+			items: WordTextSchema,
+		}) satisfies v.ObjectEntries,
+);
+export type WordList = v.InferOutput<typeof WordListSchema>;
+
+const WordGroupedListSchema = registerCustomType(
+	"WordGroupedList",
+	() =>
+		({
+			groups: v.array(
+				v.object({
+					title: WordTextSchema,
+					items: WordListSchema,
+				}),
+			),
+		}) satisfies v.ObjectEntries,
+);
+export type WordGroupedList = v.InferOutput<typeof WordListSchema>;
+
+export const WORD_TEXT_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "text",
 	inputSchema: v.object({
-		text: generic("T"),
-		bold: v.optional(v.boolean(), false),
-		italics: v.optional(v.boolean(), false),
-		strikethrough: v.optional(v.boolean(), false),
-		underline: v.optional(v.boolean(), false),
+		text: v.string(),
 	}),
 	outputSchema: v.object({
-		run: WordRunSchema,
+		result: WordTextSchema,
 	}),
 });
 
-export const WORD_LIST_NODE = new word({
+export const WORD_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "list",
 	inputSchema: v.object({
-		runs: v.array(WordRunSchema),
-		style: WordListStyleSchema,
-		alignment: v.optional(v.picklist(["start", "center", "end"]), "start"),
+		items: v.array(WordTextSchema),
 	}),
 	outputSchema: v.object({
-		run: WordRunSchema,
+		result: WordListSchema,
 	}),
 });
 
-export const WORD_GROUPED_LIST_NODE = new word({
+export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "grouped-list",
 	inputSchema: v.object({
 		groupBy: v.string(),
-		runs: v.array(WordRunSchema),
+		title: WordTextSchema,
+		items: WordListSchema,
 	}),
 	outputSchema: v.object({
-		run: WordRunSchema,
+		result: WordGroupedListSchema,
 	}),
 });
 
+const typeToEntry: Record<MicrosoftWordPlaceholderType, ObjectEntry> = {
+	[MicrosoftWordPlaceholderType.TEXT]: WordTextSchema,
+	[MicrosoftWordPlaceholderType.LIST]: WordListSchema,
+	[MicrosoftWordPlaceholderType.GROUPED_LIST]: WordGroupedListSchema,
+};
+
 export const createWordDocumentBaseNode = (
 	identifier: string,
-	layout: MicrosoftOfficeDocumentLayout,
+	layout: MicrosoftWordDocumentLayout,
 ) => {
 	const entries: v.ObjectEntries = {};
 	for (const placeholder of layout.placeholders)
-		entries[placeholder.formattedName] = schemaFromString(
-			`WordRun<${placeholder.type}>`,
-		);
+		entries[placeholder.name] = typeToEntry[placeholder.type];
 
-	return new word({
+	return new BaseNode({
 		category: "microsoft-word",
 		name: `document-${identifier}`,
 		inputSchema: v.object(entries),
@@ -78,4 +99,3 @@ export const createWordDocumentBaseNode = (
 nodesScope(() => {
 	registerBaseNodes(WORD_TEXT_NODE, WORD_LIST_NODE, WORD_GROUPED_LIST_NODE);
 });
- */

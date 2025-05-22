@@ -9,7 +9,7 @@ import {
 	registerCategory,
 	registerWithDefaultRenderer,
 } from "@/features/format-editor/nodes/renderable-node-database";
-import type { MicrosoftOfficeDocumentLayout } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
+import type { MicrosoftWordDocumentLayout } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import type { RawNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-types";
 import type { ObjectEntries } from "valibot";
@@ -21,7 +21,7 @@ import {
 export const registerMicrosoftWordNode = (
 	filename: string,
 	identifier: string,
-	layout: MicrosoftOfficeDocumentLayout,
+	layout: MicrosoftWordDocumentLayout,
 ) => {
 	const base = createWordDocumentBaseNode(identifier, layout);
 	const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
@@ -33,8 +33,8 @@ export const registerMicrosoftWordNode = (
 	};
 	for (const placeholder of layout.placeholders) {
 		if (!options.inputs) continue;
-		options.inputs[placeholder.formattedName] = {
-			title: placeholder.formattedName,
+		options.inputs[placeholder.name] = {
+			title: placeholder.name,
 			description: placeholder.description ?? undefined,
 		};
 	}
@@ -62,57 +62,32 @@ nodesScope(() => {
 	registerWithDefaultRenderer(wordNodes.WORD_TEXT_NODE, {
 		title: msg`text`,
 		inputs: {
-			text: { title: msg`text`, separate: "after" },
-			bold: { title: msg`bold?` },
-			italics: { title: msg`italics?` },
-			strikethrough: { title: msg`strikethrough?` },
-			underline: { title: msg`underline?` },
+			text: { title: msg`text` },
 		},
 		outputs: {
-			run: { title: msg`text run`, separate: "before" },
+			result: { title: msg`result` },
 		},
 	});
 
 	registerWithDefaultRenderer(wordNodes.WORD_LIST_NODE, {
-		title: msg`unordered list`,
+		title: msg`list`,
 		inputs: {
-			runs: { title: msg`runs` },
-			alignment: {
-				title: msg`alignment`,
-				description: msg`alignment of the text inside the list`,
-				mode: "independentOnly",
-				options: {
-					start: { title: msg`start` },
-					end: { title: msg`end` },
-					center: { title: msg`center` },
-				},
-			},
-			style: {
-				title: "level format",
-				description: msg`style of numbers/bullet points`,
-				mode: "independentOnly",
-				options: {
-					"alpha-lowercase-dot": { title: "a. Lorem ipsum dolor sit amet..." },
-					"alpha-uppercase-dot": { title: "A. Lorem ipsum dolor sit amet..." },
-					"alpha-lowercase-parentheses": {
-						title: "a) Lorem ipsum dolor sit amet...",
-					},
-					"alpha-uppercase-parentheses": {
-						title: "A) Lorem ipsum dolor sit amet...",
-					},
-					"digit-dot": { title: "1. Lorem ipsum dolor sit amet..." },
-					"digit-parentheses": { title: "1) Lorem ipsum dolor sit amet..." },
-					"roman-lowercase": { title: "i. Lorem ipsum dolor sit amet..." },
-					"roman-uppercase": { title: "I. Lorem ipsum dolor sit amet..." },
-
-					"bullet-dot": { title: "• Lorem ipsum dolor sit amet..." },
-					"bullet-triangle": { title: "‣ Lorem ipsum dolor sit amet..." },
-					"bullet-hyphen": { title: "⁃ Lorem ipsum dolor sit amet..." },
-				},
-			},
+			items: { title: msg`items` },
 		},
 		outputs: {
-			run: { title: msg`list run` },
+			result: { title: msg`result` },
+		},
+	});
+
+	registerWithDefaultRenderer(wordNodes.WORD_GROUPED_LIST_NODE, {
+		title: msg`grouped list`,
+		inputs: {
+			items: { title: msg`items` },
+			groupBy: { title: msg`group by` },
+			title: { title: msg`group title` },
+		},
+		outputs: {
+			result: { title: msg`result` },
 		},
 	});
 });

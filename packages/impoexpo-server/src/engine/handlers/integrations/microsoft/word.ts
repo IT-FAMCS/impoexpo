@@ -8,9 +8,9 @@ import {
 import * as v from "valibot";
 import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
-import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 /* 
+import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 registerHandler(word.WORD_TEXT_NODE, (ctx) => {
 	return {
 		run: {

@@ -7,8 +7,12 @@ import FileDropzone from "@/components/modals/FileDropzone";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { postFormWithResult } from "@/api/common";
-import { MICROSOFT_OFFICE_LAYOUT_ROUTE } from "@impoexpo/shared/src/schemas/integrations/microsoft/static";
-import { MicrosoftOfficeDocumentLayoutSchema } from "@impoexpo/shared/schemas/integrations/microsoft/MicrosoftOfficeLayoutSchema";
+import { MICROSOFT_WORD_LAYOUT_ROUTE } from "@impoexpo/shared/src/schemas/integrations/microsoft/word/static";
+import {
+	MicrosoftWordDocumentLayout,
+	MicrosoftWordDocumentLayoutSchema,
+	MicrosoftWordPlaceholderType,
+} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 import { Button, Listbox, ListboxItem, Spinner } from "@heroui/react";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 import { Icon } from "@iconify/react";
@@ -35,13 +39,13 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 			"attempted to render MicrosoftWordVerifier without currentDocument.layout initialized",
 		);
 
-	const getIconFromType = (type: string, width: number) => {
+	const getIconFromType = (
+		type: MicrosoftWordPlaceholderType,
+		width: number,
+	) => {
 		switch (type) {
-			case "string": {
+			case MicrosoftWordPlaceholderType.TEXT: {
 				return <Icon width={width} icon="mdi:text" />;
-			}
-			case "number": {
-				return <Icon width={width} icon="mdi:123" />;
 			}
 			default: {
 				return <Icon width={width} icon="mdi:selection" />;
@@ -80,12 +84,12 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 					<ListboxItem
 						className="p-2"
 						startContent={getIconFromType(p.type, 24)}
-						key={p.originalName}
+						key={p.name}
 						description={p.description}
 						classNames={{ title: "ml-1", description: "ml-1" }}
 					>
 						<p>
-							{p.formattedName}{" "}
+							{p.name}{" "}
 							<span className="text-foreground-500 text-tiny">({p.type})</span>
 						</p>
 					</ListboxItem>
@@ -139,9 +143,9 @@ export function MicrosoftWordLayouter() {
 			const form = new FormData();
 			form.append("file", currentDocument.file);
 			return await postFormWithResult(
-				MICROSOFT_OFFICE_LAYOUT_ROUTE,
+				MICROSOFT_WORD_LAYOUT_ROUTE,
 				form,
-				MicrosoftOfficeDocumentLayoutSchema,
+				MicrosoftWordDocumentLayoutSchema,
 			);
 		},
 	});
