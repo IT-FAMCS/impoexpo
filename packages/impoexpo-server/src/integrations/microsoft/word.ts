@@ -40,26 +40,19 @@ registerIntegration({
 						dotnetRuntimeExports.SimpleOfficePatchers.Patchers.WordPatcher
 							.ExtractPlaceholders;
 					if (!extractMethod) {
-						res.status(500).json({
-							ok: false,
-							internal: true,
-							error: `SimpleOfficePatchers was not initialized (SimpleOfficePatchers.Patchers.WordPatcher
-							.ExtractPlaceholders() was not found)`,
-						} satisfies FaultyAction);
-						return;
+						throw new Error(`SimpleOfficePatchers was not initialized (SimpleOfficePatchers.Patchers.WordPatcher
+							.ExtractPlaceholders() was not found)`);
 					}
 
 					const placeholders = JSON.parse(extractMethod(req.file.buffer));
-					if (
-						!v.is(v.array(MicrosoftWordDocumentPlaceholderSchema), placeholders)
-					) {
-						res.status(500).json({
-							ok: false,
-							internal: true,
-							error: `SimpleOfficePatchers returned invalid JSON from SimpleOfficePatchers.Patchers.WordPatcher
-							.ExtractPlaceholders()`,
-						} satisfies FaultyAction);
-						return;
+					const parsed = v.safeParse(
+						v.array(MicrosoftWordDocumentPlaceholderSchema),
+						placeholders,
+					);
+					if (!parsed.success) {
+						throw new Error(
+							`SimpleOfficePatchers returned invalid JSON from SimpleOfficePatchers.Patchers.WordPatcher.ExtractPlaceholders():\n${v.summarize(parsed.issues)}`,
+						);
 					}
 					res.json({ placeholders } satisfies MicrosoftWordDocumentLayout);
 				} catch (err) {

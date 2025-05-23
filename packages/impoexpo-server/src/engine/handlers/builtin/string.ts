@@ -6,7 +6,13 @@ registerHandler(stringNodes.CONTAINS_NODE, (ctx) => ({
 }));
 
 registerHandler(stringNodes.JOIN_STRINGS_NODE, (ctx) => ({
-	result: ctx.stringA + ctx.delimiter + ctx.stringB,
+	result: ctx.strings.join(ctx.delimiter ?? ""),
+}));
+
+registerHandler(stringNodes.FORMAT_STRING_NODE, (ctx) => ({
+	result: ctx.template.replace(/{(\d+)}/g, (match, idx) =>
+		typeof ctx.args[idx] !== "undefined" ? `${ctx.args[idx]}` : match,
+	),
 }));
 
 registerHandler(stringNodes.LENGTH_NODE, (ctx) => ({

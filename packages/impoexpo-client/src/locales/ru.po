@@ -13,6 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/modals/FileDropzone.tsx:30
+msgid "drag and drop a file here or click"
+msgstr "перетащите файл сюда или нажмите"
+
+#. placeholder {0}: Object.values(props.options.accept) .flatMap((x) => `*${x}`) .join(", ")
+#: src/components/modals/FileDropzone.tsx:36
+msgid "will accept: {0}"
+msgstr "разрешённые форматы: {0}"
+
 #: src/components/network/CacheInfoModal.tsx:27
 msgid "the data is stale?"
 msgstr "данные не обновляются?"
@@ -45,15 +54,19 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/FormatEditor.tsx:166
+#: src/features/format-editor/FormatEditor.tsx:187
+msgid "layout nodes"
+msgstr "упорядочить графы"
+
+#: src/features/format-editor/FormatEditor.tsx:203
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:182
+#: src/features/format-editor/FormatEditor.tsx:219
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:210
+#: src/features/format-editor/FormatEditor.tsx:247
 msgid "done"
 msgstr "далее"
 
@@ -84,7 +97,7 @@ msgid "for each item in the array, foreach"
 msgstr "для каждого элемента в массива, для каждого"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:35
-#: src/features/format-editor/nodes/builtin/conditional.tsx:82
+#: src/features/format-editor/nodes/builtin/conditional.tsx:66
 msgid "object"
 msgstr "объект"
 
@@ -97,7 +110,6 @@ msgid "if..."
 msgstr "если..."
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:22
-#: src/features/format-editor/nodes/builtin/conditional.tsx:43
 msgid "condition"
 msgstr "условие"
 
@@ -114,56 +126,56 @@ msgid "value"
 msgstr "значение"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:39
-msgid "execute, if..."
-msgstr "выполнить, если..."
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:48
-msgid "if true..."
-msgstr "если истина..."
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:51
-msgid "if false..."
-msgstr "если ложь..."
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:57
 msgid "repeat X times..."
 msgstr "повторить X раз..."
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:60
+#: src/features/format-editor/nodes/builtin/conditional.tsx:39
+#~ msgid "execute, if..."
+#~ msgstr "выполнить, если..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:42
 msgid "amount of times"
 msgstr "кол-во раз"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:64
-msgid "body..."
-msgstr "тело..."
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:65
+#: src/features/format-editor/nodes/builtin/conditional.tsx:47
 msgid "iteration"
 msgstr "итерация"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:65
+#: src/features/format-editor/nodes/builtin/conditional.tsx:48
 msgid "starting from 1"
 msgstr "начиная с 1"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:70
+#: src/features/format-editor/nodes/builtin/conditional.tsx:48
+#~ msgid "if true..."
+#~ msgstr "если истина..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:51
+#~ msgid "if false..."
+#~ msgstr "если ложь..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:54
 msgid "throw error if null"
 msgstr "выдать ошибку если null"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:73
+#: src/features/format-editor/nodes/builtin/conditional.tsx:57
 msgid "nullable object"
 msgstr "nullable объект"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:76
+#: src/features/format-editor/nodes/builtin/conditional.tsx:60
 msgid "error message"
 msgstr "сообщение об ошибке"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:64
+#~ msgid "body..."
+#~ msgstr "тело..."
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
 msgstr "литералы"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:17
-#: src/features/format-editor/nodes/builtin/strings.tsx:68
-#: src/features/format-editor/nodes/builtin/strings.tsx:81
+#: src/features/format-editor/nodes/builtin/strings.tsx:86
+#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "number"
 msgstr "число"
 
@@ -171,9 +183,10 @@ msgstr "число"
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:71
-#: src/features/format-editor/nodes/builtin/strings.tsx:78
 #: src/features/format-editor/nodes/builtin/strings.tsx:89
+#: src/features/format-editor/nodes/builtin/strings.tsx:96
+#: src/features/format-editor/nodes/builtin/strings.tsx:107
+#: src/features/format-editor/nodes/builtin/strings.tsx:119
 msgid "string"
 msgstr "строка"
 
@@ -338,6 +351,7 @@ msgid ">="
 msgstr ">="
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:13
+#: src/features/format-editor/nodes/builtin/strings.tsx:56
 msgid "strings"
 msgstr "строки"
 
@@ -357,9 +371,14 @@ msgstr "замена"
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
 #: src/features/format-editor/nodes/builtin/strings.tsx:38
 #: src/features/format-editor/nodes/builtin/strings.tsx:48
-#: src/features/format-editor/nodes/builtin/strings.tsx:61
+#: src/features/format-editor/nodes/builtin/strings.tsx:60
+#: src/features/format-editor/nodes/builtin/strings.tsx:79
+#: src/features/format-editor/nodes/builtin/strings.tsx:124
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
 msgid "result"
 msgstr "результат"
 
@@ -383,33 +402,77 @@ msgstr "объединить строки"
 msgid "combine strings, add strings"
 msgstr "добавить строки, сложить строки, добавить строки"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:58
+#: src/features/format-editor/nodes/builtin/strings.tsx:57
 msgid "delimiter (optional)"
 msgstr "разделитель (необязательно)"
 
+#: src/features/format-editor/nodes/builtin/strings.tsx:65
+msgid "format string"
+msgstr "заполнить строку по шаблону"
+
 #: src/features/format-editor/nodes/builtin/strings.tsx:66
+msgid "template string"
+msgstr "отформатировать строку, шаблон строки"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:69
+msgid "template"
+msgstr "шаблон"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:70
+msgid "to create a placeholder, use '{NUMBER}', where NUMBER starts from 0."
+msgstr "чтобы создать заполнитель, используйте '{ЧИСЛО}', где ЧИСЛО начинается с 0."
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:71
+msgid "hi, '{0}'!"
+msgstr "привет, '{0}'!"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:74
+msgid "arguments"
+msgstr "аргументы"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:75
+msgid "the order in which nodes are connected matters here!"
+msgstr "порядок, в котором присоединяются графы, здесь очень важен!"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:84
 msgid "number -> string"
 msgstr "число -> строка"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:76
+#: src/features/format-editor/nodes/builtin/strings.tsx:94
 msgid "string -> number"
 msgstr "строка -> число"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:86
+#: src/features/format-editor/nodes/builtin/strings.tsx:104
 msgid "split string"
 msgstr "разбить строку"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:87
+#: src/features/format-editor/nodes/builtin/strings.tsx:105
 msgid "divide string, explode string"
 msgstr "разделить строку, поделить строку на части"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:90
+#: src/features/format-editor/nodes/builtin/strings.tsx:108
 msgid "delimiter"
 msgstr "разделитель"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:93
+#: src/features/format-editor/nodes/builtin/strings.tsx:111
 msgid "parts"
 msgstr "части"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:116
+msgid "trim string"
+msgstr "обрезать строку"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:117
+msgid "cut string, remove spaces"
+msgstr "удалить пробелы в строке, убрать пробелы"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:120
+msgid "trim start?"
+msgstr "обрезать начало?"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:121
+msgid "trim end?"
+msgstr "обрезать конец?"
 
 #: src/features/format-editor/nodes/common.tsx:53
 msgid "input"
@@ -419,97 +482,105 @@ msgstr "ввод"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного графа..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:152
-#: src/pages/WelcomePage.tsx:46
+#: src/features/transfer-wizard/TransferWizardPage.tsx:158
+#: src/pages/WelcomePage.tsx:47
 msgid "new data transfer"
 msgstr "новый перенос данных"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/transfer-wizard/TransferWizardPage.tsx:165
 msgid "select sources"
 msgstr "выбор источников"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:160
+#: src/features/transfer-wizard/TransferWizardPage.tsx:166
 msgid "what should we transfer?"
 msgstr "что будем перемещать?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:162
+#: src/features/transfer-wizard/TransferWizardPage.tsx:168
 msgid "formatting"
 msgstr "форматирование"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:162
+#: src/features/transfer-wizard/TransferWizardPage.tsx:168
 msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:164
+#: src/features/transfer-wizard/TransferWizardPage.tsx:170
 msgid "transfer"
 msgstr "перенесение"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:165
+#: src/features/transfer-wizard/TransferWizardPage.tsx:171
 msgid "where the magic happens..."
 msgstr "где творится магия..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:167
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
+#: src/features/transfer-wizard/TransferWizardPage.tsx:173
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:72
 msgid "done!"
 msgstr "готово!"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:35
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:43
 msgid "anything else?"
 msgstr "что-нибудь ещё?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:37
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:45
 msgid "what's the read source?"
 msgstr "откуда будем читать?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:38
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:46
 msgid "what's the write source?"
 msgstr "куда будем писать?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:110
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:121
 msgid "add another"
 msgstr "добавить ещё"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:124
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:135
 #: src/integrations/google/GoogleVerifier.tsx:58
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
 msgid "next"
 msgstr "далее"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:71
-msgid "connecting to the server"
-msgstr "подключаемся к серверу"
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:242
+msgid "failed to check integration authentication status"
+msgstr "не удалось проверить статус авторизации интеграции"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:99
-msgid "reconnecting to the server"
-msgstr "пробуем переподключиться к серверу"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:150
+msgid "uploading project files"
+msgstr "выкладываем файлы проекта"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:105
-msgid "failed to connect to the server"
-msgstr "не удалось подключиться к серверу"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:176
-msgid "we're working on your project"
-msgstr "работаем над вашим проектом"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:180
-msgid "this shouldn't take too long. updates will appear below:"
-msgstr "это не должно занять слишком долго. ниже будут оповещения:"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:192
-msgid "we couldn't process your project"
-msgstr "не удалось обработать ваш проект"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:196
-msgid "please check the last notification to see what went wrong and try again."
-msgstr "пожалуйста, проверьте последнее оповещение и попробуйте снова."
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:267
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:187
 msgid "uploading your project"
 msgstr "выкладываем ваш проект"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:276
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:196
 msgid "couldn't upload your project"
 msgstr "не удалось выложить ваш проект"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:231
+msgid "connecting to the server"
+msgstr "подключаемся к серверу"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:263
+msgid "reconnecting to the server"
+msgstr "пробуем переподключиться к серверу"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:269
+msgid "failed to connect to the server"
+msgstr "не удалось подключиться к серверу"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:348
+msgid "we're working on your project"
+msgstr "работаем над вашим проектом"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:352
+msgid "this shouldn't take too long. updates will appear below:"
+msgstr "это не должно занять слишком долго. ниже будут оповещения:"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:364
+msgid "we couldn't process your project"
+msgstr "не удалось обработать ваш проект"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:368
+msgid "please check the last notification to see what went wrong and try again."
+msgstr "пожалуйста, проверьте последнее оповещение и попробуйте снова."
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -519,23 +590,23 @@ msgstr "не все права были предоставлены!"
 msgid "exchanging tokens with the server"
 msgstr "обмениваемся токенами с сервером"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:66
+#: src/integrations/google/GoogleAuthenticator.tsx:65
 msgid "couldn't exchange tokens with the server (check the console)"
 msgstr "не удалось обменяться токенами с сервером (проверьте консоль)"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:80
+#: src/integrations/google/GoogleAuthenticator.tsx:79
 msgid "waiting for the login flow response"
 msgstr "ожидаем результат входа"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:87
+#: src/integrations/google/GoogleAuthenticator.tsx:86
 msgid "to continue, login with your google account."
 msgstr "чтобы продолжить, войдите через свой google аккаунт."
 
-#: src/integrations/google/GoogleAuthenticator.tsx:95
+#: src/integrations/google/GoogleAuthenticator.tsx:94
 msgid "login via google"
 msgstr "войти через гугл"
 
-#: src/integrations/google/GoogleAuthenticator.tsx:100
+#: src/integrations/google/GoogleAuthenticator.tsx:99
 msgid "an error occurred during login:"
 msgstr "во время входа произошла ошибка:"
 
@@ -593,27 +664,95 @@ msgstr "назад к выбору источника"
 msgid "Google Forms"
 msgstr "Google Forms"
 
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:60
+msgid "no placeholder were found in the document.<0/>please check the document and try uploading it again."
+msgstr "в документе не были найдены заполнители.<0/>пожалуйста, проверьте документ и попробуйте снова."
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:70
+msgid "go back to file upload"
+msgstr "вернуться к загрузке файла"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:78
+msgid "the following placeholders were found:"
+msgstr "были найдены следующие заполнители:"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:98
+msgid "is everything correct?"
+msgstr "всё верно?"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:105
+msgid "no, go back to file upload"
+msgstr "нет, вернуться к загрузке файла"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:123
+msgid "yes, proceed"
+msgstr "да, продолжить"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:163
+msgid "extracting placeholders from the document"
+msgstr "извлекаем заполнители из документа"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:172
+msgid "couldn't extract placeholders from the document"
+msgstr "не удалось извлечь заполнители из документа"
+
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:174
+msgid "back to file upload"
+msgstr "вернуться к загрузке файла"
+
+#: src/integrations/microsoft/microsoft-word/integration.tsx:17
+#: src/integrations/microsoft/microsoft-word/integration.tsx:63
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:57
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:63
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:65
+msgid "text"
+msgstr "текст"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
+msgid "list"
+msgstr "список"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:75
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
+msgid "items"
+msgstr "элементы"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+msgid "grouped list"
+msgstr "группированный список"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
+msgid "group by"
+msgstr "критерий группировки"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:87
+msgid "group title"
+msgstr "заголовок группы"
+
 #: src/integrations/placeholder/integration.tsx:12
 msgid "nowhere"
 msgstr "никуда"
 
-#: src/integrations/placeholder/integration.tsx:39
+#: src/integrations/placeholder/integration.tsx:31
 msgid "Nowhere"
 msgstr "Никуда"
 
-#: src/pages/WelcomePage.tsx:29
+#: src/pages/WelcomePage.tsx:30
 msgid "welcome to <0>impoexpo</0>!"
 msgstr "добро пожаловать в <0>impoexpo</0>!"
 
-#: src/pages/WelcomePage.tsx:53
-#: src/pages/WelcomePage.tsx:60
+#: src/pages/WelcomePage.tsx:54
+#: src/pages/WelcomePage.tsx:61
 msgid "about the project"
 msgstr "о проекте"
 
-#: src/pages/WelcomePage.tsx:64
+#: src/pages/WelcomePage.tsx:65
 msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
 msgstr "impoexpo стремится упростить жизнь людей, кто часто работает с большим объёмом данных, в то же время используя несколько сервисов."
 
-#: src/pages/WelcomePage.tsx:71
+#: src/pages/WelcomePage.tsx:72
 msgid "impoexpo is open-source and its code can be found <0>here</0>."
 msgstr "impoexpo является открытым ПО, и его код можно найти <0>здесь</0>."

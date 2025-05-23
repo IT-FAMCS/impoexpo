@@ -67,7 +67,7 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 	// union
 	if (str.split("|").length > 1) {
-		return union(str.split(" | ").map((p) => schemaFromString(p)));
+		return union(str.split("|").map((p) => schemaFromString(p)));
 	}
 
 	// custom type

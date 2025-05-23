@@ -97,6 +97,7 @@ export const executeJobNodes = async (job: Job) => {
 		return () => persisted[key] as T;
 	};
 
+	const reducerCache: Record<string, unknown> = {};
 	const runNode = async (
 		node: ProjectNode,
 		paths: Record<string, InputPath[]>,
@@ -117,7 +118,6 @@ export const executeJobNodes = async (job: Job) => {
 
 		logger.debug(`running ${node.id} at depth ${actualDepth}`);
 
-		const reducerCache: Record<string, unknown> = {};
 		const createReducer = (
 			node: ProjectNode,
 		): NodeExecutorContext<ObjectEntries>["~reduce"] => {
@@ -157,7 +157,7 @@ export const executeJobNodes = async (job: Job) => {
 							node,
 							paths,
 							undefined,
-							cleanData,
+							clone(cleanData),
 							async (entries) => {
 								current = reducer(current, entries);
 							},

@@ -276,7 +276,7 @@ function NodePropertyRenderer(props: {
 							<p className="max-w-64 text-start">
 								{props.renderOptions.title(props.name)}
 							</p>
-							<p className="text-foreground-400 text-tiny">
+							<p className="text-foreground-400 text-tiny max-w-36">
 								{props.renderOptions.description(props.name)}
 							</p>
 						</div>
@@ -315,7 +315,7 @@ function NodePropertyRenderer(props: {
 							<p className="max-w-64 text-end">
 								{props.renderOptions.title(props.name)}
 							</p>
-							<p className="text-foreground-400 text-tiny">
+							<p className="text-foreground-400 text-tiny max-w-36 text-right">
 								{props.renderOptions.description(props.name)}
 							</p>
 						</div>

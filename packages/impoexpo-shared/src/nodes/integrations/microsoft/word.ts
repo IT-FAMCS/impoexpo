@@ -5,40 +5,27 @@ import * as v from "valibot";
 import { registerCustomType } from "../../schema-string-conversions";
 import {
 	type MicrosoftWordDocumentLayout,
+	MicrosoftWordPatchSchema,
 	MicrosoftWordPlaceholderType,
 } from "../../../schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 
-const WordTextSchema = registerCustomType(
+export const WordTextSchema = registerCustomType(
 	"WordText",
-	() =>
-		({
-			text: v.string(),
-		}) satisfies v.ObjectEntries,
+	() => MicrosoftWordPatchSchema.options["0"].entries,
 );
-export type WordText = v.InferOutput<typeof WordTextSchema>;
-
-const WordListSchema = registerCustomType(
+export const WordListSchema = registerCustomType(
 	"WordList",
-	() =>
-		({
-			items: WordTextSchema,
-		}) satisfies v.ObjectEntries,
+	() => MicrosoftWordPatchSchema.options["1"].entries,
 );
-export type WordList = v.InferOutput<typeof WordListSchema>;
-
-const WordGroupedListSchema = registerCustomType(
+export const WordGroupedListSchema = registerCustomType(
 	"WordGroupedList",
-	() =>
-		({
-			groups: v.array(
-				v.object({
-					title: WordTextSchema,
-					items: WordListSchema,
-				}),
-			),
-		}) satisfies v.ObjectEntries,
+	() => MicrosoftWordPatchSchema.options["2"].entries,
 );
-export type WordGroupedList = v.InferOutput<typeof WordListSchema>;
+export const WordPatchSchema = v.union([
+	WordTextSchema,
+	WordListSchema,
+	WordGroupedListSchema,
+]);
 
 export const WORD_TEXT_NODE = new BaseNode({
 	category: "microsoft-word",
@@ -55,7 +42,8 @@ export const WORD_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "list",
 	inputSchema: v.object({
-		items: v.array(WordTextSchema),
+		sublistTitle: v.nullable(WordTextSchema),
+		items: v.array(WordPatchSchema),
 	}),
 	outputSchema: v.object({
 		result: WordListSchema,
@@ -68,7 +56,7 @@ export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	inputSchema: v.object({
 		groupBy: v.string(),
 		title: WordTextSchema,
-		items: WordListSchema,
+		items: v.array(WordPatchSchema),
 	}),
 	outputSchema: v.object({
 		result: WordGroupedListSchema,

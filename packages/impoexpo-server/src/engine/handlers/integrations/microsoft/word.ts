@@ -9,162 +9,124 @@ import * as v from "valibot";
 import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
-/* 
-import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import {
+	type MicrosoftWordGroupedListItem,
+	type MicrosoftWordPatch,
+	MicrosoftWordPlaceholderType,
+} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
+import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
+import { dotnetRuntimeExports } from "../../../../integrations/microsoft/common/runtime";
+import { logger } from "../../../../logger";
 registerHandler(word.WORD_TEXT_NODE, (ctx) => {
 	return {
-		run: {
-			type: "text",
-			native: [
-				new TextRun({
-					bold: ctx.bold,
-					italics: ctx.italics,
-					strike: ctx.strikethrough,
-					underline: ctx.underline ? { type: "single" } : undefined,
-					text: `${ctx.text}`,
-				}),
-			] satisfies ParagraphChild[],
+		result: {
+			type: MicrosoftWordPlaceholderType.TEXT as const,
+			text: ctx.text,
 		},
 	};
 });
 
-const numberIndexToAlphabetical = (idx: number) => {
-	let result = "";
-	let current = idx;
-	while (current > 0) {
-		const remainder = (current - 1) % 26;
-		result += String.fromCharCode(65 + remainder);
-		current = Math.floor((current - 1) / 26);
-	}
-	return result;
-};
-
-const numberIndexToRoman = (idx: number) => {
-	const roman: Record<string, number> = {
-		M: 1000,
-		CM: 900,
-		D: 500,
-		CD: 400,
-		C: 100,
-		XC: 90,
-		L: 50,
-		XL: 40,
-		X: 10,
-		IX: 9,
-		V: 5,
-		IV: 4,
-		I: 1,
-	};
-	let current = idx;
-	let result = "";
-	for (const key of Object.keys(roman)) {
-		const repetitions = Math.floor(current / roman[key]);
-		current -= repetitions * roman[key];
-		result += key.repeat(repetitions);
-	}
-	return result;
-};
-
-const getListStyle = (index: number, style: word.WordListType) => {
-	switch (style) {
-		case "alpha-lowercase-dot":
-			return `${numberIndexToAlphabetical(index).toLowerCase()}.`;
-		case "alpha-uppercase-dot":
-			return `${numberIndexToAlphabetical(index)}.`;
-		case "alpha-lowercase-parentheses":
-			return `${numberIndexToAlphabetical(index).toLowerCase()})`;
-		case "alpha-uppercase-parentheses":
-			return `${numberIndexToAlphabetical(index)})`;
-		case "digit-dot":
-			return `${index}.`;
-		case "digit-parentheses":
-			return `${index})`;
-		case "roman-lowercase":
-			return `${numberIndexToRoman(index).toLowerCase()}.`;
-		case "roman-uppercase":
-			return `${numberIndexToRoman(index)}.`;
-		case "bullet-dot":
-			return "•";
-		case "bullet-hyphen":
-			return "⁃";
-		case "bullet-triangle":
-			return "‣";
-	}
-};
-
 registerAsyncHandler(word.WORD_LIST_NODE, async (ctx) => {
-	let idx = 1;
-	const paragraphs = await ctx["~reduce"]<Paragraph[]>((acc, cur) => {
-		acc.push(
-			...cur.runs.flatMap((run) =>
-				run.type === "text"
-					? new Paragraph({
-							alignment: ctx.alignment,
-							children: [
-								new TextRun(`${getListStyle(idx++, ctx.style)} `),
-								...(run.native as ParagraphChild[]),
-							],
-						})
-					: (run.native as Paragraph[]),
-			),
-		);
-		return acc;
-	}, []);
+	const items = await ctx["~reduce"]<v.InferOutput<typeof WordPatchSchema>[]>(
+		(acc, cur) => {
+			acc.push(
+				...cur.items.map((i) => i as v.InferOutput<typeof WordPatchSchema>),
+			);
+			return acc;
+		},
+		[],
+	);
 	return {
-		run: { type: "list", native: paragraphs satisfies Paragraph[] },
+		result: {
+			type: MicrosoftWordPlaceholderType.LIST as const,
+			sublistTitle: ctx.sublistTitle,
+			items: items,
+		},
 	};
 });
 
-registerIntegrationNodeHandlerRegistrar("microsoft-word", (project) => {
-	const integration = project.integrations["microsoft-word"];
-	if (!integration || !v.is(MicrosoftWordProjectIntegrationSchema, integration))
-		throw new Error();
-
-	const handlers: Record<
-		string,
-		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
-	> = {};
-
-	const generated: Record<string, boolean> = {};
-	for (const document of integration.data.documents) {
-		const base = createWordDocumentBaseNode(
-			document.clientIdentifier,
-			document.layout,
-		);
-		registerBaseNodes(base);
-
-		genericRegisterAsyncHandler(handlers, base, async (ctx) => {
-			if (document.clientIdentifier in generated) return;
-
-			const patches: Record<string, IPatch> = {};
-			for (const placeholder of document.layout.placeholders) {
-				if (ctx[placeholder.formattedName]) {
-					const run = ctx[placeholder.formattedName] as word.WordRun;
-					patches[placeholder.originalName] = {
-						type: run.type === "list" ? "file" : "paragraph",
-						children:
-							run.type === "list"
-								? (run.native as Paragraph[])
-								: (run.native as ParagraphChild[]),
-					} as IPatch;
-				}
-			}
-
-			const buffer = await patchDocument({
-				data: ctx["~job"].files[document.clientIdentifier],
-				outputType: "nodebuffer",
-				patches,
-				keepOriginalStyles: true,
-			});
-			ctx["~job"].file(
-				document.filename.replaceAll(".docx", "-patched.docx"),
-				"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-				buffer,
-			);
-			generated[document.clientIdentifier] = true;
-		});
-	}
-
-	return handlers;
+registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
+	const groups = await ctx["~reduce"]<
+		Record<string, MicrosoftWordGroupedListItem>
+	>((acc, cur) => {
+		if (!(cur.groupBy in acc))
+			acc[cur.groupBy] = { items: cur.items, title: cur.title };
+		else
+			acc[cur.groupBy] = {
+				items: acc[cur.groupBy].items.concat(cur.items),
+				title: acc[cur.groupBy].title,
+			};
+		return acc;
+	}, {});
+	return {
+		result: {
+			type: MicrosoftWordPlaceholderType.GROUPED_LIST as const,
+			groups: Object.values(groups),
+		},
+	};
 });
- */
+
+registerIntegrationNodeHandlerRegistrar(
+	MICROSOFT_WORD_INTEGRATION_ID,
+	(project) => {
+		const integration = project.integrations["microsoft-word"];
+		if (
+			!integration ||
+			!v.is(MicrosoftWordProjectIntegrationSchema, integration)
+		)
+			throw new Error();
+
+		const handlers: Record<
+			string,
+			NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+		> = {};
+
+		const generated: Record<string, boolean> = {};
+		for (const document of integration.data.documents) {
+			const base = word.createWordDocumentBaseNode(
+				document.clientIdentifier,
+				document.layout,
+			);
+			registerBaseNodes(base);
+
+			genericRegisterAsyncHandler(handlers, base, async (ctx) => {
+				if (document.clientIdentifier in generated) return;
+
+				const patches: Record<string, MicrosoftWordPatch> = {};
+				for (const placeholder of document.layout.placeholders) {
+					if (ctx[placeholder.name]) {
+						patches[placeholder.name] = ctx[
+							placeholder.name
+						] as MicrosoftWordPatch;
+					}
+				}
+
+				const patchMethod =
+					//@ts-ignore
+					dotnetRuntimeExports.SimpleOfficePatchers.Patchers.WordPatcher
+						.PatchDocument;
+				if (!patchMethod) {
+					throw new Error(
+						"SimpleOfficePatchers was not initialized (SimpleOfficePatchers.Patchers.WordPatcher.PatchDocument() was not found)",
+					);
+				}
+
+				const serializedPatches = JSON.stringify(patches);
+				const buffer = await patchMethod(
+					ctx["~job"].files[document.clientIdentifier],
+					serializedPatches,
+				);
+				ctx["~job"].file(
+					document.filename.replaceAll(".docx", "-patched.docx"),
+					"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+					buffer,
+				);
+
+				generated[document.clientIdentifier] = true;
+			});
+		}
+
+		return handlers;
+	},
+);

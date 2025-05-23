@@ -53,9 +53,27 @@ nodesScope(() => {
 		title: msg`join strings`,
 		aliases: msg`combine strings, add strings`,
 		inputs: {
-			stringA: { title: "A" },
-			stringB: { title: "B" },
+			strings: { title: msg`strings` },
 			delimiter: { title: msg`delimiter (optional)` },
+		},
+		outputs: {
+			result: { title: msg`result` },
+		},
+	});
+
+	registerWithDefaultRenderer(stringNodes.FORMAT_STRING_NODE, {
+		title: msg`format string`,
+		aliases: msg`template string`,
+		inputs: {
+			template: {
+				title: msg`template`,
+				description: msg`to create a placeholder, use '{NUMBER}', where NUMBER starts from 0.`,
+				placeholder: msg`hi, '{0}'!`,
+			},
+			args: {
+				title: msg`arguments`,
+				description: msg`the order in which nodes are connected matters here!`,
+			},
 		},
 		outputs: {
 			result: { title: msg`result` },

@@ -43,9 +43,20 @@ export const JOIN_STRINGS_NODE = new BaseNode({
 	category: "string",
 	name: "join",
 	inputSchema: v.object({
-		stringA: v.string(),
-		stringB: v.string(),
+		strings: v.array(v.string()),
 		delimiter: v.optional(v.string(), ""),
+	}),
+	outputSchema: v.object({
+		result: v.string(),
+	}),
+});
+
+export const FORMAT_STRING_NODE = new BaseNode({
+	category: "string",
+	name: "format",
+	inputSchema: v.object({
+		template: v.string(),
+		args: v.array(v.union([v.string(), v.number(), v.boolean()])),
 	}),
 	outputSchema: v.object({
 		result: v.string(),
@@ -105,6 +116,7 @@ nodesScope(() => {
 		CONTAINS_NODE,
 		LENGTH_NODE,
 		JOIN_STRINGS_NODE,
+		FORMAT_STRING_NODE,
 		NUMBER_TO_STRING_NODE,
 		STRING_TO_NUMBER_NODE,
 		SPLIT_STRING_NODE,

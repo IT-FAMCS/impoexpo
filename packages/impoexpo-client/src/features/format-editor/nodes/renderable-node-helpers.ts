@@ -6,6 +6,7 @@ import {
 	isArray,
 	isGeneric,
 	isNullable,
+	isUnion,
 } from "@impoexpo/shared/nodes/node-utils";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
 import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
@@ -28,11 +29,19 @@ export const nodeSchemasCompatible = (
 	const targetEntry = target.entry(connection.targetHandle);
 	if (!sourceEntry || !targetEntry) return false;
 
+	const isUnionOrEqual = (
+		source: ObjectEntry,
+		target: ObjectEntry,
+	): boolean => {
+		if (isUnion(target))
+			return target.options.some((opt) => isUnionOrEqual(source, opt));
+		return schemaToString(source) === schemaToString(target);
+	};
+
 	// allows connecting multiple output of the same type to an array input
 	if (
 		isArray(targetEntry.schema) &&
-		(schemaToString(targetEntry.schema.item) ===
-			schemaToString(sourceEntry.schema) ||
+		(isUnionOrEqual(sourceEntry.schema, targetEntry.schema.item) ||
 			isGeneric(getRootSchema(targetEntry.schema.item)))
 	) {
 		return true;
@@ -65,5 +74,5 @@ export const nodeSchemasCompatible = (
 			nonGenericEntry.schema,
 		);
 	}
-	return sourceEntry.type === targetEntry.type;
+	return isUnionOrEqual(sourceEntry.schema, targetEntry.schema);
 };
