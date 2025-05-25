@@ -54,7 +54,11 @@ export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "grouped-list",
 	inputSchema: v.object({
-		groupBy: v.string(),
+		groupCriteria: v.string(),
+		sortCriteria: v.optional(
+			v.picklist(["ascending", "descending"]),
+			"ascending",
+		),
 		title: WordTextSchema,
 		items: v.array(WordPatchSchema),
 	}),

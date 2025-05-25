@@ -54,21 +54,37 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/FormatEditor.tsx:187
+#: src/features/format-editor/DefaultNodeRenderer.tsx:109
+msgid "this node is an iterator."
+msgstr "этот граф — итератор."
+
+#: src/features/format-editor/FormatEditor.tsx:235
 msgid "layout nodes"
 msgstr "упорядочить графы"
 
-#: src/features/format-editor/FormatEditor.tsx:203
+#: src/features/format-editor/FormatEditor.tsx:251
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:219
+#: src/features/format-editor/FormatEditor.tsx:267
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:247
+#: src/features/format-editor/FormatEditor.tsx:295
 msgid "done"
 msgstr "далее"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:64
+msgid "duplicate"
+msgstr "дублировать"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:76
+msgid "this node cannot be removed as it's not searchable and is tied to an integration."
+msgstr "этот граф не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:84
+msgid "delete"
+msgstr "удалить"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:12
 #: src/features/format-editor/nodes/builtin/array.tsx:21
@@ -378,7 +394,7 @@ msgstr "замена"
 #: src/features/format-editor/nodes/common.tsx:56
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:68
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:78
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:99
 msgid "result"
 msgstr "результат"
 
@@ -725,10 +741,26 @@ msgid "grouped list"
 msgstr "группированный список"
 
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:86
-msgid "group by"
+msgid "group criteria"
 msgstr "критерий группировки"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:87
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
+msgid "sort criteria"
+msgstr "критерий сортировки"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:89
+msgid "affects how the groups will be arranged in the document"
+msgstr "влияет на то, в каком порядке распологаются группы в документе"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:92
+msgid "in ascending order"
+msgstr "в возрастающем порядке"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
+msgid "in descending order"
+msgstr "в убывающем порядке"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
 msgid "group title"
 msgstr "заголовок группы"
 

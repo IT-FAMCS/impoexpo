@@ -20,14 +20,14 @@ import {
 	useUpdateNodeInternals,
 } from "@xyflow/react";
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	type DefaultNodeRenderOptions,
 	localizableString,
 } from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { BaseIssue } from "valibot";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "./store";
@@ -38,11 +38,9 @@ import {
 	isEnum,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
+import { Icon } from "@iconify/react";
 
-export default function DefaultNodeRenderer({
-	type,
-	id,
-}: NodeProps<BuiltInNode>) {
+const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	const { t } = useLingui();
 
 	const updateNodeInternals = useUpdateNodeInternals();
@@ -101,10 +99,24 @@ export default function DefaultNodeRenderer({
 							id={id}
 						/>
 					))}
+
+				{nodeData.iterable && (
+					<>
+						<Divider />
+						<div className="flex flex-row gap-2 p-2 pb-0">
+							<Icon className="text-foreground-400" icon="mdi:information" />
+							<p className="text-tiny text-foreground-400">
+								<Trans>this node is an iterator.</Trans>
+							</p>
+						</div>
+					</>
+				)}
 			</CardBody>
 		</Card>
 	);
-}
+});
+
+export default DefaultNodeRenderer;
 
 const getEntryComponent = <TDefault,>(
 	renderOptions: DefaultNodeRenderOptions,
@@ -271,7 +283,7 @@ function NodePropertyRenderer(props: {
 			{(separate === "before" || separate === "both") && <Divider />}
 			<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
 				<div className="relative flex flex-row items-start gap-4">
-					{!shouldHideLabel(props.property) && (
+					{props.renderOptions.showLabel(props.name) && (
 						<div className="flex flex-col items-start gap-1 pl-4">
 							<p className="max-w-64 text-start">
 								{props.renderOptions.title(props.name)}

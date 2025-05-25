@@ -83,7 +83,17 @@ nodesScope(() => {
 		title: msg`grouped list`,
 		inputs: {
 			items: { title: msg`items` },
-			groupBy: { title: msg`group by` },
+			groupCriteria: { title: msg`group criteria`, mode: "dependentOnly" },
+			sortCriteria: {
+				title: msg`sort criteria`,
+				description: msg`affects how the groups will be arranged in the document`,
+				showLabel: true,
+				mode: "independentOnly",
+				options: {
+					ascending: { title: msg`in ascending order` },
+					descending: { title: msg`in descending order` },
+				},
+			},
 			title: { title: msg`group title` },
 		},
 		outputs: {

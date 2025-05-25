@@ -23,6 +23,7 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 	outputSchema: v.object({
 		object: generic("T"),
 	}),
+	iterable: true,
 });
 
 nodesScope(() => {

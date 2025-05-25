@@ -17,7 +17,7 @@ import {
 import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
 import { dotnetRuntimeExports } from "../../../../integrations/microsoft/common/runtime";
-import { logger } from "../../../../logger";
+
 registerHandler(word.WORD_TEXT_NODE, (ctx) => {
 	return {
 		result: {
@@ -48,21 +48,29 @@ registerAsyncHandler(word.WORD_LIST_NODE, async (ctx) => {
 
 registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 	const groups = await ctx["~reduce"]<
-		Record<string, MicrosoftWordGroupedListItem>
+		(MicrosoftWordGroupedListItem & { value: string })[]
 	>((acc, cur) => {
-		if (!(cur.groupBy in acc))
-			acc[cur.groupBy] = { items: cur.items, title: cur.title };
-		else
-			acc[cur.groupBy] = {
-				items: acc[cur.groupBy].items.concat(cur.items),
-				title: acc[cur.groupBy].title,
-			};
+		const group = acc.find((g) => g.value === cur.groupCriteria);
+		if (group) group.items = group.items.concat(cur.items);
+		else {
+			acc.push({
+				items: cur.items,
+				title: cur.title,
+				value: cur.groupCriteria,
+			});
+		}
 		return acc;
-	}, {});
+	}, []);
+
+	const ascendingGroups = groups.sort((a, b) =>
+		a.value > b.value ? 1 : b.value > a.value ? -1 : 0,
+	);
+	if (ctx.sortCriteria === "descending") ascendingGroups.reverse();
+
 	return {
 		result: {
 			type: MicrosoftWordPlaceholderType.GROUPED_LIST as const,
-			groups: Object.values(groups),
+			groups: groups,
 		},
 	};
 });

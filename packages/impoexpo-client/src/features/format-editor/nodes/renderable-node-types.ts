@@ -71,6 +71,7 @@ export type NodePropertyMetadata<
 			? // biome-ignore lint/complexity/noBannedTypes: empty type required here
 				{}
 			: {
+					showLabel: boolean;
 					options: Partial<
 						Record<
 							Exclude<NodePropertyOptions<TProperty>, bigint>,
@@ -160,6 +161,16 @@ export class NodeRenderOptions<
 		key: TKey,
 	): string {
 		return localizableString(this.property(key)?.placeholder ?? String(key));
+	}
+
+	public showLabel<TInputName extends keyof TSInput>(
+		inputName: TInputName,
+	): boolean {
+		const input = this.input(inputName);
+		if (!input || !("options" in input)) return true;
+		return "showLabel" in input
+			? ((input.showLabel as boolean | undefined) ?? false)
+			: false;
 	}
 
 	public options<TInputName extends keyof TSInput>(

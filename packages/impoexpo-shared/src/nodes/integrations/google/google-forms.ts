@@ -16,5 +16,6 @@ export const createGoogleFormsBaseNode = (
 		category: GOOGLE_FORMS_INTEGRATION_ID,
 		name: `form-${id}`,
 		outputSchema: v.object(entries),
+		iterable: true,
 	});
 };

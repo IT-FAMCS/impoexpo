@@ -5,6 +5,7 @@ import type {
 	BaseNodeEntry,
 } from "./node-types";
 import * as v from "valibot";
+import { schemaToString } from "./schema-string-conversions";
 
 export const generic = <T extends string>(name: T) =>
 	v.pipe(v.unknown(), v.metadata({ metadataType: "generic", typeName: name }));
@@ -161,17 +162,64 @@ export const findCompatibleEntry = (
 			: Object.keys(toNode.inputSchema?.entries ?? {});
 	for (const key of entries) {
 		const toEntry = toNode.entry(key);
-		if (
-			fromEntry.schema.type === toEntry.type ||
-			(toEntry.generic && !fromEntry.generic) ||
-			(!toEntry.generic && fromEntry.generic)
-		)
-			return toEntry;
+		if (entriesCompatible(fromEntry, toEntry)) return toEntry;
 	}
 
 	throw new Error(
 		`couldn't find a compatible entry between ${fromNode.category}-${fromNode.name} <=> ${toNode.category}-${toNode.name} (entry ${fromEntryKey}, expects ${fromEntry.type})`,
 	);
+};
+
+export const entriesCompatible = (
+	sourceEntry: BaseNodeEntry,
+	targetEntry: BaseNodeEntry,
+) => {
+	const isUnionOrEqual = (
+		source: ObjectEntry,
+		target: ObjectEntry,
+	): boolean => {
+		if (isUnion(target))
+			return target.options.some((opt) => isUnionOrEqual(source, opt));
+		return schemaToString(source) === schemaToString(target);
+	};
+
+	// allows connecting multiple output of the same type to an array input
+	if (
+		isArray(targetEntry.schema) &&
+		(isUnionOrEqual(sourceEntry.schema, targetEntry.schema.item) ||
+			isGeneric(getRootSchema(targetEntry.schema.item)))
+	) {
+		return true;
+	}
+
+	if (
+		(sourceEntry.generic && !targetEntry.generic) ||
+		(!sourceEntry.generic && targetEntry.generic)
+	) {
+		const genericEntry = sourceEntry.generic ? sourceEntry : targetEntry;
+		const nonGenericEntry = sourceEntry.generic ? targetEntry : sourceEntry;
+
+		const compatibleWithGenericEntry = (
+			generic: ObjectEntry,
+			nonGeneric: ObjectEntry,
+		): boolean => {
+			if (isNullable(generic) && !isNullable(nonGeneric)) return false;
+			if (isNullable(generic) && isNullable(nonGeneric))
+				return compatibleWithGenericEntry(generic.wrapped, nonGeneric.wrapped);
+
+			if (isArray(generic) && !isArray(nonGeneric)) return false;
+			if (isArray(generic) && isArray(nonGeneric))
+				return compatibleWithGenericEntry(generic.item, nonGeneric.item);
+
+			return true;
+		};
+
+		return compatibleWithGenericEntry(
+			genericEntry.schema,
+			nonGenericEntry.schema,
+		);
+	}
+	return isUnionOrEqual(sourceEntry.schema, targetEntry.schema);
 };
 
 export const genericEntries = (entry: ObjectEntry): string[] | undefined => {

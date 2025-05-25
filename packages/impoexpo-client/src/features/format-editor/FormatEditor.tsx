@@ -5,16 +5,24 @@ import {
 	Controls,
 	type Edge,
 	type FinalConnectionState,
+	type OnSelectionChangeFunc,
 	Panel,
 	ReactFlow,
 	getOutgoers,
+	useOnSelectionChange,
 	useReactFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
 import { Button, Input, Kbd, Tooltip, useDisclosure } from "@heroui/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	type MouseEvent as ReactMouseEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { useShallow } from "zustand/react/shallow";
 import { nodeSchemasCompatible } from "./nodes/renderable-node-helpers";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
@@ -22,13 +30,15 @@ import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
 import { useFormatEditorStore, useFormatEditorTemporalStore } from "./store";
-import useMousePosition from "../../hooks/useMousePosition";
 import { Icon } from "@iconify/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Trans } from "@lingui/react/macro";
 import type { ProjectNode } from "./nodes/renderable-node-types";
 import { useProjectStore } from "@/stores/project";
 import dagre from "@dagrejs/dagre";
+import FormatEditorContextMenu, {
+	type FormatEditorContextMenuRef,
+} from "./FormatEditorContextMenu";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -67,6 +77,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		onEdgesDelete,
 		onConnectEnd,
 		setNodes,
+		duplicateNode,
 	} = useFormatEditorStore();
 	const { undo, redo, futureStates, pastStates } = useFormatEditorTemporalStore(
 		(state) => state,
@@ -83,10 +94,32 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
+
 	// biome-ignore lint/style/noNonNullAssertion: will be initialized as soon as possible
 	const containerRef = useRef<HTMLDivElement>(null!);
+	// biome-ignore lint/style/noNonNullAssertion: same thing
+	const contextMenuRef = useRef<FormatEditorContextMenuRef>(null!);
 
-	const mousePosition = useMousePosition();
+	const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
+	const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+	const onSelectionChange = useCallback<
+		OnSelectionChangeFunc<ProjectNode, Edge>
+	>((selection) => {
+		setSelectedNodes(selection.nodes.map((n) => n.id));
+		setSelectedEdges(selection.edges.map((e) => e.id));
+	}, []);
+	useOnSelectionChange<ProjectNode>({ onChange: onSelectionChange });
+
+	useHotkeys(
+		"ctrl+d",
+		() => {
+			if (contextMenuRef.current.isOpen()) return;
+			for (const id of selectedNodes) duplicateNode(id);
+		},
+		{ preventDefault: true },
+	);
+
+	const mousePositionRef = useRef<{ x: number; y: number } | undefined>();
 	useHotkeys(
 		"space",
 		() => {
@@ -94,8 +127,8 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				setFilters([]);
 				setNewNodeInformation({
 					position: screenToFlowPosition({
-						x: mousePosition.x ?? 0,
-						y: mousePosition.y ?? 0,
+						x: mousePositionRef.current?.x ?? 0,
+						y: mousePositionRef.current?.y ?? 0,
 					}),
 				});
 				openSearchModal();
@@ -114,11 +147,17 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		setColorMode(
 			(localStorage.getItem(ThemeProps.KEY) as ColorMode | null) ?? "light",
 		);
+
+		const updateMousePosition = (ev: MouseEvent) => {
+			mousePositionRef.current = { x: ev.clientX, y: ev.clientY };
+		};
+		window.addEventListener("mousemove", updateMousePosition);
+		return () => window.removeEventListener("mousemove", updateMousePosition);
 	}, []);
 
 	const isValidConnection = useCallback(
 		(connection: Connection | Edge) =>
-			nodeSchemasCompatible(connection, nodes, edges) &&
+			nodeSchemasCompatible(connection, nodes) &&
 			!connectionHasCycles(connection, nodes, edges),
 		[nodes, edges],
 	);
@@ -161,6 +200,14 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		fitView();
 	}, [nodes, edges, fitView, setNodes]);
 
+	const onNodeContextMenu = useCallback(
+		(ev: ReactMouseEvent, node: ProjectNode) => {
+			ev.preventDefault();
+			contextMenuRef.current.trigger(node, { x: ev.clientX, y: ev.clientY });
+		},
+		[],
+	);
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<ReactFlow
@@ -179,6 +226,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				onReconnectEnd={onReconnectEnd}
 				onNodesDelete={onNodesDelete}
 				onEdgesDelete={onEdgesDelete}
+				onNodeContextMenu={onNodeContextMenu}
 				isValidConnection={isValidConnection}
 			>
 				<Controls />
@@ -254,6 +302,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				isOpen={isSearchModalOpen}
 				onOpenChange={onSearchModalOpenChange}
 			/>
+			<FormatEditorContextMenu ref={contextMenuRef} />
 		</div>
 	);
 }

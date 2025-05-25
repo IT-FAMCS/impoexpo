@@ -25,6 +25,7 @@ export const REPEAT_NODE = new BaseNode({
 	outputSchema: v.object({
 		iteration: v.pipe(v.number()),
 	}),
+	iterable: true,
 });
 
 export const THROW_ERROR_IF_NULL_NODE = new BaseNode({

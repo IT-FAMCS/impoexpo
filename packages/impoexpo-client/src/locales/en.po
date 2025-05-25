@@ -54,21 +54,37 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/FormatEditor.tsx:187
+#: src/features/format-editor/DefaultNodeRenderer.tsx:109
+msgid "this node is an iterator."
+msgstr "this node is an iterator."
+
+#: src/features/format-editor/FormatEditor.tsx:235
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:203
+#: src/features/format-editor/FormatEditor.tsx:251
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:219
+#: src/features/format-editor/FormatEditor.tsx:267
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:247
+#: src/features/format-editor/FormatEditor.tsx:295
 msgid "done"
 msgstr "done"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:64
+msgid "duplicate"
+msgstr "duplicate"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:76
+msgid "this node cannot be removed as it's not searchable and is tied to an integration."
+msgstr "this node cannot be removed as it's not searchable and is tied to an integration."
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:84
+msgid "delete"
+msgstr "delete"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:12
 #: src/features/format-editor/nodes/builtin/array.tsx:21
@@ -372,7 +388,7 @@ msgstr "replacement"
 #: src/features/format-editor/nodes/common.tsx:56
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:68
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:78
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:99
 msgid "result"
 msgstr "result"
 
@@ -723,10 +739,30 @@ msgid "grouped list"
 msgstr "grouped list"
 
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:86
-msgid "group by"
-msgstr "group by"
+msgid "group criteria"
+msgstr "group criteria"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:87
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
+#~ msgid "group by"
+#~ msgstr "group by"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
+msgid "sort criteria"
+msgstr "sort criteria"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:89
+msgid "affects how the groups will be arranged in the document"
+msgstr "affects how the groups will be arranged in the document"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:92
+msgid "in ascending order"
+msgstr "in ascending order"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
+msgid "in descending order"
+msgstr "in descending order"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
 msgid "group title"
 msgstr "group title"
 

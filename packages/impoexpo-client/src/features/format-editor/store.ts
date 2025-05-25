@@ -53,10 +53,7 @@ import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
 import { useStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import {
-	schemaFromString,
-	schemaToString,
-} from "@impoexpo/shared/nodes/schema-string-conversions";
+import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
 import { filterObject } from "@impoexpo/shared/nodes/node-utils";
 
 export type PersistentGenericNodeData = Record<
@@ -117,7 +114,15 @@ export type FormatEditorStore = {
 		fromHandleId: string,
 		position: { x: number; y: number },
 	) => void;
-	addNewNode: (type: string, position: { x: number; y: number }) => void;
+	addNewNode: (
+		type: string,
+		position: { x: number; y: number },
+		data?: ProjectNode["data"],
+	) => void;
+
+	duplicateNode: (id?: string) => void;
+	isNodeRemovable: (id?: string) => boolean;
+
 	resolveGenericNode: (
 		base: {
 			node: DefaultBaseNode;
@@ -145,10 +150,15 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			edges: [],
 			genericNodes: {},
 
-			onNodesChange: (changes) =>
+			onNodesChange: (changes) => {
 				set((state) => {
-					state.nodes = applyNodeChanges(changes, state.nodes);
-				}),
+					// not every node can be removed, see isNodeRemovable
+					const allowedChanges = changes.filter(
+						(ch) => ch.type !== "remove" || state.isNodeRemovable(ch.id),
+					);
+					state.nodes = applyNodeChanges(allowedChanges, state.nodes);
+				});
+			},
 			onEdgesChange: (changes) =>
 				set((state) => {
 					state.edges = applyEdgeChanges(changes, state.edges);
@@ -382,17 +392,42 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				return getBaseNode(type);
 			},
 
-			addNewNode(type, position) {
+			addNewNode(type, position, data?) {
 				const id = getNodeId(type);
 				const newNode = {
 					id: id,
 					position: position,
-					data: {},
+					data: data ?? {},
 					type: type,
 				} satisfies ProjectNode;
 				set((state) => {
 					state.nodes.push(newNode);
 				});
+			},
+
+			duplicateNode(id) {
+				const node = get().nodes.find((n) => n.id === id);
+				if (!node?.type) return;
+				get().addNewNode(
+					node.type,
+					{
+						x: node.position.x,
+						y:
+							node.position.y +
+							(node.measured?.height ?? node.height ?? 0) +
+							25,
+					},
+					node.data,
+				);
+			},
+
+			isNodeRemovable(id) {
+				const node = get().nodes.find((n) => n.id === id);
+				if (!node?.type) return false;
+				return (
+					(getNodeRenderOptions(node.type).raw.searchable ?? true) ||
+					get().nodes.filter((n) => n.type === node.type).length !== 1
+				);
 			},
 
 			setNodeEntry(id, entry, value) {
