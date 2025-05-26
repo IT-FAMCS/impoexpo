@@ -35,4 +35,38 @@ nodesScope(() => {
 			object: { title: msg`object` },
 		},
 	});
+
+	registerWithDefaultRenderer(arrayNodes.ARRAY_IS_FIRST_NODE, {
+		title: msg`is this the first iteration?`,
+		aliases: msg`is first entry, is first object`,
+		inputs: {
+			object: {
+				title: msg`object`,
+				description: msg`must be connected to an iterator node. otherwise, will always return false.`,
+				mode: "dependentOnly",
+			},
+		},
+		outputs: {
+			first: {
+				title: msg`first iteration?`,
+			},
+		},
+	});
+
+	registerWithDefaultRenderer(arrayNodes.ARRAY_IS_LAST_NODE, {
+		title: msg`is this the last iteration?`,
+		aliases: msg`is last entry, is last object`,
+		inputs: {
+			object: {
+				title: msg`object`,
+				description: msg`must be connected to an iterator node. otherwise, will always return false.`,
+				mode: "dependentOnly",
+			},
+		},
+		outputs: {
+			last: {
+				title: msg`last iteration?`,
+			},
+		},
+	});
 });

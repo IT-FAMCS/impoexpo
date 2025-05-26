@@ -29,7 +29,22 @@ export type NodeExecutorContext<TIn extends v.ObjectEntries> = {
 		reducer: (acc: T, cur: ResolveEntries<TIn>) => T,
 		initial: T,
 	) => Promise<T>;
+	"~iterator": () => Iterator | undefined;
 } & ResolveEntries<TIn>;
+
+export type InputPath = {
+	node: string;
+	entry: string;
+	depth: number;
+	parent?: Record<string, InputPath[]>;
+};
+
+export type Iterator = {
+	node: string;
+	length: number;
+	items: ResolveEntries<v.ObjectEntries>[];
+	index: number;
+};
 
 export type NodeOutput<TOut extends v.ObjectEntries> =
 	| ResolveEntries<TOut>

@@ -1,16 +1,4 @@
-import {
-	type GenericSchema,
-	array,
-	boolean,
-	nullable,
-	number,
-	record,
-	string,
-	union,
-	type ObjectEntries,
-	type ObjectSchema,
-	object,
-} from "valibot";
+import * as v from "valibot";
 import type { ObjectEntry } from "./node-types";
 import {
 	isArray,
@@ -27,15 +15,18 @@ import {
 	resolveCustomType,
 	customType,
 	getCustomTypeGenerics,
+	dateTime,
+	isDateTime,
 } from "./node-utils";
 
 const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
-	string: string,
-	number: number,
-	boolean: boolean,
+	string: v.string,
+	number: v.number,
+	boolean: v.boolean,
+	DateTime: () => dateTime(),
 };
-const customTypeSchemaConverters: Record<string, () => ObjectEntries> = {};
-export const registerCustomType = <T extends ObjectEntries>(
+const customTypeSchemaConverters: Record<string, () => v.ObjectEntries> = {};
+export const registerCustomType = <T extends v.ObjectEntries>(
 	name: string,
 	generator: () => T,
 ) => {
@@ -48,17 +39,18 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 	// (something) | null
 	const nullRegexMatches = /(.*\S)\s*\|\s?null/.exec(str);
-	if (nullRegexMatches) return nullable(schemaFromString(nullRegexMatches[1]));
+	if (nullRegexMatches)
+		return v.nullable(schemaFromString(nullRegexMatches[1]));
 
 	// array
 	const arrayRegexMatches = /Array<(.+)>/.exec(str);
-	if (arrayRegexMatches) return array(schemaFromString(arrayRegexMatches[1]));
+	if (arrayRegexMatches) return v.array(schemaFromString(arrayRegexMatches[1]));
 
 	// dictionary
 	const dictionaryRegexMatches = /Dictionary<(.+),\s?(.+)>/.exec(str);
 	if (dictionaryRegexMatches)
-		return record(
-			schemaFromString(dictionaryRegexMatches[1]) as GenericSchema<
+		return v.record(
+			schemaFromString(dictionaryRegexMatches[1]) as v.GenericSchema<
 				string,
 				string | number | symbol
 			>,
@@ -67,7 +59,7 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 	// union
 	if (str.split("|").length > 1) {
-		return union(str.split("|").map((p) => schemaFromString(p)));
+		return v.union(str.split("|").map((p) => schemaFromString(p)));
 	}
 
 	// custom type
@@ -104,7 +96,8 @@ export const schemaToString = (schema: ObjectEntry): string => {
 		return `Dictionary<${schemaToString(schema.key)}, ${schemaToString(schema.value)}>`;
 	if (isNullable(schema))
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
-
+		
+	if (isDateTime(schema)) return "DateTime";
 	if (isCustomType(schema)) {
 		const generics = Object.entries(getCustomTypeGenerics(schema));
 		return `${getCustomTypeName(schema)}${generics.length !== 0 ? `<${generics.map(([key, schema]) => (schema ? schemaToString(schema) : key)).join(", ")}>` : ""}`;

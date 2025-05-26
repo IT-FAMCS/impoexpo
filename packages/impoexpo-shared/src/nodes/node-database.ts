@@ -25,7 +25,7 @@ export const unregisterBaseNodes = (
 	}
 };
 
-export const nodeInitializers: Array<() => void> = new Array();
+export const nodeInitializers: (() => void)[] = [];
 export let nodesInitialized = false;
 
 export const initializeNodes = () => {

@@ -12,10 +12,10 @@ export enum TransferProgressCardState {
 export type TransferProgressCardStore = {
 	state: TransferProgressCardState;
 	jobId?: string;
-	outputs: Array<ProjectOutput>;
+	outputs: ProjectOutput[];
 	setState: (ns: TransferProgressCardState) => void;
 	setJobId: (id: string) => void;
-	setOutputs: (outputs: Array<ProjectOutput>) => void;
+	setOutputs: (outputs: ProjectOutput[]) => void;
 };
 
 export const useTransferProgressCardStore =

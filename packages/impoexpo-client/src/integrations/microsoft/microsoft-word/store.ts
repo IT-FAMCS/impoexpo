@@ -17,7 +17,7 @@ export type MicrosoftWordHydratorStore = {
 	state: MicrosoftWordHydratorState;
 	setState: (newState: MicrosoftWordHydratorState) => void;
 
-	documents: Array<MicrosoftOfficeDocument>;
+	documents: MicrosoftOfficeDocument[];
 	currentDocument?: MicrosoftOfficeDocument;
 	addDocument: (document: MicrosoftOfficeDocument) => void;
 	setCurrentDocument: (document?: MicrosoftOfficeDocument) => void;

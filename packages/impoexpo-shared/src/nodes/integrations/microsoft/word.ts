@@ -44,6 +44,7 @@ export const WORD_LIST_NODE = new BaseNode({
 	inputSchema: v.object({
 		sublistTitle: v.nullable(WordTextSchema),
 		items: v.array(WordPatchSchema),
+		automaticSeparators: v.optional(v.boolean(), false),
 	}),
 	outputSchema: v.object({
 		result: WordListSchema,
@@ -61,6 +62,7 @@ export const WORD_GROUPED_LIST_NODE = new BaseNode({
 		),
 		title: WordTextSchema,
 		items: v.array(WordPatchSchema),
+		automaticSeparators: v.optional(v.boolean(), false),
 	}),
 	outputSchema: v.object({
 		result: WordGroupedListSchema,

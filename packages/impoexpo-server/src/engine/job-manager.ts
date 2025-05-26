@@ -28,7 +28,7 @@ export class Job {
 	> = {};
 
 	public files: Record<string, Buffer> = {};
-	public outputs: Array<ProjectOutput> = [];
+	public outputs: ProjectOutput[] = [];
 
 	constructor(id: string, project: Project) {
 		this.id = id;

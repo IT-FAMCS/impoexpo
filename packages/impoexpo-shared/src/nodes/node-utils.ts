@@ -6,6 +6,15 @@ import type {
 } from "./node-types";
 import * as v from "valibot";
 import { schemaToString } from "./schema-string-conversions";
+import { DateTime } from "luxon";
+
+const dateTimeValidator = (input: unknown) => DateTime.isDateTime(input);
+export const dateTime = () => v.custom<DateTime>(dateTimeValidator);
+export const isDateTime = (
+	schema: ObjectEntry,
+): schema is ReturnType<typeof dateTime> => {
+	return "check" in schema && schema.check === dateTimeValidator;
+};
 
 export const generic = <T extends string>(name: T) =>
 	v.pipe(v.unknown(), v.metadata({ metadataType: "generic", typeName: name }));

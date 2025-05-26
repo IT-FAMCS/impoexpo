@@ -14,9 +14,11 @@ import {
 	GOOGLE_FORMS_VERIFY_ROUTE,
 } from "@impoexpo/shared/schemas/integrations/google/forms/static";
 import type { ListGoogleForm } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
-import type {
-	GoogleFormsLayout,
-	GoogleFormsLayoutItem,
+import {
+	GoogleFormsChoiceQuestionType,
+	GoogleFormsQuestionType,
+	type GoogleFormsLayout,
+	type GoogleFormsLayoutItem,
 } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 
 import {
@@ -72,41 +74,79 @@ registerIntegration({
 					}
 
 					const layout: GoogleFormsLayout = {
-						documentTitle: response.data.info?.documentTitle ?? "",
-						title: response.data.info?.title ?? null,
+						title:
+							response.data.info?.title ??
+							response.data.info?.documentTitle ??
+							"",
 						description: response.data.info?.description ?? null,
 						items: [],
 					};
 					for (const rawItem of response.data.items ?? []) {
 						if (!rawItem.questionItem?.question) continue;
-						const item: GoogleFormsLayoutItem = {
+						const question = rawItem.questionItem.question;
+
+						const item: Partial<GoogleFormsLayoutItem> = {
 							id: rawItem.questionItem.question.questionId ?? "",
 							title: rawItem.title ?? null,
 							description: rawItem.description ?? null,
 							required: rawItem.questionItem.question.required ?? false,
-							type: "unknown",
 						};
-						if (
-							rawItem.questionItem.question.dateQuestion ||
-							rawItem.questionItem.question.timeQuestion
-						)
-							item.type = "string";
-						if (
-							rawItem.questionItem.question.scaleQuestion ||
-							rawItem.questionItem.question.ratingQuestion
-						)
-							item.type = "number";
-						if (rawItem.questionItem.question.textQuestion)
-							item.type = "string";
-						if (rawItem.questionItem.question.fileUploadQuestion)
-							item.type = "Array<string>";
-						if (rawItem.questionItem.question.choiceQuestion)
+
+						if (question.choiceQuestion?.type) {
+							item.questionMetadata = {
+								type: GoogleFormsQuestionType.CHOICE,
+								choiceType:
+									GoogleFormsChoiceQuestionType[
+										question.choiceQuestion
+											.type as keyof typeof GoogleFormsChoiceQuestionType
+									],
+							};
 							item.type =
-								rawItem.questionItem.question.choiceQuestion.type === "CHECKBOX"
+								item.questionMetadata.choiceType ===
+								GoogleFormsChoiceQuestionType.CHECKBOX
 									? "Array<string>"
 									: "string";
-						if (!item.required) item.type += " | null";
-						layout.items.push(item);
+						}
+
+						if (question.dateQuestion) {
+							item.questionMetadata = {
+								type: GoogleFormsQuestionType.DATE,
+								includeTime: question.dateQuestion.includeTime ?? false,
+								includeYear: question.dateQuestion.includeYear ?? false,
+							};
+							item.type = "DateTime";
+						}
+
+						if (question.fileUploadQuestion?.maxFiles) {
+							item.questionMetadata = {
+								type: GoogleFormsQuestionType.FILE_UPLOAD,
+								allowMultiple: question.fileUploadQuestion.maxFiles > 1,
+							};
+							item.type = "Array<GoogleFormsFile>";
+						}
+
+						if (question.ratingQuestion) {
+							item.questionMetadata = { type: GoogleFormsQuestionType.RATING };
+							item.type = "number";
+						}
+
+						if (question.scaleQuestion) {
+							item.questionMetadata = { type: GoogleFormsQuestionType.SCALE };
+							item.type = "number";
+						}
+
+						if (question.textQuestion) {
+							item.questionMetadata = { type: GoogleFormsQuestionType.TEXT };
+							item.type = "string";
+						}
+
+						if (question.timeQuestion) {
+							item.questionMetadata = { type: GoogleFormsQuestionType.TIME };
+							item.type = "DateTime";
+						}
+
+						if (!question.required) item.type += " | null";
+						layout.items.push(item as GoogleFormsLayoutItem);
 					}
 
 					res.send(layout);

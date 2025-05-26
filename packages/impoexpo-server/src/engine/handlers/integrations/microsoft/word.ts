@@ -12,6 +12,7 @@ import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 import {
 	type MicrosoftWordGroupedListItem,
 	type MicrosoftWordPatch,
+	type MicrosoftWordTextPatch,
 	MicrosoftWordPlaceholderType,
 } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
@@ -37,6 +38,20 @@ registerAsyncHandler(word.WORD_LIST_NODE, async (ctx) => {
 		},
 		[],
 	);
+
+	if (ctx.automaticSeparators) {
+		// TODO: having this behaviour hardcoded is probably
+		// not a good solution. however, implementing this
+		// manually is WAY harder and is out of the scope of
+		// a 1.0 release.
+		for (let idx = 0; idx < items.length; idx++) {
+			if (items[idx].type === MicrosoftWordPlaceholderType.TEXT) {
+				(items[idx] as MicrosoftWordTextPatch).text +=
+					idx === items.length - 1 ? "." : ";";
+			}
+		}
+	}
+
 	return {
 		result: {
 			type: MicrosoftWordPlaceholderType.LIST as const,
@@ -66,6 +81,21 @@ registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 		a.value > b.value ? 1 : b.value > a.value ? -1 : 0,
 	);
 	if (ctx.sortCriteria === "descending") ascendingGroups.reverse();
+
+	if (ctx.automaticSeparators) {
+		// TODO: having this behaviour hardcoded is probably
+		// not a good solution. however, implementing this
+		// manually is WAY harder and is out of the scope of
+		// a 1.0 release.
+		for (const group of groups) {
+			for (let idx = 0; idx < group.items.length; idx++) {
+				if (group.items[idx].type === MicrosoftWordPlaceholderType.TEXT) {
+					(group.items[idx] as MicrosoftWordTextPatch).text +=
+						idx === group.items.length - 1 ? "." : ";";
+				}
+			}
+		}
+	}
 
 	return {
 		result: {

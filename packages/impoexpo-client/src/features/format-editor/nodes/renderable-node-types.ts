@@ -147,7 +147,8 @@ export class NodeRenderOptions<
 		key: TKey,
 	): string {
 		const property = this.property(key);
-		if (property?.description) return localizableString(property.description);
+		if (property?.description !== undefined)
+			return localizableString(property.description);
 		return this.node.entry(String(key)).type;
 	}
 

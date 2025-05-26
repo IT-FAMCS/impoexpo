@@ -26,6 +26,33 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 	iterable: true,
 });
 
+export const ARRAY_IS_FIRST_NODE = new BaseNode({
+	category: "array",
+	name: "is-first",
+	inputSchema: v.object({
+		object: generic("T"),
+	}),
+	outputSchema: v.object({
+		first: v.boolean(),
+	}),
+});
+
+export const ARRAY_IS_LAST_NODE = new BaseNode({
+	category: "array",
+	name: "is-last",
+	inputSchema: v.object({
+		object: generic("T"),
+	}),
+	outputSchema: v.object({
+		last: v.boolean(),
+	}),
+});
+
 nodesScope(() => {
-	registerBaseNodes(ARRAY_LENGTH_NODE, ARRAY_FOREACH_NODE);
+	registerBaseNodes(
+		ARRAY_LENGTH_NODE,
+		ARRAY_FOREACH_NODE,
+		ARRAY_IS_FIRST_NODE,
+		ARRAY_IS_LAST_NODE,
+	);
 });

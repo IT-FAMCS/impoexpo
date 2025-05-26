@@ -194,8 +194,8 @@ const getEntryComponent = <TDefault,>(
 
 		return (
 			<Select
-				style={{ minWidth: "10rem" }}
-				popoverProps={{ style: { minWidth: "fit-content" } }}
+				style={{ minWidth: "15rem" }}
+				popoverProps={{ className: "min-w-fit" }}
 				aria-label={renderOptions.placeholder(handleName)}
 				placeholder={renderOptions.placeholder(handleName)}
 				className="nodrag"

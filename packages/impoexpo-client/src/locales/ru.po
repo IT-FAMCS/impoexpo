@@ -56,11 +56,11 @@ msgstr "попробовать снова"
 
 #: src/features/format-editor/DefaultNodeRenderer.tsx:109
 msgid "this node is an iterator."
-msgstr "этот граф — итератор."
+msgstr "этот узел — итератор."
 
 #: src/features/format-editor/FormatEditor.tsx:235
 msgid "layout nodes"
-msgstr "упорядочить графы"
+msgstr "упорядочить узлы"
 
 #: src/features/format-editor/FormatEditor.tsx:251
 msgid "undo"
@@ -80,7 +80,7 @@ msgstr "дублировать"
 
 #: src/features/format-editor/FormatEditorContextMenu.tsx:76
 msgid "this node cannot be removed as it's not searchable and is tied to an integration."
-msgstr "этот граф не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
+msgstr "этот узел не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
 
 #: src/features/format-editor/FormatEditorContextMenu.tsx:84
 msgid "delete"
@@ -113,9 +113,40 @@ msgid "for each item in the array, foreach"
 msgstr "для каждого элемента в массива, для каждого"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:35
+#: src/features/format-editor/nodes/builtin/array.tsx:44
+#: src/features/format-editor/nodes/builtin/array.tsx:61
 #: src/features/format-editor/nodes/builtin/conditional.tsx:66
 msgid "object"
 msgstr "объект"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:40
+msgid "is this the first iteration?"
+msgstr "это первая итерация?"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:41
+msgid "is first entry, is first object"
+msgstr "первый объект, первый элемент"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:45
+#: src/features/format-editor/nodes/builtin/array.tsx:62
+msgid "must be connected to an iterator node. otherwise, will always return false."
+msgstr "должен быть присоединён к узлу-итератору. в противном случае будет всегда возвращать \"ложь\"."
+
+#: src/features/format-editor/nodes/builtin/array.tsx:51
+msgid "first iteration?"
+msgstr "первая итерация?"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:57
+msgid "is this the last iteration?"
+msgstr "это последняя итерация?"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:58
+msgid "is last entry, is last object"
+msgstr "последний объект, последний элемент"
+
+#: src/features/format-editor/nodes/builtin/array.tsx:68
+msgid "last iteration?"
+msgstr "последняя итерация?"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:12
 msgid "conditional"
@@ -184,6 +215,52 @@ msgstr "сообщение об ошибке"
 #: src/features/format-editor/nodes/builtin/conditional.tsx:64
 #~ msgid "body..."
 #~ msgstr "тело..."
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:15
+msgid "date & time"
+msgstr "дата и время"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:57
+msgid "set locale"
+msgstr "задать локаль"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:58
+msgid "change country, change locale"
+msgstr "изменить язык, изменить страну"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:60
+#: src/features/format-editor/nodes/builtin/date-time.tsx:74
+#: src/features/format-editor/nodes/builtin/date-time.tsx:88
+msgid "date"
+msgstr "дата"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:62
+msgid "locale"
+msgstr "локаль"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:71
+msgid "set time zone"
+msgstr "задать часовой пояс"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:72
+msgid "shift date, shift time, change time zone"
+msgstr "сместить дату, сместить время, изменить часовой пояс"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:76
+msgid "time zone"
+msgstr "часовой пояс"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:85
+msgid "date -> string (preset)"
+msgstr "дата -> строка (по встроенному шаблону)"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:86
+msgid "convert date to string, format date to string"
+msgstr "превратить дату в строку, форматировать дату"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:90
+msgid "preset"
+msgstr "шаблон"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
@@ -392,9 +469,9 @@ msgstr "замена"
 #: src/features/format-editor/nodes/builtin/strings.tsx:124
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:99
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:71
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:111
 msgid "result"
 msgstr "результат"
 
@@ -448,7 +525,7 @@ msgstr "аргументы"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:75
 msgid "the order in which nodes are connected matters here!"
-msgstr "порядок, в котором присоединяются графы, здесь очень важен!"
+msgstr "порядок, в котором присоединяются узлы, здесь очень важен!"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:84
 msgid "number -> string"
@@ -496,7 +573,7 @@ msgstr "ввод"
 
 #: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:131
 msgid "enter the name, category or tag of the needed node..."
-msgstr "введите название, категорию или тег нужного графа..."
+msgstr "введите название, категорию или тег нужного узла..."
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:158
 #: src/pages/WelcomePage.tsx:47
@@ -640,7 +717,7 @@ msgstr "получаем макет формы"
 
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:88
 msgid "failed to receive the form's layout (and create a node for it)"
-msgstr "не удалось получить макет формы (и создать для неё граф)"
+msgstr "не удалось получить макет формы (и создать для неё узел)"
 
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:90
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:128
@@ -718,49 +795,59 @@ msgstr "вернуться к загрузке файла"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
 #: src/integrations/microsoft/microsoft-word/integration.tsx:63
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:57
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:60
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:63
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:65
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:66
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
 msgid "text"
 msgstr "текст"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:76
 msgid "list"
 msgstr "список"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:75
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:92
 msgid "items"
 msgstr "элементы"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:106
+msgid "automatically separate list items"
+msgstr "автоматически разделять элементы списка"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:81
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:107
+msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
+msgstr "автоматически добавлять точку с запятой (;) к концу каждого элемента списка, кроме последнего, к которому будет добавлена точка (.)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
 msgid "grouped list"
 msgstr "группированный список"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
 msgid "group criteria"
 msgstr "критерий группировки"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
 msgid "sort criteria"
 msgstr "критерий сортировки"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:89
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
 msgid "affects how the groups will be arranged in the document"
 msgstr "влияет на то, в каком порядке распологаются группы в документе"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:92
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
 msgid "in ascending order"
 msgstr "в возрастающем порядке"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:101
 msgid "in descending order"
 msgstr "в убывающем порядке"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:104
 msgid "group title"
 msgstr "заголовок группы"
 

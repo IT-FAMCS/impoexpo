@@ -8,6 +8,8 @@ import {
 	type NodeHandlerFunction,
 	type ResolveEntries,
 	type NodeExecutorContext,
+	type InputPath,
+	type Iterator,
 } from "./node-executor-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
@@ -30,21 +32,8 @@ export const executeJobNodes = async (job: Job) => {
 	logger.level =
 		process.env.VERBOSE_NODE_EXECUTOR === "true" ? "debug" : "info";
 
-	type InputPath = {
-		node: string;
-		entry: string;
-		depth: number;
-		parent?: Record<string, InputPath[]>;
-	};
-
-	type Iterator = {
-		node: string;
-		length: number;
-		items: ResolveEntries<v.ObjectEntries>[];
-	};
-
 	// this will be used for ~reduce
-	let globalIterators: Array<Iterator> = [];
+	let globalIterators: Iterator[] = [];
 
 	const resolveInputPaths = (node: ProjectNode, depth = 1) => {
 		const paths: Record<string, InputPath[]> = {};
@@ -118,6 +107,23 @@ export const executeJobNodes = async (job: Job) => {
 
 		logger.debug(`running ${node.id} at depth ${actualDepth}`);
 
+		const createIteratorGetter = (
+			node: ProjectNode,
+		): NodeExecutorContext<ObjectEntries>["~iterator"] => {
+			return () => {
+				let iterator: Iterator | undefined = undefined;
+				traversePaths(paths, (path) => {
+					if (path.node === node.id && path.parent && !iterator) {
+						iterator = globalIterators.find((it) =>
+							Object.values(path.parent ?? {}).some((paths) =>
+								paths.some((path) => it.node === path.node),
+							),
+						);
+					}
+				});
+				return iterator;
+			};
+		};
 		const createReducer = (
 			node: ProjectNode,
 		): NodeExecutorContext<ObjectEntries>["~reduce"] => {
@@ -152,6 +158,7 @@ export const executeJobNodes = async (job: Job) => {
 						const cleanData: Record<string, NodeOutput<v.ObjectEntries>> = {};
 						for (const it of iterators) {
 							cleanData[it.node] = it.items[idx];
+							it.index = idx;
 						}
 						await runNode(
 							node,
@@ -226,9 +233,7 @@ export const executeJobNodes = async (job: Job) => {
 								)[source.entry];
 								inputs[input] = isArray(schema)
 									? [
-											...(input in inputs
-												? (inputs[input] as Array<unknown>)
-												: []),
+											...(input in inputs ? (inputs[input] as unknown[]) : []),
 											...(Array.isArray(value) ? value : [value]),
 										]
 									: value;
@@ -260,6 +265,7 @@ export const executeJobNodes = async (job: Job) => {
 				...resolveInputs(sourceNode),
 				"~job": job,
 				"~reduce": createReducer(sourceNode),
+				"~iterator": createIteratorGetter(sourceNode),
 				"~persist": persist,
 			});
 			logger.debug("received: %o", output);
@@ -288,6 +294,7 @@ export const executeJobNodes = async (job: Job) => {
 					...inputs,
 					"~job": job,
 					"~reduce": createReducer(node),
+					"~iterator": createIteratorGetter(node),
 					"~persist": persist,
 				});
 			}
@@ -301,6 +308,7 @@ export const executeJobNodes = async (job: Job) => {
 							node: p[0],
 							length: p[1].length,
 							items: p[1],
+							index: 0,
 						}) satisfies Iterator,
 				);
 			const nonIterators: Record<
@@ -356,6 +364,7 @@ export const executeJobNodes = async (job: Job) => {
 							`(depth ${actualDepth}) iterating ${it.node} (${idx + 1}/${iterators[0].length}): %o`,
 							it.items[idx],
 						);
+						it.index = idx;
 						actualPreviousData[it.node] = it.items[idx];
 					}
 					await runNode(

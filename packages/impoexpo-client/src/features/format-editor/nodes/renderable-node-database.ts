@@ -32,9 +32,9 @@ export const importIntegrationNodes = async () => {
 	);
 };
 
-const searchInitializers: Array<
-	(database: Orama<typeof nodesDatabaseSchema>) => void
-> = new Array();
+const searchInitializers: ((
+	database: Orama<typeof nodesDatabaseSchema>,
+) => void)[] = [];
 export const searchScope = (
 	initializer: (database: Orama<typeof nodesDatabaseSchema>) => void,
 ) => searchInitializers.push(initializer);

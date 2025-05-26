@@ -1,8 +1,23 @@
 import * as v from "valibot";
 import type { GoogleFormsLayout } from "../../../schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import { BaseNode } from "../../node-types";
-import { schemaFromString } from "../../schema-string-conversions";
+import {
+	registerCustomType,
+	schemaFromString,
+} from "../../schema-string-conversions";
 import { GOOGLE_FORMS_INTEGRATION_ID } from "../../../schemas/integrations/google/forms/static";
+
+export const GoogleFormsFileSchema = registerCustomType(
+	"GoogleFormsFile",
+	() => ({
+		owner: v.string(),
+		name: v.string(),
+		id: v.string(),
+		link: v.string(),
+		type: v.string(),
+	}),
+);
+export type GoogleFormsFile = v.InferOutput<typeof GoogleFormsFileSchema>;
 
 export const createGoogleFormsBaseNode = (
 	id: string,

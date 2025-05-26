@@ -35,7 +35,10 @@ export const registerMicrosoftWordNode = (
 		if (!options.inputs) continue;
 		options.inputs[placeholder.name] = {
 			title: placeholder.name,
-			description: placeholder.description ?? undefined,
+			description:
+				placeholder.description === "" || placeholder.description === null
+					? undefined
+					: placeholder.description,
 		};
 	}
 
@@ -73,6 +76,10 @@ nodesScope(() => {
 		title: msg`list`,
 		inputs: {
 			items: { title: msg`items` },
+			automaticSeparators: {
+				title: msg`automatically separate list items`,
+				description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
+			},
 		},
 		outputs: {
 			result: { title: msg`result` },
@@ -95,6 +102,10 @@ nodesScope(() => {
 				},
 			},
 			title: { title: msg`group title` },
+			automaticSeparators: {
+				title: msg`automatically separate list items`,
+				description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
+			},
 		},
 		outputs: {
 			result: { title: msg`result` },
