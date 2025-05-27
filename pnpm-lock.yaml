@@ -121,6 +121,9 @@ importers:
       react:
         specifier: 18.3.0
         version: 18.3.0
+      react-confetti-boom:
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.0(react@18.3.0))(react@18.3.0)
       react-dom:
         specifier: 18.3.0
         version: 18.3.0(react@18.3.0)
@@ -3911,6 +3914,13 @@ packages:
   raw-body@2.5.2:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
     engines: {node: '>= 0.8'}
+
+  react-confetti-boom@2.0.0:
+    resolution: {integrity: sha512-KWH1NbONktnT3oEdd+PW0YQqa2spkU6Al3/bAxKoa8Y8bnI+tYFgPT17yhm8VmPyYQ2D66V+5g9uIHjU0nOgTQ==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   react-dom@18.3.0:
     resolution: {integrity: sha512-zaKdLBftQJnvb7FtDIpZtsAIb2MZU087RM8bRDZU8LVCCFYjPTsDZJNFUWPcVz3HFSN1n/caxi0ca4B/aaVQGQ==}
@@ -9034,6 +9044,11 @@ snapshots:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+
+  react-confetti-boom@2.0.0(react-dom@18.3.0(react@18.3.0))(react@18.3.0):
+    dependencies:
+      react: 18.3.0
+      react-dom: 18.3.0(react@18.3.0)
 
   react-dom@18.3.0(react@18.3.0):
     dependencies:

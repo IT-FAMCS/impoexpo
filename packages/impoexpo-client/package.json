@@ -43,6 +43,7 @@
 		"luxon": "^3.6.1",
 		"motion": "^12.11.0",
 		"react": "18.3.0",
+		"react-confetti-boom": "^2.0.0",
 		"react-dom": "18.3.0",
 		"react-dropzone": "^14.3.8",
 		"react-hotkeys-hook": "^5.0.1",

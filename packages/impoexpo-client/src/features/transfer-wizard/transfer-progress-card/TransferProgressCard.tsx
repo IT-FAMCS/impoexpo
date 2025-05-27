@@ -38,6 +38,7 @@ import {
 import { array, parse } from "valibot";
 import { AnimatePresence, motion } from "motion/react";
 import { getFile } from "@/db/files";
+import Confetti from "react-confetti-boom";
 
 export default function TransferProgressCard() {
 	const { state } = useTransferProgressCardStore();
@@ -65,41 +66,44 @@ export default function TransferProgressCard() {
 function ProjectOutputsCard() {
 	const { outputs } = useTransferProgressCardStore();
 	return (
-		<div className="flex flex-col justify-center items-center gap-2">
-			<Icon width={72} icon="mdi:check-bold" />
-			<p className="text-3xl">
-				<b>
-					<Trans>done!</Trans>
-				</b>
-			</p>
-			<Listbox
-				className="border-small rounded-small border-default"
-				disallowEmptySelection
-				selectionMode="none"
-				items={outputs}
-			>
-				{(output) => (
-					<ListboxItem
-						key={output.identifier}
-						startContent={<Icon width={18} icon="mdi:microsoft-word" />}
-						className="p-2"
-						endContent={
-							<Button
-								color="primary"
-								size="sm"
-								onPress={() => {
-									window.location.href = route(
-										`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
-									).href;
-								}}
-								isIconOnly
-								startContent={<Icon width={18} icon="mdi:download" />}
-							/>
-						}
-						title={output.name}
-					/>
-				)}
-			</Listbox>
+		<div className="w-full h-full flex flex-col items-center justify-center relative">
+			<div className="flex flex-col items-center gap-2">
+				<Icon width={72} icon="mdi:check-bold" />
+				<p className="text-3xl">
+					<b>
+						<Trans>done!</Trans>
+					</b>
+				</p>
+				<Listbox
+					className="border-small rounded-small border-default"
+					disallowEmptySelection
+					selectionMode="none"
+					items={outputs}
+				>
+					{(output) => (
+						<ListboxItem
+							key={output.identifier}
+							startContent={<Icon width={18} icon="mdi:microsoft-word" />}
+							className="p-2"
+							endContent={
+								<Button
+									color="primary"
+									size="sm"
+									onPress={() => {
+										window.location.href = route(
+											`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
+										).href;
+									}}
+									isIconOnly
+									startContent={<Icon width={18} icon="mdi:download" />}
+								/>
+							}
+							title={output.name}
+						/>
+					)}
+				</Listbox>
+			</div>
+			<Confetti className="absolute w-full h-full" mode="boom" particleCount={50} launchSpeed={2.0} y={1.0} />
 		</div>
 	);
 }
