@@ -1,0 +1,26 @@
+name: Build the impoexpo website
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+      - name: Setup node.js
+        run: pnpm env use --global lts
+      - name: Install dependencies
+        run: pnpm i
+      - name: Build @impoexpo/client
+        run: pnpm run --filter @impoexpo/client build
+      - name: Copy the dist folder
+        run: |
+          mkdir dist
+          mv ./packages/impoexpo-client/dist dist
+      - name: Upload the dist folder
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: dist
+          path: dist/
