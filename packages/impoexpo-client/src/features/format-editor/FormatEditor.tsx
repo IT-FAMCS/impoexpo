@@ -67,6 +67,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 	const {
 		edges,
 		nodes,
+		recording,
 		onConnect,
 		onEdgesChange,
 		onNodesChange,
@@ -203,10 +204,18 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 	const onNodeContextMenu = useCallback(
 		(ev: ReactMouseEvent, node: ProjectNode) => {
 			ev.preventDefault();
-			contextMenuRef.current.trigger(node, { x: ev.clientX, y: ev.clientY });
+			contextMenuRef.current.trigger(
+				node,
+				{ x: ev.clientX, y: ev.clientY },
+				(ev.target as HTMLElement).closest(
+					".node",
+				) as HTMLDivElement,
+			);
 		},
 		[],
 	);
+
+	useHotkeys("shift+4", layoutNodes);
 
 	return (
 		<div ref={containerRef} className="w-full h-full">
@@ -228,74 +237,81 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				onEdgesDelete={onEdgesDelete}
 				onNodeContextMenu={onNodeContextMenu}
 				isValidConnection={isValidConnection}
+				style={{
+					backgroundColor: recording ? "#00ff00" : "#ffffff",
+				}}
 			>
-				<Controls />
-				<Background size={2} />
-				<Panel position="top-right">
-					<Tooltip content={<Trans>layout nodes</Trans>}>
-						<Button
-							onPress={layoutNodes}
-							isIconOnly
-							startContent={<Icon width={18} icon="mdi:stars" />}
-						/>
-					</Tooltip>
-				</Panel>
-				<Panel position="top-left">
-					<div className="flex flex-row gap-2">
-						{/* TODO */}
-						<Input value="untitled" />
-						<Tooltip
-							delay={500}
-							content={
-								<div className="flex flex-row items-center justify-center gap-2 p-1">
-									<Trans>undo</Trans>
-									<Kbd keys={["ctrl"]}>Z</Kbd>
-								</div>
-							}
-						>
-							<Button
-								onPress={() => undo()}
-								isIconOnly
-								isDisabled={pastStates.length === 0}
-								startContent={<Icon width={18} icon="mdi:undo" />}
-							/>
-						</Tooltip>
-						<Tooltip
-							delay={500}
-							content={
-								<div className="flex flex-row items-center justify-center gap-2 p-1">
-									<Trans>redo</Trans>
-									<Kbd keys={["ctrl", "shift"]}>Z</Kbd>
-								</div>
-							}
-						>
-							<Button
-								onPress={() => redo()}
-								isIconOnly
-								isDisabled={futureStates.length === 0}
-								startContent={<Icon width={18} icon="mdi:redo" />}
-							/>
-						</Tooltip>
-					</div>
-				</Panel>
-				<Panel position="bottom-right">
-					<div className="flex flex-row gap-2">
-						<Button
-							size="lg"
-							className="text-lg gap-2 items-center"
-							color="primary"
-							variant="shadow"
-							endContent={<Icon width={20} icon="mdi:arrow-right" />}
-							onPress={async () => {
-								useProjectStore.getState().collectNodes();
-								await useProjectStore.getState().collectIntegrations();
-								props.doneCallback();
-							}}
-						>
-							<Trans>done</Trans>
-						</Button>
-					</div>
-				</Panel>
+				{!recording && (
+					<>
+						<Controls />
+						<Background size={2} />
+						<Panel position="top-right">
+							<Tooltip content={<Trans>layout nodes</Trans>}>
+								<Button
+									onPress={layoutNodes}
+									isIconOnly
+									startContent={<Icon width={18} icon="mdi:stars" />}
+								/>
+							</Tooltip>
+						</Panel>
+						<Panel position="top-left">
+							<div className="flex flex-row gap-2">
+								{/* TODO */}
+								<Input placeholder="Введите название проекта..." />
+								<Tooltip
+									delay={500}
+									content={
+										<div className="flex flex-row items-center justify-center gap-2 p-1">
+											<Trans>undo</Trans>
+											<Kbd keys={["ctrl"]}>Z</Kbd>
+										</div>
+									}
+								>
+									<Button
+										onPress={() => undo()}
+										isIconOnly
+										isDisabled={pastStates.length === 0}
+										startContent={<Icon width={18} icon="mdi:undo" />}
+									/>
+								</Tooltip>
+								<Tooltip
+									delay={500}
+									content={
+										<div className="flex flex-row items-center justify-center gap-2 p-1">
+											<Trans>redo</Trans>
+											<Kbd keys={["ctrl", "shift"]}>Z</Kbd>
+										</div>
+									}
+								>
+									<Button
+										onPress={() => redo()}
+										isIconOnly
+										isDisabled={futureStates.length === 0}
+										startContent={<Icon width={18} icon="mdi:redo" />}
+									/>
+								</Tooltip>
+							</div>
+						</Panel>
+						<Panel position="bottom-right">
+							<div className="flex flex-row gap-2">
+								<Button
+									size="lg"
+									className="text-lg gap-2 items-center"
+									color="primary"
+									variant="shadow"
+									endContent={<Icon width={20} icon="mdi:arrow-right" />}
+									onPress={async () => {
+										useProjectStore.getState().collectNodes();
+										await useProjectStore.getState().collectIntegrations();
+										props.doneCallback();
+									}}
+								>
+									<Trans>done</Trans>
+								</Button>
+							</div>
+						</Panel>
+					</>
+				)}
 			</ReactFlow>
 			<SearchNodesModal
 				portal={containerRef}

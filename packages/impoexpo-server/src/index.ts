@@ -34,8 +34,12 @@ try {
 }
 
 // misc
-await registerProjectEndpoints(app);
+registerProjectEndpoints(app);
 
-app.listen(process.env.PORT, () => {
-	logger.info(`server started listening on port ${process.env.PORT}`);
+app.listen(process.env.PORT, (err) => {
+	if(err) {
+		logger.error(`failed to start the express server: ${err}`);
+		process.exit(1);
+	}
+	else logger.info(`server started listening on port ${process.env.PORT}`);
 });

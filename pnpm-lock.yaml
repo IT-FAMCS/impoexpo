@@ -106,6 +106,9 @@ importers:
       hash-wasm:
         specifier: ^4.12.0
         version: 4.12.0
+      html-to-image:
+        specifier: ^1.11.13
+        version: 1.11.13
       idb-keyval:
         specifier: ^6.2.2
         version: 6.2.2
@@ -282,6 +285,9 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       pino-http-print:
+        specifier: ^3.1.0
+        version: 3.1.0
+      pino-roll:
         specifier: ^3.1.0
         version: 3.1.0
       uuid:
@@ -2784,6 +2790,9 @@ packages:
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
 
@@ -3210,6 +3219,9 @@ packages:
 
   hotypes@0.6.4:
     resolution: {integrity: sha512-FFv4hJi/Ix7ugUe4uFT4v+3o22aGPvlrSbtLuto7UJrT7/1HhfYd7YdMePj+ABiR5redgFgq/UypVZI8i4ynsQ==}
+
+  html-to-image@1.11.13:
+    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
 
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
@@ -3793,6 +3805,9 @@ packages:
   pino-pretty@7.6.1:
     resolution: {integrity: sha512-H7N6ZYkiyrfwBGW9CSjx0uyO9Q2Lyt73881+OTYk8v3TiTdgN92QHrWlEq/LeWw5XtDP64jeSk3mnc6T+xX9/w==}
     hasBin: true
+
+  pino-roll@3.1.0:
+    resolution: {integrity: sha512-UimuzDe5FJSqzHZjBOQIgXArc6GE8rcJ7XsmhMkTI37msWqeI8yOqNKdPH3qucrvSxdL+y+GksqPTgQlSFWFEQ==}
 
   pino-std-serializers@7.0.0:
     resolution: {integrity: sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==}
@@ -7802,6 +7817,8 @@ snapshots:
 
   date-fns@3.6.0: {}
 
+  date-fns@4.1.0: {}
+
   dateformat@4.6.3: {}
 
   debug@2.6.9:
@@ -8354,6 +8371,8 @@ snapshots:
   hotypes@0.5.1: {}
 
   hotypes@0.6.4: {}
+
+  html-to-image@1.11.13: {}
 
   http-errors@2.0.0:
     dependencies:
@@ -8917,6 +8936,11 @@ snapshots:
       secure-json-parse: 2.7.0
       sonic-boom: 2.8.0
       strip-json-comments: 3.1.1
+
+  pino-roll@3.1.0:
+    dependencies:
+      date-fns: 4.1.0
+      sonic-boom: 4.2.0
 
   pino-std-serializers@7.0.0: {}
 

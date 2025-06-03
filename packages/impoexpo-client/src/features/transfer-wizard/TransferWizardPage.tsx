@@ -34,6 +34,7 @@ import {
 } from "../format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
+import { useFormatEditorStore } from "../format-editor/store";
 
 const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
@@ -77,6 +78,7 @@ export default function TransferWizardPage() {
 		useState<boolean>(true);
 	const [reverseBlockerContainer, setReverseBlockerContainer] =
 		useState<boolean>(false);
+	const { recording } = useFormatEditorStore();
 
 	useEffect(() => {
 		window.addEventListener("beforeunload", saveStatesToDatabase);
@@ -105,7 +107,11 @@ export default function TransferWizardPage() {
 				return <SelectSourceCard />;
 			case TransferWizardStage.FORMAT:
 				return (
-					<Card className="relative flex items-center justify-center w-full h-full">
+					<Card
+						shadow={recording ? "none" : "md"}
+						radius={recording ? "none" : "lg"}
+						className="relative flex items-center justify-center w-full h-full"
+					>
 						<ReactFlowProvider>
 							<FormatEditor doneCallback={onFormatEditorClosedCallback} />
 						</ReactFlowProvider>
@@ -137,8 +143,12 @@ export default function TransferWizardPage() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4 p-6">
+		<div
+			className="flex flex-row items-center justify-start w-screen h-screen gap-4"
+			style={{ padding: recording ? "0" : "24px" }}
+		>
 			<AnimatedCard
+				id="status"
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}

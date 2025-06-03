@@ -7,12 +7,24 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import {
+	forwardRef,
+	type MutableRefObject,
+	type Ref,
+	useCallback,
+	useImperativeHandle,
+	useState,
+} from "react";
 import type { ProjectNode } from "./nodes/renderable-node-types";
 import { useFormatEditorStore } from "./store";
+import * as htmlToImage from "html-to-image";
 
 export type FormatEditorContextMenuRef = {
-	trigger: (node: ProjectNode, position: { x: number; y: number }) => void;
+	trigger: (
+		node: ProjectNode,
+		position: { x: number; y: number },
+		containerRef: HTMLDivElement,
+	) => void;
 	isOpen: () => boolean;
 };
 const FormatEditorContextMenu = forwardRef((props, ref) => {
@@ -21,13 +33,21 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [position, setPosition] = useState({ x: 0, y: 0 });
+	const [containerRef, setContainerRef] = useState<
+		HTMLDivElement | undefined
+	>();
 	const [node, setNode] = useState<ProjectNode | undefined>();
 
 	useImperativeHandle(ref, () => {
 		return {
-			trigger(node: ProjectNode, pos: { x: number; y: number }) {
+			trigger(
+				node: ProjectNode,
+				pos: { x: number; y: number },
+				ref: HTMLDivElement,
+			) {
 				setPosition(pos);
 				setNode(node);
+				setContainerRef(ref);
 				setIsOpen(true);
 			},
 			isOpen() {
@@ -46,6 +66,35 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 		duplicateNode(node.id);
 	}, [node, duplicateNode]);
 
+	const renderNodeToImageAction = useCallback(async () => {
+		if (!node || !containerRef) return;
+		const rect = containerRef.getBoundingClientRect();
+		const data = await htmlToImage.toBlob(containerRef, {
+			cacheBust: true,
+			width: rect.width + 20,
+			height: rect.height + 20,
+			style: {
+				width: `${rect.width}px`,
+				height: `${rect.height}px`,
+				margin: "10px",
+			},
+		});
+		if (!data) return;
+		/* await navigator.clipboard.write([
+			new ClipboardItem({
+				"image/png": data,
+			}),
+		]); */
+		const dataUrl = URL.createObjectURL(data);
+		const a = document.createElement("a");
+		a.href = dataUrl;
+		a.download = `${node.type}.png`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(dataUrl);
+	}, [node, containerRef]);
+
 	return (
 		<Dropdown isOpen={isOpen} onOpenChange={setIsOpen} placement="right-start">
 			<DropdownTrigger>
@@ -55,6 +104,13 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 				/>
 			</DropdownTrigger>
 			<DropdownMenu disabledKeys={isNodeRemovable(node?.id) ? [] : ["delete"]}>
+				<DropdownItem
+					key="render-png"
+					startContent={<Icon width={18} icon="mdi:image-move" />}
+					onPress={renderNodeToImageAction}
+				>
+					<Trans>render</Trans>
+				</DropdownItem>
 				<DropdownItem
 					key="duplicate"
 					shortcut="Ctrl+D"

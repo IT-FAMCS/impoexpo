@@ -137,6 +137,9 @@ export type FormatEditorStore = {
 
 	genericNodes: PersistentGenericNodeData;
 	recoverGenericNodes: (nodes: PersistentGenericNodeData) => void;
+
+	recording: boolean;
+	setRecording: (rec: boolean) => void;
 };
 
 type PartializedFormatEditorState = Pick<FormatEditorStore, "nodes" | "edges">;
@@ -146,6 +149,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 )(
 	temporal(
 		immer((set, get) => ({
+			recording: false,
+			setRecording: (rec) => set({ recording: rec }),
+
 			nodes: [],
 			edges: [],
 			genericNodes: {},

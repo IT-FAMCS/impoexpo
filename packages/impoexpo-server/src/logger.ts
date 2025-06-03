@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { pino } from "pino";
 import { pinoHttp } from "pino-http";
 
@@ -16,24 +17,15 @@ const logger = pino({
 				level: "debug",
 			},
 			{
-				target: "pino-pretty",
+				target: "pino-roll",
 				options: {
-					colorize: false,
-					destination: "logs/latest-pretty.log",
-					append: false,
+					file: join("logs/server"),
+					frequency: "daily",
+					extension: ".log",
 					mkdir: true,
 					ignore: "hostname,pid,reqId,responseTime,req,res",
 				},
 				level: "debug",
-			},
-			{
-				target: "pino/file",
-				options: {
-					destination: "logs/latest.log",
-					append: false,
-					mkdir: true,
-					level: "debug",
-				},
 			},
 		],
 	},

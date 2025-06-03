@@ -29,3 +29,8 @@
 :root.dark {
 	--dot-color: #ffffff10;
 }
+
+:root.green {
+	--dot-color: transparent;
+	background-color: #00ff00 !important;
+}

@@ -39,5 +39,8 @@ export default defineConfig(({ mode }) => {
 				"top-level-await": true,
 			},
 		},
+		preview: {
+			port: Number.parseInt(process.env.PORT ?? "4173"),
+		},
 	};
 });

@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 
 	readonly VITE_GIT_BASE: string;
 	readonly VITE_BACKEND_URL: string;
+	readonly VITE_DOCS_URL: string;
 	readonly VITE_GOOGLE_CLIENT_ID: string;
 }
 

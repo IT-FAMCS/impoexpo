@@ -50,7 +50,7 @@ export const registerMicrosoftWordNode = (
 			data: {},
 			type: `${base.category}-${base.name}`,
 			id: getNodeId(`${base.category}-${base.name}`),
-			position: { x: 300, y: 100 }, // TODO
+			position: { x: 500, y: 100 }, // TODO
 		}),
 	}));
 };

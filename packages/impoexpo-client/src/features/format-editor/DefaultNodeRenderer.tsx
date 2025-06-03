@@ -60,7 +60,10 @@ const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	if (nodeRenderOptions === undefined) return <>meow</>;
 
 	return (
-		<Card classNames={{ body: "p-0", base: "overflow-visible relative" }}>
+		<Card
+			className="node"
+			classNames={{ body: "p-0", base: "overflow-visible relative" }}
+		>
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",
@@ -302,8 +305,8 @@ function NodePropertyRenderer(props: {
 								top: 0,
 								transform: "translate(-50%, 75%)",
 								left: 0,
-								width: 10,
-								height: 10,
+								width: 15,
+								height: 15,
 							}}
 						/>
 					)}
@@ -340,8 +343,8 @@ function NodePropertyRenderer(props: {
 							top: 0,
 							transform: "translate(50%, 75%)",
 							right: 0,
-							width: 10,
-							height: 10,
+							width: 15,
+							height: 15,
 						}}
 					/>
 				</div>
