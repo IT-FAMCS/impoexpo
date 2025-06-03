@@ -9,6 +9,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10.11.1
       - name: Setup node.js
         run: pnpm env use --global lts
       - name: Install dependencies
