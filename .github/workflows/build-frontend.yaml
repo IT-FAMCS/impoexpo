@@ -17,12 +17,8 @@ jobs:
         run: pnpm i
       - name: Build @impoexpo/client
         run: pnpm run --filter @impoexpo/client build
-      - name: Copy the dist folder
-        run: |
-          mkdir dist
-          mv ./packages/impoexpo-client/dist dist
       - name: Upload the dist folder
         uses: actions/upload-artifact@v4.6.2
         with:
           name: dist
-          path: dist/
+          path: packages/impoexpo-client/dist
