@@ -49,6 +49,7 @@ registerIntegration({
 						v.array(MicrosoftWordDocumentPlaceholderSchema),
 						placeholders,
 					);
+					console.log(placeholders);
 					if (!parsed.success) {
 						throw new Error(
 							`SimpleOfficePatchers returned invalid JSON from SimpleOfficePatchers.Patchers.WordPatcher.ExtractPlaceholders():\n${v.summarize(parsed.issues)}`,

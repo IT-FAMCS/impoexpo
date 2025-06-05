@@ -34,6 +34,7 @@ import {
 } from "../format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
+import SwitchesPanel from "@/components/buttons/SwitchesPanel";
 
 const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
@@ -176,9 +177,7 @@ export default function TransferWizardPage() {
 					/>
 				</CardBody>
 				<CardFooter className="flex flex-row items-center gap-2">
-					<ThemeSwitcher />
-					<Icon icon="mdi:circle" width={6} />
-					<LanguageSwitcher />
+					<SwitchesPanel />
 				</CardFooter>
 			</AnimatedCard>
 			<motion.div

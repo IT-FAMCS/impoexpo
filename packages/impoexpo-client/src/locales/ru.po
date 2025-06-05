@@ -337,7 +337,7 @@ msgstr "логарифм"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:43
 msgid "negate"
-msgstr "отрицать"
+msgstr "отрицание"
 
 #: src/features/format-editor/nodes/builtin/math.tsx:46
 msgid "square root"

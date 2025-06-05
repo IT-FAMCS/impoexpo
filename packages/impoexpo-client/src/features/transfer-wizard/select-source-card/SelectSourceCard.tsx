@@ -64,7 +64,7 @@ export default function SelectSourceCard() {
 	return state === SourceCardState.DONE ? (
 		<AnimatedTransitionCard />
 	) : (
-		<Card className="p-2 min-w-80">
+		<Card className="max-w-[40vw] p-2 min-w-[15vw]">
 			<CardHeader className="justify-center text-large">{title}</CardHeader>
 			<Divider />
 			<AnimateChangeInSize height>

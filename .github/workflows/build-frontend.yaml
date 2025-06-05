@@ -5,6 +5,7 @@ on: [push, workflow_dispatch]
 jobs:
   build:
       runs-on: ubuntu-latest
+      environment: production
       steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
@@ -16,7 +17,9 @@ jobs:
       - name: Install dependencies
         run: pnpm i
       - name: Build @impoexpo/client
-        run: pnpm run --filter @impoexpo/client build
+        run: |
+          echo "${{ secrets.ENVIRONMENT }}" > ./packages/impoexpo-client/.env
+          pnpm run --filter @impoexpo/client build
       - name: Upload the dist folder
         uses: actions/upload-artifact@v4.6.2
         with:

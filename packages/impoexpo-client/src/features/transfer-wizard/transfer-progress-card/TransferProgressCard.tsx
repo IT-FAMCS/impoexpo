@@ -103,7 +103,13 @@ function ProjectOutputsCard() {
 					)}
 				</Listbox>
 			</div>
-			<Confetti className="absolute w-full h-full" mode="boom" particleCount={50} launchSpeed={2.0} y={1.0} />
+			<Confetti
+				className="absolute w-full h-full"
+				mode="boom"
+				particleCount={50}
+				launchSpeed={2.0}
+				y={1.0}
+			/>
 		</div>
 	);
 }

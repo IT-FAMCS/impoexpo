@@ -9,6 +9,7 @@ import {
 	Panel,
 	ReactFlow,
 	getOutgoers,
+	useNodesInitialized,
 	useOnSelectionChange,
 	useReactFlow,
 } from "@xyflow/react";
@@ -83,6 +84,8 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		(state) => state,
 	);
 
+	const nodesLaidOut = useRef(false);
+	const nodesInitialized = useNodesInitialized();
 	const { screenToFlowPosition, fitView } = useReactFlow();
 	const {
 		onOpen: openSearchModal,
@@ -200,6 +203,13 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		fitView();
 	}, [nodes, edges, fitView, setNodes]);
 
+	useEffect(() => {
+		if (nodesInitialized && !nodesLaidOut.current) {
+			nodesLaidOut.current = true;
+			(useProjectStore.getState().loaded ? fitView : layoutNodes)();
+		}
+	}, [nodesInitialized, fitView, layoutNodes]);
+
 	const onNodeContextMenu = useCallback(
 		(ev: ReactMouseEvent, node: ProjectNode) => {
 			ev.preventDefault();
@@ -282,7 +292,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 					<div className="flex flex-row gap-2">
 						<Button
 							size="lg"
-							className="text-lg gap-2 items-center"
+							className="items-center gap-2 text-lg"
 							color="primary"
 							variant="shadow"
 							endContent={<Icon width={20} icon="mdi:arrow-right" />}

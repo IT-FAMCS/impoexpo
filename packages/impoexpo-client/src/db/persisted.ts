@@ -57,7 +57,10 @@ export const loadStatesFromDatabase = async () => {
 	const projectState = (await globalDatabase.persisted.get("project-state"))
 		?.data;
 	if (projectState && v.is(ProjectSchema, projectState)) {
-		useProjectStore.setState(() => projectState as Project);
+		useProjectStore.setState({
+			...(projectState as Project),
+			loaded: true,
+		});
 		for (const id of Object.keys(projectState.integrations)) {
 			const integration = allIntegrations.find((i) => i.id === id);
 			if (!integration || !integration.onProjectInformationLoaded) continue;

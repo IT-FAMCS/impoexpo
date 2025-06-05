@@ -96,7 +96,7 @@ export const schemaToString = (schema: ObjectEntry): string => {
 		return `Dictionary<${schemaToString(schema.key)}, ${schemaToString(schema.value)}>`;
 	if (isNullable(schema))
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
-		
+
 	if (isDateTime(schema)) return "DateTime";
 	if (isCustomType(schema)) {
 		const generics = Object.entries(getCustomTypeGenerics(schema));

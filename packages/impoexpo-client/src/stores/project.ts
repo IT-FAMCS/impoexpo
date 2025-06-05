@@ -9,13 +9,15 @@ import type {
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { create } from "zustand";
 
-export type ProjectStoreActions = {
+export type ProjectStoreInternals = {
 	collectNodes: () => void;
 	collectIntegrations: () => Promise<void>;
+	loaded: boolean;
 };
 
-export const useProjectStore = create<Project & ProjectStoreActions>(
+export const useProjectStore = create<Project & ProjectStoreInternals>(
 	(set, get) => ({
+		loaded: false,
 		integrations: {},
 		nodes: [],
 

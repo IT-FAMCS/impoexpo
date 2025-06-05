@@ -36,7 +36,7 @@ export default function NetworkErrorCard(props: {
 			<p className="text-center">
 				{props.title}
 				<br />
-				<Code>{props.error.message}</Code>
+				<Code className="text-wrap">{props.error.message}</Code>
 			</p>
 			<Button onPress={props.retry} color="primary">
 				{props.retryButtonText ?? t`retry`}

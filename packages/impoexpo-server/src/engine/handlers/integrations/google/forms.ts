@@ -142,7 +142,6 @@ registerIntegrationNodeHandlerRegistrar(
 									);
 									break;
 							}
-							
 						} else {
 							outputs[item.id] = null;
 						}
