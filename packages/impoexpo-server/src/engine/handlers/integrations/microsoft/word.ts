@@ -40,7 +40,7 @@ registerAsyncHandler(word.WORD_LIST_NODE, async (ctx) => {
 	);
 
 	if (ctx.automaticSeparators) {
-		// TODO: having this behaviour hardcoded is probably
+		// TODO: having this behavior hardcoded is probably
 		// not a good solution. however, implementing this
 		// manually is WAY harder and is out of the scope of
 		// a 1.0 release.
@@ -62,6 +62,33 @@ registerAsyncHandler(word.WORD_LIST_NODE, async (ctx) => {
 });
 
 registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
+	if (ctx.automaticSeparators) {
+		// TODO: having this behavior hardcoded is probably
+		// not a good solution. however, implementing this
+		// manually is WAY harder and is out of the scope of
+		// a 1.0 release.
+		for (const [, patches] of ctx.groups.entries()) {
+			for (let idx = 0; idx < patches.length; idx++) {
+				if (patches[idx].type === MicrosoftWordPlaceholderType.TEXT) {
+					(patches[idx] as MicrosoftWordTextPatch).text +=
+						idx === patches.length - 1 ? "." : ";";
+				}
+			}
+		}
+	}
+
+	return {
+		result: {
+			type: MicrosoftWordPlaceholderType.GROUPED_LIST as const,
+			groups: Array.from(ctx.groups.entries()).map(([k, v]) => ({
+				title: k,
+				items: v,
+			})),
+		},
+	};
+});
+
+/* registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 	const groups = await ctx["~reduce"]<
 		(MicrosoftWordGroupedListItem & { value: string })[]
 	>((acc, cur) => {
@@ -83,7 +110,7 @@ registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 	if (ctx.sortCriteria === "descending") ascendingGroups.reverse();
 
 	if (ctx.automaticSeparators) {
-		// TODO: having this behaviour hardcoded is probably
+		// TODO: having this behavior hardcoded is probably
 		// not a good solution. however, implementing this
 		// manually is WAY harder and is out of the scope of
 		// a 1.0 release.
@@ -103,7 +130,7 @@ registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 			groups: groups,
 		},
 	};
-});
+}); */
 
 registerIntegrationNodeHandlerRegistrar(
 	MICROSOFT_WORD_INTEGRATION_ID,

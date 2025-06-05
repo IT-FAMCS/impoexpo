@@ -95,4 +95,39 @@ nodesScope(() => {
 			},
 		},
 	});
+
+	registerWithDefaultRenderer(dateTimeNodes.CURRENT_DATETIME_NODE, {
+		title: msg`current date`,
+		aliases: msg`now, current time`,
+		outputs: {
+			result: {
+				title: msg`result`,
+				description: msg`only use this node to get the current date, not the precise time!`,
+			},
+		},
+	});
+
+	registerWithDefaultRenderer(dateTimeNodes.GROUP_BY_DATETIME_NODE, {
+		title: msg`group by date`,
+		aliases: msg`group by time`,
+		inputs: {
+			date: { title: msg`date` },
+			sortMethod: {
+				title: msg`sorting method`,
+				description: "",
+				showLabel: true,
+				mode: "independentOnly",
+				options: {
+					ascending: {
+						title: msg`in ascending order (from earliest to latest)`,
+					},
+					descending: {
+						title: msg`in descending order (from latest to earliest)`,
+					},
+				},
+			},
+			key: { title: msg`key` },
+			value: { title: msg`value` },
+		},
+	});
 });

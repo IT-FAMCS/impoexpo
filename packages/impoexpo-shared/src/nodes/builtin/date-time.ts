@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { dateTime } from "../node-utils";
+import { dateTime, generic } from "../node-utils";
 import ISO6391 from "iso-639-1";
 import { DateTime } from "luxon";
 
@@ -70,10 +70,37 @@ export const FORMAT_DATETIME_AUTO_NODE = new BaseNode({
 	}),
 });
 
+export const GROUP_BY_DATETIME_NODE = new BaseNode({
+	category: "date-time",
+	name: "group-by",
+	inputSchema: v.object({
+		date: dateTime(),
+		sortMethod: v.optional(
+			v.picklist(["ascending", "descending"]),
+			"ascending",
+		),
+		key: generic("TKey"),
+		value: generic("TValue"),
+	}),
+	outputSchema: v.object({
+		result: v.map(generic("TKey"), v.array(generic("TValue"))),
+	}),
+});
+
+export const CURRENT_DATETIME_NODE = new BaseNode({
+	category: "date-time",
+	name: "current",
+	outputSchema: v.object({
+		result: dateTime(),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		SET_DATETIME_LOCALE_NODE,
 		SET_DATETIME_TIMEZONE_NODE,
 		FORMAT_DATETIME_AUTO_NODE,
+		GROUP_BY_DATETIME_NODE,
+		CURRENT_DATETIME_NODE,
 	);
 });

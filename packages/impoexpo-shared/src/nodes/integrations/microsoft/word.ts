@@ -51,7 +51,7 @@ export const WORD_LIST_NODE = new BaseNode({
 	}),
 });
 
-export const WORD_GROUPED_LIST_NODE = new BaseNode({
+/* export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "grouped-list",
 	inputSchema: v.object({
@@ -62,6 +62,18 @@ export const WORD_GROUPED_LIST_NODE = new BaseNode({
 		),
 		title: WordTextSchema,
 		items: v.array(WordPatchSchema),
+		automaticSeparators: v.optional(v.boolean(), false),
+	}),
+	outputSchema: v.object({
+		result: WordGroupedListSchema,
+	}),
+}); */
+
+export const WORD_GROUPED_LIST_NODE = new BaseNode({
+	category: "microsoft-word",
+	name: "grouped-list",
+	inputSchema: v.object({
+		groups: v.map(WordTextSchema, v.array(WordPatchSchema)),
 		automaticSeparators: v.optional(v.boolean(), false),
 	}),
 	outputSchema: v.object({

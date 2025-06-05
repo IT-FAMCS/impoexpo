@@ -32,6 +32,7 @@ import {
 	isCustomType,
 	getCustomTypeName,
 	getCustomTypeGenerics,
+	isMap,
 } from "@impoexpo/shared/nodes/node-utils";
 import {
 	BaseNode,
@@ -219,9 +220,9 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const handle = node.entry(handleId);
 
 					const filters = [
-						`${handle.source === "input" ? "outputs" : "accepts"}${handle.generic ? "" : `:${handle.type}`}`,
+						`${handle.source === "input" ? "outputs" : "accepts"}${handle.generics ? "" : `:${handle.type}`}`,
 					];
-					if (!handle.generic)
+					if (!handle.generics)
 						filters.push(
 							`${handle.source === "input" ? "outputs" : "accepts"}:generic`,
 						);
@@ -261,16 +262,15 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						connectionState.toHandle.id,
 					);
 
-					const affectedNode = fromEntry.generic
+					const affectedNode = fromEntry.generics
 						? connectionState.fromNode
-						: toEntry.generic
+						: toEntry.generics
 							? connectionState.toNode
 							: undefined;
 					let newNode: ProjectNode | undefined;
 					if (!affectedNode) return;
 
-					if (fromEntry.generic) {
-						console.log(fromEntry, genericEntries(fromEntry.schema));
+					if (fromEntry.generics) {
 						newNode = get().resolveGenericNode(
 							{
 								node: fromNode,
@@ -280,7 +280,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 							toEntry,
 							connectionState.fromNode,
 						);
-					} else if (toEntry.generic) {
+					} else if (toEntry.generics) {
 						newNode = get().resolveGenericNode(
 							{
 								node: toNode,
@@ -304,7 +304,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			onEdgesDelete(edges) {
 				for (const edge of edges) {
 					if (!edge.sourceHandle || !edge.targetHandle) continue;
-					const { isGeneric, genericNodes } =
+					const { isGeneric, getTrueGenericNodeBase } =
 						useRenderableNodesStore.getState();
 
 					const source = get().getBaseNodeFromId(edge.source);
@@ -313,15 +313,22 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					if (!source || !target) return;
 					if (!isGeneric(source) && !isGeneric(target)) return;
 
-					const checkNode = (id: string, node: DefaultBaseNode) => {
+					const checkNode = (
+						id: string,
+						handle: string,
+						node: DefaultBaseNode,
+					) => {
 						if (!isGeneric(node)) return;
 
 						// biome-ignore lint/style/noNonNullAssertion: why wouldn't it exist
 						const affectedNode: ProjectNode = get().nodes.find(
 							(n) => n.id === id,
 						)!;
-						const base: DefaultBaseNode =
-							genericNodes[`${node.category}-${node.name}`].base;
+						const base = getTrueGenericNodeBase(
+							`${node.category}-${node.name}`,
+						);
+						if (!base) return;
+						const baseEntry = base.entry(handle);
 
 						const connectedEdges = getConnectedEdges(
 							get().nodes,
@@ -333,34 +340,51 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 								e.id !== edge.id,
 						);
 
-						// if there are any other nodes connected to generic fields of this node, DO NOT reset the node
-						if (
-							connectedEdges.some(
-								(e) =>
-									e.targetHandle &&
-									base.hasEntry(e.targetHandle) &&
-									base.entry(e.targetHandle).generic,
-							) ||
-							connectedEdges.some(
-								(e) =>
-									e.sourceHandle &&
-									base.hasEntry(e.sourceHandle) &&
-									base.entry(e.sourceHandle).generic,
+						// forgive me father 🙏
+						const genericTypes = structuredClone(node.genericTypes);
+						for (const genericType of baseEntry.generics ?? []) {
+							const entriesWithSameType = Object.keys(
+								baseEntry.source === "input"
+									? (base.inputSchema?.entries ?? {})
+									: (base.outputSchema?.entries ?? {}),
+							).filter(
+								(k) =>
+									base.entry(k).generics?.includes(genericType) &&
+									k !== baseEntry.name,
+							);
+
+							if (
+								!connectedEdges.some((e) =>
+									entriesWithSameType.includes(
+										baseEntry.source === "input"
+											? (e.targetHandle ?? "")
+											: (e.sourceHandle ?? ""),
+									),
+								)
 							)
-						)
-							return;
+								genericTypes[genericType] = null;
+						}
 
 						set((state) => ({
 							nodes: state.nodes.map((n) =>
 								n.id === affectedNode.id
-									? { ...affectedNode, type: `${base.category}-${base.name}` }
+									? {
+											...affectedNode,
+											type: !Object.values(genericTypes).some((t) => t !== null)
+												? `${base.category}-${base.name}`
+												: `${base.category}-${base.name}-${Object.entries(
+														genericTypes,
+													)
+														.map(([key, type]) => (type ? type : key))
+														.join("-")}`,
+										}
 									: n,
 							),
 						}));
 					};
 
-					checkNode(edge.source, source);
-					checkNode(edge.target, target);
+					checkNode(edge.source, edge.sourceHandle, source);
+					checkNode(edge.target, edge.targetHandle, target);
 				}
 			},
 
@@ -484,7 +508,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					type: toNodeType,
 				};
 
-				if (toEntry.generic) {
+				if (toEntry.generics) {
 					newNode = get().resolveGenericNode(
 						{
 							node: toData,
@@ -496,7 +520,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						fromEntry,
 						newNode,
 					);
-				} else if (fromEntry.generic) {
+				} else if (fromEntry.generics) {
 					newNode = get().resolveGenericNode(
 						{
 							node: fromData,
@@ -534,7 +558,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			},
 
 			resolveGenericNode(base, resolved, resolver, node) {
-				if (!resolved.generic)
+				if (!resolved.generics)
 					throw new Error(
 						`resolveGenericNode was called on a non-generic entry "${resolved.name}" (node "${node.id}")`,
 					);
@@ -569,7 +593,10 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 
 					if (isArray(source) && isArray(target))
 						return findResolvedTypes(source.item, target.item);
-					if (isRecord(source) && isRecord(target))
+					if (
+						(isRecord(source) && isRecord(target)) ||
+						(isMap(source) && isMap(target))
+					)
 						return {
 							...findResolvedTypes(source.key, target.key),
 							...findResolvedTypes(source.value, target.value),
@@ -589,21 +616,30 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const copy = deepCopy(base.node);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
-				console.log(copy.genericTypes, resolvedTypes);
 				for (const [resolvedType, resolverSchema] of Object.entries(
 					resolvedTypes,
 				)) {
 					copy.resolveGenericType(resolvedType, resolverSchema);
 				}
-				copy.name = `${base.node.name}-${Object.entries(copy.genericTypes)
+
+				const { addGenericNodeInstance, getTrueGenericNodeBase } =
+					useRenderableNodesStore.getState();
+
+				const trueBase =
+					getTrueGenericNodeBase(`${base.node.category}-${base.node.name}`) ??
+					base.node;
+				copy.name = `${trueBase.name}-${Object.entries(copy.genericTypes)
 					.map(([key, type]) => (type ? type : key))
 					.join("-")}`;
 
-				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 				addGenericNodeInstance(base.node, copy);
 				set((state) => {
+					// TODO: this is disgusting
+					if (node.id in state.genericNodes)
+						state.genericNodes[getNodeId("GENERIC-DEPENDENCY")] =
+							state.genericNodes[node.id];
 					state.genericNodes[node.id] = {
-						base: `${base.node.category}-${base.node.name}`,
+						base: `${trueBase.category}-${trueBase.name}`,
 						name: copy.name,
 						resolvedTypes: copy.genericTypes,
 					};
@@ -620,6 +656,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			recoverGenericNodes(nodes) {
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 
+				console.log(nodes);
 				for (const [, { base, name, resolvedTypes }] of Object.entries(nodes)) {
 					const baseNode = getBaseNode(base);
 					const copy = deepCopy(baseNode);

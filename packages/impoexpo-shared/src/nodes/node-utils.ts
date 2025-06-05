@@ -130,6 +130,12 @@ export const isRecord = (
 	return schema.type === "record";
 };
 
+export const isMap = (
+	schema: ObjectEntry,
+): schema is v.MapSchema<ObjectEntry, ObjectEntry, undefined> => {
+	return schema.type === "map";
+};
+
 export const isPicklist = (
 	schema: ObjectEntry,
 ): schema is v.PicklistSchema<
@@ -187,6 +193,17 @@ export const entriesCompatible = (
 		source: ObjectEntry,
 		target: ObjectEntry,
 	): boolean => {
+		console.log(source, target);
+		if (isArray(source) && isArray(target))
+			return isUnionOrEqual(source.item, target.item);
+		if (
+			(isRecord(source) || isMap(source)) &&
+			(isRecord(target) || isMap(target))
+		)
+			return (
+				isUnionOrEqual(source.key, target.key) &&
+				isUnionOrEqual(source.value, target.value)
+			);
 		if (isUnion(target))
 			return target.options.some((opt) => isUnionOrEqual(source, opt));
 		return schemaToString(source) === schemaToString(target);
@@ -202,11 +219,11 @@ export const entriesCompatible = (
 	}
 
 	if (
-		(sourceEntry.generic && !targetEntry.generic) ||
-		(!sourceEntry.generic && targetEntry.generic)
+		(sourceEntry.generics && !targetEntry.generics) ||
+		(!sourceEntry.generics && targetEntry.generics)
 	) {
-		const genericEntry = sourceEntry.generic ? sourceEntry : targetEntry;
-		const nonGenericEntry = sourceEntry.generic ? targetEntry : sourceEntry;
+		const genericEntry = sourceEntry.generics ? sourceEntry : targetEntry;
+		const nonGenericEntry = sourceEntry.generics ? targetEntry : sourceEntry;
 
 		const compatibleWithGenericEntry = (
 			generic: ObjectEntry,
@@ -228,13 +245,14 @@ export const entriesCompatible = (
 			nonGenericEntry.schema,
 		);
 	}
+
 	return isUnionOrEqual(sourceEntry.schema, targetEntry.schema);
 };
 
 export const genericEntries = (entry: ObjectEntry): string[] | undefined => {
 	// NOTE: do not change the order of checks here!
 	if (isArray(entry)) return genericEntries(entry.item);
-	if (isRecord(entry))
+	if (isRecord(entry) || isMap(entry))
 		return [
 			...(genericEntries(entry.key) ?? []),
 			...(genericEntries(entry.value) ?? []),
@@ -259,25 +277,24 @@ export const replaceGenericWithSchema = (
 	if (isGeneric(root) && getGenericName(root) === name) return resolver;
 
 	if (isCustomType(root)) {
+		let matched = false;
 		const replica = createCustomTypeReplica(
 			root,
 			Object.entries(root.entries).reduce<v.ObjectEntries>((acc, cur) => {
 				acc[cur[0]] = replaceGenericWithSchema(cur[1], resolver, name);
+				if (acc[cur[0]] !== cur[1]) matched = true;
 				return acc;
 			}, {}),
 		);
-		resolveCustomType(replica, name, resolver);
+		if (matched) resolveCustomType(replica, name, resolver);
 		return replica;
 	}
 
 	if (isArray(root))
 		return v.array(replaceGenericWithSchema(root.item, resolver, name));
-	if (isRecord(root))
-		return v.record(
-			replaceGenericWithSchema(root.key, resolver, name) as v.GenericSchema<
-				string,
-				string | number | symbol
-			>,
+	if (isRecord(root) || isMap(root))
+		return v.map(
+			replaceGenericWithSchema(root.key, resolver, name),
 			replaceGenericWithSchema(root.value, resolver, name),
 		);
 	if (isObject(root)) {

@@ -89,6 +89,20 @@ nodesScope(() => {
 	registerWithDefaultRenderer(wordNodes.WORD_GROUPED_LIST_NODE, {
 		title: msg`grouped list`,
 		inputs: {
+			groups: { title: msg`groups` },
+			automaticSeparators: {
+				title: msg`automatically separate list items`,
+				description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
+			},
+		},
+		outputs: {
+			result: { title: msg`result` },
+		},
+	});
+
+	/* registerWithDefaultRenderer(wordNodes.WORD_GROUPED_LIST_NODE, {
+		title: msg`grouped list`,
+		inputs: {
 			items: { title: msg`items` },
 			groupCriteria: { title: msg`group criteria`, mode: "dependentOnly" },
 			sortCriteria: {
@@ -110,5 +124,5 @@ nodesScope(() => {
 		outputs: {
 			result: { title: msg`result` },
 		},
-	});
+	}); */
 });

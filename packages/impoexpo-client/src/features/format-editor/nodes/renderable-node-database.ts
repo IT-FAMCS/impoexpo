@@ -104,23 +104,23 @@ export const registerWithDefaultRenderer = <
 		const outputs = Object.keys(node.outputSchema?.entries ?? []);
 		for (const key of inputs) {
 			tags.add(
-				`accepts:${node.entry(key).generic ? "generic" : node.entry(key).type}`,
+				`accepts:${node.entry(key).generics ? "generic" : node.entry(key).type}`,
 			);
 		}
 		for (const key of outputs) {
 			tags.add(
-				`outputs:${node.entry(key).generic ? "generic" : node.entry(key).type}`,
+				`outputs:${node.entry(key).generics ? "generic" : node.entry(key).type}`,
 			);
 		}
 
 		if (
 			inputs.length > 0 &&
-			inputs.length !== inputs.filter((k) => node.entry(k).generic).length
+			inputs.length !== inputs.filter((k) => node.entry(k).generics).length
 		)
 			tags.add("accepts");
 		if (
 			outputs.length > 0 &&
-			outputs.length !== outputs.filter((k) => node.entry(k).generic).length
+			outputs.length !== outputs.filter((k) => node.entry(k).generics).length
 		)
 			tags.add("outputs");
 
@@ -174,6 +174,7 @@ export type RenderableNodesStore = {
 		instance: DefaultBaseNode,
 	) => void;
 	removeGenericNodeInstance: (key: string) => void;
+	getTrueGenericNodeBase: (key: string) => DefaultBaseNode | undefined;
 	isGeneric: (node: DefaultBaseNode) => boolean;
 
 	unregisterRenderOptions: (type: string) => void;
@@ -211,6 +212,15 @@ export const useRenderableNodesStore = create<RenderableNodesStore>(
 				state.nodeRenderOptions.delete(type);
 				return state;
 			}),
+
+		getTrueGenericNodeBase(key) {
+			const genericNodes = get().genericNodes;
+			if (!(key in genericNodes)) return undefined;
+			let base = genericNodes[key].base;
+			while (`${base.category}-${base.name}` in genericNodes)
+				base = genericNodes[`${base.category}-${base.name}`].base;
+			return base;
+		},
 	}),
 );
 

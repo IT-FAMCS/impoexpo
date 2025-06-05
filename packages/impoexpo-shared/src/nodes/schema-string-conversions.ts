@@ -17,6 +17,7 @@ import {
 	getCustomTypeGenerics,
 	dateTime,
 	isDateTime,
+	isMap,
 } from "./node-utils";
 
 const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
@@ -49,11 +50,9 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 	// dictionary
 	const dictionaryRegexMatches = /Dictionary<(.+),\s?(.+)>/.exec(str);
 	if (dictionaryRegexMatches)
-		return v.record(
-			schemaFromString(dictionaryRegexMatches[1]) as v.GenericSchema<
-				string,
-				string | number | symbol
-			>,
+		// TODO: this might not be desirable (currently, there's no difference between record and map)
+		return v.map(
+			schemaFromString(dictionaryRegexMatches[1]),
 			schemaFromString(dictionaryRegexMatches[2]),
 		);
 
@@ -92,7 +91,7 @@ export const schemaFromString = (raw: string): ObjectEntry => {
 
 export const schemaToString = (schema: ObjectEntry): string => {
 	if (isArray(schema)) return `Array<${schemaToString(schema.item)}>`;
-	if (isRecord(schema))
+	if (isRecord(schema) || isMap(schema))
 		return `Dictionary<${schemaToString(schema.key)}, ${schemaToString(schema.value)}>`;
 	if (isNullable(schema))
 		return `${schemaToString(schema.wrapped)}${isNullable(schema.wrapped) ? "" : " | null"}`;
