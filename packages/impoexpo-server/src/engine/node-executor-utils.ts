@@ -29,7 +29,10 @@ export type NodeExecutorContext<TIn extends v.ObjectEntries> = {
 		reducer: (acc: T, cur: ResolveEntries<TIn>) => T,
 		initial: T,
 	) => Promise<T>;
-	"~iterators": () => Iterator[] | undefined;
+	"~iterators": () => {
+		iterators: Iterator[] | undefined;
+		skip: () => void;
+	};
 } & ResolveEntries<TIn>;
 
 export type InputPath = {

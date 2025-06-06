@@ -65,6 +65,9 @@ nodesScope(() => {
 				showLabel: true,
 			},
 		},
+		outputs: {
+			result: { title: msg`result` },
+		},
 	});
 
 	registerWithDefaultRenderer(dateTimeNodes.SET_DATETIME_TIMEZONE_NODE, {
@@ -78,6 +81,9 @@ nodesScope(() => {
 				options: timezoneOptions,
 				showLabel: true,
 			},
+		},
+		outputs: {
+			result: { title: msg`result` },
 		},
 	});
 
@@ -93,6 +99,9 @@ nodesScope(() => {
 				showLabel: true,
 				mode: "independentOnly",
 			},
+		},
+		outputs: {
+			result: { title: msg`result` },
 		},
 	});
 
@@ -129,15 +138,18 @@ nodesScope(() => {
 			key: { title: msg`key` },
 			value: { title: msg`value` },
 		},
+		outputs: {
+			result: { title: msg`result` },
+		},
 	});
 
 	registerWithDefaultRenderer(dateTimeNodes.DATE_IN_RANGE_NODE, {
 		title: msg`is the date within a certain range?`,
-		aliases: msg`check data, verify date, date boundaries, is date before, is date after`,
+		aliases: msg`check date, verify date, date boundaries, is date before, is date after`,
 		inputs: {
 			date: { title: msg`date` },
-			start: { title: msg`min`, description: msg`the earliest allowed date` },
-			end: { title: msg`max`, description: msg`the latest allowed date` },
+			start: { title: msg`start`, description: msg`the earliest allowed date` },
+			end: { title: msg`end`, description: msg`the latest allowed date` },
 		},
 		outputs: {
 			result: {

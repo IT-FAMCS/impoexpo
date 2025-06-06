@@ -27,3 +27,6 @@ registerHandler(mathNodes.SQUARE_ROOT_NODE, (ctx) => ({
 registerHandler(mathNodes.SUBTRACT_NODE, (ctx) => ({
 	result: ctx.inA - ctx.inB,
 }));
+registerHandler(mathNodes.IS_INTEGER_NODE, (ctx) => ({
+	result: Number.isInteger(ctx.number),
+}));

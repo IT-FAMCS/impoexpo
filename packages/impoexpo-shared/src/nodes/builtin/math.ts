@@ -2,6 +2,8 @@ import { number } from "valibot";
 import { nodesScope } from "../node-database";
 import { registerBaseNodes } from "../node-database";
 import { binaryNode, unaryNode } from "../common";
+import { BaseNode } from "../node-types";
+import * as v from "valibot";
 
 export const ADD_NODE = binaryNode("math", "add", number);
 export const SUBTRACT_NODE = binaryNode("math", "subtract", number);
@@ -15,6 +17,17 @@ export const ABS_NODE = unaryNode("math", "abs", number);
 export const NEGATE_NODE = unaryNode("math", "negate", number);
 export const LOG_NODE = unaryNode("math", "log", number);
 
+export const IS_INTEGER_NODE = new BaseNode({
+	category: "math",
+	name: "is-integer",
+	inputSchema: v.object({
+		number: v.number(),
+	}),
+	outputSchema: v.object({
+		result: v.boolean(),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		ADD_NODE,
@@ -27,5 +40,6 @@ nodesScope(() => {
 		ABS_NODE,
 		NEGATE_NODE,
 		LOG_NODE,
+		IS_INTEGER_NODE,
 	);
 });

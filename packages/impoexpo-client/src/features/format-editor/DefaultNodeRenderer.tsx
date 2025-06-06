@@ -201,7 +201,7 @@ const getEntryComponent = <TDefault,>(
 									year: value.year,
 									day: value.day,
 									month: value.month,
-								})
+								}).toJSON()
 							: undefined,
 					);
 				}}

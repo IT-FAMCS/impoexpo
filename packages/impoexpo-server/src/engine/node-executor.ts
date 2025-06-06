@@ -15,8 +15,20 @@ import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
 import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
 import { childLogger } from "../logger";
-import { isArray } from "@impoexpo/shared/nodes/node-utils";
+import {
+	isArray,
+	isDateTime,
+	unwrapNodeIfNeeded,
+} from "@impoexpo/shared/nodes/node-utils";
 import clone from "clone";
+import { DateTime } from "luxon";
+
+export class SkipIterationError extends Error {
+	constructor() {
+		super("a node handler requested to skip an iteration");
+		this.name = "SkipIterationError";
+	}
+}
 
 export const getNodeHandler = (
 	type: string,
@@ -131,7 +143,13 @@ export const executeJobNodes = async (job: Job) => {
 						}
 					}
 				});
-				return iterators.length === 0 ? undefined : iterators;
+				return {
+					iterators: iterators.length === 0 ? undefined : iterators,
+					skip: () => {
+						logger.warn(node.id);
+						if (iterators.length !== 0) throw new SkipIterationError();
+					},
+				};
 			};
 		};
 		const createReducer = (
@@ -170,15 +188,23 @@ export const executeJobNodes = async (job: Job) => {
 							cleanData[it.node] = it.items[idx];
 							it.index = idx;
 						}
-						await runNode(
-							node,
-							paths,
-							undefined,
-							clone(cleanData),
-							async (entries) => {
-								current = reducer(current, entries);
-							},
-						);
+						try {
+							await runNode(
+								node,
+								paths,
+								undefined,
+								clone(cleanData),
+								async (entries) => {
+									current = reducer(current, entries);
+								},
+							);
+						} catch (err) {
+							if (err instanceof SkipIterationError) {
+								logger.debug(
+									"caught a SkipIterationError (not actually an error) inside a reducer!",
+								);
+							} else throw err;
+						}
 					}
 				}
 
@@ -211,7 +237,20 @@ export const executeJobNodes = async (job: Job) => {
 								throw new Error(
 									`node "${sourceNode.id}" has an independent input "${input}" which wasn't set`,
 								);
-							inputs[input] = meta.value;
+
+							// TODO: perhaps not the best solution to hard code it but
+							// it'll work for now
+							if (
+								isDateTime(
+									unwrapNodeIfNeeded(schema, {
+										nullable: true,
+										optional: true,
+									}),
+								) &&
+								typeof meta.value === "string"
+							)
+								inputs[input] = DateTime.fromISO(meta.value);
+							else inputs[input] = meta.value;
 							break;
 						}
 						case "dependent": {
@@ -377,13 +416,22 @@ export const executeJobNodes = async (job: Job) => {
 						it.index = idx;
 						actualPreviousData[it.node] = it.items[idx];
 					}
-					await runNode(
-						node,
-						paths,
-						actualDepth - 1,
-						clone(actualPreviousData),
-						customHandler,
-					);
+
+					try {
+						await runNode(
+							node,
+							paths,
+							actualDepth - 1,
+							clone(actualPreviousData),
+							customHandler,
+						);
+					} catch (err) {
+						if (err instanceof SkipIterationError) {
+							logger.debug(
+								"caught a SkipIterationError (not actually an error)!",
+							);
+						} else throw err;
+					}
 				}
 			}
 		}

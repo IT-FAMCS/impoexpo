@@ -1,5 +1,8 @@
 import { nodesScope } from "@impoexpo/shared/nodes/node-database";
-import { registerCategory } from "../renderable-node-database";
+import {
+	registerCategory,
+	registerWithDefaultRenderer,
+} from "../renderable-node-database";
 import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 import * as mathNodes from "@impoexpo/shared/nodes/builtin/math";
@@ -45,5 +48,16 @@ nodesScope(() => {
 	registerUnaryNode(mathNodes.SQUARE_ROOT_NODE, {
 		title: msg`square root`,
 		aliases: msg`sqrt`,
+	});
+
+	registerWithDefaultRenderer(mathNodes.IS_INTEGER_NODE, {
+		title: msg`is this number an integer?`,
+		aliases: msg`is number whole, no decimal part`,
+		inputs: {
+			number: { title: msg`number` },
+		},
+		outputs: {
+			result: { title: msg`result` },
+		},
 	});
 });

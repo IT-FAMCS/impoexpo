@@ -78,6 +78,10 @@ nodesScope(() => {
 				description: msg`must be connected to an iterator node, otherwise will never skip an iteration.`,
 				mode: "dependentOnly",
 			},
+			obj: { title: msg`object` },
+		},
+		outputs: {
+			sameObj: { title: msg`same object` },
 		},
 	});
 });

@@ -22,9 +22,7 @@ registerHandler(conditionalNodes.THROW_ERROR_IF_NULL_NODE, (ctx) => {
 });
 
 registerHandler(conditionalNodes.SKIP_ITERATION_IF_NODE, (ctx) => {
-	const its = ctx["~iterators"]() ?? [];
-	if (ctx.condition) {
-		for (const it of its) it.index++;
-	}
+	const { skip } = ctx["~iterators"]();
+	if (ctx.condition) skip();
 	return { sameObj: ctx.obj };
 });

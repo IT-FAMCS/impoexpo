@@ -9,7 +9,10 @@ import { schemaToString } from "./schema-string-conversions";
 import { DateTime } from "luxon";
 import moize from "moize";
 
-const dateTimeValidator = (input: unknown) => DateTime.isDateTime(input);
+const dateTimeValidator = (input: unknown) => {
+	if (typeof input === "string") return DateTime.fromISO(input).isValid;
+	return DateTime.isDateTime(input);
+};
 export const dateTime = () => v.custom<DateTime>(dateTimeValidator);
 export const isDateTime = (
 	schema: ObjectEntry,
@@ -78,10 +81,17 @@ export const createCustomTypeReplica = (
 	);
 };
 
-export const unwrapNodeIfNeeded = (node: ObjectEntry): ObjectEntry => {
-	// NOTE: do not unwrap nullable types here! they must be handled by the user
-	// with special nodes.
-	if (isOptional(node)) return unwrapNodeIfNeeded(node.wrapped);
+export const unwrapNodeIfNeeded = (
+	node: ObjectEntry,
+	options: { optional: boolean; nullable: boolean } = {
+		optional: true,
+		nullable: false,
+	},
+): ObjectEntry => {
+	if (isOptional(node) && options.optional)
+		return unwrapNodeIfNeeded(node.wrapped);
+	if (isNullable(node) && options.nullable)
+		return unwrapNodeIfNeeded(node.wrapped);
 	return node;
 };
 

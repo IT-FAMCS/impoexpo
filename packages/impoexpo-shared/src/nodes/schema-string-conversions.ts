@@ -12,7 +12,6 @@ import {
 	isUnion,
 	replaceGenericWithSchema,
 	genericEntries,
-	resolveCustomType,
 	customType,
 	getCustomTypeGenerics,
 	dateTime,

@@ -4,6 +4,7 @@ import {
 	registerHandler,
 } from "../../node-executor-utils";
 import * as dateTimeNodes from "@impoexpo/shared/nodes/builtin/date-time";
+import { logger } from "../../../logger";
 
 registerHandler(dateTimeNodes.SET_DATETIME_LOCALE_NODE, (ctx) => {
 	return { result: ctx.dateTime.setLocale(ctx.locale) };
@@ -26,6 +27,7 @@ registerHandler(dateTimeNodes.CURRENT_DATETIME_NODE, (ctx) => ({
 }));
 
 registerHandler(dateTimeNodes.DATE_IN_RANGE_NODE, (ctx) => {
+	logger.info(`${ctx.start} ${ctx.date} ${ctx.end}`);
 	return {
 		result:
 			ctx.date >= (ctx.start ?? ctx.date) && ctx.date <= (ctx.end ?? ctx.date),
