@@ -25,11 +25,17 @@ registerHandler(dateTimeNodes.CURRENT_DATETIME_NODE, (ctx) => ({
 	result: DateTime.now(),
 }));
 
+registerHandler(dateTimeNodes.DATE_IN_RANGE_NODE, (ctx) => {
+	return {
+		result:
+			ctx.date >= (ctx.start ?? ctx.date) && ctx.date <= (ctx.end ?? ctx.date),
+	};
+});
+
 registerAsyncHandler(dateTimeNodes.GROUP_BY_DATETIME_NODE, async (ctx) => {
 	const groups = await ctx["~reduce"]<Map<number, [unknown, unknown[]]>>(
 		(acc, cur) => {
 			const group = acc.get(cur.date.toUnixInteger());
-			console.log(group);
 			acc.set(
 				cur.date.toUnixInteger(),
 				group ? [group[0], [...group[1], cur.value]] : [cur.key, [cur.value]],

@@ -7,6 +7,7 @@ import type {
 import * as v from "valibot";
 import { schemaToString } from "./schema-string-conversions";
 import { DateTime } from "luxon";
+import moize from "moize";
 
 const dateTimeValidator = (input: unknown) => DateTime.isDateTime(input);
 export const dateTime = () => v.custom<DateTime>(dateTimeValidator);
@@ -185,7 +186,7 @@ export const findCompatibleEntry = (
 	);
 };
 
-export const entriesCompatible = (
+const internalEntriesCompatible = (
 	sourceEntry: BaseNodeEntry,
 	targetEntry: BaseNodeEntry,
 ) => {
@@ -248,6 +249,9 @@ export const entriesCompatible = (
 
 	return isUnionOrEqual(sourceEntry.schema, targetEntry.schema);
 };
+export const entriesCompatible = moize(internalEntriesCompatible, {
+	isDeepEqual: true,
+});
 
 export const genericEntries = (entry: ObjectEntry): string[] | undefined => {
 	// NOTE: do not change the order of checks here!

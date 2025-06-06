@@ -20,3 +20,11 @@ registerHandler(conditionalNodes.THROW_ERROR_IF_NULL_NODE, (ctx) => {
 	}
 	return { object: ctx.nullableObject };
 });
+
+registerHandler(conditionalNodes.SKIP_ITERATION_IF_NODE, (ctx) => {
+	const its = ctx["~iterators"]() ?? [];
+	if (ctx.condition) {
+		for (const it of its) it.index++;
+	}
+	return { sameObj: ctx.obj };
+});

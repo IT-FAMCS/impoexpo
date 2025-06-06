@@ -130,4 +130,20 @@ nodesScope(() => {
 			value: { title: msg`value` },
 		},
 	});
+
+	registerWithDefaultRenderer(dateTimeNodes.DATE_IN_RANGE_NODE, {
+		title: msg`is the date within a certain range?`,
+		aliases: msg`check data, verify date, date boundaries, is date before, is date after`,
+		inputs: {
+			date: { title: msg`date` },
+			start: { title: msg`min`, description: msg`the earliest allowed date` },
+			end: { title: msg`max`, description: msg`the latest allowed date` },
+		},
+		outputs: {
+			result: {
+				title: msg`result`,
+				description: msg`dates are compared including the start and end days!`,
+			},
+		},
+	});
 });

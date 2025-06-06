@@ -67,4 +67,17 @@ nodesScope(() => {
 			},
 		},
 	});
+
+	registerWithDefaultRenderer(conditionalNodes.SKIP_ITERATION_IF_NODE, {
+		title: msg`skip iteration, if...`,
+		aliases: msg`skip, ignore`,
+		header: "bg-danger-200",
+		inputs: {
+			condition: {
+				title: msg`condition`,
+				description: msg`must be connected to an iterator node, otherwise will never skip an iteration.`,
+				mode: "dependentOnly",
+			},
+		},
+	});
 });

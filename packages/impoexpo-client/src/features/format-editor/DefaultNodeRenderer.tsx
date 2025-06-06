@@ -3,6 +3,7 @@ import {
 	CardBody,
 	CardHeader,
 	Checkbox,
+	DatePicker,
 	Divider,
 	Input,
 	NumberInput,
@@ -36,9 +37,11 @@ import {
 	type ValidatorFunction,
 	isPicklist,
 	isEnum,
+	isDateTime,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
+import { DateTime } from "luxon";
 
 const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	const { t } = useLingui();
@@ -178,6 +181,30 @@ const getEntryComponent = <TDefault,>(
 				renderOptions={renderOptions}
 				default={(defaultValue as number | undefined) ?? 0}
 				validator={validator}
+			/>
+		);
+	}
+
+	if (isDateTime(entry)) {
+		return (
+			<DatePicker
+				style={{ minWidth: "15rem" }}
+				popoverProps={{ className: "min-w-fit" }}
+				aria-label={renderOptions.placeholder(handleName)}
+				className="nodrag"
+				onChange={(value) => {
+					useFormatEditorStore.getState().setNodeEntry(
+						node,
+						handleName,
+						value
+							? DateTime.fromObject({
+									year: value.year,
+									day: value.day,
+									month: value.month,
+								})
+							: undefined,
+					);
+				}}
 			/>
 		);
 	}
@@ -327,7 +354,7 @@ function NodePropertyRenderer(props: {
 							<p className="max-w-64 text-end">
 								{props.renderOptions.title(props.name)}
 							</p>
-							<p className="text-foreground-400 text-tiny max-w-36 text-right">
+							<p className="text-right text-foreground-400 text-tiny max-w-36">
 								{props.renderOptions.description(props.name)}
 							</p>
 						</div>

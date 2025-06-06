@@ -95,6 +95,19 @@ export const CURRENT_DATETIME_NODE = new BaseNode({
 	}),
 });
 
+export const DATE_IN_RANGE_NODE = new BaseNode({
+	category: "date-time",
+	name: "date-in-range",
+	inputSchema: v.object({
+		date: dateTime(),
+		start: v.nullable(dateTime()),
+		end: v.nullable(dateTime()),
+	}),
+	outputSchema: v.object({
+		result: v.boolean(),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		SET_DATETIME_LOCALE_NODE,
@@ -102,5 +115,6 @@ nodesScope(() => {
 		FORMAT_DATETIME_AUTO_NODE,
 		GROUP_BY_DATETIME_NODE,
 		CURRENT_DATETIME_NODE,
+		DATE_IN_RANGE_NODE,
 	);
 });

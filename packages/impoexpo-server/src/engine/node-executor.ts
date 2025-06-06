@@ -107,21 +107,31 @@ export const executeJobNodes = async (job: Job) => {
 
 		logger.debug(`running ${node.id} at depth ${actualDepth}`);
 
-		const createIteratorGetter = (
+		const createIteratorsGetter = (
 			node: ProjectNode,
-		): NodeExecutorContext<ObjectEntries>["~iterator"] => {
+		): NodeExecutorContext<ObjectEntries>["~iterators"] => {
 			return () => {
-				let iterator: Iterator | undefined = undefined;
+				let currentIds = Object.values(resolveInputPaths(node))
+					.flat()
+					.map((p) => p.node);
+				const iterators: Iterator[] = [];
 				traversePaths(paths, (path) => {
-					if (path.node === node.id && path.parent && !iterator) {
-						iterator = globalIterators.find((it) =>
-							Object.values(path.parent ?? {}).some((paths) =>
-								paths.some((path) => it.node === path.node),
-							),
+					if (currentIds.includes(path.node) && path.parent) {
+						const it = globalIterators.find(
+							(it) =>
+								Object.values(path.parent ?? {}).some((paths) =>
+									paths.some((path) => it.node === path.node),
+								) && iterators.find((i) => i.node === it.node) === undefined,
 						);
+						if (it) iterators.push(it);
+						else {
+							currentIds = Object.values(path.parent)
+								.flat()
+								.map((p) => p.node);
+						}
 					}
 				});
-				return iterator;
+				return iterators.length === 0 ? undefined : iterators;
 			};
 		};
 		const createReducer = (
@@ -265,7 +275,7 @@ export const executeJobNodes = async (job: Job) => {
 				...resolveInputs(sourceNode),
 				"~job": job,
 				"~reduce": createReducer(sourceNode),
-				"~iterator": createIteratorGetter(sourceNode),
+				"~iterators": createIteratorsGetter(sourceNode),
 				"~persist": persist,
 			});
 			logger.debug("received: %o", output);
@@ -294,7 +304,7 @@ export const executeJobNodes = async (job: Job) => {
 					...inputs,
 					"~job": job,
 					"~reduce": createReducer(node),
-					"~iterator": createIteratorGetter(node),
+					"~iterators": createIteratorsGetter(node),
 					"~persist": persist,
 				});
 			}
