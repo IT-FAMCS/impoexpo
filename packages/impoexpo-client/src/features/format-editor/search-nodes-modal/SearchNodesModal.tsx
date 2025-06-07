@@ -24,6 +24,7 @@ import { useNodeSearchMetadataStore } from "../nodes/renderable-node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "../store";
 import { localizableString } from "../nodes/renderable-node-types";
+import { entriesCompatible } from "@impoexpo/shared/nodes/node-utils";
 
 export default function SearchNodesModal(props: {
 	isOpen: boolean;
@@ -33,7 +34,7 @@ export default function SearchNodesModal(props: {
 	const { t } = useLingui();
 	const locale = useLocaleInformation();
 	const { database, reset } = useNodeSearchMetadataStore();
-	const { setFilters, setNewNodeInformation, filters, newNodeInformation } =
+	const { setNewNodeInformation, newNodeInformation } =
 		useSearchNodesModalStore();
 	const { attachNewNode, addNewNode } = useFormatEditorStore();
 	const { categoryRenderOptions } = useRenderableNodesStore();
@@ -64,21 +65,35 @@ export default function SearchNodesModal(props: {
 
 		const params: SearchParams<typeof database> = {};
 		if (query !== "") params.term = query;
-		if (filters.length !== 0) params.where = { tags: { containsAny: filters } };
 
 		const searchResults = search(database, params, locale.fullName);
 		if (searchResults instanceof Promise) return;
 
-		setSearchResults(
-			searchResults.hits
-				.filter((hit) => hit.score !== 0)
-				.sort((left, right) => (left.score > right.score ? -1 : 1))
-				.map((hit) => ({
-					id: hit.document.id,
-					score: hit.score,
-				})),
-		);
-	}, [database, locale, query, filters, props.isOpen]);
+		const hits = searchResults.hits
+			.filter((hit) => hit.score !== 0)
+			.sort((left, right) => (left.score > right.score ? -1 : 1))
+			.map((hit) => ({
+				id: hit.document.id,
+				score: hit.score,
+			}))
+			.filter((h) => {
+				if (
+					!newNodeInformation?.fromNodeType ||
+					!newNodeInformation?.fromHandleId
+				)
+					return true;
+				const fromNode = getBaseNode(newNodeInformation.fromNodeType);
+				const fromEntry = fromNode.entry(newNodeInformation.fromHandleId);
+				const toNode = getBaseNode(h.id);
+
+				return Object.keys(
+					fromEntry.source === "input"
+						? (toNode.outputSchema?.entries ?? {})
+						: (toNode.inputSchema?.entries ?? {}),
+				).some((key) => entriesCompatible(fromEntry, toNode.entry(key)));
+			});
+		setSearchResults(hits);
+	}, [database, locale, query, props.isOpen, newNodeInformation]);
 
 	return (
 		<Modal
@@ -106,21 +121,6 @@ export default function SearchNodesModal(props: {
 										startContent={
 											<div className="flex flex-row items-center justify-center gap-2">
 												<Icon width={18} icon="mdi:search" />
-												{filters.map((filter) => (
-													<Chip
-														onClose={() =>
-															setFilters(
-																filters.filter((tag) => filter !== tag),
-															)
-														}
-														key={filter}
-														color="primary"
-														variant="solid"
-														className="whitespace-nowrap"
-													>
-														{filter}
-													</Chip>
-												))}
 											</div>
 										}
 										classNames={{

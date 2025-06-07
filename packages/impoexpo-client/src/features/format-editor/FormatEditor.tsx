@@ -40,7 +40,6 @@ import dagre from "@dagrejs/dagre";
 import FormatEditorContextMenu, {
 	type FormatEditorContextMenuRef,
 } from "./FormatEditorContextMenu";
-
 const connectionHasCycles = (
 	connection: Connection | Edge,
 	nodes: ProjectNode[],
@@ -93,7 +92,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
 
-	const { setFilters, setNewNodeInformation } = useSearchNodesModalStore();
+	const { setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
 		useShallow((state) => state.nodeRenderers),
 	);
@@ -127,7 +126,6 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 		"space",
 		() => {
 			if (!isSearchModalOpen) {
-				setFilters([]);
 				setNewNodeInformation({
 					position: screenToFlowPosition({
 						x: mousePositionRef.current?.x ?? 0,
@@ -137,7 +135,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				openSearchModal();
 			}
 		},
-		[isSearchModalOpen, setFilters, setNewNodeInformation, openSearchModal],
+		[isSearchModalOpen, setNewNodeInformation, openSearchModal],
 	);
 
 	useHotkeys("ctrl+z", () => undo(), [undo]);
@@ -242,13 +240,15 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				<Controls />
 				<Background size={2} />
 				<Panel position="top-right">
-					<Tooltip content={<Trans>layout nodes</Trans>}>
-						<Button
-							onPress={layoutNodes}
-							isIconOnly
-							startContent={<Icon width={18} icon="mdi:stars" />}
-						/>
-					</Tooltip>
+					<div className="flex flex-row gap-2">
+						<Tooltip content={<Trans>layout nodes</Trans>}>
+							<Button
+								onPress={layoutNodes}
+								isIconOnly
+								startContent={<Icon width={18} icon="mdi:stars" />}
+							/>
+						</Tooltip>
+					</div>
 				</Panel>
 				<Panel position="top-left">
 					<div className="flex flex-row gap-2">

@@ -45,7 +45,6 @@ export const nodesDatabaseSchema = {
 	category: "string" as const,
 	id: "string" as const,
 	aliases: "string[]" as const,
-	tags: "enum[]" as const,
 };
 
 export type NodeSearchMetadataStore = {
@@ -66,7 +65,7 @@ export const useNodeSearchMetadataStore = create<NodeSearchMetadataStore>(
 				components: {
 					tokenizer: {
 						stemming: true,
-						stemmerSkipProperties: ["id", "tags"],
+						stemmerSkipProperties: ["id"],
 						...locale.oramaMetadata,
 					},
 				},
@@ -98,32 +97,6 @@ export const registerWithDefaultRenderer = <
 	});
 
 	if (options.searchable ?? true) {
-		const tags: Set<string> = new Set();
-
-		const inputs = Object.keys(node.inputSchema?.entries ?? []);
-		const outputs = Object.keys(node.outputSchema?.entries ?? []);
-		for (const key of inputs) {
-			tags.add(
-				`accepts:${node.entry(key).generics ? "generic" : node.entry(key).type}`,
-			);
-		}
-		for (const key of outputs) {
-			tags.add(
-				`outputs:${node.entry(key).generics ? "generic" : node.entry(key).type}`,
-			);
-		}
-
-		if (
-			inputs.length > 0 &&
-			inputs.length !== inputs.filter((k) => node.entry(k).generics).length
-		)
-			tags.add("accepts");
-		if (
-			outputs.length > 0 &&
-			outputs.length !== outputs.filter((k) => node.entry(k).generics).length
-		)
-			tags.add("outputs");
-
 		const categoryRenderOptions = useRenderableNodesStore
 			.getState()
 			.categoryRenderOptions.get(node.category);
@@ -141,7 +114,6 @@ export const registerWithDefaultRenderer = <
 				aliases: localizableString(options.aliases ?? "")
 					.split(",")
 					.map((s) => s.trim()),
-				tags: Array.from(tags),
 			});
 		});
 	}

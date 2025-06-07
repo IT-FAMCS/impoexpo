@@ -206,8 +206,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				>["screenToFlowPosition"],
 				openSearchModal: () => void,
 			) => {
-				const { setFilters, setNewNodeInformation } =
-					useSearchNodesModalStore.getState();
+				const { setNewNodeInformation } = useSearchNodesModalStore.getState();
 
 				if (
 					!connectionState.isValid &&
@@ -215,19 +214,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					connectionState.fromHandle?.id &&
 					!get().isReconnecting
 				) {
-					const node = getBaseNode(connectionState.fromNode.type);
-					const handleId = connectionState.fromHandle.id;
-					const handle = node.entry(handleId);
-
-					const filters = [
-						`${handle.source === "input" ? "outputs" : "accepts"}${handle.generics ? "" : `:${handle.type}`}`,
-					];
-					if (!handle.generics)
-						filters.push(
-							`${handle.source === "input" ? "outputs" : "accepts"}:generic`,
-						);
-					setFilters(filters);
-
 					const { clientX, clientY } =
 						"changedTouches" in event ? event.changedTouches[0] : event;
 					setNewNodeInformation({

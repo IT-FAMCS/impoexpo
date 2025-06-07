@@ -63,7 +63,7 @@
 		"@lingui/cli": "^5.3.1",
 		"@lingui/swc-plugin": "^5.5.2",
 		"@lingui/vite-plugin": "^5.3.1",
-		"@react-types/shared": "3.27.0",
+		"@react-types/shared": "3.29.0",
 		"@types/gapi": "^0.0.47",
 		"@types/google.accounts": "^0.0.15",
 		"@types/luxon": "^3.6.2",

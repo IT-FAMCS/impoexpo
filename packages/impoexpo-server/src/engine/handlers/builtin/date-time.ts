@@ -27,7 +27,6 @@ registerHandler(dateTimeNodes.CURRENT_DATETIME_NODE, (ctx) => ({
 }));
 
 registerHandler(dateTimeNodes.DATE_IN_RANGE_NODE, (ctx) => {
-	logger.info(`${ctx.start} ${ctx.date} ${ctx.end}`);
 	return {
 		result:
 			ctx.date >= (ctx.start ?? ctx.date) && ctx.date <= (ctx.end ?? ctx.date),
