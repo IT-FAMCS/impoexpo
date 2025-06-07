@@ -41,7 +41,7 @@ import {
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
-import { DateTime } from "luxon";
+import { DateTime, FixedOffsetZone, Zone } from "luxon";
 
 const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	const { t } = useLingui();
@@ -197,11 +197,14 @@ const getEntryComponent = <TDefault,>(
 						node,
 						handleName,
 						value
-							? DateTime.fromObject({
-									year: value.year,
-									day: value.day,
-									month: value.month,
-								}).toJSON()
+							? DateTime.fromObject(
+									{
+										year: value.year,
+										day: value.day,
+										month: value.month,
+									},
+									{ zone: FixedOffsetZone.utcInstance },
+								).toJSON()
 							: undefined,
 					);
 				}}
