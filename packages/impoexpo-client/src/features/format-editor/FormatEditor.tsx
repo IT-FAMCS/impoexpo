@@ -40,6 +40,7 @@ import dagre from "@dagrejs/dagre";
 import FormatEditorContextMenu, {
 	type FormatEditorContextMenuRef,
 } from "./FormatEditorContextMenu";
+import NestedDropdown from "@/components/external/NestedDropdown";
 const connectionHasCycles = (
 	connection: Connection | Edge,
 	nodes: ProjectNode[],
@@ -241,13 +242,42 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 				<Background size={2} />
 				<Panel position="top-right">
 					<div className="flex flex-row gap-2">
-						<Tooltip content={<Trans>layout nodes</Trans>}>
-							<Button
-								onPress={layoutNodes}
-								isIconOnly
-								startContent={<Icon width={18} icon="mdi:stars" />}
-							/>
-						</Tooltip>
+						<NestedDropdown
+							trigger={
+								<Button
+									isIconOnly
+									startContent={<Icon width={18} icon="mdi:dots-vertical" />}
+								/>
+							}
+							items={[
+								{
+									key: "layout-nodes",
+									label: <Trans>layout nodes</Trans>,
+									endContent: <Icon width={18} icon="mdi:stars" />,
+									onPress: layoutNodes,
+								},
+								{
+									key: "export",
+									label: <Trans>export project...</Trans>,
+									startContent: <Icon width={18} icon="mdi:arrow-left" />,
+									endContent: <Icon width={18} icon="mdi:download" />,
+									items: [
+										{
+											key: "export-to-image",
+											label: <Trans>to image</Trans>,
+											startContent: <Icon width={18} icon="mdi:image" />,
+										},
+										{
+											key: "export-to-json",
+											label: <Trans>to json</Trans>,
+											startContent: <Icon width={18} icon="mdi:code-json" />,
+											onPress: () => {},
+										},
+									],
+									placement: "left-start",
+								},
+							]}
+						/>
 					</div>
 				</Panel>
 				<Panel position="top-left">

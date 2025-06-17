@@ -146,7 +146,6 @@ export const executeJobNodes = async (job: Job) => {
 				return {
 					iterators: iterators.length === 0 ? undefined : iterators,
 					skip: () => {
-						logger.warn(node.id);
 						if (iterators.length !== 0) throw new SkipIterationError();
 					},
 				};

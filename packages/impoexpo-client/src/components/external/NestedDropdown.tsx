@@ -6,21 +6,37 @@ import {
 	DropdownItem,
 	type DropdownItemProps,
 	type PopoverProps,
+	DropdownSection,
+	type DropdownSectionProps,
 } from "@heroui/react";
-import type { CollectionElement } from "@react-types/shared";
+import type { CollectionElement, ItemElement } from "@react-types/shared";
 
 export type NestedDropdownPlacement = Required<PopoverProps["placement"]>;
 
 export interface NestedDropdownItemProps
-	extends Omit<DropdownItemProps, "children"> {
+	extends Omit<DropdownItemProps, "children" | "items" | "key"> {
 	key: string;
 	label: ReactNode;
 	items?: NestedDropdownItemProps[];
 	placement?: NestedDropdownPlacement;
 }
 
+export interface NestedDropdownSectionProps
+	extends Omit<DropdownSectionProps, "children" | "items" | "key"> {
+	key: string;
+	items?: NestedDropdownItemProps[];
+}
+
+export type NestedDropdownChildProps =
+	| NestedDropdownItemProps
+	| NestedDropdownSectionProps;
+
+const isSection = (
+	obj: NestedDropdownChildProps,
+): obj is NestedDropdownSectionProps => "showDivider" in obj;
+
 interface NestedDropdownProps {
-	items: NestedDropdownItemProps[];
+	items: NestedDropdownChildProps[];
 	trigger: ReactNode;
 	placement?: NestedDropdownPlacement;
 }
@@ -32,7 +48,18 @@ const NestedDropdown: FC<NestedDropdownProps> = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const renderMenuItem = (item: NestedDropdownItemProps): ReactNode => {
+	const renderMenuItem = (item: NestedDropdownChildProps): ReactNode => {
+		if (isSection(item)) {
+			const { key, items, ...rest } = item;
+			return (
+				<DropdownSection {...rest} key={key} items={items}>
+					{(item) =>
+						renderMenuItem(item) as ItemElement<NestedDropdownItemProps>
+					}
+				</DropdownSection>
+			);
+		}
+
 		const { key, label, items, placement, ...rest } = item;
 		if (items) {
 			return (
@@ -76,7 +103,7 @@ const NestedDropdown: FC<NestedDropdownProps> = ({
 				}}
 			>
 				{(item) =>
-					renderMenuItem(item) as CollectionElement<NestedDropdownItemProps>
+					renderMenuItem(item) as CollectionElement<NestedDropdownChildProps>
 				}
 			</DropdownMenu>
 		</Dropdown>

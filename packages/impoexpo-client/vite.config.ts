@@ -3,7 +3,10 @@ import { lingui } from "@lingui/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const getCommitInformation = (type: "shortHash" | "longHash" | "message") => {
 	const format = type === "message" ? "%s" : type === "shortHash" ? "%h" : "%H";
 	return child.execSync(`git log -1 --pretty=${format}`).toString().trim();
@@ -37,6 +40,14 @@ export default defineConfig(({ mode }) => {
 		esbuild: {
 			supported: {
 				"top-level-await": true,
+			},
+		},
+		build: {
+			rollupOptions: {
+				input: {
+					main: resolve(__dirname, "index.html"),
+					wizard: resolve(__dirname, "wizard/index.html"),
+				},
 			},
 		},
 	};
