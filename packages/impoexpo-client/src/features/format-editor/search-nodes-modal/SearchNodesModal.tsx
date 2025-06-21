@@ -1,6 +1,5 @@
 import AnimateChangeInSize from "@/components/external/AnimateChangeInSize";
 import {
-	Chip,
 	Divider,
 	Input,
 	Listbox,
@@ -10,8 +9,11 @@ import {
 	ModalContent,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
-import { useLingui } from "@lingui/react/macro";
+import {
+	baseNodesMap,
+	getBaseNode,
+} from "@impoexpo/shared/nodes/node-database";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -36,8 +38,6 @@ export default function SearchNodesModal(props: {
 	const { database, reset } = useNodeSearchMetadataStore();
 	const { setNewNodeInformation, newNodeInformation } =
 		useSearchNodesModalStore();
-	const { attachNewNode, addNewNode } = useFormatEditorStore();
-	const { categoryRenderOptions } = useRenderableNodesStore();
 	const [query, setQuery] = useState("");
 	const [searchResults, setSearchResults] = useState<
 		{
@@ -46,6 +46,17 @@ export default function SearchNodesModal(props: {
 		}[]
 	>([]);
 	const inputRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		const listener = (ev: KeyboardEvent) => {
+			if (ev.target === inputRef.current) return;
+			inputRef.current?.focus();
+			inputRef.current?.dispatchEvent(ev);
+		};
+
+		window.addEventListener("keypress", listener);
+		return () => window.removeEventListener("keypress", listener);
+	}, []);
 
 	useEffect(() => {
 		reset(locale.id);
@@ -131,55 +142,19 @@ export default function SearchNodesModal(props: {
 										placeholder={t`enter the name, category or tag of the needed node...`}
 									/>
 									<Divider />
-									<Listbox items={searchResults} className="w-full">
-										{(item) => {
-											const renderOptions = getNodeRenderOptions(item.id);
-											const nodeData = getBaseNode(item.id);
-
-											const categoryOptions = categoryRenderOptions.get(
-												nodeData.category,
-											);
-											if (!categoryOptions) return null;
-
-											return (
-												<ListboxItem
-													onPress={() => {
-														if (!newNodeInformation) return;
-														if (
-															newNodeInformation.fromNodeId &&
-															newNodeInformation.fromNodeType &&
-															newNodeInformation.fromHandleId
-														) {
-															attachNewNode(
-																newNodeInformation.fromNodeId,
-																newNodeInformation.fromNodeType,
-																item.id,
-																newNodeInformation.fromHandleId,
-																newNodeInformation.position,
-															);
-														} else {
-															addNewNode(item.id, newNodeInformation.position);
-														}
-
-														onClose();
-													}}
-													startContent={
-														renderOptions.raw.icon?.(24) ??
-														categoryOptions.icon?.(24)
-													}
-													description={`${item.id} (${Math.trunc(item.score * 100)}%)`}
-												>
-													<div className="flex flex-row items-center justify-center gap-1">
-														{localizableString(categoryOptions.name, t)}{" "}
-														<Icon icon="mdi:arrow-right" />{" "}
-														{renderOptions.raw.title !== undefined
-															? localizableString(renderOptions.raw.title, t)
-															: item.id}
-													</div>
-												</ListboxItem>
-											);
-										}}
-									</Listbox>
+									{query === "" ? (
+										<ManualNodeSelector onClose={onClose} />
+									) : (
+										<Listbox items={searchResults} className="w-full">
+											{(item) =>
+												getSearchModalNodeListItem({
+													id: item.id,
+													score: item.score,
+													onClose: onClose,
+												})
+											}
+										</Listbox>
+									)}
 								</div>
 							</ModalBody>
 						</AnimateChangeInSize>
@@ -189,3 +164,157 @@ export default function SearchNodesModal(props: {
 		</Modal>
 	);
 }
+
+function ManualNodeSelector(props: {
+	onClose: () => void;
+}) {
+	const BACK_LIST_ITEM_KEY = "back";
+
+	const { categoryRenderOptions } = useRenderableNodesStore();
+	const { newNodeInformation } = useSearchNodesModalStore();
+
+	const [selectedCategory, setSelectedCategory] = useState<
+		string | undefined
+	>();
+
+	const [nodes, setNodes] = useState<{ id: string }[]>([]);
+	useEffect(() => {
+		if (!selectedCategory) setNodes([]);
+		else
+			setNodes([
+				...Array.from(baseNodesMap.values())
+					.filter((toNode) => {
+						if (toNode.category !== selectedCategory) return false;
+						if (
+							!newNodeInformation?.fromNodeType ||
+							!newNodeInformation?.fromHandleId
+						)
+							return true;
+						const fromNode = getBaseNode(newNodeInformation.fromNodeType);
+						const fromEntry = fromNode.entry(newNodeInformation.fromHandleId);
+
+						return Object.keys(
+							fromEntry.source === "input"
+								? (toNode.outputSchema?.entries ?? {})
+								: (toNode.inputSchema?.entries ?? {}),
+						).some((key) => entriesCompatible(fromEntry, toNode.entry(key)));
+					})
+					.map((v) => ({ id: String(`${v.category}-${v.name}`) })),
+				{ id: BACK_LIST_ITEM_KEY },
+			]);
+	}, [selectedCategory, newNodeInformation]);
+
+	return (
+		<div className="flex flex-col">
+			{selectedCategory === undefined ? (
+				<Listbox
+					className="w-full"
+					items={Array.from(categoryRenderOptions.entries())}
+				>
+					{([k, v]) => (
+						<ListboxItem
+							key={k}
+							startContent={v.icon?.(24)}
+							endContent={<Icon width={18} icon="mdi:chevron-right" />}
+							onPress={() => setSelectedCategory(k)}
+						>
+							{localizableString(v.name)}
+						</ListboxItem>
+					)}
+				</Listbox>
+			) : (
+				<Listbox className="w-full" items={nodes}>
+					{(obj) => {
+						if (obj.id === BACK_LIST_ITEM_KEY) {
+							return (
+								<ListboxItem
+									key={obj.id}
+									startContent={<Icon width={24} icon="mdi:chevron-left" />}
+									onPress={() => setSelectedCategory(undefined)}
+								>
+									<Trans>go back</Trans>
+								</ListboxItem>
+							);
+						}
+
+						return getSearchModalNodeListItem({
+							id: obj.id,
+							onClose: props.onClose,
+						});
+					}}
+				</Listbox>
+			)}
+			<Divider />
+			<div className="flex flex-row gap-2 w-full items-center p-2">
+				<Icon
+					className="text-foreground-400"
+					width={18}
+					icon="mdi:information"
+				/>
+				<p className="text-tiny text-foreground-400">
+					<Trans>
+						the results are filtered based on what node and property you've
+						selected.
+					</Trans>
+				</p>
+			</div>
+		</div>
+	);
+}
+
+// blame heroui for this abomination (it always expects ListItem as a child)
+const getSearchModalNodeListItem = (props: {
+	id: string;
+	score?: number;
+	onClose: () => void;
+}) => {
+	const { newNodeInformation } = useSearchNodesModalStore.getState();
+	const { attachNewNode, addNewNode } = useFormatEditorStore.getState();
+	const { categoryRenderOptions } = useRenderableNodesStore.getState();
+
+	const renderOptions = getNodeRenderOptions(props.id);
+	const nodeData = getBaseNode(props.id);
+
+	const categoryOptions = categoryRenderOptions.get(nodeData.category);
+	if (!categoryOptions) return null;
+
+	return (
+		<ListboxItem
+			key={props.id}
+			startContent={renderOptions.raw.icon?.(24) ?? categoryOptions.icon?.(24)}
+			description={
+				props.score
+					? `${props.id} (${Math.trunc(props.score * 100)}%)`
+					: props.id
+			}
+			onPress={() => {
+				if (!newNodeInformation) return;
+				if (
+					newNodeInformation.fromNodeId &&
+					newNodeInformation.fromNodeType &&
+					newNodeInformation.fromHandleId
+				) {
+					attachNewNode(
+						newNodeInformation.fromNodeId,
+						newNodeInformation.fromNodeType,
+						props.id,
+						newNodeInformation.fromHandleId,
+						newNodeInformation.position,
+					);
+				} else {
+					addNewNode(props.id, newNodeInformation.position);
+				}
+
+				props.onClose();
+			}}
+		>
+			<div className="flex flex-row items-center justify-center gap-1">
+				{localizableString(categoryOptions.name)}{" "}
+				<Icon icon="mdi:arrow-right" />{" "}
+				{renderOptions.raw.title !== undefined
+					? localizableString(renderOptions.raw.title)
+					: props.id}
+			</div>
+		</ListboxItem>
+	);
+};

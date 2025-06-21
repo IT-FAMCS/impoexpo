@@ -1,11 +1,11 @@
-import LanguageSwitcher from "@/components/buttons/LanguageSwitcher";
-import ThemeSwitcher from "@/components/buttons/ThemeSwitcher";
 import ColumnSteps from "@/components/external/ColumnStep";
 import SelectSourceCard from "@/features/transfer-wizard/select-source-card/SelectSourceCard";
 import FormatEditor from "@/features/format-editor/FormatEditor";
 import { WIZARD_STORE_CATEGORY, resetStores } from "@/stores/resettable";
 import {
+	FormatEditorWrapperState,
 	TransferWizardStage,
+	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
 import {
@@ -19,8 +19,8 @@ import {
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
-import { motion } from "motion/react";
-import { useCallback, useEffect, useState } from "react";
+import { motion, useAnimate } from "motion/react";
+import { type ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
 	clearStatesFromDatabase,
@@ -48,7 +48,7 @@ export default function TransferWizardPage() {
 		},
 	});
 	const importNodesSuccessful = importNodesQuery.data;
-	if (!importNodesSuccessful) console.error(importNodesQuery.error);
+	if (importNodesQuery.error) console.error(importNodesQuery.error);
 
 	const loadPersistentDataQuery = useQuery({
 		queryKey: ["load-persistent-data"],
@@ -74,20 +74,11 @@ export default function TransferWizardPage() {
 	const navigate = useNavigate();
 	const { t } = useLingui();
 	const { stage, setStage } = useTransferWizardStore();
-	const [showBlockerContainer, setShowBlockerContainer] =
-		useState<boolean>(true);
-	const [reverseBlockerContainer, setReverseBlockerContainer] =
-		useState<boolean>(false);
 
 	useEffect(() => {
 		window.addEventListener("beforeunload", saveStatesToDatabase);
 		return () =>
 			window.removeEventListener("beforeunload", saveStatesToDatabase);
-	}, []);
-
-	const onFormatEditorClosedCallback = useCallback(() => {
-		setReverseBlockerContainer(true);
-		setShowBlockerContainer(true);
 	}, []);
 
 	const getStageWidget = () => {
@@ -106,31 +97,13 @@ export default function TransferWizardPage() {
 				return <SelectSourceCard />;
 			case TransferWizardStage.FORMAT:
 				return (
-					<Card className="relative flex items-center justify-center w-full h-full">
+					<FormatEditorWrapper
+						endCallback={() => setStage(TransferWizardStage.TRANSFER)}
+					>
 						<ReactFlowProvider>
-							<FormatEditor doneCallback={onFormatEditorClosedCallback} />
+							<FormatEditor />
 						</ReactFlowProvider>
-						{showBlockerContainer && (
-							<AnimatedCard
-								transition={{
-									delay: 0.25,
-									ease: [0.83, 0, 0.17, 1],
-									duration: 0.5,
-								}}
-								initial={{ opacity: reverseBlockerContainer ? 0 : 1 }}
-								animate={{ opacity: reverseBlockerContainer ? 1 : 0 }}
-								onAnimationComplete={() => {
-									if (reverseBlockerContainer) {
-										setTimeout(
-											() => setStage(TransferWizardStage.TRANSFER),
-											250,
-										);
-									} else setShowBlockerContainer(false);
-								}}
-								className="absolute w-full h-full bg-content1"
-							/>
-						)}
-					</Card>
+					</FormatEditorWrapper>
 				);
 			case TransferWizardStage.TRANSFER:
 				return <TransferProgressCard />;
@@ -189,5 +162,88 @@ export default function TransferWizardPage() {
 				{getStageWidget()}
 			</motion.div>
 		</div>
+	);
+}
+
+function FormatEditorWrapper(props: {
+	children: ReactNode;
+	endCallback: () => void;
+}) {
+	const { state, setState } = useFormatEditorWrapperStore();
+	const [containerScope, animateContainer] = useAnimate();
+	const [overlayScope, animateOverlay] = useAnimate();
+
+	useEffect(() => {
+		console.log(FormatEditorWrapperState[state]);
+
+		switch (state) {
+			case FormatEditorWrapperState.HIDDEN:
+			case FormatEditorWrapperState.IDLE:
+				break;
+			case FormatEditorWrapperState.IN:
+				animateContainer(
+					containerScope.current,
+					{
+						width: ["2rem", "100%"],
+						height: ["2rem", "100%"],
+					},
+					{
+						times: [0, 0.4, 1],
+						duration: 1.5,
+						ease: [0.83, 0, 0.17, 1],
+						onComplete: () => {
+							queueMicrotask(() =>
+								animateOverlay(
+									overlayScope.current,
+									{ opacity: 0 },
+									{
+										delay: 0.25,
+										ease: [0.83, 0, 0.17, 1],
+										duration: 0.5,
+									},
+								),
+							);
+							setState(FormatEditorWrapperState.IDLE);
+						},
+					},
+				);
+				break;
+			case FormatEditorWrapperState.OUT:
+				animateOverlay(
+					overlayScope.current,
+					{ opacity: 1 },
+					{
+						delay: 0.25,
+						ease: [0.83, 0, 0.17, 1],
+						duration: 0.5,
+						onComplete: props.endCallback,
+					},
+				);
+				break;
+		}
+	}, [
+		state,
+		setState,
+		containerScope,
+		overlayScope,
+		animateContainer,
+		animateOverlay,
+		props.endCallback,
+	]);
+
+	return (
+		state !== FormatEditorWrapperState.HIDDEN && (
+			<AnimatedCard
+				style={{ width: "0px", height: "0px" }}
+				ref={containerScope}
+			>
+				{state !== FormatEditorWrapperState.IN && props.children}
+				<AnimatedCard
+					ref={overlayScope}
+					style={{ opacity: 1 }}
+					className="absolute w-full h-full bg-content1 pointer-events-none"
+				/>
+			</AnimatedCard>
+		)
 	);
 }

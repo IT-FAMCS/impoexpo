@@ -16,7 +16,7 @@ import {
 
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
-import { Button, Input, Kbd, Tooltip, useDisclosure } from "@heroui/react";
+import { Button, Kbd, Tooltip, useDisclosure } from "@heroui/react";
 import {
 	type MouseEvent as ReactMouseEvent,
 	useCallback,
@@ -41,6 +41,10 @@ import FormatEditorContextMenu, {
 	type FormatEditorContextMenuRef,
 } from "./FormatEditorContextMenu";
 import NestedDropdown from "@/components/external/NestedDropdown";
+import {
+	FormatEditorWrapperState,
+	useFormatEditorWrapperStore,
+} from "../transfer-wizard/store";
 const connectionHasCycles = (
 	connection: Connection | Edge,
 	nodes: ProjectNode[],
@@ -64,7 +68,7 @@ const connectionHasCycles = (
 	return hasCycle(target);
 };
 
-export default function FormatEditor(props: { doneCallback: () => void }) {
+export default function FormatEditor() {
 	const {
 		edges,
 		nodes,
@@ -240,7 +244,7 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 			>
 				<Controls />
 				<Background size={2} />
-				<Panel position="top-right">
+				<Panel position="top-left">
 					<div className="flex flex-row gap-2">
 						<NestedDropdown
 							trigger={
@@ -253,14 +257,14 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 								{
 									key: "layout-nodes",
 									label: <Trans>layout nodes</Trans>,
-									endContent: <Icon width={18} icon="mdi:stars" />,
+									startContent: <Icon width={18} icon="mdi:stars" />,
 									onPress: layoutNodes,
 								},
 								{
 									key: "export",
 									label: <Trans>export project...</Trans>,
-									startContent: <Icon width={18} icon="mdi:arrow-left" />,
-									endContent: <Icon width={18} icon="mdi:download" />,
+									endContent: <Icon width={18} icon="mdi:chevron-right" />,
+									startContent: <Icon width={18} icon="mdi:download" />,
 									items: [
 										{
 											key: "export-to-image",
@@ -274,16 +278,10 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 											onPress: () => {},
 										},
 									],
-									placement: "left-start",
+									placement: "right-start",
 								},
 							]}
 						/>
-					</div>
-				</Panel>
-				<Panel position="top-left">
-					<div className="flex flex-row gap-2">
-						{/* TODO */}
-						<Input value="untitled" />
 						<Tooltip
 							delay={500}
 							content={
@@ -329,7 +327,9 @@ export default function FormatEditor(props: { doneCallback: () => void }) {
 							onPress={async () => {
 								useProjectStore.getState().collectNodes();
 								await useProjectStore.getState().collectIntegrations();
-								props.doneCallback();
+								useFormatEditorWrapperStore
+									.getState()
+									.setState(FormatEditorWrapperState.OUT);
 							}}
 						>
 							<Trans>done</Trans>

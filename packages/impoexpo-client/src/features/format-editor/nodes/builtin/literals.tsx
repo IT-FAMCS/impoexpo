@@ -11,6 +11,7 @@ nodesScope(() => {
 	registerCategory("literals", {
 		name: msg`literals`,
 		header: "bg-default-200",
+		icon: (size) => <Icon width={size} icon="mdi:symbol" />,
 	});
 
 	registerWithDefaultRenderer(literalNodes.NUMBER_NODE, {

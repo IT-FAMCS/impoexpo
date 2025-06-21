@@ -19,7 +19,9 @@ import {
 	useSourceCardStore,
 } from "@/features/transfer-wizard/select-source-card/store";
 import {
+	FormatEditorWrapperState,
 	TransferWizardStage,
+	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
@@ -33,10 +35,13 @@ import {
 	DefaultIntegrationHydrator,
 	DefaultIntegrationVerifier,
 } from "@/integrations/common";
-import { motion } from "motion/react";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
+
+	const { setStage } = useTransferWizardStore();
+	const { setState: setTransitionCardState } = useFormatEditorWrapperStore();
+
 	const { t } = useLingui();
 
 	const title = useMemo(() => {
@@ -58,12 +63,14 @@ export default function SelectSourceCard() {
 				return <SourceHydrator />;
 			case SourceCardState.CHECK_ADDED_SOURCES:
 				return <SourceChecker />;
+			case SourceCardState.DONE:
+				setStage(TransferWizardStage.FORMAT);
+				setTransitionCardState(FormatEditorWrapperState.IN);
+				return <></>;
 		}
-	}, [state]);
+	}, [state, setStage, setTransitionCardState]);
 
-	return state === SourceCardState.DONE ? (
-		<AnimatedTransitionCard />
-	) : (
+	return (
 		<Card className="max-w-[40vw] p-2 min-w-[15vw]">
 			<CardHeader className="justify-center text-large">{title}</CardHeader>
 			<Divider />
@@ -71,23 +78,6 @@ export default function SelectSourceCard() {
 				<CardBody>{renderer}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
-	);
-}
-
-const AnimatedCard = motion.create(Card);
-function AnimatedTransitionCard() {
-	const { setStage } = useTransferWizardStore();
-	return (
-		<AnimatedCard
-			transition={{
-				times: [0, 0.4, 1],
-				duration: 1.5,
-				ease: [0.83, 0, 0.17, 1],
-			}}
-			initial={{ width: "0px", height: "0px" }}
-			animate={{ width: ["2rem", "100%"], height: ["2rem", "100%"] }}
-			onAnimationComplete={() => setStage(TransferWizardStage.FORMAT)}
-		/>
 	);
 }
 

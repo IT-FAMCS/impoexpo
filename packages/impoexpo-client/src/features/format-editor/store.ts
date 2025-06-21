@@ -642,7 +642,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			recoverGenericNodes(nodes) {
 				const { addGenericNodeInstance } = useRenderableNodesStore.getState();
 
-				console.log(nodes);
 				for (const [, { base, name, resolvedTypes }] of Object.entries(nodes)) {
 					const baseNode = getBaseNode(base);
 					const copy = deepCopy(baseNode);

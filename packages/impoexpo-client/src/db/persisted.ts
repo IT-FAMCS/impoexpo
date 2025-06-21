@@ -1,5 +1,7 @@
 import {
+	FormatEditorWrapperState,
 	TransferWizardStage,
+	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
 import { globalDatabase } from "./global-database";
@@ -87,13 +89,15 @@ export const loadStatesFromDatabase = async () => {
 
 	const wizardState = await globalDatabase.persisted.get("wizard-state");
 	if (wizardState) {
-		useTransferWizardStore
-			.getState()
-			.setStage(
-				TransferWizardStage[
-					wizardState.data.state as keyof typeof TransferWizardStage
-				],
-			);
+		const stage =
+			TransferWizardStage[
+				wizardState.data.state as keyof typeof TransferWizardStage
+			];
+		useTransferWizardStore.getState().setStage(stage);
+		if (stage === TransferWizardStage.FORMAT)
+			useFormatEditorWrapperStore
+				.getState()
+				.setState(FormatEditorWrapperState.IN);
 	}
 };
 
