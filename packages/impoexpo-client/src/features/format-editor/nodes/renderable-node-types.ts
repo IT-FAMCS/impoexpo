@@ -105,8 +105,8 @@ export class NodeRenderOptions<
 			Object.assign(this.raw, { outputs: {} });
 
 		const { categoryRenderOptions } = useRenderableNodesStore.getState();
-		if (!this.raw.icon && categoryRenderOptions.has(this.node.category))
-			this.raw.icon = categoryRenderOptions.get(this.node.category)?.icon;
+		if (!this.raw.icon && this.node.category in categoryRenderOptions)
+			this.raw.icon = categoryRenderOptions[this.node.category].icon;
 	}
 
 	public input<TKey extends keyof TSInput>(
@@ -145,10 +145,14 @@ export class NodeRenderOptions<
 
 	public description<TKey extends keyof TSInput | keyof TSOutput>(
 		key: TKey,
-	): string {
+	): string | undefined {
 		const property = this.property(key);
-		if (property?.description !== undefined)
-			return localizableString(property.description);
+		return property?.description !== undefined
+			? localizableString(property.description)
+			: undefined;
+	}
+
+	public type<TKey extends keyof TSInput | keyof TSOutput>(key: TKey): string {
 		return this.node.entry(String(key)).type;
 	}
 

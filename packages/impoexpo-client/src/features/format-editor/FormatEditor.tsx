@@ -45,6 +45,8 @@ import {
 	FormatEditorWrapperState,
 	useFormatEditorWrapperStore,
 } from "../transfer-wizard/store";
+import ExportProjectModal from "./export-project-modal/ExportProjectModal";
+
 const connectionHasCycles = (
 	connection: Connection | Edge,
 	nodes: ProjectNode[],
@@ -91,11 +93,18 @@ export default function FormatEditor() {
 	const nodesLaidOut = useRef(false);
 	const nodesInitialized = useNodesInitialized();
 	const { screenToFlowPosition, fitView } = useReactFlow();
+
 	const {
 		onOpen: openSearchModal,
 		isOpen: isSearchModalOpen,
 		onOpenChange: onSearchModalOpenChange,
 	} = useDisclosure({ id: "SEARCH_NODES_MODAL" });
+	const {
+		onOpen: openExportProjectModal,
+		isOpen: isExportProjectModalOpen,
+		onOpenChange: onExportProjectModalOpenChange,
+		onClose: onExportProjectModalClose,
+	} = useDisclosure({ id: "EXPORT_PROJECT_MODAL" });
 
 	const { setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
@@ -261,24 +270,10 @@ export default function FormatEditor() {
 									onPress: layoutNodes,
 								},
 								{
-									key: "export",
+									key: "export-project",
 									label: <Trans>export project...</Trans>,
-									endContent: <Icon width={18} icon="mdi:chevron-right" />,
 									startContent: <Icon width={18} icon="mdi:download" />,
-									items: [
-										{
-											key: "export-to-image",
-											label: <Trans>to image</Trans>,
-											startContent: <Icon width={18} icon="mdi:image" />,
-										},
-										{
-											key: "export-to-json",
-											label: <Trans>to json</Trans>,
-											startContent: <Icon width={18} icon="mdi:code-json" />,
-											onPress: () => {},
-										},
-									],
-									placement: "right-start",
+									onPress: openExportProjectModal,
 								},
 							]}
 						/>
@@ -341,6 +336,11 @@ export default function FormatEditor() {
 				portal={containerRef}
 				isOpen={isSearchModalOpen}
 				onOpenChange={onSearchModalOpenChange}
+			/>
+			<ExportProjectModal
+				isOpen={isExportProjectModalOpen}
+				onOpenChange={onExportProjectModalOpenChange}
+				onClose={onExportProjectModalClose}
 			/>
 			<FormatEditorContextMenu ref={contextMenuRef} />
 		</div>

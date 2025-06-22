@@ -56,11 +56,10 @@ const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	const nodeData = useMemo(() => getBaseNode(type), [type]);
 	const [nodeRenderOptions, categoryRenderOptions] = useRenderableNodesStore(
 		useShallow((state) => [
-			state.nodeRenderOptions.get(type),
-			state.categoryRenderOptions.get(nodeData.category),
+			state.nodeRenderOptions[type],
+			state.categoryRenderOptions[nodeData.category],
 		]),
 	);
-	if (nodeRenderOptions === undefined) return <>meow</>;
 
 	return (
 		<Card classNames={{ body: "p-0", base: "overflow-visible relative" }}>
@@ -315,10 +314,14 @@ function NodePropertyRenderer(props: {
 				<div className="relative flex flex-row items-start gap-4">
 					{props.renderOptions.showLabel(props.name) && (
 						<div className="flex flex-col items-start gap-1 pl-4">
-							<p className="max-w-64 text-start">
+							<p className="max-w-64 text-start leading-none">
 								{props.renderOptions.title(props.name)}
+								<span className="text-foreground-400 text-tiny">
+									<br />
+									{props.renderOptions.type(props.name)}
+								</span>
 							</p>
-							<p className="text-foreground-400 text-tiny max-w-36">
+							<p className="text-foreground-600 text-tiny max-w-36">
 								{props.renderOptions.description(props.name)}
 							</p>
 						</div>
@@ -354,10 +357,14 @@ function NodePropertyRenderer(props: {
 				<div className="relative flex flex-row items-start gap-4 w-fit">
 					{!shouldHideLabel(props.property) && (
 						<div className="flex flex-col items-end gap-1 pr-4">
-							<p className="max-w-64 text-end">
+							<p className="max-w-64 text-end leading-none">
 								{props.renderOptions.title(props.name)}
+								<span className="text-foreground-400 text-tiny">
+									<br />
+									{props.renderOptions.type(props.name)}
+								</span>
 							</p>
-							<p className="text-right text-foreground-400 text-tiny max-w-36">
+							<p className="text-foreground-600 text-end text-tiny max-w-36">
 								{props.renderOptions.description(props.name)}
 							</p>
 						</div>

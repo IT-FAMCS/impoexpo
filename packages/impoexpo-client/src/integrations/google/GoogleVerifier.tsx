@@ -14,6 +14,7 @@ export default function GoogleVerifier(props: {
 		queryFn: async () =>
 			(await getAuthFromDatabase("google", GoogleExchangeResponseSchema)) ??
 			null,
+		refetchOnWindowFocus: false,
 	});
 
 	if (getGoogleAuthQuery.isLoading || !getGoogleAuthQuery.data) return <></>;

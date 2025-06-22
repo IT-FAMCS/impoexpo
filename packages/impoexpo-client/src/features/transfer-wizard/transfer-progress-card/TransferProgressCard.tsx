@@ -181,6 +181,7 @@ function UploadingProjectCard() {
 				project,
 				UploadProjectResponseSchema,
 			),
+		refetchOnWindowFocus: false,
 	});
 	const { t } = useLingui();
 	const { setJobId, setState } = useTransferProgressCardStore();

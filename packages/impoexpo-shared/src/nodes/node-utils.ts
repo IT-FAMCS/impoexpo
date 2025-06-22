@@ -204,7 +204,6 @@ const internalEntriesCompatible = (
 		source: ObjectEntry,
 		target: ObjectEntry,
 	): boolean => {
-		console.log(source, target);
 		if (isArray(source) && isArray(target))
 			return isUnionOrEqual(source.item, target.item);
 		if (

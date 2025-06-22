@@ -89,17 +89,16 @@ export const registerWithDefaultRenderer = <
 			nodeRenderers: Object.assign(state.nodeRenderers, {
 				[type]: DefaultNodeRenderer,
 			}),
-			nodeRenderOptions: new Map(state.nodeRenderOptions).set(
-				type,
-				new NodeRenderOptions(node, options),
-			),
+			nodeRenderOptions: {
+				...state.nodeRenderOptions,
+				[type]: new NodeRenderOptions(node, options),
+			},
 		};
 	});
 
 	if (options.searchable ?? true) {
-		const categoryRenderOptions = useRenderableNodesStore
-			.getState()
-			.categoryRenderOptions.get(node.category);
+		const categoryRenderOptions =
+			useRenderableNodesStore.getState().categoryRenderOptions[node.category];
 
 		searchScope((database) => {
 			insert(database, {
@@ -121,11 +120,11 @@ export const registerWithDefaultRenderer = <
 
 export type RenderableNodesStore = {
 	nodeRenderers: NodeTypes;
-	nodeRenderOptions: Map<
+	nodeRenderOptions: Record<
 		string,
 		NodeRenderOptions<ObjectEntries, ObjectEntries>
 	>;
-	categoryRenderOptions: Map<
+	categoryRenderOptions: Record<
 		string,
 		{
 			icon?: IconRenderFunction;
@@ -155,8 +154,8 @@ export type RenderableNodesStore = {
 export const useRenderableNodesStore = create<RenderableNodesStore>(
 	(set, get) => ({
 		nodeRenderers: {},
-		categoryRenderOptions: new Map(),
-		nodeRenderOptions: new Map(),
+		categoryRenderOptions: {},
+		nodeRenderOptions: {},
 		genericNodes: {},
 
 		addGenericNodeInstance: (base, instance) =>
@@ -181,7 +180,7 @@ export const useRenderableNodesStore = create<RenderableNodesStore>(
 		unregisterRenderOptions: (type) =>
 			set((state) => {
 				delete state.nodeRenderers[type];
-				state.nodeRenderOptions.delete(type);
+				delete state.nodeRenderOptions[type];
 				return state;
 			}),
 
@@ -206,7 +205,7 @@ export const registerCategory = (
 ) =>
 	useRenderableNodesStore.setState((state) => {
 		return {
-			categoryRenderOptions: new Map(state.categoryRenderOptions).set(id, data),
+			categoryRenderOptions: { ...state.categoryRenderOptions, [id]: data },
 		};
 	});
 
@@ -214,10 +213,9 @@ export const getNodeRenderOptions = (
 	type: string,
 ): DefaultNodeRenderOptions => {
 	const optionsMap = useRenderableNodesStore.getState().nodeRenderOptions;
-	if (!optionsMap.has(type))
+	if (!(type in optionsMap))
 		throw new Error(`no node render options were found for node "${type}"`);
-	// biome-ignore lint/style/noNonNullAssertion: checked above
-	return optionsMap.get(type)!;
+	return optionsMap[type];
 };
 
 persistStoreOnReload("renderableNodes", useRenderableNodesStore);

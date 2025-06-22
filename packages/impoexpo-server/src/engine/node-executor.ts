@@ -13,7 +13,7 @@ import {
 } from "./node-executor-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
-import { baseNodesMap } from "@impoexpo/shared/nodes/node-database";
+import { baseNodes } from "@impoexpo/shared/nodes/node-database";
 import { childLogger } from "../logger";
 import {
 	isArray,
@@ -49,7 +49,7 @@ export const executeJobNodes = async (job: Job) => {
 
 	const resolveInputPaths = (node: ProjectNode, depth = 1) => {
 		const paths: Record<string, InputPath[]> = {};
-		const base = baseNodesMap.get(node.type);
+		const base = baseNodes[node.type];
 		if (!base) {
 			throw new Error(`no node base was found for node type "${node.type}"`);
 		}
@@ -220,7 +220,7 @@ export const executeJobNodes = async (job: Job) => {
 		});
 
 		const resolveInputs = (sourceNode: ProjectNode) => {
-			const base = baseNodesMap.get(sourceNode.type);
+			const base = baseNodes[sourceNode.type];
 			if (!base)
 				throw new Error(`no node base found for node type ${sourceNode.type}`);
 
@@ -321,7 +321,7 @@ export const executeJobNodes = async (job: Job) => {
 		}
 
 		if (actualDepth === 0) {
-			const base = baseNodesMap.get(node.type);
+			const base = baseNodes[node.type];
 			if (!base)
 				throw new Error(`no node base found for node type "${node.type}"`);
 			const handler = getNodeHandler(node.type, job);
@@ -439,8 +439,8 @@ export const executeJobNodes = async (job: Job) => {
 	try {
 		const terminatingNodes = job.project.nodes.filter(
 			(n) =>
-				Object.keys(baseNodesMap.get(n.type)?.outputSchema?.entries ?? {})
-					.length === 0,
+				Object.keys(baseNodes[n.type]?.outputSchema?.entries ?? {}).length ===
+				0,
 		);
 		logger.debug(`running ${terminatingNodes.length} terminating node(s)`);
 		for (const node of terminatingNodes) {

@@ -3,17 +3,16 @@ import { create as actualCreate } from "zustand";
 
 export const WIZARD_STORE_CATEGORY = "wizard";
 
-const storeResetFunctions: Map<string, Set<() => void>> = new Map();
+const storeResetFunctions: Record<string, (() => void)[]> = {};
 export const resetStores = (...categories: string[]) => {
 	for (const category of categories) {
-		if (!storeResetFunctions.has(category)) {
+		if (!(category in storeResetFunctions)) {
 			console.warn(`unknown resettable store category: ${category}. ignoring`);
 			continue;
 		}
 
 		console.info(`resetting all stores in the "${category}" category`);
-		// biome-ignore lint/style/noNonNullAssertion: checked with .has() beforehand
-		for (const fn of storeResetFunctions.get(category)!) {
+		for (const fn of storeResetFunctions[category] || []) {
 			fn();
 		}
 	}
@@ -27,11 +26,14 @@ export const createResettable = <T>(...categories: string[]) => {
 		const initialState = store.getInitialState();
 
 		for (const category of categories) {
-			if (!storeResetFunctions.has(category))
-				storeResetFunctions.set(category, new Set());
-			storeResetFunctions.get(category)?.add(() => {
-				store.setState(initialState, true);
-			});
+			if (!(category in storeResetFunctions))
+				storeResetFunctions[category] = [];
+			storeResetFunctions[category] = [
+				...storeResetFunctions[category],
+				() => {
+					store.setState(initialState, true);
+				},
+			];
 		}
 
 		return store;

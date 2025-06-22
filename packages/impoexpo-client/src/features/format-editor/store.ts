@@ -66,12 +66,10 @@ export type PersistentGenericNodeData = Record<
 	}
 >;
 
-const nodeCount: Map<string, number> = new Map();
+const nodeCount: Record<string, number> = {};
 export const getNodeId = (type: string) => {
-	if (!nodeCount.has(type)) nodeCount.set(type, 0);
-	// biome-ignore lint/style/noNonNullAssertion: checked on the line above
-	const next = nodeCount.get(type)! + 1;
-	nodeCount.set(type, next);
+	const next = (nodeCount[type] || 0) + 1;
+	nodeCount[type] = next;
 	return `${type}-${next}`;
 };
 
@@ -361,7 +359,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 												: `${base.category}-${base.name}-${Object.entries(
 														genericTypes,
 													)
-														.map(([key, type]) => (type ? type : key))
+														.map(([key, type]) => type || key)
 														.join("-")}`,
 										}
 									: n,
@@ -615,7 +613,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					getTrueGenericNodeBase(`${base.node.category}-${base.node.name}`) ??
 					base.node;
 				copy.name = `${trueBase.name}-${Object.entries(copy.genericTypes)
-					.map(([key, type]) => (type ? type : key))
+					.map(([key, type]) => type || key)
 					.join("-")}`;
 
 				addGenericNodeInstance(base.node, copy);

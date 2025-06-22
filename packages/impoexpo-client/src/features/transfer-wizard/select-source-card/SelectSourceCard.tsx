@@ -216,6 +216,7 @@ function SourceAuthenticator() {
 		queryKey: [`check-authenticated-${currentIntegration}`],
 		queryFn:
 			currentIntegration.checkAuthenticated ?? (() => Promise.resolve(true)),
+		refetchOnWindowFocus: false,
 	});
 
 	useEffect(() => {

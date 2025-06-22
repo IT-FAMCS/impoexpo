@@ -97,7 +97,7 @@ export const genericRegisterHandler = <
 	childLogger("nodes").debug(`\t\t-> registering handler for ${id}`);
 	registry[id] = async (ctx) => {
 		const result = handler(ctx as unknown as NodeExecutorContext<TIn>);
-		return result === undefined ? {} : result;
+		return result || {};
 	};
 };
 
@@ -122,7 +122,7 @@ export const genericRegisterAsyncHandler = <
 	childLogger("nodes").debug(`\t\t-> registering handler (async) for ${id}`);
 	registry[id] = async (ctx) => {
 		const result = await handler(ctx as unknown as NodeExecutorContext<TIn>);
-		return result === undefined ? {} : result;
+		return result || {};
 	};
 };
 

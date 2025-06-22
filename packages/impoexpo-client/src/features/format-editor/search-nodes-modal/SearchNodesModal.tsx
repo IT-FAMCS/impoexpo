@@ -9,10 +9,7 @@ import {
 	ModalContent,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import {
-	baseNodesMap,
-	getBaseNode,
-} from "@impoexpo/shared/nodes/node-database";
+import { baseNodes, getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { search, type SearchParams } from "@orama/orama";
 import type React from "react";
@@ -182,7 +179,7 @@ function ManualNodeSelector(props: {
 		if (!selectedCategory) setNodes([]);
 		else
 			setNodes([
-				...Array.from(baseNodesMap.values())
+				...Object.values(baseNodes)
 					.filter((toNode) => {
 						if (toNode.category !== selectedCategory) return false;
 						if (
@@ -209,7 +206,7 @@ function ManualNodeSelector(props: {
 			{selectedCategory === undefined ? (
 				<Listbox
 					className="w-full"
-					items={Array.from(categoryRenderOptions.entries())}
+					items={Object.entries(categoryRenderOptions)}
 				>
 					{([k, v]) => (
 						<ListboxItem
@@ -274,9 +271,7 @@ const getSearchModalNodeListItem = (props: {
 
 	const renderOptions = getNodeRenderOptions(props.id);
 	const nodeData = getBaseNode(props.id);
-
-	const categoryOptions = categoryRenderOptions.get(nodeData.category);
-	if (!categoryOptions) return null;
+	const categoryOptions = categoryRenderOptions[nodeData.category] || {};
 
 	return (
 		<ListboxItem

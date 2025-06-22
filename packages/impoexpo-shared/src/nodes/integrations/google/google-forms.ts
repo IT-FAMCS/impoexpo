@@ -32,5 +32,6 @@ export const createGoogleFormsBaseNode = (
 		name: `form-${id}`,
 		outputSchema: v.object(entries),
 		iterable: true,
+		integration: true,
 	});
 };

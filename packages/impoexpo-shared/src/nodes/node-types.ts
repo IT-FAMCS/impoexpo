@@ -45,6 +45,7 @@ export class BaseNode<
 
 	public genericTypes: Record<string, string | null> = {};
 	public iterable: boolean;
+	public integration: boolean;
 
 	constructor(
 		init: Partial<BaseNode<TIn, TOut>> &
@@ -53,6 +54,7 @@ export class BaseNode<
 		Object.assign(this, init);
 		this.fillGenericTypes();
 		this.iterable = init.iterable ?? false;
+		this.integration = init.integration ?? false;
 	}
 
 	fillGenericTypes() {

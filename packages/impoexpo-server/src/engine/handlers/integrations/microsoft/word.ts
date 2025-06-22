@@ -10,7 +10,6 @@ import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
 import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 import {
-	type MicrosoftWordGroupedListItem,
 	type MicrosoftWordPatch,
 	type MicrosoftWordTextPatch,
 	MicrosoftWordPlaceholderType,
@@ -87,50 +86,6 @@ registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 		},
 	};
 });
-
-/* registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
-	const groups = await ctx["~reduce"]<
-		(MicrosoftWordGroupedListItem & { value: string })[]
-	>((acc, cur) => {
-		const group = acc.find((g) => g.value === cur.groupCriteria);
-		if (group) group.items = group.items.concat(cur.items);
-		else {
-			acc.push({
-				items: cur.items,
-				title: cur.title,
-				value: cur.groupCriteria,
-			});
-		}
-		return acc;
-	}, []);
-
-	const ascendingGroups = groups.sort((a, b) =>
-		a.value > b.value ? 1 : b.value > a.value ? -1 : 0,
-	);
-	if (ctx.sortCriteria === "descending") ascendingGroups.reverse();
-
-	if (ctx.automaticSeparators) {
-		// TODO: having this behavior hardcoded is probably
-		// not a good solution. however, implementing this
-		// manually is WAY harder and is out of the scope of
-		// a 1.0 release.
-		for (const group of groups) {
-			for (let idx = 0; idx < group.items.length; idx++) {
-				if (group.items[idx].type === MicrosoftWordPlaceholderType.TEXT) {
-					(group.items[idx] as MicrosoftWordTextPatch).text +=
-						idx === group.items.length - 1 ? "." : ";";
-				}
-			}
-		}
-	}
-
-	return {
-		result: {
-			type: MicrosoftWordPlaceholderType.GROUPED_LIST as const,
-			groups: groups,
-		},
-	};
-}); */
 
 registerIntegrationNodeHandlerRegistrar(
 	MICROSOFT_WORD_INTEGRATION_ID,

@@ -15,7 +15,7 @@ import {
 import { projectOutputFilesCache } from "../project/endpoints";
 
 const logger = childLogger("jobs");
-export const jobs: Map<string, Job> = new Map();
+export const jobs: Record<string, Job> = {};
 
 export class Job {
 	public session?: Session;
@@ -109,9 +109,9 @@ export class Job {
 
 export const createJob = (project: Project): string => {
 	let id = uuid.v4();
-	while (jobs.has(id)) id = uuid.v4();
+	while (id in jobs) id = uuid.v4();
 
 	logger.info(`creating a new job with id ${id}`);
-	jobs.set(id, new Job(id, project));
+	jobs[id] = new Job(id, project);
 	return id;
 };

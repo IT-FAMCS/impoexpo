@@ -46,6 +46,7 @@ export default function TransferWizardPage() {
 			initializeNodes();
 			return true;
 		},
+		refetchOnWindowFocus: false,
 	});
 	const importNodesSuccessful = importNodesQuery.data;
 	if (importNodesQuery.error) console.error(importNodesQuery.error);
@@ -64,6 +65,7 @@ export default function TransferWizardPage() {
 			await loadStatesFromDatabase();
 			return true;
 		},
+		refetchOnWindowFocus: false,
 		enabled: !!importNodesSuccessful,
 	});
 
@@ -174,8 +176,6 @@ function FormatEditorWrapper(props: {
 	const [overlayScope, animateOverlay] = useAnimate();
 
 	useEffect(() => {
-		console.log(FormatEditorWrapperState[state]);
-
 		switch (state) {
 			case FormatEditorWrapperState.HIDDEN:
 			case FormatEditorWrapperState.IDLE:

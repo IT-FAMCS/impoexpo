@@ -30,6 +30,7 @@ export const WordPatchSchema = v.union([
 export const WORD_TEXT_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "text",
+	integration: true,
 	inputSchema: v.object({
 		text: v.string(),
 	}),
@@ -41,6 +42,7 @@ export const WORD_TEXT_NODE = new BaseNode({
 export const WORD_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "list",
+	integration: true,
 	inputSchema: v.object({
 		sublistTitle: v.nullable(WordTextSchema),
 		items: v.array(WordPatchSchema),
@@ -51,27 +53,10 @@ export const WORD_LIST_NODE = new BaseNode({
 	}),
 });
 
-/* export const WORD_GROUPED_LIST_NODE = new BaseNode({
-	category: "microsoft-word",
-	name: "grouped-list",
-	inputSchema: v.object({
-		groupCriteria: v.string(),
-		sortCriteria: v.optional(
-			v.picklist(["ascending", "descending"]),
-			"ascending",
-		),
-		title: WordTextSchema,
-		items: v.array(WordPatchSchema),
-		automaticSeparators: v.optional(v.boolean(), false),
-	}),
-	outputSchema: v.object({
-		result: WordGroupedListSchema,
-	}),
-}); */
-
 export const WORD_GROUPED_LIST_NODE = new BaseNode({
 	category: "microsoft-word",
 	name: "grouped-list",
+	integration: true,
 	inputSchema: v.object({
 		groups: v.map(WordTextSchema, v.array(WordPatchSchema)),
 		automaticSeparators: v.optional(v.boolean(), false),
@@ -98,6 +83,7 @@ export const createWordDocumentBaseNode = (
 	return new BaseNode({
 		category: "microsoft-word",
 		name: `document-${identifier}`,
+		integration: true,
 		inputSchema: v.object(entries),
 	});
 };

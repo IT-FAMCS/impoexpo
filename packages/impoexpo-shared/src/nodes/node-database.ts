@@ -2,17 +2,17 @@ import type { BaseNode } from "./node-types";
 import type { ObjectEntries } from "valibot";
 import type { DefaultBaseNode } from "./node-utils";
 
-export const baseNodesMap: Map<
+export const baseNodes: Record<
 	string,
 	BaseNode<ObjectEntries, ObjectEntries>
-> = new Map();
+> = {};
 
 export const registerBaseNodes = (
 	...nodes: BaseNode<ObjectEntries, ObjectEntries>[]
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
-		baseNodesMap.set(id, node);
+		baseNodes[id] = node;
 	}
 };
 
@@ -21,7 +21,7 @@ export const unregisterBaseNodes = (
 ) => {
 	for (const node of nodes) {
 		const id = `${node.category}-${node.name}`;
-		baseNodesMap.delete(id);
+		delete baseNodes[id];
 	}
 };
 
@@ -37,8 +37,7 @@ export const nodesScope = (initializer: () => void) =>
 	nodeInitializers.push(initializer);
 
 export const getBaseNode = (type: string): DefaultBaseNode => {
-	if (!baseNodesMap.has(type))
+	if (!(type in baseNodes))
 		throw new Error(`no base node was found with the type "${type}"`);
-	// biome-ignore lint/style/noNonNullAssertion: checked above
-	return baseNodesMap.get(type)!;
+	return baseNodes[type];
 };
