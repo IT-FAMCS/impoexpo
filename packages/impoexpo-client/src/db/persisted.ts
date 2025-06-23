@@ -85,6 +85,7 @@ export const loadStatesFromDatabase = async () => {
 				.recoverGenericNodes(
 					editorState.genericNodes as PersistentGenericNodeData,
 				);
+		useFormatEditorStore.getState().updateNodeCount();
 	}
 
 	const wizardState = await globalDatabase.persisted.get("wizard-state");

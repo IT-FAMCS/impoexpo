@@ -25,12 +25,21 @@ export const useProjectStore = create<Project & ProjectStoreInternals>(
 			const integrations: Record<string, ProjectIntegration> = {};
 			for (const integration of allIntegrations) {
 				if (!integration.getProjectInformation) continue;
-				integrations[integration.id] =
+				const integrationInformation =
 					await integration.getProjectInformation();
+				if (
+					integrationInformation &&
+					Object.keys(integrationInformation).length !== 0
+				)
+					integrations[integration.id] = integrationInformation;
 			}
 			set({ integrations });
 		},
 
+		// TODO: right now, the editor state => project state conversion is a
+		// one-way process. technically, not much information is lost, and with
+		// some refactoring the editor state may be fully restored just from the
+		// project state. this might be a good thing to do later
 		collectNodes() {
 			const nodes: ProjectNode[] = [];
 			const clientNodes = useFormatEditorStore.getState().nodes;

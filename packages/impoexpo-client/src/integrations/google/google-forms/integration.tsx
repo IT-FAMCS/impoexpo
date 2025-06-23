@@ -30,7 +30,7 @@ registerIntegration({
 		const tokens = (
 			await getAuthFromDatabase("google", GoogleExchangeResponseSchema)
 		)?.tokens;
-		if (!tokens) return {};
+		if (!tokens) return undefined;
 
 		return {
 			auth: { tokens },
@@ -67,7 +67,7 @@ registerIntegration({
 			(form) => ({
 				className: "p-2",
 				startContent: <Icon width={24} icon="simple-icons:googleforms" />,
-				title: form[1].title ?? form[1].documentTitle,
+				title: form[1].title,
 				description: <Trans>Google Forms</Trans>,
 				key: form[0],
 			}),

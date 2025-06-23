@@ -5,12 +5,13 @@ import {
 } from "../../../stores/resettable";
 
 export enum SourceCardState {
-	SELECT_SOURCE = 0,
-	AUTHENTICATE_SOURCE = 1,
-	VERIFY_SOURCE = 2,
-	HYDRATE_SOURCE = 3,
-	CHECK_ADDED_SOURCES = 4,
-	DONE = 5,
+	MAYBE_IMPORT_PROJECT_TEMPLATE = 0,
+	SELECT_SOURCE = 1,
+	AUTHENTICATE_SOURCE = 2,
+	VERIFY_SOURCE = 3,
+	HYDRATE_SOURCE = 4,
+	CHECK_ADDED_SOURCES = 5,
+	DONE = 6,
 }
 
 export type SourceCardStore = {
@@ -28,7 +29,7 @@ export type SourceCardStoreActions = {
 export const useSourceCardStore = createResettable<
 	SourceCardStore & SourceCardStoreActions
 >(WIZARD_STORE_CATEGORY)((set) => ({
-	state: SourceCardState.SELECT_SOURCE,
+	state: SourceCardState.MAYBE_IMPORT_PROJECT_TEMPLATE,
 	integrationType: "read",
 	currentIntegration: undefined,
 

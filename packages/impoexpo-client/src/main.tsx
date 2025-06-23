@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router";
 import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
 import { HeroUIProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/toast";
 import "@/styles/globals.css";
 import { type Messages, i18n } from "@lingui/core";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
@@ -28,13 +29,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<Provider>
-				<HeroUIProvider>
-					<QueryClientProvider client={queryClient}>
-						<I18nProvider i18n={i18n}>
+				<I18nProvider i18n={i18n}>
+					<HeroUIProvider>
+						<ToastProvider />
+						<QueryClientProvider client={queryClient}>
 							<App />
-						</I18nProvider>
-					</QueryClientProvider>
-				</HeroUIProvider>
+						</QueryClientProvider>
+					</HeroUIProvider>
+				</I18nProvider>
 			</Provider>
 		</BrowserRouter>
 	</React.StrictMode>,

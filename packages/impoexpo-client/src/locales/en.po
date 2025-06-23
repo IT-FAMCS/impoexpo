@@ -54,23 +54,27 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:112
+#: src/features/format-editor/DefaultNodeRenderer.tsx:115
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:245
+#: src/features/format-editor/FormatEditor.tsx:268
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:261
+#: src/features/format-editor/FormatEditor.tsx:274
+msgid "export project..."
+msgstr "export project..."
+
+#: src/features/format-editor/FormatEditor.tsx:284
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:277
+#: src/features/format-editor/FormatEditor.tsx:300
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:305
+#: src/features/format-editor/FormatEditor.tsx:330
 msgid "done"
 msgstr "done"
 
@@ -85,6 +89,26 @@ msgstr "this node cannot be removed as it's not searchable and is tied to an int
 #: src/features/format-editor/FormatEditorContextMenu.tsx:84
 msgid "delete"
 msgstr "delete"
+
+#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:46
+msgid "project export"
+msgstr "project export"
+
+#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:49
+msgid "are you sure you want to export this project?"
+msgstr "are you sure you want to export this project?"
+
+#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:52
+msgid "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
+msgstr "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
+
+#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:65
+msgid "cancel"
+msgstr "cancel"
+
+#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:68
+msgid "export"
+msgstr "export"
 
 #: src/features/format-editor/nodes/builtin/array.tsx:12
 #: src/features/format-editor/nodes/builtin/array.tsx:21
@@ -179,10 +203,6 @@ msgstr "value"
 msgid "repeat X times..."
 msgstr "repeat X times..."
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:39
-#~ msgid "execute, if..."
-#~ msgstr "execute, if..."
-
 #: src/features/format-editor/nodes/builtin/conditional.tsx:42
 msgid "amount of times"
 msgstr "amount of times"
@@ -195,14 +215,6 @@ msgstr "iteration"
 msgid "starting from 1"
 msgstr "starting from 1"
 
-#: src/features/format-editor/nodes/builtin/conditional.tsx:48
-#~ msgid "if true..."
-#~ msgstr "if true..."
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:51
-#~ msgid "if false..."
-#~ msgstr "if false..."
-
 #: src/features/format-editor/nodes/builtin/conditional.tsx:54
 msgid "throw error if null"
 msgstr "throw error if null"
@@ -214,10 +226,6 @@ msgstr "nullable object"
 #: src/features/format-editor/nodes/builtin/conditional.tsx:60
 msgid "error message"
 msgstr "error message"
-
-#: src/features/format-editor/nodes/builtin/conditional.tsx:64
-#~ msgid "body..."
-#~ msgstr "body..."
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:72
 msgid "skip iteration, if..."
@@ -336,10 +344,6 @@ msgstr "in ascending order (from earliest to latest)"
 msgid "in descending order (from latest to earliest)"
 msgstr "in descending order (from latest to earliest)"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:136
-#~ msgid "check data, verify date, date boundaries, is date before, is date after"
-#~ msgstr "check data, verify date, date boundaries, is date before, is date after"
-
 #: src/features/format-editor/nodes/builtin/date-time.tsx:138
 msgid "key"
 msgstr "key"
@@ -376,14 +380,14 @@ msgstr "dates are compared including the start and end days!"
 msgid "literals"
 msgstr "literals"
 
-#: src/features/format-editor/nodes/builtin/literals.tsx:17
+#: src/features/format-editor/nodes/builtin/literals.tsx:18
 #: src/features/format-editor/nodes/builtin/math.tsx:57
 #: src/features/format-editor/nodes/builtin/strings.tsx:86
 #: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "number"
 msgstr "number"
 
-#: src/features/format-editor/nodes/builtin/literals.tsx:23
+#: src/features/format-editor/nodes/builtin/literals.tsx:24
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
@@ -394,7 +398,7 @@ msgstr "number"
 msgid "string"
 msgstr "string"
 
-#: src/features/format-editor/nodes/builtin/literals.tsx:29
+#: src/features/format-editor/nodes/builtin/literals.tsx:30
 msgid "boolean"
 msgstr "boolean"
 
@@ -509,6 +513,7 @@ msgid "&&"
 msgstr "&&"
 
 #: src/features/format-editor/nodes/builtin/operators.tsx:28
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:139
 msgid "or"
 msgstr "or"
 
@@ -618,10 +623,6 @@ msgstr "to create a placeholder, use '{NUMBER}', where NUMBER starts from 0."
 msgid "hi, '{0}'!"
 msgstr "hi, '{0}'!"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:71
-#~ msgid "hi, {0}!"
-#~ msgstr "hi, {0}!"
-
 #: src/features/format-editor/nodes/builtin/strings.tsx:74
 msgid "arguments"
 msgstr "arguments"
@@ -674,67 +675,92 @@ msgstr "trim end?"
 msgid "input"
 msgstr "input"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:131
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:139
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:159
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:232
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
+msgid "go back"
+msgstr "go back"
+
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:252
+msgid "the results are filtered based on what node and property you've selected."
+msgstr "the results are filtered based on what node and property you've selected."
+
+#: src/features/transfer-wizard/TransferWizardPage.tsx:134
 #: src/pages/WelcomePage.tsx:44
 msgid "new data transfer"
 msgstr "new data transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:166
+#: src/features/transfer-wizard/TransferWizardPage.tsx:141
 msgid "select sources"
 msgstr "select sources"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:167
+#: src/features/transfer-wizard/TransferWizardPage.tsx:142
 msgid "what should we transfer?"
 msgstr "what should we transfer?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:169
+#: src/features/transfer-wizard/TransferWizardPage.tsx:144
 msgid "formatting"
 msgstr "formatting"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:169
+#: src/features/transfer-wizard/TransferWizardPage.tsx:144
 msgid "how should we transfer?"
 msgstr "how should we transfer?"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:171
+#: src/features/transfer-wizard/TransferWizardPage.tsx:146
 msgid "transfer"
 msgstr "transfer"
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:172
+#: src/features/transfer-wizard/TransferWizardPage.tsx:147
 msgid "where the magic happens..."
 msgstr "where the magic happens..."
 
-#: src/features/transfer-wizard/TransferWizardPage.tsx:174
+#: src/features/transfer-wizard/TransferWizardPage.tsx:149
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:74
 msgid "done!"
 msgstr "done!"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:43
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:54
+msgid "where shall we start?"
+msgstr "where shall we start?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:56
 msgid "anything else?"
 msgstr "anything else?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:45
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:59
 msgid "what's the read source?"
 msgstr "what's the read source?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:46
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:60
 msgid "what's the write source?"
 msgstr "what's the write source?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:121
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:115
+msgid "failed to import the project template"
+msgstr "failed to import the project template"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:135
+msgid "create an empty project"
+msgstr "create an empty project"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:143
+msgid "import an existing project"
+msgstr "import an existing project"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:176
 msgid "add another"
 msgstr "add another"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:135
-#: src/integrations/google/GoogleVerifier.tsx:58
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:190
+#: src/integrations/google/GoogleVerifier.tsx:59
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
 msgid "next"
 msgstr "next"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:242
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:298
 msgid "failed to check integration authentication status"
 msgstr "failed to check integration authentication status"
 
@@ -742,39 +768,39 @@ msgstr "failed to check integration authentication status"
 msgid "uploading project files"
 msgstr "uploading project files"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:197
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:198
 msgid "uploading your project"
 msgstr "uploading your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
 msgid "couldn't upload your project"
 msgstr "couldn't upload your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:241
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:242
 msgid "connecting to the server"
 msgstr "connecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:273
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:274
 msgid "reconnecting to the server"
 msgstr "reconnecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:279
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:280
 msgid "failed to connect to the server"
 msgstr "failed to connect to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:358
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:359
 msgid "we're working on your project"
 msgstr "we're working on your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:362
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:363
 msgid "this shouldn't take too long. updates will appear below:"
 msgstr "this shouldn't take too long. updates will appear below:"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:374
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:375
 msgid "we couldn't process your project"
 msgstr "we couldn't process your project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:378
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:379
 msgid "please check the last notification to see what went wrong and try again."
 msgstr "please check the last notification to see what went wrong and try again."
 
@@ -806,11 +832,11 @@ msgstr "login via google"
 msgid "an error occurred during login:"
 msgstr "an error occurred during login:"
 
-#: src/integrations/google/GoogleVerifier.tsx:26
+#: src/integrations/google/GoogleVerifier.tsx:27
 msgid "is this you?"
 msgstr "is this you?"
 
-#: src/integrations/google/GoogleVerifier.tsx:50
+#: src/integrations/google/GoogleVerifier.tsx:51
 msgid "relogin"
 msgstr "relogin"
 
@@ -897,7 +923,7 @@ msgid "back to file upload"
 msgstr "back to file upload"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
-#: src/integrations/microsoft/microsoft-word/integration.tsx:63
+#: src/integrations/microsoft/microsoft-word/integration.tsx:65
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:60
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
@@ -925,10 +951,6 @@ msgstr "automatically separate list items"
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
-#~ msgid "group by"
-#~ msgstr "group by"
-
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:90
 msgid "grouped list"
 msgstr "grouped list"
@@ -936,30 +958,6 @@ msgstr "grouped list"
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:92
 msgid "groups"
 msgstr "groups"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
-#~ msgid "group criteria"
-#~ msgstr "group criteria"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
-#~ msgid "sort criteria"
-#~ msgstr "sort criteria"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
-#~ msgid "affects how the groups will be arranged in the document"
-#~ msgstr "affects how the groups will be arranged in the document"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
-#~ msgid "in ascending order"
-#~ msgstr "in ascending order"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:101
-#~ msgid "in descending order"
-#~ msgstr "in descending order"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:104
-#~ msgid "group title"
-#~ msgstr "group title"
 
 #: src/integrations/placeholder/integration.tsx:12
 msgid "nowhere"

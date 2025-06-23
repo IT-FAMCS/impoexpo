@@ -10,9 +10,12 @@ import { useRenderableNodesStore } from "./renderable-node-database";
 import type { Node } from "@xyflow/react";
 import type { ProjectNodeEntry } from "@impoexpo/shared/schemas/project/ProjectSchema";
 
-export type ProjectNode = Node<{
-	entries?: Record<string, ProjectNodeEntry>;
-}>;
+export type ProjectNode = Omit<
+	Node<{
+		entries?: Record<string, ProjectNodeEntry>;
+	}>,
+	"domAttributes"
+>;
 
 export type NodePropertyMode = "independentOnly" | "dependentOnly" | "hybrid";
 export type NodePropertySeparator = "before" | "after" | "both" | "none";
@@ -63,6 +66,7 @@ export type NodePropertyMetadata<
 		title: MessageDescriptor | string;
 		description: MessageDescriptor | string;
 		separate: NodePropertySeparator;
+		hideType: boolean;
 	} & (TIsInput extends true
 		? { placeholder: MessageDescriptor | string; mode: NodePropertyMode }
 		: // biome-ignore lint/complexity/noBannedTypes: empty type required here
@@ -153,7 +157,10 @@ export class NodeRenderOptions<
 	}
 
 	public type<TKey extends keyof TSInput | keyof TSOutput>(key: TKey): string {
-		return this.node.entry(String(key)).type;
+		const property = this.property(key);
+		return (property?.hideType ?? false)
+			? ""
+			: this.node.entry(String(key)).type;
 	}
 
 	public separate<TKey extends keyof TSInput | keyof TSOutput>(

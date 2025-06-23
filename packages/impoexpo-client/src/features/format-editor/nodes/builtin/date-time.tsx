@@ -60,9 +60,9 @@ nodesScope(() => {
 			dateTime: { title: msg`date` },
 			locale: {
 				title: msg`locale`,
-				description: "",
 				options: localeOptions,
 				showLabel: true,
+				hideType: true,
 			},
 		},
 		outputs: {
@@ -77,9 +77,9 @@ nodesScope(() => {
 			dateTime: { title: msg`date` },
 			timezone: {
 				title: msg`time zone`,
-				description: "",
 				options: timezoneOptions,
 				showLabel: true,
+				hideType: true,
 			},
 		},
 		outputs: {
@@ -94,9 +94,9 @@ nodesScope(() => {
 			dateTime: { title: msg`date` },
 			preset: {
 				title: msg`preset`,
-				description: "",
 				options: presetOptions,
 				showLabel: true,
+				hideType: true,
 				mode: "independentOnly",
 			},
 		},

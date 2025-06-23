@@ -21,6 +21,8 @@ registerIntegration({
 
 	async getProjectInformation() {
 		const documents = useMicrosoftWordHydratorStore.getState().documents;
+		if (documents.length === 0) return undefined;
+
 		return {
 			data: {
 				documents: documents

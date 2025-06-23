@@ -12,28 +12,26 @@ import {
 	ModalFooter,
 	ModalHeader,
 } from "@heroui/react";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "@/api/common";
+import { createProjectSnapshot } from "@/db/snapshot";
 
 export default function ExportProjectModal(props: {
 	isOpen: boolean;
 	onOpenChange: () => void;
 	onClose: () => void;
 }) {
-	const { t } = useLingui();
-	const { isFetching, refetch } = useQuery({
-		queryKey: ["export-project"],
-		queryFn: async () => {
-			return await new Promise((resolve) => {
-				setTimeout(() => {
-					props.onClose();
-					resolve(true);
-				}, 3000);
-			});
-		},
-		refetchOnWindowFocus: false,
-		enabled: false,
-	});
+	const exportProject = async () => {
+		const template = await createProjectSnapshot("template");
+
+		const a = document.createElement("a");
+		a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(template))}`;
+		a.download = "project.json";
+		a.style.display = "none";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+
+		props.onClose();
+	};
 
 	return (
 		<Modal
@@ -53,7 +51,9 @@ export default function ExportProjectModal(props: {
 								<p>
 									<Trans>
 										please note that&nbsp;
-										<b>all integration-related notes will not be exported.</b>
+										<b>
+											all integration-related information will not be exported.
+										</b>
 										&nbsp;this means that, when importing the project, you'll
 										have to reattach all integration nodes again.
 									</Trans>
@@ -64,11 +64,7 @@ export default function ExportProjectModal(props: {
 							<Button color="danger" variant="light" onPress={onClose}>
 								<Trans>cancel</Trans>
 							</Button>
-							<Button
-								onPress={() => refetch()}
-								isLoading={isFetching}
-								color="primary"
-							>
+							<Button onPress={exportProject} color="primary">
 								<Trans>export</Trans>
 							</Button>
 						</ModalFooter>

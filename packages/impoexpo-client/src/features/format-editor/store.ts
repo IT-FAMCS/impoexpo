@@ -56,14 +56,38 @@ import { useStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversions";
 import { filterObject } from "@impoexpo/shared/nodes/node-utils";
+import * as v from "valibot";
+import { ProjectNodeEntrySchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
 
-export type PersistentGenericNodeData = Record<
-	string,
-	{
-		base: string;
-		name: string;
-		resolvedTypes: Record<string, string | null>;
-	}
+export const ProjectNodeSchema = v.object({
+	data: v.record(v.string(), v.unknown()),
+	id: v.string(),
+	type: v.optional(v.string()),
+	position: v.object({ x: v.number(), y: v.number() }),
+	measured: v.optional(
+		v.object({ width: v.optional(v.number()), height: v.optional(v.number()) }),
+	),
+	entries: v.optional(v.record(v.string(), ProjectNodeEntrySchema), {}),
+});
+
+export const EdgeSchema = v.object({
+	id: v.string(),
+	source: v.string(),
+	sourceHandle: v.optional(v.nullable(v.string())),
+	target: v.string(),
+	targetHandle: v.optional(v.nullable(v.string())),
+});
+
+export const PersistentGenericNodeDataSchema = v.record(
+	v.string(),
+	v.object({
+		base: v.string(),
+		name: v.string(),
+		resolvedTypes: v.record(v.string(), v.nullable(v.string())),
+	}),
+);
+export type PersistentGenericNodeData = v.InferOutput<
+	typeof PersistentGenericNodeDataSchema
 >;
 
 const nodeCount: Record<string, number> = {};
@@ -71,6 +95,9 @@ export const getNodeId = (type: string) => {
 	const next = (nodeCount[type] || 0) + 1;
 	nodeCount[type] = next;
 	return `${type}-${next}`;
+};
+export const setNodeCount = (type: string, count: number) => {
+	nodeCount[type] = count;
 };
 
 export type FormatEditorStore = {
@@ -101,6 +128,7 @@ export type FormatEditorStore = {
 		edge: Edge,
 		handle: HandleType,
 	) => void;
+	updateNodeCount: () => void;
 
 	getNodeEntryValue: (id: string, entry: string) => unknown;
 	setNodeEntry: (id: string, entry: string, value: unknown) => void;
@@ -132,7 +160,7 @@ export type FormatEditorStore = {
 		node: ProjectNode,
 	) => ProjectNode;
 	getBaseNodeFromId: (id: string) => DefaultBaseNode | undefined;
-	unrevertibleAction: (callback: () => void) => void;
+	irreversibleAction: (callback: () => void) => void;
 
 	genericNodes: PersistentGenericNodeData;
 	recoverGenericNodes: (nodes: PersistentGenericNodeData) => void;
@@ -171,6 +199,19 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 			},
 			setEdges: (edges) => {
 				set({ edges });
+			},
+			updateNodeCount() {
+				const nodes = get().nodes;
+				for (const node of nodes) {
+					if (node.type && !(node.type in nodeCount)) {
+						const maxCount = Math.max(
+							...nodes
+								.filter((n) => n.type === node.type)
+								.map((n) => Number.parseInt(n.id.split("-").at(-1) ?? "0")),
+						);
+						nodeCount[node.type] = maxCount;
+					}
+				}
 			},
 
 			isReconnecting: false,
@@ -662,7 +703,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				set({ genericNodes: nodes });
 			},
 
-			unrevertibleAction(callback) {
+			irreversibleAction(callback) {
 				useFormatEditorStore.temporal.getState().pause();
 				callback();
 				useFormatEditorStore.temporal.getState().resume();

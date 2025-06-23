@@ -32,7 +32,7 @@ export default function FileDropzone(props: {
 				</CardBody>
 			</Card>
 			{props.options.accept && (
-				<p className="text-foreground-500 italic">
+				<p className="text-foreground-500 text-sm italic">
 					<Trans>
 						will accept:&nbsp;
 						{Object.values(props.options.accept)

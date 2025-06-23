@@ -9,7 +9,7 @@ export type Integration = {
 	read: boolean;
 	write: boolean;
 
-	getProjectInformation?: () => Promise<ProjectIntegration>;
+	getProjectInformation?: () => Promise<ProjectIntegration | undefined>;
 	onProjectInformationLoaded?: (data: ProjectIntegration) => Promise<void>;
 
 	checkAuthenticated?: () => Promise<boolean>;

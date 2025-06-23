@@ -11,6 +11,7 @@ import {
 	Divider,
 	Listbox,
 	ListboxItem,
+	addToast,
 } from "@heroui/react";
 import ActionCard from "../../../components/external/ActionCard";
 
@@ -26,7 +27,7 @@ import {
 } from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
 import { useQuery } from "@tanstack/react-query";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -35,6 +36,9 @@ import {
 	DefaultIntegrationHydrator,
 	DefaultIntegrationVerifier,
 } from "@/integrations/common";
+import FileDropzone from "@/components/modals/FileDropzone";
+import { assert, parse } from "valibot";
+import { applyProjectSnapshot, ProjectSnapshotSchema } from "@/db/snapshot";
 
 export default function SelectSourceCard() {
 	const { state, integrationType } = useSourceCardStore();
@@ -45,14 +49,22 @@ export default function SelectSourceCard() {
 	const { t } = useLingui();
 
 	const title = useMemo(() => {
-		if (state === SourceCardState.CHECK_ADDED_SOURCES) return t`anything else?`;
-		return integrationType === "read"
-			? t`what's the read source?`
-			: t`what's the write source?`;
+		switch (state) {
+			case SourceCardState.MAYBE_IMPORT_PROJECT_TEMPLATE:
+				return t`where shall we start?`;
+			case SourceCardState.CHECK_ADDED_SOURCES:
+				return t`anything else?`;
+			default:
+				return integrationType === "read"
+					? t`what's the read source?`
+					: t`what's the write source?`;
+		}
 	}, [state, integrationType, t]);
 
 	const renderer = useMemo(() => {
 		switch (state) {
+			case SourceCardState.MAYBE_IMPORT_PROJECT_TEMPLATE:
+				return <ProjectTemplateSelector />;
 			case SourceCardState.SELECT_SOURCE:
 				return <SourceSelector />;
 			case SourceCardState.AUTHENTICATE_SOURCE:
@@ -78,6 +90,59 @@ export default function SelectSourceCard() {
 				<CardBody>{renderer}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
+	);
+}
+
+function ProjectTemplateSelector() {
+	const { setState } = useSourceCardStore();
+	const [importing, setImporting] = useState(false);
+
+	return importing ? (
+		<div className="flex flex-col gap-2">
+			<FileDropzone
+				options={{
+					accept: { "application/json": [".json"] },
+					async onDropAccepted(files) {
+						// TODO: be more informative here
+						try {
+							const raw = JSON.parse(await files[0].text());
+							const snapshot = parse(ProjectSnapshotSchema, raw);
+							await applyProjectSnapshot(snapshot);
+							setState(SourceCardState.SELECT_SOURCE);
+						} catch (err) {
+							addToast({
+								color: "danger",
+								title: <Trans>failed to import the project template</Trans>,
+								description: `${err}`,
+							});
+						}
+					},
+				}}
+			/>
+			<Button
+				onPress={() => setImporting(false)}
+				startContent={<Icon icon="mdi:chevron-left" />}
+			>
+				<Trans>go back</Trans>
+			</Button>
+		</div>
+	) : (
+		<div className="flex flex-col gap-2">
+			<Button
+				color="primary"
+				onPress={() => setState(SourceCardState.SELECT_SOURCE)}
+			>
+				<Trans>create an empty project</Trans>
+			</Button>
+			<div className="flex flex-row justify-center items-center gap-2">
+				<Divider className="w-20" />
+				<Trans>or</Trans>
+				<Divider className="w-20" />
+			</div>
+			<Button onPress={() => setImporting(true)}>
+				<Trans>import an existing project</Trans>
+			</Button>
+		</div>
 	);
 }
 

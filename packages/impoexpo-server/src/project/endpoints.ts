@@ -100,7 +100,7 @@ export const registerProjectEndpoints = (app: Express) => {
 				return;
 			}
 
-			const job = jobs.get(req.params.id);
+			const job = jobs[req.params.id];
 			if (!job) {
 				res.status(400).send({
 					ok: false,
@@ -124,7 +124,7 @@ export const registerProjectEndpoints = (app: Express) => {
 	);
 
 	app.get(`${PROJECT_TRANSFER_STATUS_ROUTE}/:id`, async (req, res) => {
-		const job = jobs.get(req.params.id);
+		const job = jobs[req.params.id];
 		if (!job) {
 			res.status(400).send({
 				ok: false,

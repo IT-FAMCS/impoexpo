@@ -41,7 +41,11 @@ import {
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
-import { DateTime, FixedOffsetZone, Zone } from "luxon";
+import { DateTime, FixedOffsetZone } from "luxon";
+import {
+	parseAbsoluteToLocal,
+	type ZonedDateTime,
+} from "@internationalized/date";
 
 const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
 	const { t } = useLingui();
@@ -184,78 +188,27 @@ const getEntryComponent = <TDefault,>(
 		);
 	}
 
-	if (isDateTime(entry)) {
+	if (entry.type === "picklist" || entry.type === "enum")
 		return (
-			<DatePicker
-				style={{ minWidth: "15rem" }}
-				popoverProps={{ className: "min-w-fit" }}
-				aria-label={renderOptions.placeholder(handleName)}
-				className="nodrag"
-				onChange={(value) => {
-					useFormatEditorStore.getState().setNodeEntry(
-						node,
-						handleName,
-						value
-							? DateTime.fromObject(
-									{
-										year: value.year,
-										day: value.day,
-										month: value.month,
-									},
-									{ zone: FixedOffsetZone.utcInstance },
-								).toJSON()
-							: undefined,
-					);
-				}}
+			<NodePropertyGenericSelect
+				default={defaultValue as string | undefined}
+				entry={entry}
+				name={handleName}
+				node={node}
+				renderOptions={renderOptions}
 			/>
 		);
-	}
 
-	if (entry.type === "picklist" || entry.type === "enum") {
-		const options = isPicklist(entry)
-			? entry.options
-			: isEnum(entry)
-				? Object.keys(entry.enum)
-				: [];
-		const items = options
-			.map((key) => renderOptions.options(handleName, key))
-			.filter((i) => i !== undefined);
-
+	if (isDateTime(entry)) {
 		return (
-			<Select
-				style={{ minWidth: "15rem" }}
-				popoverProps={{ className: "min-w-fit" }}
-				aria-label={renderOptions.placeholder(handleName)}
-				placeholder={renderOptions.placeholder(handleName)}
-				className="nodrag"
-				onSelectionChange={(selection) => {
-					if (selection.currentKey)
-						useFormatEditorStore
-							.getState()
-							.setNodeEntry(node, handleName, selection.currentKey);
-				}}
-				defaultSelectedKeys={
-					defaultValue === undefined
-						? undefined
-						: new Set<string>().add(
-								typeof defaultValue === "string"
-									? defaultValue
-									: // biome-ignore lint/style/noNonNullAssertion: meow
-										defaultValue!.toString(),
-							)
+			<NodePropertyDatePicker
+				default={
+					defaultValue ? parseAbsoluteToLocal(defaultValue as string) : null
 				}
-				items={items}
-			>
-				{(data) => (
-					<SelectItem
-						aria-label={data.description ?? data.title ?? data.key}
-						description={data.description}
-						key={data.key}
-					>
-						{data.title}
-					</SelectItem>
-				)}
-			</Select>
+				name={handleName}
+				node={node}
+				renderOptions={renderOptions}
+			/>
 		);
 	}
 
@@ -385,6 +338,118 @@ function NodePropertyRenderer(props: {
 			</div>
 			{(separate === "after" || separate === "both") && <Divider />}
 		</>
+	);
+}
+
+function NodePropertyDatePicker(props: {
+	node: string;
+	name: string;
+	renderOptions: DefaultNodeRenderOptions;
+	default: ZonedDateTime | null;
+}) {
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
+	const [value, setValue] = useState<ZonedDateTime | null>(props.default);
+
+	useEffect(() => {
+		const savedValue = getNodeEntryValue(props.node, props.name);
+		if (savedValue) setValue(parseAbsoluteToLocal(savedValue as string));
+	}, [getNodeEntryValue, props.name, props.node]);
+
+	useEffect(() => {
+		setNodeEntry(
+			props.node,
+			props.name,
+			value
+				? DateTime.fromObject(
+						{
+							year: value.year,
+							day: value.day,
+							month: value.month,
+						},
+						{ zone: FixedOffsetZone.utcInstance },
+					).toJSON()
+				: undefined,
+		);
+	}, [props.name, props.node, setNodeEntry, value]);
+
+	return (
+		<DatePicker
+			style={{ minWidth: "15rem" }}
+			popoverProps={{ className: "min-w-fit" }}
+			aria-label={props.renderOptions.placeholder(props.name)}
+			className="nodrag"
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+
+function NodePropertyGenericSelect(props: {
+	renderOptions: DefaultNodeRenderOptions;
+	node: string;
+	name: string;
+	default: string | undefined;
+	entry: ObjectEntry;
+}) {
+	const options = useMemo(
+		() =>
+			isPicklist(props.entry)
+				? props.entry.options
+				: isEnum(props.entry)
+					? Object.keys(props.entry.enum)
+					: [],
+		[props.entry],
+	);
+
+	const items = useMemo(
+		() =>
+			options
+				.map((key) => props.renderOptions.options(props.name, key))
+				.filter((i) => i !== undefined),
+		[props.renderOptions, props.name, options],
+	);
+
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
+	const [value, setValue] = useState<string | undefined>(props.default);
+
+	useEffect(() => {
+		const savedValue = getNodeEntryValue(props.node, props.name);
+		if (savedValue) setValue(savedValue as string);
+	}, [getNodeEntryValue, props.name, props.node]);
+
+	useEffect(() => {
+		setNodeEntry(props.node, props.name, value);
+	}, [props.name, props.node, setNodeEntry, value]);
+
+	return (
+		<Select
+			style={{ minWidth: "15rem" }}
+			popoverProps={{ className: "min-w-fit" }}
+			aria-label={props.renderOptions.placeholder(props.name)}
+			placeholder={props.renderOptions.placeholder(props.name)}
+			className="nodrag"
+			onSelectionChange={(selection) => {
+				if (selection.currentKey)
+					useFormatEditorStore
+						.getState()
+						.setNodeEntry(props.node, props.name, selection.currentKey);
+			}}
+			onChange={(ev) => {
+				setValue(ev.target.value);
+			}}
+			selectedKeys={value ? [value] : []}
+			items={items}
+		>
+			{(data) => (
+				<SelectItem
+					aria-label={data.description ?? data.title ?? data.key}
+					description={data.description}
+					key={data.key}
+				>
+					{data.title}
+				</SelectItem>
+			)}
+		</Select>
 	);
 }
 
