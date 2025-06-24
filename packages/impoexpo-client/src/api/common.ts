@@ -4,12 +4,16 @@ import { RatelimitHitError } from "./errors";
 import { FaultyActionSchema } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
 
 export const BACKEND_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+export const DOCS_URL_BASE = import.meta.env.VITE_DOCS_URL;
 export const queryClient = new QueryClient();
 
 export const route = (path: string, query?: Record<string, string>) => {
 	const current = new URL(`${BACKEND_URL_BASE}${path}`);
 	current.search = new URLSearchParams(query).toString();
 	return current;
+};
+export const docs = (path: string) => {
+	return `${DOCS_URL_BASE}${path}`;
 };
 
 export const getWithSchema = async <const TSchema extends v.GenericSchema>(

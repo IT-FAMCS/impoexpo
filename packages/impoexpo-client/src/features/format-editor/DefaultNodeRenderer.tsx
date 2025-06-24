@@ -47,7 +47,10 @@ import {
 	type ZonedDateTime,
 } from "@internationalized/date";
 
-const DefaultNodeRenderer = memo(({ type, id }: NodeProps<BuiltInNode>) => {
+const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
+	type,
+	id,
+}: NodeProps<BuiltInNode>) {
 	const { t } = useLingui();
 
 	const updateNodeInternals = useUpdateNodeInternals();
@@ -215,14 +218,14 @@ const getEntryComponent = <TDefault,>(
 	return <></>;
 };
 
-function NodePropertyRenderer(props: {
+export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 	renderOptions: DefaultNodeRenderOptions;
 	property: ObjectEntry;
 	name: string;
 	input: boolean;
 	id: string;
 }) {
-	const { edges } = useFormatEditorStore();
+	const edges = useFormatEditorStore(useShallow((state) => state.edges));
 
 	const separate = useMemo(
 		() => props.renderOptions.separate(props.name),
@@ -339,7 +342,7 @@ function NodePropertyRenderer(props: {
 			{(separate === "after" || separate === "both") && <Divider />}
 		</>
 	);
-}
+});
 
 function NodePropertyDatePicker(props: {
 	node: string;
@@ -347,7 +350,12 @@ function NodePropertyDatePicker(props: {
 	renderOptions: DefaultNodeRenderOptions;
 	default: ZonedDateTime | null;
 }) {
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
+		useShallow((state) => ({
+			setNodeEntry: state.setNodeEntry,
+			getNodeEntryValue: state.getNodeEntryValue,
+		})),
+	);
 	const [value, setValue] = useState<ZonedDateTime | null>(props.default);
 
 	useEffect(() => {
@@ -409,7 +417,12 @@ function NodePropertyGenericSelect(props: {
 		[props.renderOptions, props.name, options],
 	);
 
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
+		useShallow((state) => ({
+			setNodeEntry: state.setNodeEntry,
+			getNodeEntryValue: state.getNodeEntryValue,
+		})),
+	);
 	const [value, setValue] = useState<string | undefined>(props.default);
 
 	useEffect(() => {
@@ -460,7 +473,12 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	default: T;
 	validator?: ValidatorFunction;
 }) {
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore();
+	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
+		useShallow((state) => ({
+			setNodeEntry: state.setNodeEntry,
+			getNodeEntryValue: state.getNodeEntryValue,
+		})),
+	);
 	const [value, setValue] = useState<T | undefined>(props.default);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 	const locale = useLocaleInformation();
