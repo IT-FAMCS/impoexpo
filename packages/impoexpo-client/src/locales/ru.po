@@ -22,6 +22,34 @@ msgstr "перетащите файл сюда или нажмите"
 msgid "will accept: {0}"
 msgstr "разрешённые форматы: {0}"
 
+#: src/components/modals/SettingsModal.tsx:41
+msgid "settings"
+msgstr "настройки"
+
+#: src/components/modals/SettingsModal.tsx:44
+msgid "general"
+msgstr "общие"
+
+#: src/components/modals/SettingsModal.tsx:45
+msgid "language"
+msgstr "язык"
+
+#: src/components/modals/SettingsModal.tsx:48
+msgid "theme"
+msgstr "тема"
+
+#: src/components/modals/SettingsModal.tsx:52
+msgid "developer options"
+msgstr "для разработчиков"
+
+#: src/components/modals/SettingsModal.tsx:54
+msgid "allow taking screenshots of nodes"
+msgstr "показывать опцию для скриншота узлов"
+
+#: src/components/modals/SettingsModal.tsx:55
+msgid "used for writing documentation"
+msgstr "обычно используется для написания документации"
+
 #: src/components/network/CacheInfoModal.tsx:27
 msgid "the data is stale?"
 msgstr "данные не обновляются?"
@@ -54,41 +82,58 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:115
+#: src/features/format-editor/DefaultNodeRenderer.tsx:118
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/FormatEditor.tsx:268
+#: src/features/format-editor/FormatEditor.tsx:272
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:274
+#: src/features/format-editor/FormatEditor.tsx:278
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:284
+#: src/features/format-editor/FormatEditor.tsx:288
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:300
+#: src/features/format-editor/FormatEditor.tsx:304
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:330
+#: src/features/format-editor/FormatEditor.tsx:334
 msgid "done"
 msgstr "далее"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:64
+#: src/features/format-editor/FormatEditorContextMenu.tsx:80
+msgid "failed to render node"
+msgstr "не удалось зарендерить узел"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:94
+#: src/features/format-editor/FormatEditorContextMenu.tsx:111
+msgid "ok"
+msgstr "ок"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:130
 msgid "duplicate"
 msgstr "дублировать"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:76
+#: src/features/format-editor/FormatEditorContextMenu.tsx:142
 msgid "this node cannot be removed as it's not searchable and is tied to an integration."
 msgstr "этот узел не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:84
+#: src/features/format-editor/FormatEditorContextMenu.tsx:150
 msgid "delete"
 msgstr "удалить"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:163
+msgid "render to clipboard"
+msgstr "зарендерить в буфер обмена"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:170
+msgid "render to file"
+msgstr "зарендерить в файл" 
 
 #: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:46
 msgid "project export"

@@ -69,7 +69,10 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 	);
 
 	return (
-		<Card classNames={{ body: "p-0", base: "overflow-visible relative" }}>
+		<Card
+			className="node"
+			classNames={{ body: "p-0", base: "overflow-visible relative" }}
+		>
 			<CardHeader
 				className={clsx(
 					"pl-4 flex flex-row gap-2 relative",

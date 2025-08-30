@@ -22,6 +22,34 @@ msgstr "drag and drop a file here or click"
 msgid "will accept: {0}"
 msgstr "will accept: {0}"
 
+#: src/components/modals/SettingsModal.tsx:41
+msgid "settings"
+msgstr "settings"
+
+#: src/components/modals/SettingsModal.tsx:44
+msgid "general"
+msgstr "general"
+
+#: src/components/modals/SettingsModal.tsx:45
+msgid "language"
+msgstr "language"
+
+#: src/components/modals/SettingsModal.tsx:48
+msgid "theme"
+msgstr "theme"
+
+#: src/components/modals/SettingsModal.tsx:52
+msgid "developer options"
+msgstr "developer options"
+
+#: src/components/modals/SettingsModal.tsx:54
+msgid "allow taking screenshots of nodes"
+msgstr "allow taking screenshots of nodes"
+
+#: src/components/modals/SettingsModal.tsx:55
+msgid "used for writing documentation"
+msgstr "used for writing documentation"
+
 #: src/components/network/CacheInfoModal.tsx:27
 msgid "the data is stale?"
 msgstr "the data is stale?"
@@ -54,41 +82,58 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:115
+#: src/features/format-editor/DefaultNodeRenderer.tsx:118
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:268
+#: src/features/format-editor/FormatEditor.tsx:272
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:274
+#: src/features/format-editor/FormatEditor.tsx:278
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:284
+#: src/features/format-editor/FormatEditor.tsx:288
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:300
+#: src/features/format-editor/FormatEditor.tsx:304
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:330
+#: src/features/format-editor/FormatEditor.tsx:334
 msgid "done"
 msgstr "done"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:64
+#: src/features/format-editor/FormatEditorContextMenu.tsx:80
+msgid "failed to render node"
+msgstr "failed to render node"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:94
+#: src/features/format-editor/FormatEditorContextMenu.tsx:111
+msgid "ok"
+msgstr "ok"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:130
 msgid "duplicate"
 msgstr "duplicate"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:76
+#: src/features/format-editor/FormatEditorContextMenu.tsx:142
 msgid "this node cannot be removed as it's not searchable and is tied to an integration."
 msgstr "this node cannot be removed as it's not searchable and is tied to an integration."
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:84
+#: src/features/format-editor/FormatEditorContextMenu.tsx:150
 msgid "delete"
 msgstr "delete"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:163
+msgid "render to clipboard"
+msgstr "render to clipboard"
+
+#: src/features/format-editor/FormatEditorContextMenu.tsx:170
+msgid "render to file"
+msgstr "render to file"
 
 #: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:46
 msgid "project export"

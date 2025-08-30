@@ -225,7 +225,11 @@ export default function FormatEditor() {
 	const onNodeContextMenu = useCallback(
 		(ev: ReactMouseEvent, node: ProjectNode) => {
 			ev.preventDefault();
-			contextMenuRef.current.trigger(node, { x: ev.clientX, y: ev.clientY });
+			contextMenuRef.current.trigger(
+				node,
+				{ x: ev.clientX, y: ev.clientY },
+				(ev.target as HTMLElement).closest(".node") as HTMLDivElement,
+			);
 		},
 		[],
 	);

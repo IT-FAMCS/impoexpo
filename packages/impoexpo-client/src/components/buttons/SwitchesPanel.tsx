@@ -1,7 +1,6 @@
 import { Tooltip, Code, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import LanguageSwitcher from "./LanguageSwitcher";
-import ThemeSwitcher from "./ThemeSwitcher";
+import SettingsModal from "../modals/SettingsModal";
 
 export default function SwitchesPanel() {
 	return (
@@ -24,9 +23,7 @@ export default function SwitchesPanel() {
 				</Code>
 			</Tooltip>
 			<Icon icon="mdi:circle" width={6} />
-			<ThemeSwitcher />
-			<Icon icon="mdi:circle" width={6} />
-			<LanguageSwitcher />
+			<SettingsModal />
 		</div>
 	);
 }

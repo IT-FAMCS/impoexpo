@@ -1,0 +1,107 @@
+import {
+	Button,
+	Card,
+	CardBody,
+	Divider,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	Switch,
+	useDisclosure,
+} from "@heroui/react";
+import { Icon } from "@iconify/react";
+import { Trans, useLingui } from "@lingui/react/macro";
+import type { PropsWithChildren, ReactNode } from "react";
+import LanguageSwitcher from "../buttons/LanguageSwitcher";
+import ThemeSwitcher from "../buttons/ThemeSwitcher";
+import { useSettingsStore } from "@/stores/settings";
+
+export default function SettingsModal() {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure({
+		id: "SETTINGS_MODAL",
+	});
+	const { t } = useLingui();
+	const settings = useSettingsStore();
+
+	return (
+		<>
+			<Button
+				onPress={onOpen}
+				size="sm"
+				isIconOnly
+				startContent={<Icon width={18} icon="mdi:cog" />}
+			/>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">
+								<Trans>settings</Trans>
+							</ModalHeader>
+							<ModalBody className="flex flex-col gap-4">
+								<SettingsModalSection title={t`general`}>
+									<SettingsModalItem title={t`language`}>
+										<LanguageSwitcher />
+									</SettingsModalItem>
+									<SettingsModalItem title={t`theme`}>
+										<ThemeSwitcher />
+									</SettingsModalItem>
+								</SettingsModalSection>
+								<SettingsModalSection title={t`developer options`}>
+									<SettingsModalItem
+										title={t`allow taking screenshots of nodes`}
+										description={t`used for writing documentation`}
+									>
+										<Switch
+											isSelected={settings.developer.nodeScreenshots}
+											onValueChange={(v) =>
+												settings.put("developer.nodeScreenshots", v)
+											}
+										/>
+									</SettingsModalItem>
+								</SettingsModalSection>
+							</ModalBody>
+							<ModalFooter />
+						</>
+					)}
+				</ModalContent>
+			</Modal>
+		</>
+	);
+}
+
+function SettingsModalSection(props: PropsWithChildren<{ title: ReactNode }>) {
+	return (
+		<div>
+			<DividerWithText>{props.title}</DividerWithText>
+			<div className="flex flex-col gap-2 mt-2">{props.children}</div>
+		</div>
+	);
+}
+
+function SettingsModalItem(
+	props: PropsWithChildren<{ title: ReactNode; description?: ReactNode }>,
+) {
+	return (
+		<Card>
+			<CardBody className="py-2 px-4 gap-4 flex flex-row justify-between items-center">
+				<div>
+					<p>{props.title}</p>
+					<p className="text-sm text-foreground-500">{props.description}</p>
+				</div>
+				{props.children}
+			</CardBody>
+		</Card>
+	);
+}
+
+function DividerWithText(props: { children?: ReactNode }) {
+	return (
+		<div className="flex flex-row gap-2 items-center w-full">
+			<p className="text-foreground-500">{props.children}</p>
+			<Divider className="flex-grow w-max" />
+		</div>
+	);
+}
