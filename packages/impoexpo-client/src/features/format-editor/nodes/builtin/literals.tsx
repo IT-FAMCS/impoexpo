@@ -17,18 +17,28 @@ nodesScope(() => {
 	registerWithDefaultRenderer(literalNodes.NUMBER_NODE, {
 		title: msg`number`,
 		icon: (size) => <Icon width={size} icon="mdi:123" />,
-		inputs: { value: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly", title: msg`value` } },
+		outputs: { number: { title: msg`number` } },
 	});
 
 	registerWithDefaultRenderer(literalNodes.STRING_NODE, {
 		title: msg`string`,
 		icon: (size) => <Icon width={size} icon="mdi:abc" />,
-		inputs: { value: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly", title: msg`value` } },
+		outputs: { string: { title: msg`string` } },
 	});
 
 	registerWithDefaultRenderer(literalNodes.BOOLEAN_NODE, {
 		title: msg`boolean`,
 		icon: (size) => <Icon width={size} icon="mdi:checkbox-outline" />,
-		inputs: { value: { mode: "independentOnly" } },
+		inputs: { value: { mode: "independentOnly", title: msg`value` } },
+		outputs: { boolean: { title: msg`boolean` } },
+	});
+
+	registerWithDefaultRenderer(literalNodes.DATE_TIME_NODE, {
+		title: msg`date`,
+		icon: (size) => <Icon width={size} icon="mdi:calendar" />,
+		inputs: { value: { mode: "independentOnly", title: msg`value` } },
+		outputs: { dateTime: { title: msg`date` } },
 	});
 });

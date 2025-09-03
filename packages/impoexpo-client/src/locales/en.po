@@ -82,27 +82,27 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:118
+#: src/features/format-editor/DefaultNodeRenderer.tsx:121
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:272
+#: src/features/format-editor/FormatEditor.tsx:273
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:278
+#: src/features/format-editor/FormatEditor.tsx:279
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:288
+#: src/features/format-editor/FormatEditor.tsx:289
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:304
+#: src/features/format-editor/FormatEditor.tsx:305
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:334
+#: src/features/format-editor/FormatEditor.tsx:335
 msgid "done"
 msgstr "done"
 
@@ -240,7 +240,11 @@ msgid "value when false"
 msgstr "value when false"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:33
-#: src/features/format-editor/nodes/builtin/date-time.tsx:139
+#: src/features/format-editor/nodes/builtin/date-time.tsx:142
+#: src/features/format-editor/nodes/builtin/literals.tsx:20
+#: src/features/format-editor/nodes/builtin/literals.tsx:27
+#: src/features/format-editor/nodes/builtin/literals.tsx:34
+#: src/features/format-editor/nodes/builtin/literals.tsx:41
 msgid "value"
 msgstr "value"
 
@@ -301,23 +305,26 @@ msgid "change country, change locale"
 msgstr "change country, change locale"
 
 #: src/features/format-editor/nodes/builtin/date-time.tsx:60
-#: src/features/format-editor/nodes/builtin/date-time.tsx:77
-#: src/features/format-editor/nodes/builtin/date-time.tsx:94
-#: src/features/format-editor/nodes/builtin/date-time.tsx:123
-#: src/features/format-editor/nodes/builtin/date-time.tsx:150
+#: src/features/format-editor/nodes/builtin/date-time.tsx:78
+#: src/features/format-editor/nodes/builtin/date-time.tsx:96
+#: src/features/format-editor/nodes/builtin/date-time.tsx:126
+#: src/features/format-editor/nodes/builtin/date-time.tsx:153
+#: src/features/format-editor/nodes/builtin/literals.tsx:39
+#: src/features/format-editor/nodes/builtin/literals.tsx:42
 msgid "date"
 msgstr "date"
 
 #: src/features/format-editor/nodes/builtin/date-time.tsx:62
+#: src/features/format-editor/nodes/builtin/date-time.tsx:66
 msgid "locale"
 msgstr "locale"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:69
-#: src/features/format-editor/nodes/builtin/date-time.tsx:86
-#: src/features/format-editor/nodes/builtin/date-time.tsx:104
-#: src/features/format-editor/nodes/builtin/date-time.tsx:113
-#: src/features/format-editor/nodes/builtin/date-time.tsx:142
-#: src/features/format-editor/nodes/builtin/date-time.tsx:156
+#: src/features/format-editor/nodes/builtin/date-time.tsx:70
+#: src/features/format-editor/nodes/builtin/date-time.tsx:88
+#: src/features/format-editor/nodes/builtin/date-time.tsx:107
+#: src/features/format-editor/nodes/builtin/date-time.tsx:116
+#: src/features/format-editor/nodes/builtin/date-time.tsx:145
+#: src/features/format-editor/nodes/builtin/date-time.tsx:159
 #: src/features/format-editor/nodes/builtin/math.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
 #: src/features/format-editor/nodes/builtin/strings.tsx:38
@@ -328,96 +335,98 @@ msgstr "locale"
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:71
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:99
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
 msgid "result"
 msgstr "result"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:74
+#: src/features/format-editor/nodes/builtin/date-time.tsx:75
 msgid "set time zone"
 msgstr "set time zone"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:75
+#: src/features/format-editor/nodes/builtin/date-time.tsx:76
 msgid "shift date, shift time, change time zone"
 msgstr "shift date, shift time, change time zone"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:79
+#: src/features/format-editor/nodes/builtin/date-time.tsx:80
+#: src/features/format-editor/nodes/builtin/date-time.tsx:84
 msgid "time zone"
 msgstr "time zone"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:91
+#: src/features/format-editor/nodes/builtin/date-time.tsx:93
 msgid "date -> string (preset)"
 msgstr "date -> string (preset)"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:92
+#: src/features/format-editor/nodes/builtin/date-time.tsx:94
 msgid "convert date to string, format date to string"
 msgstr "convert date to string, format date to string"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:96
+#: src/features/format-editor/nodes/builtin/date-time.tsx:98
+#: src/features/format-editor/nodes/builtin/date-time.tsx:103
 msgid "preset"
 msgstr "preset"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:109
+#: src/features/format-editor/nodes/builtin/date-time.tsx:112
 msgid "current date"
 msgstr "current date"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:110
+#: src/features/format-editor/nodes/builtin/date-time.tsx:113
 msgid "now, current time"
 msgstr "now, current time"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:114
+#: src/features/format-editor/nodes/builtin/date-time.tsx:117
 msgid "only use this node to get the current date, not the precise time!"
 msgstr "only use this node to get the current date, not the precise time!"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:120
+#: src/features/format-editor/nodes/builtin/date-time.tsx:123
 msgid "group by date"
 msgstr "group by date"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:121
+#: src/features/format-editor/nodes/builtin/date-time.tsx:124
 msgid "group by time"
 msgstr "group by time"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:125
+#: src/features/format-editor/nodes/builtin/date-time.tsx:128
 msgid "sorting method"
 msgstr "sorting method"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:131
+#: src/features/format-editor/nodes/builtin/date-time.tsx:134
 msgid "in ascending order (from earliest to latest)"
 msgstr "in ascending order (from earliest to latest)"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:134
+#: src/features/format-editor/nodes/builtin/date-time.tsx:137
 msgid "in descending order (from latest to earliest)"
 msgstr "in descending order (from latest to earliest)"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:138
+#: src/features/format-editor/nodes/builtin/date-time.tsx:141
 msgid "key"
 msgstr "key"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:147
+#: src/features/format-editor/nodes/builtin/date-time.tsx:150
 msgid "is the date within a certain range?"
 msgstr "is the date within a certain range?"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:148
+#: src/features/format-editor/nodes/builtin/date-time.tsx:151
 msgid "check date, verify date, date boundaries, is date before, is date after"
 msgstr "check date, verify date, date boundaries, is date before, is date after"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:151
+#: src/features/format-editor/nodes/builtin/date-time.tsx:154
 msgid "start"
 msgstr "start"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:151
+#: src/features/format-editor/nodes/builtin/date-time.tsx:154
 msgid "the earliest allowed date"
 msgstr "the earliest allowed date"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:152
+#: src/features/format-editor/nodes/builtin/date-time.tsx:155
 msgid "end"
 msgstr "end"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:152
+#: src/features/format-editor/nodes/builtin/date-time.tsx:155
 msgid "the latest allowed date"
 msgstr "the latest allowed date"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:157
+#: src/features/format-editor/nodes/builtin/date-time.tsx:160
 msgid "dates are compared including the start and end days!"
 msgstr "dates are compared including the start and end days!"
 
@@ -426,13 +435,15 @@ msgid "literals"
 msgstr "literals"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:18
+#: src/features/format-editor/nodes/builtin/literals.tsx:21
 #: src/features/format-editor/nodes/builtin/math.tsx:57
 #: src/features/format-editor/nodes/builtin/strings.tsx:86
 #: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "number"
 msgstr "number"
 
-#: src/features/format-editor/nodes/builtin/literals.tsx:24
+#: src/features/format-editor/nodes/builtin/literals.tsx:25
+#: src/features/format-editor/nodes/builtin/literals.tsx:28
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
@@ -443,7 +454,8 @@ msgstr "number"
 msgid "string"
 msgstr "string"
 
-#: src/features/format-editor/nodes/builtin/literals.tsx:30
+#: src/features/format-editor/nodes/builtin/literals.tsx:32
+#: src/features/format-editor/nodes/builtin/literals.tsx:35
 msgid "boolean"
 msgstr "boolean"
 
@@ -987,20 +999,24 @@ msgid "items"
 msgstr "items"
 
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:80
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:94
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
 msgid "automatically separate list items"
 msgstr "automatically separate list items"
 
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:81
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+msgid "list title"
+msgstr "list title"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
 msgid "grouped list"
 msgstr "grouped list"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:92
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
 msgid "groups"
 msgstr "groups"
 

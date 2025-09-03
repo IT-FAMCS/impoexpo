@@ -7,3 +7,6 @@ import { registerHandler } from "../../node-executor-utils";
 registerHandler(literalNodes.BOOLEAN_NODE, (ctx) => ({ boolean: ctx.value }));
 registerHandler(literalNodes.NUMBER_NODE, (ctx) => ({ number: ctx.value }));
 registerHandler(literalNodes.STRING_NODE, (ctx) => ({ string: ctx.value }));
+registerHandler(literalNodes.DATE_TIME_NODE, (ctx) => ({
+	dateTime: ctx.value,
+}));

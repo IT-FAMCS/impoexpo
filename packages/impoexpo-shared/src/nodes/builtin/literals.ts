@@ -1,6 +1,7 @@
 import { nodesScope, registerBaseNodes } from "../node-database";
 import { BaseNode } from "../node-types";
 import * as v from "valibot";
+import { dateTime } from "../node-utils";
 
 export const NUMBER_NODE = new BaseNode({
 	category: "literals",
@@ -35,6 +36,17 @@ export const BOOLEAN_NODE = new BaseNode({
 	}),
 });
 
+export const DATE_TIME_NODE = new BaseNode({
+	category: "literals",
+	name: "date-time",
+	inputSchema: v.object({
+		value: dateTime(),
+	}),
+	outputSchema: v.object({
+		dateTime: dateTime(),
+	}),
+});
+
 nodesScope(() => {
-	registerBaseNodes(NUMBER_NODE, STRING_NODE, BOOLEAN_NODE);
+	registerBaseNodes(NUMBER_NODE, STRING_NODE, BOOLEAN_NODE, DATE_TIME_NODE);
 });

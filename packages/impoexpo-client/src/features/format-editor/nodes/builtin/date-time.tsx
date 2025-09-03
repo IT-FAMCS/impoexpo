@@ -63,6 +63,7 @@ nodesScope(() => {
 				options: localeOptions,
 				showLabel: true,
 				hideType: true,
+				placeholder: msg`locale`,
 			},
 		},
 		outputs: {
@@ -80,6 +81,7 @@ nodesScope(() => {
 				options: timezoneOptions,
 				showLabel: true,
 				hideType: true,
+				placeholder: msg`time zone`,
 			},
 		},
 		outputs: {
@@ -98,6 +100,7 @@ nodesScope(() => {
 				showLabel: true,
 				hideType: true,
 				mode: "independentOnly",
+				placeholder: msg`preset`,
 			},
 		},
 		outputs: {
