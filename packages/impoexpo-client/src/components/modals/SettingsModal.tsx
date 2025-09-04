@@ -49,6 +49,19 @@ export default function SettingsModal() {
 										<ThemeSwitcher />
 									</SettingsModalItem>
 								</SettingsModalSection>
+								<SettingsModalSection title={t`editor options`}>
+									<SettingsModalItem
+										title={t`show a "what does it do?" button near nodes`}
+										description={t`will open the documentation for the selected node`}
+									>
+										<Switch
+											isSelected={settings.editor.showDocumentationButton}
+											onValueChange={(v) =>
+												settings.put("editor.showDocumentationButton", v)
+											}
+										/>
+									</SettingsModalItem>
+								</SettingsModalSection>
 								<SettingsModalSection title={t`developer options`}>
 									<SettingsModalItem
 										title={t`allow taking screenshots of nodes`}

@@ -1,4 +1,5 @@
 import {
+	Button,
 	Card,
 	CardBody,
 	CardHeader,
@@ -46,6 +47,9 @@ import {
 	parseAbsoluteToLocal,
 	type ZonedDateTime,
 } from "@internationalized/date";
+import { useSettingsStore } from "@/stores/settings";
+import { useDocumentationModalStore } from "./documentation-modal/store";
+import { docs } from "@/api/common";
 
 const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 	type,
@@ -68,6 +72,15 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		]),
 	);
 
+	const showDocumentationButton = useSettingsStore(
+		(selector) => selector.editor.showDocumentationButton,
+	);
+	const documentationModalStore = useDocumentationModalStore();
+	const openDocumentationModal = (path: string) => {
+		documentationModalStore.setUrl(docs(path));
+		documentationModalStore.disclosure?.onOpen();
+	};
+
 	return (
 		<Card
 			className="node"
@@ -75,16 +88,39 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		>
 			<CardHeader
 				className={clsx(
-					"pl-4 flex flex-row gap-2 relative",
+					"px-4 relative justify-between",
 					nodeRenderOptions.raw.header ?? categoryRenderOptions?.header,
 				)}
 			>
-				{nodeRenderOptions.raw.icon?.(16) ?? categoryRenderOptions?.icon?.(16)}
-				<p className="overflow-hidden overflow-ellipsis max-w-64">
-					{nodeRenderOptions.raw.title !== undefined
-						? localizableString(nodeRenderOptions.raw.title, t)
-						: nodeData.name}
-				</p>
+				<div className="flex flex-row gap-2 items-center">
+					{nodeRenderOptions.raw.icon?.(16) ??
+						categoryRenderOptions?.icon?.(16)}
+					<p className="overflow-hidden overflow-ellipsis max-w-64">
+						{nodeRenderOptions.raw.title !== undefined
+							? localizableString(nodeRenderOptions.raw.title, t)
+							: nodeData.name}
+					</p>
+				</div>
+				{showDocumentationButton ? (
+					<Button
+						className="cursor-help group"
+						size="sm"
+						isIconOnly
+						onPress={() => {
+							openDocumentationModal(
+								`/user/nodes/${nodeData.category}#${nodeData.name}`,
+							);
+						}}
+						startContent={
+							<Icon
+								className="opacity-50 group-hover:opacity-100 transition-opacity duration-250"
+								width={18}
+								icon="mdi:help"
+							/>
+						}
+						variant="light"
+					/>
+				) : null}
 			</CardHeader>
 			<Divider />
 			<CardBody className="flex flex-col py-2 overflow-visible">

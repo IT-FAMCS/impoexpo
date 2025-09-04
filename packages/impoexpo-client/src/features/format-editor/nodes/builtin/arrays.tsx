@@ -1,4 +1,4 @@
-import * as arrayNodes from "@impoexpo/shared/nodes/builtin/array";
+import * as arrayNodes from "@impoexpo/shared/nodes/builtin/arrays";
 import { nodesScope } from "@impoexpo/shared/nodes/node-database";
 import {
 	registerCategory,

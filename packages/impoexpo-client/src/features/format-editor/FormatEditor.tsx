@@ -46,6 +46,7 @@ import {
 	useFormatEditorWrapperStore,
 } from "../transfer-wizard/store";
 import ExportProjectModal from "./export-project-modal/ExportProjectModal";
+import DocumentationModal from "./documentation-modal/DocumentationModal";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -346,6 +347,7 @@ export default function FormatEditor() {
 				onOpenChange={onExportProjectModalOpenChange}
 				onClose={onExportProjectModalClose}
 			/>
+			<DocumentationModal />
 			<FormatEditorContextMenu ref={contextMenuRef} />
 		</div>
 	);

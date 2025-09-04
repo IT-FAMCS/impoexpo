@@ -2,7 +2,7 @@ import {
 	registerAsyncHandler,
 	registerHandler,
 } from "../../node-executor-utils";
-import * as arrayNodes from "@impoexpo/shared/nodes/builtin/array";
+import * as arrayNodes from "@impoexpo/shared/nodes/builtin/arrays";
 
 registerHandler(arrayNodes.ARRAY_LENGTH_NODE, (ctx) => ({
 	length: ctx.array.length,

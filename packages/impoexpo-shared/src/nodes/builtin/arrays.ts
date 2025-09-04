@@ -4,7 +4,7 @@ import { generic } from "../node-utils";
 import { nodesScope, registerBaseNodes } from "../node-database";
 
 export const ARRAY_LENGTH_NODE = new BaseNode({
-	category: "array",
+	category: "arrays",
 	name: "length",
 	inputSchema: v.object({
 		array: v.array(generic("T")),
@@ -15,7 +15,7 @@ export const ARRAY_LENGTH_NODE = new BaseNode({
 });
 
 export const ARRAY_FOREACH_NODE = new BaseNode({
-	category: "array",
+	category: "arrays",
 	name: "foreach",
 	inputSchema: v.object({
 		array: v.array(generic("T")),
@@ -27,7 +27,7 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 });
 
 export const ARRAY_IS_FIRST_NODE = new BaseNode({
-	category: "array",
+	category: "arrays",
 	name: "is-first",
 	inputSchema: v.object({
 		object: generic("T"),
@@ -38,7 +38,7 @@ export const ARRAY_IS_FIRST_NODE = new BaseNode({
 });
 
 export const ARRAY_IS_LAST_NODE = new BaseNode({
-	category: "array",
+	category: "arrays",
 	name: "is-last",
 	inputSchema: v.object({
 		object: generic("T"),

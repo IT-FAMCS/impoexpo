@@ -9,7 +9,7 @@ registerHandler(mathNodes.DIVIDE_NODE, (ctx) => ({
 	result: ctx.inA / ctx.inB,
 }));
 registerHandler(mathNodes.LOG_NODE, (ctx) => ({
-	result: Math.log10(ctx.in),
+	result: Math.log(ctx.in),
 }));
 registerHandler(mathNodes.MODULO_NODE, (ctx) => ({
 	result: ctx.inA % ctx.inB,

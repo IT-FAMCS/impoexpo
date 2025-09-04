@@ -4,7 +4,7 @@ import { registerBaseNodes } from "../node-database";
 import * as v from "valibot";
 
 export const REPLACE_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "replace",
 	inputSchema: v.object({
 		string: v.string(),
@@ -17,7 +17,7 @@ export const REPLACE_NODE = new BaseNode({
 });
 
 export const CONTAINS_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "contains",
 	inputSchema: v.object({
 		string: v.string(),
@@ -29,7 +29,7 @@ export const CONTAINS_NODE = new BaseNode({
 });
 
 export const LENGTH_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "length",
 	inputSchema: v.object({
 		string: v.string(),
@@ -40,7 +40,7 @@ export const LENGTH_NODE = new BaseNode({
 });
 
 export const JOIN_STRINGS_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "join",
 	inputSchema: v.object({
 		strings: v.array(v.string()),
@@ -52,7 +52,7 @@ export const JOIN_STRINGS_NODE = new BaseNode({
 });
 
 export const FORMAT_STRING_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "format",
 	inputSchema: v.object({
 		template: v.string(),
@@ -64,7 +64,7 @@ export const FORMAT_STRING_NODE = new BaseNode({
 });
 
 export const NUMBER_TO_STRING_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "number-to-string",
 	inputSchema: v.object({
 		number: v.number(),
@@ -75,7 +75,7 @@ export const NUMBER_TO_STRING_NODE = new BaseNode({
 });
 
 export const STRING_TO_NUMBER_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "string-to-number",
 	inputSchema: v.object({
 		string: v.string(),
@@ -86,7 +86,7 @@ export const STRING_TO_NUMBER_NODE = new BaseNode({
 });
 
 export const SPLIT_STRING_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "split-string",
 	inputSchema: v.object({
 		string: v.string(),
@@ -98,7 +98,7 @@ export const SPLIT_STRING_NODE = new BaseNode({
 });
 
 export const TRIM_STRING_NODE = new BaseNode({
-	category: "string",
+	category: "strings",
 	name: "trim-string",
 	inputSchema: v.object({
 		string: v.string(),
