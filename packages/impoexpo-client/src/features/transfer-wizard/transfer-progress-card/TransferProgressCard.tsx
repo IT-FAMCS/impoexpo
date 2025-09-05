@@ -372,9 +372,9 @@ export default function TransferProgressCard() {
 							>
 								<div className="flex flex-col gap-2">
 									<Icon
-										width={96}
+										width={72}
 										icon="mdi:file-document"
-										className="-ml-4 -mb-2"
+										className="-ml-2 -mb-2"
 									/>
 									<p className="text-4xl">{handler.outputs[0].name}</p>
 									<p className="text-foreground-500 text-xl">
