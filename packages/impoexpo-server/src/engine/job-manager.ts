@@ -102,6 +102,7 @@ export class Job {
 			mimeType: type,
 			identifier: id,
 			ttl: projectOutputFilesCache.getRemainingTTL(id),
+			size: data.length,
 		});
 		return id;
 	}

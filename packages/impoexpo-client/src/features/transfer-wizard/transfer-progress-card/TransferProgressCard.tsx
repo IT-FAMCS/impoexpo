@@ -1,338 +1,44 @@
-import {
-	Alert,
-	Card,
-	Spinner,
-	ScrollShadow,
-	Listbox,
-	ListboxItem,
-	Button,
-} from "@heroui/react";
-import {
-	TransferProgressCardState,
-	useProjectStatusCardStore,
-	useTransferProgressCardStore,
-} from "./store";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { Alert, Button, Card, Code, ScrollShadow } from "@heroui/react";
+import { useCallback, useEffect, useState } from "react";
 import { useProjectStore } from "@/stores/project";
-import {
-	ProjectOutputSchema,
-	type Project,
-} from "@impoexpo/shared/schemas/project/ProjectSchema";
-import { postForm, postWithSchemaAndResult, route } from "@/api/common";
-import {
-	PROJECT_TRANSFER_STATUS_ROUTE,
-	CREATE_PROJECT_ROUTE,
-	UPLOAD_PROJECT_FILE_ROUTE,
-	RETRIEVE_PROJECT_OUTPUT_ROUTE,
-} from "@impoexpo/shared/schemas/project/static";
+import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { Trans, useLingui } from "@lingui/react/macro";
-import NetworkErrorCard from "@/components/network/NetworkErrorCard";
-import { UploadProjectResponseSchema } from "@impoexpo/shared/schemas/project/UploadProjectResponseSchema";
-import { t } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
-import {
-	ProjectStatusNotificationSchema,
-	type ProjectStatusNotification,
-} from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
-import { array, parse } from "valibot";
 import { AnimatePresence, motion } from "motion/react";
-import { getFile } from "@/db/files";
 import Confetti from "react-confetti-boom";
+import {
+	type FileUploadStatusChange,
+	TransferHandler,
+	TransferHandlerState,
+} from "@/api/TransferHandler";
+import "./style.css";
+import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
+import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
+import prettyBytes from "pretty-bytes";
+
+import useSound from "use-sound";
+import meowSfx from "../../../../public/sounds/meow.mp3";
+import { useNavigate } from "react-router";
+
+const AnimatedCard = motion.create(Card);
+const AnimatedAlert = motion.create(Alert);
+const AnimatedButton = motion.create(Button);
 
 export default function TransferProgressCard() {
-	const { state } = useTransferProgressCardStore();
-
-	const stateComponent = useMemo(() => {
-		switch (state) {
-			case TransferProgressCardState.UPLOADING_PROJECT:
-				return <UploadingProjectCard />;
-			case TransferProgressCardState.UPLOADING_PROJECT_FILES:
-				return <UploadingProjectFilesCard />;
-			case TransferProgressCardState.TRANSFERRING:
-				return <ProjectStatusCard />;
-			case TransferProgressCardState.DONE:
-				return <ProjectOutputsCard />;
-		}
-	}, [state]);
-
-	return (
-		<Card className="relative flex items-center justify-center w-full h-full">
-			{stateComponent}
-		</Card>
-	);
-}
-
-function ProjectOutputsCard() {
-	const { outputs } = useTransferProgressCardStore();
-	return (
-		<div className="w-full h-full flex flex-col items-center justify-center relative">
-			<div className="flex flex-col items-center gap-2">
-				<Icon width={72} icon="mdi:check-bold" />
-				<p className="text-3xl">
-					<b>
-						<Trans>done!</Trans>
-					</b>
-				</p>
-				<Listbox
-					className="border-small rounded-small border-default"
-					disallowEmptySelection
-					selectionMode="none"
-					items={outputs}
-				>
-					{(output) => (
-						<ListboxItem
-							key={output.identifier}
-							startContent={<Icon width={18} icon="mdi:microsoft-word" />}
-							className="p-2"
-							endContent={
-								<Button
-									color="primary"
-									size="sm"
-									onPress={() => {
-										window.location.href = route(
-											`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
-										).href;
-									}}
-									isIconOnly
-									startContent={<Icon width={18} icon="mdi:download" />}
-								/>
-							}
-							title={output.name}
-						/>
-					)}
-				</Listbox>
-			</div>
-			<Confetti
-				className="absolute w-full h-full"
-				mode="boom"
-				particleCount={50}
-				launchSpeed={2.0}
-				y={1.0}
-			/>
-		</div>
-	);
-}
-
-function UploadingProjectFilesCard() {
-	const project = useProjectStore() as Project;
-	const files = Object.values(project.integrations).flatMap(
-		(i) => i.files ?? [],
-	);
-
-	const { jobId, setState } = useTransferProgressCardStore();
-	if (!jobId)
-		throw new Error(
-			"attempted to render UploadingProjectFilesCard without initializing jobId",
-		);
-
-	const queries = useQueries({
-		queries: files.map((f) => {
-			return {
-				queryKey: ["upload-project-file", f],
-				queryFn: async () => {
-					const file = await getFile(f);
-					if (!file)
-						throw new Error(
-							`no file with identifier "${f}" was found in the local database`,
-						);
-
-					const formData = new FormData();
-					formData.append("file", new Blob([file.data]));
-					formData.append("identifier", f);
-					return postForm(`${UPLOAD_PROJECT_FILE_ROUTE}/${jobId}`, formData);
-				},
-			};
-		}),
-	});
-
-	const completedCount = useMemo(
-		() => queries.filter((q) => q.isSuccess).length,
-		[...queries, queries.filter],
-	);
-	useEffect(() => {
-		if (completedCount === files.length)
-			setState(TransferProgressCardState.TRANSFERRING);
-	}, [completedCount, setState, files]);
-
-	return (
-		<div className="flex flex-col items-center justify-center gap-2">
-			<Trans>uploading project files</Trans>
-			<Spinner />
-		</div>
-	);
-}
-
-function UploadingProjectCard() {
-	const project = useProjectStore() as Project;
-	const {
-		isFetching,
-		isError,
-		isRefetchError,
-		isSuccess,
-		data,
-		error,
-		refetch,
-	} = useQuery({
-		queryKey: ["upload-project", project],
-		queryFn: async () =>
-			postWithSchemaAndResult(
-				CREATE_PROJECT_ROUTE,
-				project,
-				UploadProjectResponseSchema,
-			),
-		refetchOnWindowFocus: false,
-	});
 	const { t } = useLingui();
-	const { setJobId, setState } = useTransferProgressCardStore();
-
-	useEffect(() => {
-		if (!isSuccess) return;
-		setJobId(data.job);
-		setState(TransferProgressCardState.UPLOADING_PROJECT_FILES);
-	}, [isSuccess, data, setJobId, setState]);
-
-	if (isFetching) {
-		return (
-			<div className="flex flex-col items-center justify-center gap-2">
-				<Trans>uploading your project</Trans>
-				<Spinner />
-			</div>
-		);
-	}
-
-	if (isError || isRefetchError) {
-		return (
-			<NetworkErrorCard
-				title={t`couldn't upload your project`}
-				retry={refetch}
-				error={error}
-			/>
-		);
-	}
-
-	return <></>;
-}
-
-const AnimatedAlert = motion.create(Alert);
-function ProjectStatusCard() {
-	const { jobId } = useTransferProgressCardStore();
-	if (!jobId) throw new Error("invalid state in TransferringCard"); // TODO: improve these messages
-	const {
-		open,
-		reconnecting,
-		message,
-		notifications,
-		setMessage,
-		setReconnecting,
-		setOpen,
-		addNotification,
-		complete,
-		terminate,
-		result,
-	} = useProjectStatusCardStore();
-	const { setState, setOutputs } = useTransferProgressCardStore();
-
-	const error = useMemo(
-		() => !open && !reconnecting && message,
-		[open, reconnecting, message],
+	const [handlerState, setHandlerState] = useState<TransferHandlerState>(
+		TransferHandlerState.IDLE,
 	);
-
-	useEffect(() => {
-		setMessage(t`connecting to the server`);
-	}, [setMessage]);
-
-	useEffect(() => {
-		if (result === true) setState(TransferProgressCardState.DONE);
-	}, [result, setState]);
-
-	// TODO: is this really the case?
-	// biome-ignore lint/correctness/useExhaustiveDependencies: this is called once and only once per project request, so none of the outside variables matter
-	useEffect(() => {
-		const eventSource = new EventSource(
-			route(`${PROJECT_TRANSFER_STATUS_ROUTE}/${jobId}`),
-		);
-
-		eventSource.addEventListener(
-			"open",
-			() => {
-				setReconnecting(false);
-				setOpen(true);
-				setMessage(undefined);
-			},
-			false,
-		);
-
-		eventSource.addEventListener(
-			"error",
-			(e) => {
-				// open shouldn't be used here because it's not specified (and shouldn't be!) in the dependency list
-				if (useProjectStatusCardStore.getState().open) {
-					console.warn(
-						`lost connection to /project/status/${jobId}, attempting to reconnect`,
-					);
-					setMessage(t`reconnecting to the server`);
-					setReconnecting(true);
-				} else {
-					console.error(
-						`failed to connect to /project/status/${jobId} (SSE): ${e}`,
-					);
-					setMessage(t`failed to connect to the server`);
-					setReconnecting(false);
-					setOpen(false);
-				}
-			},
-			false,
-		);
-
-		eventSource.addEventListener(
-			"notification",
-			(e) => {
-				try {
-					const notification = parse(
-						ProjectStatusNotificationSchema,
-						JSON.parse(e.data),
-					);
-					addNotification(e.lastEventId, notification);
-					if (notification.type === "error") terminate();
-				} catch (err) {
-					console.error(`notification event sent invalid payload: ${err}`);
-				}
-			},
-			false,
-		);
-
-		eventSource.addEventListener("done", (e) => {
-			try {
-				const outputs = parse(array(ProjectOutputSchema), JSON.parse(e.data));
-				setOutputs(outputs);
-				complete();
-			} catch (err) {
-				console.error(`done event sent invalid payload: ${err}`);
-			}
-		});
-
-		return () => eventSource.close();
-	}, []);
-
-	if (error) {
-		return (
-			<div className="flex flex-col items-center justify-center gap-1">
-				<Icon className="text-danger" width={48} icon="mdi:error-outline" />
-				<p className="text-center">{message}</p>
-			</div>
-		);
-	}
-	if (!error && message) {
-		return (
-			<div className="flex flex-col items-center justify-center gap-2">
-				<Spinner size="lg" />
-				<p className="text-3xl">
-					<b>{message}</b>
-				</p>
-			</div>
-		);
-	}
+	const [notifications, setNotifications] = useState<
+		ProjectStatusNotification[]
+	>([]);
+	const [transferringStarted, setTransferringStarted] = useState(false);
+	const [fileUploadInformation, setFileUploadInformation] =
+		useState<FileUploadStatusChange>();
+	// biome-ignore lint/style/noNonNullAssertion: initialized asap
+	const [handler, setHandler] = useState<TransferHandler>(null!);
+	const [playMeow] = useSound(meowSfx);
+	const navigate = useNavigate();
 
 	const convertColor = (
 		notificationType: ProjectStatusNotification["type"],
@@ -349,58 +55,363 @@ function ProjectStatusCard() {
 		}
 	};
 
+	useEffect(() => {
+		if (handler) return;
+
+		const newHandler = new TransferHandler(
+			useProjectStore.getState() as Project,
+		);
+		newHandler.addEventListener("state-changed", setHandlerState);
+		newHandler.addEventListener("file-uploaded", setFileUploadInformation);
+		newHandler.addEventListener("notification", () =>
+			setNotifications(newHandler.notifications),
+		);
+
+		setHandler(newHandler);
+	}, [handler]);
+
+	useEffect(() => {
+		if (transferringStarted) return;
+		if (handlerState === TransferHandlerState.CONNECTING)
+			setTransferringStarted(true);
+	}, [transferringStarted, handlerState]);
+
+	const stringifyState = useCallback(() => {
+		switch (handlerState) {
+			case TransferHandlerState.UPLOADING_PROJECT:
+				return t`uploading the project`;
+			case TransferHandlerState.UPLOADING_PROJECT_FILES:
+				return t`uploading project files`;
+			case TransferHandlerState.CONNECTING:
+				return t`connecting to the server`;
+			case TransferHandlerState.CONNECTED:
+				return t`transferring`;
+			case TransferHandlerState.RECONNECTING:
+				return t`reconnecting to the server`;
+			case TransferHandlerState.DONE:
+				return t`done!`;
+			case TransferHandlerState.IDLE:
+				return t`preparing`;
+			case TransferHandlerState.TERMINATED:
+				return t`you were not supposed to see this.`;
+		}
+	}, [handlerState, t]);
+
 	return (
-		<div className="flex flex-col items-center justify-center gap-2">
-			{result === undefined && (
-				<>
-					<Spinner size="lg" />
-					<p className="text-3xl">
-						<b>
-							<Trans>we're working on your project</Trans>
-						</b>
-					</p>
-					<p className="text-center">
-						<Trans>
-							this shouldn't take too long. updates will appear below:
-						</Trans>
-					</p>
-				</>
-			)}
+		<Card className="p-4 grid grid-cols-6 grid-rows-5 gap-4 w-full h-full relative">
+			{/* <Card className="col-span-2 row-span-3">1</Card> */}
+			{/* <Card className="col-span-2 row-start-5">2</Card> */}
+			{/* <Card className="col-span-2 col-start-5 row-start-5">3</Card> */}
+			{/* <Card className="col-span-2 col-start-3 row-start-5">4</Card> */}
 
-			{result === false && (
-				<>
-					<Icon width={72} icon="mdi:error-outline" />
-					<p className="text-3xl">
-						<b>
-							<Trans>we couldn't process your project</Trans>
-						</b>
-					</p>
-					<p className="text-center">
-						<Trans>
-							please check the last notification to see what went wrong and try
-							again.
-						</Trans>
-					</p>
-				</>
-			)}
+			<div className="col-span-2 col-start-3 row-start-5 flex justify-end items-end w-full h-full">
+				<AnimatePresence>
+					{(handlerState === TransferHandlerState.DONE ||
+						handlerState === TransferHandlerState.TERMINATED) && (
+						<AnimatedCard
+							className={
+								handlerState === TransferHandlerState.DONE
+									? handler.outputs.length > 4
+										? "bg-success"
+										: "bg-secondary"
+									: "bg-warning"
+							}
+							initial={{ width: "0", height: "0" }}
+							animate={{
+								width: "100%",
+								height: "100%",
+							}}
+							transition={{
+								times: [0, 0.4, 1],
+								duration: 1,
+								ease: [0.83, 0, 0.17, 1],
+							}}
+						>
+							{handlerState === TransferHandlerState.DONE ? (
+								handler.outputs.length > 4 ? (
+									<AnimatedButton
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										transition={{ delay: 1, duration: 0.5 }}
+										color="success"
+										className="w-full h-full text-3xl flex flex-col gap-0"
+									>
+										<Icon
+											className="min-w-16"
+											width={64}
+											icon="mdi:folder-multiple"
+										/>
+										<Trans>view all files</Trans>
+									</AnimatedButton>
+								) : (
+									<AnimatedButton
+										onPress={() => playMeow()}
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										transition={{ delay: 1, duration: 0.5 }}
+										color="secondary"
+										className="w-full h-full text-3xl flex flex-col gap-0"
+										isIconOnly
+									>
+										<Icon className="min-w-24" width={96} icon="mdi:cat" />
+									</AnimatedButton>
+								)
+							) : (
+								<AnimatedButton
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									transition={{ delay: 1, duration: 0.5 }}
+									color="warning"
+									className="w-full h-full text-3xl flex flex-col gap-0"
+								>
+									<Icon className="min-w-16" width={64} icon="mdi:refresh" />
+									<Trans>try again</Trans>
+								</AnimatedButton>
+							)}
+						</AnimatedCard>
+					)}
+				</AnimatePresence>
+			</div>
 
-			<ScrollShadow className="max-h-[25vh] max-w-[30vw] w-full mt-2 pb-10">
-				<div className="flex flex-col h-full gap-2">
-					<AnimatePresence>
-						{Object.entries(notifications).map((pair) => (
-							<AnimatedAlert
-								initial={{ opacity: 0, y: 5 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.5 }}
-								key={pair[0]}
-								color={convertColor(pair[1].type)}
+			<div className="col-span-2 col-start-5 row-start-5 flex justify-end items-end w-full h-full">
+				<AnimatePresence>
+					{(handlerState === TransferHandlerState.DONE ||
+						handlerState === TransferHandlerState.TERMINATED) && (
+						<AnimatedCard
+							className="bg-primary"
+							initial={{ width: "0", height: "0" }}
+							animate={{
+								width: "100%",
+								height: "100%",
+							}}
+							transition={{
+								times: [0, 0.4, 1],
+								duration: 1,
+								ease: [0.83, 0, 0.17, 1],
+							}}
+						>
+							<AnimatedButton
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ delay: 1, duration: 0.5 }}
+								color="primary"
+								className="w-full h-full text-3xl flex flex-col gap-0"
+								onPress={() => navigate("/")}
 							>
-								{pair[1].message}
-							</AnimatedAlert>
-						))}
-					</AnimatePresence>
-				</div>
-			</ScrollShadow>
-		</div>
+								<Icon className="min-w-16" width={64} icon="mdi:home" />
+								<Trans>return to the homepage</Trans>
+							</AnimatedButton>
+						</AnimatedCard>
+					)}
+				</AnimatePresence>
+			</div>
+
+			<div className="col-span-2 row-span-3 flex justify-start items-end w-full h-full">
+				<AnimatePresence>
+					{transferringStarted && (
+						<AnimatedCard
+							initial={{ width: "0", height: "0" }}
+							animate={{
+								width: "100%",
+								height: "100%",
+							}}
+							transition={{
+								times: [0, 0.4, 1],
+								duration: 1,
+								ease: [0.83, 0, 0.17, 1],
+							}}
+							className="flex flex-col justify-end items-start"
+						>
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ delay: 1, duration: 0.5 }}
+								className="flex flex-col p-4 h-full w-full"
+							>
+								{notifications.length === 0 ? (
+									<div className="flex justify-start items-end w-full h-full">
+										<p className="text-foreground-400 text-2xl">
+											<i>
+												<Trans>
+													notifications will appear here
+													<br />
+													(if there are any)
+												</Trans>
+											</i>
+										</p>
+									</div>
+								) : (
+									<ScrollShadow className="max-h-full flex flex-col gap-2">
+										<AnimatePresence>
+											{Object.entries(notifications).map((p) => (
+												<AnimatedAlert
+													initial={{ opacity: 0, y: 5 }}
+													animate={{ opacity: 1, y: 0 }}
+													transition={{ duration: 0.5 }}
+													key={p[0]}
+													color={convertColor(p[1].type)}
+													className="h=min"
+												>
+													{p[1].message}
+												</AnimatedAlert>
+											))}
+										</AnimatePresence>
+									</ScrollShadow>
+								)}
+							</motion.div>
+						</AnimatedCard>
+					)}
+				</AnimatePresence>
+			</div>
+
+			<div className="col-span-2 row-span-2 row-start-4 flex justify-start items-end w-full h-full">
+				<AnimatedCard
+					initial={{ width: "0", height: "0" }}
+					animate={{
+						width: "100%",
+						height: "100%",
+					}}
+					transition={{
+						times: [0, 0.4, 1],
+						duration: 1,
+						ease: [0.83, 0, 0.17, 1],
+					}}
+					className="flex flex-col justify-end items-start"
+				>
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ delay: 1, duration: 0.5 }}
+						onAnimationComplete={() => handler.start()}
+						className="flex flex-col gap-2 m-4"
+					>
+						{handlerState === TransferHandlerState.TERMINATED &&
+						handler.terminationReason ? (
+							<>
+								<Icon
+									width={96}
+									className="-mb-2 -ml-2"
+									icon="mdi:error-outline"
+								/>
+								<p className="text-5xl">
+									{localizableString(handler.terminationReason.short, t)}
+								</p>
+								<Code color="danger" className="mt-2">
+									{handler.terminationReason.technical}
+								</Code>
+							</>
+						) : (
+							<>
+								<AnimatePresence>
+									{handlerState !== TransferHandlerState.DONE && (
+										<motion.div
+											key="loading-icon"
+											initial={{ opacity: 1 }}
+											exit={{ opacity: 0, display: "none" }}
+											transition={{ ease: [0.83, 0, 0.17, 1], duration: 0.5 }}
+											className="la-ball-grid-pulse la-3x"
+										>
+											<div /> <div /> <div /> <div /> <div /> <div /> <div />{" "}
+											<div /> <div />
+										</motion.div>
+									)}
+									{handlerState === TransferHandlerState.DONE && (
+										<motion.div
+											initial={{ opacity: 0, display: "none" }}
+											animate={{ opacity: 1, display: "block" }}
+											transition={{
+												ease: [0.83, 0, 0.17, 1],
+												delay: 0.5,
+												duration: 0.5,
+											}}
+											className="size-24 -mb-2 -ml-2"
+										>
+											<Icon icon="mdi:check" width={96} />
+										</motion.div>
+									)}
+								</AnimatePresence>
+								<p className="text-5xl">
+									{stringifyState()}
+									{handlerState ===
+										TransferHandlerState.UPLOADING_PROJECT_FILES &&
+										fileUploadInformation && (
+											<span className="text-foreground-500">
+												{" "}
+												({fileUploadInformation.uploaded}/
+												{fileUploadInformation.total})
+											</span>
+										)}
+								</p>
+							</>
+						)}
+					</motion.div>
+				</AnimatedCard>
+			</div>
+
+			{/* <Card className="col-span-2 row-span-2 col-start-5 row-start-1">6</Card>
+			<Card className="col-span-2 row-span-2 col-start-3 row-start-3">7</Card>
+			<Card className="col-span-2 row-span-2 col-start-5 row-start-3">8</Card> */}
+			{/* <Card className="col-span-2 row-span-2 col-start-3 row-start-1">5</Card> */}
+
+			<div className="col-span-2 row-span-2 col-start-3 row-start-1 flex justify-start items-start">
+				<AnimatePresence>
+					{handlerState === TransferHandlerState.DONE &&
+						handler.outputs.length >= 1 && (
+							<AnimatedCard
+								initial={{ width: "0", height: "0" }}
+								animate={{
+									width: "100%",
+									height: "100%",
+								}}
+								transition={{
+									times: [0, 0.4, 1],
+									duration: 1,
+									ease: [0.83, 0, 0.17, 1],
+								}}
+								className="p-4 flex flex-col justify-between"
+							>
+								<div className="flex flex-col gap-2">
+									<Icon
+										width={96}
+										icon="mdi:file-document"
+										className="-ml-4 -mb-2"
+									/>
+									<p className="text-4xl">{handler.outputs[0].name}</p>
+									<p className="text-foreground-500 text-xl">
+										{prettyBytes(handler.outputs[0].size)}
+									</p>
+								</div>
+								<div className="flex flex-row gap-2 h-max">
+									<Button className="flex-grow flex flex-col h-full py-4 gap-0">
+										<Icon
+											className="min-w-12"
+											width={48}
+											icon="mdi:clipboard-file"
+										/>
+										<Trans>copy to clipboard</Trans>
+									</Button>
+									<Button className="flex-grow flex flex-col h-full py-4 gap-0">
+										<Icon className="min-w-12" width={48} icon="mdi:download" />
+										<Trans>download</Trans>
+									</Button>
+								</div>
+							</AnimatedCard>
+						)}
+				</AnimatePresence>
+			</div>
+
+			{handlerState === TransferHandlerState.DONE && (
+				<Confetti
+					className="absolute w-full h-full pointer-events-none"
+					mode="boom"
+					particleCount={50}
+					launchSpeed={2.5}
+					y={1.0}
+					x={0}
+					deg={300}
+					effectCount={1}
+				/>
+			)}
+		</Card>
 	);
 }

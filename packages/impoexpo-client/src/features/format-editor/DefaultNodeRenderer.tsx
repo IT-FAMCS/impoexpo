@@ -76,8 +76,13 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		(selector) => selector.editor.showDocumentationButton,
 	);
 	const documentationModalStore = useDocumentationModalStore();
-	const openDocumentationModal = (path: string) => {
-		documentationModalStore.setUrl(docs(path));
+	const openDocumentationModal = () => {
+		const hash =
+			nodeRenderOptions.raw.documentationHashOverride ?? nodeData.name;
+		const base =
+			categoryRenderOptions.documentationLink ??
+			`/user/nodes/${nodeData.category}`;
+		documentationModalStore.setUrl(docs(`${base}#${hash}`));
 		documentationModalStore.disclosure?.onOpen();
 	};
 
@@ -106,11 +111,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 						className="cursor-help group"
 						size="sm"
 						isIconOnly
-						onPress={() => {
-							openDocumentationModal(
-								`/user/nodes/${nodeData.category}#${nodeData.name}`,
-							);
-						}}
+						onPress={openDocumentationModal}
 						startContent={
 							<Icon
 								className="opacity-50 group-hover:opacity-100 transition-opacity duration-250"

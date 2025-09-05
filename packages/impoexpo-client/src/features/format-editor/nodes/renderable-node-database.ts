@@ -129,6 +129,7 @@ export type RenderableNodesStore = {
 		{
 			icon?: IconRenderFunction;
 			header?: string;
+			documentationLink?: string;
 			name: MessageDescriptor | string;
 		}
 	>;
@@ -201,6 +202,7 @@ export const registerCategory = (
 		name: MessageDescriptor;
 		header?: string;
 		icon?: IconRenderFunction;
+		documentationLink?: string;
 	},
 ) =>
 	useRenderableNodesStore.setState((state) => {

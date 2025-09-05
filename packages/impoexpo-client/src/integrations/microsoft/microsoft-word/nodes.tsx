@@ -29,6 +29,7 @@ export const registerMicrosoftWordNode = (
 		title: filename,
 		header: "bg-primary-200",
 		icon: (size) => <Icon width={size} icon="mdi:microsoft-word" />,
+		documentationHashOverride: "document",
 		inputs: {},
 	};
 	for (const placeholder of layout.placeholders) {
@@ -60,6 +61,7 @@ nodesScope(() => {
 		name: msg`Microsoft Word`,
 		header: "bg-primary-200",
 		icon: (size) => <Icon width={size} icon="mdi:microsoft-word" />,
+		documentationLink: "/user/integrations/microsoft-word",
 	});
 
 	registerWithDefaultRenderer(wordNodes.WORD_TEXT_NODE, {

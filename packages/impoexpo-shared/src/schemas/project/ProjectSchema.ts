@@ -34,6 +34,7 @@ export const ProjectOutputSchema = v.variant("type", [
 		mimeType: v.string(),
 		identifier: v.string(),
 		ttl: v.number(),
+		size: v.number(),
 	}),
 ]);
 

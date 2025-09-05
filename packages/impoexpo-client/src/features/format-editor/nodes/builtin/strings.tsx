@@ -9,7 +9,7 @@ import {
 } from "../renderable-node-database";
 
 nodesScope(() => {
-	registerCategory("string", {
+	registerCategory("strings", {
 		name: msg`strings`,
 		header: "bg-primary-200",
 		icon: (size) => <Icon width={size} icon="mdi:text" />,

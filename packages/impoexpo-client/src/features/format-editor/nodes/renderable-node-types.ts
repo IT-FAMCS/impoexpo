@@ -38,6 +38,7 @@ export type RawNodeRenderOptions<
 	icon: IconRenderFunction;
 	header: string;
 	searchable: boolean;
+	documentationHashOverride?: string;
 	aliases: MessageDescriptor | string;
 	title: MessageDescriptor | string;
 }> &

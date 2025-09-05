@@ -93,6 +93,7 @@ export default function SearchNodesModal(props: {
 				const fromNode = getBaseNode(newNodeInformation.fromNodeType);
 				const fromEntry = fromNode.entry(newNodeInformation.fromHandleId);
 				const toNode = getBaseNode(h.id);
+				if (!(getNodeRenderOptions(h.id).raw.searchable ?? true)) return false;
 
 				return Object.keys(
 					fromEntry.source === "input"
@@ -181,6 +182,13 @@ function ManualNodeSelector(props: {
 			setNodes([
 				...Object.values(baseNodes)
 					.filter((toNode) => {
+						if (
+							!(
+								getNodeRenderOptions(`${toNode.category}-${toNode.name}`).raw
+									.searchable ?? true
+							)
+						)
+							return false;
 						if (toNode.category !== selectedCategory) return false;
 						if (
 							!newNodeInformation?.fromNodeType ||
