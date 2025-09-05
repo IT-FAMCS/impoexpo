@@ -13,6 +13,27 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/api/TransferHandler.ts:117
+msgid "failed to connect to the server via SSE"
+msgstr "не удалось подключиться к серверу через SSE"
+
+#: src/api/TransferHandler.ts:138
+msgid "transfer was cancelled"
+msgstr "перенос был отменён"
+
+#: src/api/TransferHandler.ts:144
+#: src/api/TransferHandler.ts:157
+msgid "something is up with the server"
+msgstr "что-то не так с сервером"
+
+#: src/api/TransferHandler.ts:202
+msgid "failed to upload project files"
+msgstr "не удалось загрузить файлы проекта"
+
+#: src/api/TransferHandler.ts:221
+msgid "failed to upload the project"
+msgstr "не удалось загрузить проект"
+
 #: src/components/modals/FileDropzone.tsx:30
 msgid "drag and drop a file here or click"
 msgstr "перетащите файл сюда или нажмите"
@@ -39,14 +60,26 @@ msgid "theme"
 msgstr "тема"
 
 #: src/components/modals/SettingsModal.tsx:52
+msgid "editor options"
+msgstr "настройки редактора"
+
+#: src/components/modals/SettingsModal.tsx:54
+msgid "show a \"what does it do?\" button near nodes"
+msgstr "показывать кнопку \"что это делает?\" возле узлов"
+
+#: src/components/modals/SettingsModal.tsx:55
+msgid "will open the documentation for the selected node"
+msgstr "по нажатию открывает документацию выбранного узла"
+
+#: src/components/modals/SettingsModal.tsx:65
 msgid "developer options"
 msgstr "для разработчиков"
 
-#: src/components/modals/SettingsModal.tsx:54
+#: src/components/modals/SettingsModal.tsx:67
 msgid "allow taking screenshots of nodes"
 msgstr "показывать опцию для скриншота узлов"
 
-#: src/components/modals/SettingsModal.tsx:55
+#: src/components/modals/SettingsModal.tsx:68
 msgid "used for writing documentation"
 msgstr "обычно используется для написания документации"
 
@@ -82,7 +115,7 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:121
+#: src/features/format-editor/DefaultNodeRenderer.tsx:158
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
@@ -155,66 +188,66 @@ msgstr "отмена"
 msgid "export"
 msgstr "экспортировать"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:12
-#: src/features/format-editor/nodes/builtin/array.tsx:21
-#: src/features/format-editor/nodes/builtin/array.tsx:32
+#: src/features/format-editor/nodes/builtin/arrays.tsx:12
+#: src/features/format-editor/nodes/builtin/arrays.tsx:21
+#: src/features/format-editor/nodes/builtin/arrays.tsx:32
 msgid "array"
 msgstr "массив"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:18
+#: src/features/format-editor/nodes/builtin/arrays.tsx:18
 msgid "length of array"
 msgstr "размер массива"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:19
+#: src/features/format-editor/nodes/builtin/arrays.tsx:19
 msgid "size of array"
 msgstr "длина массива"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:24
+#: src/features/format-editor/nodes/builtin/arrays.tsx:24
 msgid "length"
 msgstr "размер"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:29
+#: src/features/format-editor/nodes/builtin/arrays.tsx:29
 msgid "iterate over elements of the array..."
 msgstr "пройтись по каждому элементу массива..."
 
-#: src/features/format-editor/nodes/builtin/array.tsx:30
+#: src/features/format-editor/nodes/builtin/arrays.tsx:30
 msgid "for each item in the array, foreach"
 msgstr "для каждого элемента в массива, для каждого"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:35
-#: src/features/format-editor/nodes/builtin/array.tsx:44
-#: src/features/format-editor/nodes/builtin/array.tsx:61
+#: src/features/format-editor/nodes/builtin/arrays.tsx:35
+#: src/features/format-editor/nodes/builtin/arrays.tsx:44
+#: src/features/format-editor/nodes/builtin/arrays.tsx:61
 #: src/features/format-editor/nodes/builtin/conditional.tsx:66
 #: src/features/format-editor/nodes/builtin/conditional.tsx:81
 msgid "object"
 msgstr "объект"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:40
+#: src/features/format-editor/nodes/builtin/arrays.tsx:40
 msgid "is this the first iteration?"
 msgstr "это первая итерация?"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:41
+#: src/features/format-editor/nodes/builtin/arrays.tsx:41
 msgid "is first entry, is first object"
 msgstr "первый объект, первый элемент"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:45
-#: src/features/format-editor/nodes/builtin/array.tsx:62
+#: src/features/format-editor/nodes/builtin/arrays.tsx:45
+#: src/features/format-editor/nodes/builtin/arrays.tsx:62
 msgid "must be connected to an iterator node. otherwise, will always return false."
 msgstr "должен быть присоединён к узлу-итератору. в противном случае будет всегда возвращать \"ложь\"."
 
-#: src/features/format-editor/nodes/builtin/array.tsx:51
+#: src/features/format-editor/nodes/builtin/arrays.tsx:51
 msgid "first iteration?"
 msgstr "первая итерация?"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:57
+#: src/features/format-editor/nodes/builtin/arrays.tsx:57
 msgid "is this the last iteration?"
 msgstr "это последняя итерация?"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:58
+#: src/features/format-editor/nodes/builtin/arrays.tsx:58
 msgid "is last entry, is last object"
 msgstr "последний объект, последний элемент"
 
-#: src/features/format-editor/nodes/builtin/array.tsx:68
+#: src/features/format-editor/nodes/builtin/arrays.tsx:68
 msgid "last iteration?"
 msgstr "последняя итерация?"
 
@@ -334,9 +367,9 @@ msgstr "локаль"
 #: src/features/format-editor/nodes/builtin/strings.tsx:124
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:71
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:102
 msgid "result"
 msgstr "результат"
 
@@ -732,16 +765,16 @@ msgstr "обрезать конец?"
 msgid "input"
 msgstr "ввод"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:139
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:140
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного узла..."
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:232
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:240
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
 msgid "go back"
 msgstr "вернуться назад"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:252
+#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:260
 msgid "the results are filtered based on what node and property you've selected."
 msgstr "результаты отфильтрованы на основании выбранных вами узла и его свойства."
 
@@ -775,7 +808,7 @@ msgid "where the magic happens..."
 msgstr "где творится магия..."
 
 #: src/features/transfer-wizard/TransferWizardPage.tsx:149
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:74
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:92
 msgid "done!"
 msgstr "готово!"
 
@@ -821,45 +854,57 @@ msgstr "далее"
 msgid "failed to check integration authentication status"
 msgstr "не удалось проверить статус авторизации интеграции"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:160
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:82
+msgid "uploading the project"
+msgstr "загружаем проект"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:84
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:198
-msgid "uploading your project"
-msgstr "выкладываем ваш проект"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
-msgid "couldn't upload your project"
-msgstr "не удалось выложить ваш проект"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:242
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:86
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:274
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:88
+msgid "transferring"
+msgstr "переносим"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:90
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:280
-msgid "failed to connect to the server"
-msgstr "не удалось подключиться к серверу"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:94
+msgid "preparing"
+msgstr "готовимся"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:359
-msgid "we're working on your project"
-msgstr "работаем над вашим проектом"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:96
+msgid "you were not supposed to see this."
+msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:363
-msgid "this shouldn't take too long. updates will appear below:"
-msgstr "это не должно занять слишком долго. ниже будут оповещения:"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:144
+msgid "view all files"
+msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:375
-msgid "we couldn't process your project"
-msgstr "не удалось обработать ваш проект"
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:168
+msgid "try again"
+msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:379
-msgid "please check the last notification to see what went wrong and try again."
-msgstr "пожалуйста, проверьте последнее оповещение и попробуйте снова."
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:202
+msgid "return to the homepage"
+msgstr "вернуться на главную страницу"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:235
+msgid "notifications will appear here<0/>(if there are any)"
+msgstr "уведомления появятся тут<0/>(если они есть)"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:391
+msgid "copy to clipboard"
+msgstr "скопировать"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:395
+msgid "download"
+msgstr "скачать"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -940,6 +985,7 @@ msgstr "назад к выбору источника"
 
 #: src/integrations/google/google-forms/integration.tsx:22
 #: src/integrations/google/google-forms/integration.tsx:71
+#: src/integrations/google/google-forms/nodes.tsx:22
 msgid "Google Forms"
 msgstr "Google Forms"
 
@@ -981,42 +1027,42 @@ msgstr "вернуться к загрузке файла"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
 #: src/integrations/microsoft/microsoft-word/integration.tsx:65
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:60
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:61
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:66
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:68
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:70
 msgid "text"
 msgstr "текст"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:76
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
 msgid "list"
 msgstr "список"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
 msgid "items"
 msgstr "элементы"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:82
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:97
 msgid "automatically separate list items"
 msgstr "автоматически разделять элементы списка"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:81
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:98
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "автоматически добавлять точку с запятой (;) к концу каждого элемента списка, кроме последнего, к которому будет добавлена точка (.)"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
 msgid "list title"
 msgstr "заголовок списка"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
 msgid "grouped list"
 msgstr "группированный список"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
 msgid "groups"
 msgstr "группы"
 
