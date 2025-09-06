@@ -78,7 +78,7 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 			addToast({
 				color: "danger",
 				title: <Trans>failed to render node</Trans>,
-				description: `${err}`,
+				description: <p className="font-mono">{`${err}`}</p>,
 			});
 		}
 	}, [container, node]);

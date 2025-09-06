@@ -113,7 +113,7 @@ function ProjectTemplateSelector() {
 							addToast({
 								color: "danger",
 								title: <Trans>failed to import the project template</Trans>,
-								description: `${err}`,
+								description: <p className="font-mono">{`${err}`}</p>,
 							});
 						}
 					},

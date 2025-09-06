@@ -48,7 +48,7 @@ import {
 	type ZonedDateTime,
 } from "@internationalized/date";
 import { useSettingsStore } from "@/stores/settings";
-import { useDocumentationModalStore } from "./documentation-modal/store";
+import { useDocumentationModalStore } from "./modals/documentation-modal/store";
 import { docs } from "@/api/common";
 
 const DefaultNodeRenderer = memo(function DefaultNodeRenderer({

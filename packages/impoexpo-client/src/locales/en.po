@@ -43,6 +43,42 @@ msgstr "drag and drop a file here or click"
 msgid "will accept: {0}"
 msgstr "will accept: {0}"
 
+#: src/components/modals/LocalProjectsManagerModal.tsx:45
+msgid "manage projects"
+msgstr "manage projects"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:52
+msgid "projects"
+msgstr "projects"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:63
+msgid "you currently have no saved projects.<0/>go create one!"
+msgstr "you currently have no saved projects.<0/>go create one!"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:113
+msgid "edit project"
+msgstr "edit project"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:122
+msgid "delete project"
+msgstr "delete project"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:132
+msgid "run project"
+msgstr "run project"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:153
+msgid "yes"
+msgstr "yes"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:160
+msgid "no"
+msgstr "no"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:164
+msgid "are you sure?"
+msgstr "are you sure?"
+
 #: src/components/modals/SettingsModal.tsx:41
 msgid "settings"
 msgstr "settings"
@@ -119,23 +155,40 @@ msgstr "retry"
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:273
+#: src/features/format-editor/FormatEditor.tsx:292
+msgid "save project..."
+msgstr "save project..."
+
+#: src/features/format-editor/FormatEditor.tsx:307
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
+msgid "successfully saved the project"
+msgstr "successfully saved the project"
+
+#: src/features/format-editor/FormatEditor.tsx:314
+msgid "failed to save the project (did you mess with the database?)"
+msgstr "failed to save the project (did you mess with the database?)"
+
+#: src/features/format-editor/FormatEditor.tsx:326
+msgid "save project as..."
+msgstr "save project as..."
+
+#: src/features/format-editor/FormatEditor.tsx:336
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:279
+#: src/features/format-editor/FormatEditor.tsx:342
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:289
+#: src/features/format-editor/FormatEditor.tsx:352
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:305
+#: src/features/format-editor/FormatEditor.tsx:368
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:335
+#: src/features/format-editor/FormatEditor.tsx:398
 msgid "done"
 msgstr "done"
 
@@ -168,25 +221,55 @@ msgstr "render to clipboard"
 msgid "render to file"
 msgstr "render to file"
 
-#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:46
-msgid "project export"
-msgstr "project export"
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:48
+msgid "export project"
+msgstr "export project"
 
-#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:49
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:51
 msgid "are you sure you want to export this project?"
 msgstr "are you sure you want to export this project?"
 
-#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:52
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:54
 msgid "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
 msgstr "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
 
-#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:65
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:67
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:73
 msgid "cancel"
 msgstr "cancel"
 
-#: src/features/format-editor/export-project-modal/ExportProjectModal.tsx:68
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:70
 msgid "export"
 msgstr "export"
+
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:48
+msgid "save project"
+msgstr "save project"
+
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:54
+msgid "project name"
+msgstr "project name"
+
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:62
+msgid "group (optional)"
+msgstr "group (optional)"
+
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:92
+msgid "save"
+msgstr "save"
+
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:140
+msgid "enter the name, category or tag of the needed node..."
+msgstr "enter the name, category or tag of the needed node..."
+
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:240
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
+msgid "go back"
+msgstr "go back"
+
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:260
+msgid "the results are filtered based on what node and property you've selected."
+msgstr "the results are filtered based on what node and property you've selected."
 
 #: src/features/format-editor/nodes/builtin/arrays.tsx:12
 #: src/features/format-editor/nodes/builtin/arrays.tsx:21
@@ -765,53 +848,6 @@ msgstr "trim end?"
 msgid "input"
 msgstr "input"
 
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:140
-msgid "enter the name, category or tag of the needed node..."
-msgstr "enter the name, category or tag of the needed node..."
-
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:240
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
-msgid "go back"
-msgstr "go back"
-
-#: src/features/format-editor/search-nodes-modal/SearchNodesModal.tsx:260
-msgid "the results are filtered based on what node and property you've selected."
-msgstr "the results are filtered based on what node and property you've selected."
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:134
-#: src/pages/WelcomePage.tsx:44
-msgid "new data transfer"
-msgstr "new data transfer"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:141
-msgid "select sources"
-msgstr "select sources"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:142
-msgid "what should we transfer?"
-msgstr "what should we transfer?"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:144
-msgid "formatting"
-msgstr "formatting"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:144
-msgid "how should we transfer?"
-msgstr "how should we transfer?"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:146
-msgid "transfer"
-msgstr "transfer"
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:147
-msgid "where the magic happens..."
-msgstr "where the magic happens..."
-
-#: src/features/transfer-wizard/TransferWizardPage.tsx:149
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:92
-msgid "done!"
-msgstr "done!"
-
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:54
 msgid "where shall we start?"
 msgstr "where shall we start?"
@@ -854,57 +890,58 @@ msgstr "next"
 msgid "failed to check integration authentication status"
 msgstr "failed to check integration authentication status"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:82
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:144
+msgid "download"
+msgstr "download"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "uploading the project"
 msgstr "uploading the project"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:84
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
 msgid "uploading project files"
 msgstr "uploading project files"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:86
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
 msgid "connecting to the server"
 msgstr "connecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:88
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:215
 msgid "transferring"
 msgstr "transferring"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:90
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:217
 msgid "reconnecting to the server"
 msgstr "reconnecting to the server"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:94
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:219
+#: src/pages/TransferWizardPage.tsx:178
+msgid "done!"
+msgstr "done!"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:221
 msgid "preparing"
 msgstr "preparing"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:96
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:223
 msgid "you were not supposed to see this."
 msgstr "you were not supposed to see this."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:144
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:264
 msgid "view all files"
 msgstr "view all files"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:168
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:288
 msgid "try again"
 msgstr "try again"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:202
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:310
 msgid "return to the homepage"
 msgstr "return to the homepage"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:235
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:327
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "notifications will appear here<0/>(if there are any)"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:391
-msgid "copy to clipboard"
-msgstr "copy to clipboard"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:395
-msgid "download"
-msgstr "download"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -1074,19 +1111,48 @@ msgstr "nowhere"
 msgid "Nowhere"
 msgstr "Nowhere"
 
-#: src/pages/WelcomePage.tsx:27
+#: src/pages/TransferWizardPage.tsx:163
+#: src/pages/WelcomePage.tsx:46
+msgid "new data transfer"
+msgstr "new data transfer"
+
+#: src/pages/TransferWizardPage.tsx:170
+msgid "select sources"
+msgstr "select sources"
+
+#: src/pages/TransferWizardPage.tsx:171
+msgid "what should we transfer?"
+msgstr "what should we transfer?"
+
+#: src/pages/TransferWizardPage.tsx:173
+msgid "formatting"
+msgstr "formatting"
+
+#: src/pages/TransferWizardPage.tsx:173
+msgid "how should we transfer?"
+msgstr "how should we transfer?"
+
+#: src/pages/TransferWizardPage.tsx:175
+msgid "transfer"
+msgstr "transfer"
+
+#: src/pages/TransferWizardPage.tsx:176
+msgid "where the magic happens..."
+msgstr "where the magic happens..."
+
+#: src/pages/WelcomePage.tsx:28
 msgid "welcome to <0>impoexpo</0>!"
 msgstr "welcome to <0>impoexpo</0>!"
 
-#: src/pages/WelcomePage.tsx:51
-#: src/pages/WelcomePage.tsx:58
+#: src/pages/WelcomePage.tsx:55
+#: src/pages/WelcomePage.tsx:62
 msgid "about the project"
 msgstr "about the project"
 
-#: src/pages/WelcomePage.tsx:62
+#: src/pages/WelcomePage.tsx:66
 msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
 msgstr "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
 
-#: src/pages/WelcomePage.tsx:69
+#: src/pages/WelcomePage.tsx:73
 msgid "impoexpo is open-source and its code can be found <0>here</0>."
 msgstr "impoexpo is open-source and its code can be found <0>here</0>."

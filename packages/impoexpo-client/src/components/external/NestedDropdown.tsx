@@ -97,7 +97,15 @@ const NestedDropdown: FC<NestedDropdownProps> = ({
 				closeOnSelect={false}
 				items={rootItems}
 				onAction={(key) => {
-					if (rootItems.find((i) => i.key === key && i.items === undefined)) {
+					if (
+						rootItems.find((i) => {
+							const shouldClose = (it: NestedDropdownChildProps) =>
+								it.key === key && it.items === undefined;
+							return (
+								shouldClose(i) || (i.items ?? []).some((c) => shouldClose(c))
+							);
+						})
+					) {
 						setIsOpen(false);
 					}
 				}}

@@ -13,6 +13,7 @@ import {
 	ModalHeader,
 } from "@heroui/react";
 import { createProjectSnapshot } from "@/db/snapshot";
+import { Icon } from "@iconify/react";
 
 export default function ExportProjectModal(props: {
 	isOpen: boolean;
@@ -42,8 +43,9 @@ export default function ExportProjectModal(props: {
 			<ModalContent>
 				{(onClose) => (
 					<>
-						<ModalHeader className="pb-2">
-							<Trans>project export</Trans>
+						<ModalHeader className="pb-2 gap-2 items-center">
+							<Icon width={24} icon="mdi:download" />
+							<Trans>export project</Trans>
 						</ModalHeader>
 						<ModalBody>
 							<Trans>are you sure you want to export this project?</Trans>

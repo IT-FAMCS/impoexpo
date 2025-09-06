@@ -49,7 +49,7 @@ import type {
 	DefaultNodeRenderOptions,
 	ProjectNode,
 } from "./nodes/renderable-node-types";
-import { useSearchNodesModalStore } from "./search-nodes-modal/store";
+import { useSearchNodesModalStore } from "./modals/search-nodes-modal/store";
 import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
 import { useStore } from "zustand";

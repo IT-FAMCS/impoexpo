@@ -57,7 +57,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 
 	useEffect(() => {
 		if (data && currentForm) {
-			registerGoogleFormNode(currentForm.id, data);
+			registerGoogleFormNode(currentForm.id, data, true);
 			addUsedForm(currentForm.id, data);
 
 			setCurrentForm(undefined);

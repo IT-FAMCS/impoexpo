@@ -1,4 +1,5 @@
 import SwitchesPanel from "@/components/buttons/SwitchesPanel";
+import LocalProjectsManagerModal from "@/components/modals/LocalProjectsManagerModal";
 import {
 	Button,
 	Card,
@@ -30,19 +31,22 @@ export default function WelcomePage() {
 					</h1>
 				</CardBody>
 			</Card>
-			<div className="flex flex-row gap-2">
-				<Button
-					onPress={() => navigate("/wizard")}
-					startContent={
-						<Icon
-							fontSize={24}
-							icon="material-symbols:compare-arrows-rounded"
-						/>
-					}
-					color="primary"
-				>
-					<Trans>new data transfer</Trans>
-				</Button>
+			<div className="flex flex-col gap-2">
+				<div className="flex flex-row gap-2">
+					<Button
+						onPress={() => navigate("/wizard")}
+						startContent={
+							<Icon
+								fontSize={24}
+								icon="material-symbols:compare-arrows-rounded"
+							/>
+						}
+						color="primary"
+					>
+						<Trans>new data transfer</Trans>
+					</Button>
+					<LocalProjectsManagerModal />
+				</div>
 				<Button
 					onPress={onOpen}
 					startContent={<Icon fontSize={24} icon="material-symbols:info" />}

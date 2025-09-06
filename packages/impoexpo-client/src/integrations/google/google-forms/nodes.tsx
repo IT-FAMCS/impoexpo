@@ -28,7 +28,11 @@ nodesScope(() => {
 	});
 });
 
-export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
+export const registerGoogleFormNode = (
+	id: string,
+	form: GoogleFormsLayout,
+	addNode = false,
+) => {
 	const base = createGoogleFormsBaseNode(id, form);
 
 	const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
@@ -53,12 +57,14 @@ export const registerGoogleFormNode = (id: string, form: GoogleFormsLayout) => {
 	registerBaseNodes(base);
 	registerWithDefaultRenderer(base, options);
 
-	useFormatEditorStore.setState((state) => ({
-		nodes: state.nodes.concat({
-			data: {},
-			type: `${base.category}-${base.name}`,
-			id: getNodeId(`${base.category}-${base.name}`),
-			position: { x: 100, y: 100 }, // TODO
-		}),
-	}));
+	if (addNode) {
+		useFormatEditorStore.setState((state) => ({
+			nodes: state.nodes.concat({
+				data: {},
+				type: `${base.category}-${base.name}`,
+				id: getNodeId(`${base.category}-${base.name}`),
+				position: { x: 100, y: 100 }, // TODO
+			}),
+		}));
+	}
 };

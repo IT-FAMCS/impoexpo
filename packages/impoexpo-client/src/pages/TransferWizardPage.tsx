@@ -31,10 +31,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
 	importBuiltinNodes,
 	importIntegrationNodes,
-} from "../format-editor/nodes/renderable-node-database";
+} from "../features/format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
-import TransferProgressCard from "./transfer-progress-card/TransferProgressCard";
+import TransferProgressCard from "../features/transfer-wizard/transfer-progress-card/TransferProgressCard";
 import SwitchesPanel from "@/components/buttons/SwitchesPanel";
+import { getLocalProject } from "@/db/local-projects";
+import { applyProjectSnapshot } from "@/db/snapshot";
+import { allIntegrations } from "@/integrations/integrations";
+import { useProjectStore } from "@/stores/project";
 
 const AnimatedCard = motion.create(Card);
 export default function TransferWizardPage() {
@@ -57,12 +61,37 @@ export default function TransferWizardPage() {
 			await Promise.all(
 				Object.values(
 					import.meta.glob([
-						"../../integrations/**/integration.ts",
-						"../../integrations/**/integration.tsx",
+						"../integrations/**/integration.ts",
+						"../integrations/**/integration.tsx",
 					]),
 				).map((v) => v()),
 			);
-			await loadStatesFromDatabase();
+
+			const query = new URLSearchParams(window.location.search);
+			if (query.has("project")) {
+				const project = await getLocalProject(query.get("project") ?? "");
+				if (!project) return;
+				await applyProjectSnapshot(project.snapshot);
+				useProjectStore.getState().setLocalProjectId(project.id);
+				for (const id of Object.keys(project.snapshot.project.integrations)) {
+					const integration = allIntegrations.find((i) => i.id === id);
+					if (!integration || !integration.onProjectInformationLoaded) continue;
+					await integration.onProjectInformationLoaded(
+						project.snapshot.project.integrations[id],
+					);
+				}
+
+				window.history.replaceState(
+					{},
+					"",
+					`${window.location.origin}${window.location.pathname}`,
+				);
+				setStage(TransferWizardStage.FORMAT);
+				useFormatEditorWrapperStore
+					.getState()
+					.setState(FormatEditorWrapperState.IN);
+			} else await loadStatesFromDatabase();
+
 			return true;
 		},
 		refetchOnWindowFocus: false,

@@ -51,6 +51,7 @@ export const saveStatesToDatabase = async () => {
 		data: {
 			nodes: useProjectStore.getState().nodes,
 			integrations: useProjectStore.getState().integrations,
+			localProjectId: useProjectStore.getState().localProjectId,
 		},
 	});
 };
@@ -60,7 +61,7 @@ export const loadStatesFromDatabase = async () => {
 		?.data;
 	if (projectState && v.is(ProjectSchema, projectState)) {
 		useProjectStore.setState({
-			...(projectState as Project),
+			...projectState,
 			loaded: true,
 		});
 		for (const id of Object.keys(projectState.integrations)) {

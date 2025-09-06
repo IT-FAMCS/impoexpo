@@ -52,6 +52,7 @@ export const createProjectSnapshot = async (
 ): Promise<ProjectSnapshot> => {
 	const formatEditorStore = useFormatEditorStore.getState();
 	const projectStore = useProjectStore.getState();
+	if (type === "complete") await projectStore.collectIntegrations();
 	projectStore.collectNodes();
 
 	const current: v.InferInput<typeof ProjectSnapshotSchema> = {

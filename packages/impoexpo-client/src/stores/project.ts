@@ -13,6 +13,9 @@ export type ProjectStoreInternals = {
 	collectNodes: () => void;
 	collectIntegrations: () => Promise<void>;
 	loaded: boolean;
+
+	localProjectId?: string;
+	setLocalProjectId: (id: string) => void;
 };
 
 export const useProjectStore = create<Project & ProjectStoreInternals>(
@@ -20,6 +23,7 @@ export const useProjectStore = create<Project & ProjectStoreInternals>(
 		loaded: false,
 		integrations: {},
 		nodes: [],
+		setLocalProjectId: (localProjectId) => set({ localProjectId }),
 
 		async collectIntegrations() {
 			const integrations: Record<string, ProjectIntegration> = {};

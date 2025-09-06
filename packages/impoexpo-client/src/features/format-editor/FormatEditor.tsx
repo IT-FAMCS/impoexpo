@@ -16,7 +16,14 @@ import {
 
 import "@xyflow/react/dist/style.css";
 import "../../styles/reactflow.css";
-import { Button, Kbd, Tooltip, useDisclosure } from "@heroui/react";
+import {
+	addToast,
+	Button,
+	Code,
+	Kbd,
+	Tooltip,
+	useDisclosure,
+} from "@heroui/react";
 import {
 	type MouseEvent as ReactMouseEvent,
 	useCallback,
@@ -27,8 +34,8 @@ import {
 import { useShallow } from "zustand/react/shallow";
 import { nodeSchemasCompatible } from "./nodes/renderable-node-helpers";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
-import SearchNodesModal from "./search-nodes-modal/SearchNodesModal";
-import { useSearchNodesModalStore } from "./search-nodes-modal/store";
+import SearchNodesModal from "./modals/search-nodes-modal/SearchNodesModal";
+import { useSearchNodesModalStore } from "./modals/search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
 import { useFormatEditorStore, useFormatEditorTemporalStore } from "./store";
 import { Icon } from "@iconify/react";
@@ -45,8 +52,10 @@ import {
 	FormatEditorWrapperState,
 	useFormatEditorWrapperStore,
 } from "../transfer-wizard/store";
-import ExportProjectModal from "./export-project-modal/ExportProjectModal";
-import DocumentationModal from "./documentation-modal/DocumentationModal";
+import ExportProjectModal from "./modals/export-project-modal/ExportProjectModal";
+import DocumentationModal from "./modals/documentation-modal/DocumentationModal";
+import SaveProjectModal from "./modals/save-project-modal/SaveProjectModal";
+import { updateLocalProject } from "@/db/local-projects";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -106,6 +115,12 @@ export default function FormatEditor() {
 		onOpenChange: onExportProjectModalOpenChange,
 		onClose: onExportProjectModalClose,
 	} = useDisclosure({ id: "EXPORT_PROJECT_MODAL" });
+	const {
+		onOpen: openSaveProjectModal,
+		isOpen: isSaveProjectModalOpen,
+		onOpenChange: onSaveProjectModalOpenChange,
+		onClose: onSaveProjectModalClose,
+	} = useDisclosure({ id: "SAVE_PROJECT_MODAL" });
 
 	const { setNewNodeInformation } = useSearchNodesModalStore();
 	const nodeRenderers = useRenderableNodesStore(
@@ -269,6 +284,56 @@ export default function FormatEditor() {
 							}
 							items={[
 								{
+									key: "save-section",
+									showDivider: true,
+									items: [
+										{
+											key: "save-project",
+											label: <Trans>save project...</Trans>,
+											startContent: <Icon width={18} icon="mdi:content-save" />,
+											onPress: async () => {
+												const localProjectId =
+													useProjectStore.getState().localProjectId;
+												if (!localProjectId) {
+													openSaveProjectModal();
+													return;
+												}
+
+												try {
+													await updateLocalProject(localProjectId);
+													addToast({
+														color: "success",
+														title: (
+															<Trans>successfully saved the project</Trans>
+														),
+													});
+												} catch (err) {
+													addToast({
+														color: "danger",
+														title: (
+															<Trans>
+																failed to save the project (did you mess with
+																the database?)
+															</Trans>
+														),
+														description: (
+															<p className="font-mono">{`${err}`}</p>
+														),
+													});
+												}
+											},
+										},
+										{
+											key: "save-project-as",
+											label: <Trans>save project as...</Trans>,
+											startContent: (
+												<Icon width={18} icon="mdi:content-save-plus" />
+											),
+											onPress: openSaveProjectModal,
+										},
+									],
+								},
+								{
 									key: "layout-nodes",
 									label: <Trans>layout nodes</Trans>,
 									startContent: <Icon width={18} icon="mdi:stars" />,
@@ -346,6 +411,11 @@ export default function FormatEditor() {
 				isOpen={isExportProjectModalOpen}
 				onOpenChange={onExportProjectModalOpenChange}
 				onClose={onExportProjectModalClose}
+			/>
+			<SaveProjectModal
+				isOpen={isSaveProjectModalOpen}
+				onOpenChange={onSaveProjectModalOpenChange}
+				onClose={onSaveProjectModalClose}
 			/>
 			<DocumentationModal />
 			<FormatEditorContextMenu ref={contextMenuRef} />

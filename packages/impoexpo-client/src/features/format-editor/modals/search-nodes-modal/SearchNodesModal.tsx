@@ -17,12 +17,12 @@ import { useEffect, useRef, useState } from "react";
 import {
 	getNodeRenderOptions,
 	useRenderableNodesStore,
-} from "../nodes/renderable-node-database";
+} from "../../nodes/renderable-node-database";
 import { useSearchNodesModalStore } from "./store";
-import { useNodeSearchMetadataStore } from "../nodes/renderable-node-database";
+import { useNodeSearchMetadataStore } from "../../nodes/renderable-node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
-import { useFormatEditorStore } from "../store";
-import { localizableString } from "../nodes/renderable-node-types";
+import { useFormatEditorStore } from "../../store";
+import { localizableString } from "../../nodes/renderable-node-types";
 import { entriesCompatible } from "@impoexpo/shared/nodes/node-utils";
 
 export default function SearchNodesModal(props: {
