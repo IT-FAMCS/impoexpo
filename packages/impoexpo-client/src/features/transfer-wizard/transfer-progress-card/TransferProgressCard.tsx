@@ -28,10 +28,11 @@ import { useNavigate } from "react-router";
 import clsx from "clsx";
 import { route } from "@/api/common";
 import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
+import { clearStatesFromDatabase } from "@/db/persisted";
+import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
 
 const AnimatedCard = motion.create(Card);
 const AnimatedAlert = motion.create(Alert);
-const AnimatedButton = motion.create(Button);
 
 function AnimatedGridCell(
 	props: PropsWithChildren<{
@@ -97,7 +98,6 @@ function TransferOutputCard(props: {
 	index: number;
 }) {
 	const { t } = useLingui();
-	const [copyingToClipboard, setCopyingToClipboard] = useState(false);
 	if (!props.handler) return <></>;
 
 	return (
@@ -130,7 +130,7 @@ function TransferOutputCard(props: {
 							`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
 						).href;
 					}}
-					className="flex-grow flex flex-col h-full py-4 gap-0"
+					className="flex-grow flex flex-col h-full py-2 gap-0"
 				>
 					<Icon className="min-w-12" width={48} icon="mdi:download" />
 					<Trans>download</Trans>
@@ -218,11 +218,6 @@ export default function TransferProgressCard() {
 
 	return (
 		<Card className="p-4 grid grid-cols-6 grid-rows-5 gap-4 w-full h-full relative">
-			{/* <Card className="col-span-2 row-span-3">1</Card> */}
-			{/* <Card className="col-span-2 row-start-5">2</Card> */}
-			{/* <Card className="col-span-2 col-start-5 row-start-5">3</Card> */}
-			{/* <Card className="col-span-2 col-start-3 row-start-5">4</Card> */}
-
 			<AnimatedGridCell
 				classNames={{
 					base: "col-span-2 col-start-3 row-start-5",
@@ -241,10 +236,7 @@ export default function TransferProgressCard() {
 			>
 				{handlerState === TransferHandlerState.DONE ? (
 					handler.outputs.length > 4 ? (
-						<AnimatedButton
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							transition={{ delay: 1, duration: 0.5 }}
+						<Button
 							color="success"
 							className="w-full h-full text-3xl flex flex-col gap-0"
 						>
@@ -254,31 +246,24 @@ export default function TransferProgressCard() {
 								icon="mdi:folder-multiple"
 							/>
 							<Trans>view all files</Trans>
-						</AnimatedButton>
+						</Button>
 					) : (
-						<AnimatedButton
-							onPress={() => playMeow()}
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							transition={{ delay: 1, duration: 0.5 }}
+						<Button
 							color="secondary"
 							className="w-full h-full text-3xl flex flex-col gap-0"
 							isIconOnly
 						>
 							<Icon className="min-w-24" width={96} icon="mdi:cat" />
-						</AnimatedButton>
+						</Button>
 					)
 				) : (
-					<AnimatedButton
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ delay: 1, duration: 0.5 }}
+					<Button
 						color="warning"
 						className="w-full h-full text-3xl flex flex-col gap-0"
 					>
 						<Icon className="min-w-16" width={64} icon="mdi:refresh" />
 						<Trans>try again</Trans>
-					</AnimatedButton>
+					</Button>
 				)}
 			</AnimatedGridCell>
 
@@ -296,7 +281,11 @@ export default function TransferProgressCard() {
 				<Button
 					color="primary"
 					className="w-full h-full text-3xl flex flex-col gap-0 text-wrap"
-					onPress={() => navigate("/")}
+					onPress={async () => {
+						await clearStatesFromDatabase();
+						resetStores(WIZARD_STORE_CATEGORY);
+						navigate("/");
+					}}
 				>
 					<Icon className="min-w-16" width={64} icon="mdi:home" />
 					<Trans>return to the homepage</Trans>
@@ -407,11 +396,6 @@ export default function TransferProgressCard() {
 					</>
 				)}
 			</AnimatedGridCell>
-
-			{/* <Card className="col-span-2 row-span-2 col-start-5 row-start-1">6</Card>
-			<Card className="col-span-2 row-span-2 col-start-3 row-start-3">7</Card>
-			<Card className="col-span-2 row-span-2 col-start-5 row-start-3">8</Card> */}
-			{/* <Card className="col-span-2 row-span-2 col-start-3 row-start-1">5</Card> */}
 
 			<TransferOutputCard
 				className="col-span-2 row-span-2 col-start-3 row-start-1"
