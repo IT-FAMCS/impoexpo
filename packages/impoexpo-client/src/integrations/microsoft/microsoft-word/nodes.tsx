@@ -22,6 +22,7 @@ export const registerMicrosoftWordNode = (
 	filename: string,
 	identifier: string,
 	layout: MicrosoftWordDocumentLayout,
+	addNode = false,
 ) => {
 	const base = createWordDocumentBaseNode(identifier, layout);
 	const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
@@ -46,14 +47,16 @@ export const registerMicrosoftWordNode = (
 	registerBaseNodes(base);
 	registerWithDefaultRenderer(base, options);
 
-	useFormatEditorStore.setState((state) => ({
-		nodes: state.nodes.concat({
-			data: {},
-			type: `${base.category}-${base.name}`,
-			id: getNodeId(`${base.category}-${base.name}`),
-			position: { x: 300, y: 100 }, // TODO
-		}),
-	}));
+	if (addNode) {
+		useFormatEditorStore.setState((state) => ({
+			nodes: state.nodes.concat({
+				data: {},
+				type: `${base.category}-${base.name}`,
+				id: getNodeId(`${base.category}-${base.name}`),
+				position: { x: 300, y: 100 }, // TODO
+			}),
+		}));
+	}
 };
 
 nodesScope(() => {

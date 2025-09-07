@@ -97,7 +97,6 @@ function TransferOutputCard(props: {
 	handler?: TransferHandler;
 	index: number;
 }) {
-	const { t } = useLingui();
 	if (!props.handler) return <></>;
 
 	return (
@@ -252,6 +251,7 @@ export default function TransferProgressCard() {
 							color="secondary"
 							className="w-full h-full text-3xl flex flex-col gap-0"
 							isIconOnly
+							onPress={() => playMeow()}
 						>
 							<Icon className="min-w-24" width={96} icon="mdi:cat" />
 						</Button>

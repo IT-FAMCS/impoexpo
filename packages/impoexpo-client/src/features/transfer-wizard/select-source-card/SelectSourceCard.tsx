@@ -37,7 +37,7 @@ import {
 	DefaultIntegrationVerifier,
 } from "@/integrations/common";
 import FileDropzone from "@/components/modals/FileDropzone";
-import { assert, parse } from "valibot";
+import { parse } from "valibot";
 import { applyProjectSnapshot, ProjectSnapshotSchema } from "@/db/snapshot";
 
 export default function SelectSourceCard() {

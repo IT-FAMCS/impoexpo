@@ -1,4 +1,3 @@
-import { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { createProjectSnapshot, type ProjectSnapshot } from "./snapshot";
 import { globalDatabase } from "./global-database";
 import * as uuid from "uuid";
@@ -26,11 +25,13 @@ export const saveNewLocalProject = async (
 };
 
 export const updateLocalProject = async (id: string) => {
-	const records = await globalDatabase.localProjects.update(id, {
+	const project = await getLocalProject(id);
+	if (!project)
+		throw new Error(`project with id "${id}" doesn't exist in the iDB`);
+	await globalDatabase.localProjects.put({
+		...project,
 		snapshot: await createProjectSnapshot("complete"),
 	});
-	if (records === 0)
-		throw new Error(`project with id "${id}" doesn't exist in the iDB`);
 };
 
 export const getExistingGroups = async () =>

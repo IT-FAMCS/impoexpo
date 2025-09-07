@@ -19,7 +19,6 @@ import "../../styles/reactflow.css";
 import {
 	addToast,
 	Button,
-	Code,
 	Kbd,
 	Tooltip,
 	useDisclosure,

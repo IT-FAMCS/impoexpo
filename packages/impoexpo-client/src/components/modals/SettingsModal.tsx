@@ -17,6 +17,7 @@ import type { PropsWithChildren, ReactNode } from "react";
 import LanguageSwitcher from "../buttons/LanguageSwitcher";
 import ThemeSwitcher from "../buttons/ThemeSwitcher";
 import { useSettingsStore } from "@/stores/settings";
+import DividerWithText from "../external/DividerWithText";
 
 export default function SettingsModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
@@ -107,14 +108,5 @@ function SettingsModalItem(
 				{props.children}
 			</CardBody>
 		</Card>
-	);
-}
-
-function DividerWithText(props: { children?: ReactNode }) {
-	return (
-		<div className="flex flex-row gap-2 items-center w-full">
-			<p className="text-foreground-500">{props.children}</p>
-			<Divider className="flex-grow w-max" />
-		</div>
 	);
 }

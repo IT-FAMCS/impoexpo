@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { postFormWithResult } from "@/api/common";
 import { MICROSOFT_WORD_LAYOUT_ROUTE } from "@impoexpo/shared/src/schemas/integrations/microsoft/word/static";
 import {
-	MicrosoftWordDocumentLayout,
 	MicrosoftWordDocumentLayoutSchema,
 	MicrosoftWordPlaceholderType,
 } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
@@ -114,6 +113,7 @@ export function MicrosoftWordVerifier(props: { callback: () => void }) {
 							currentDocument.id,
 							// biome-ignore lint/style/noNonNullAssertion: guaranteed to exist here
 							currentDocument.layout!,
+							true,
 						);
 						setCurrentDocument(undefined);
 						setState(MicrosoftWordHydratorState.UPLOAD);

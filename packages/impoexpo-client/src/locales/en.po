@@ -17,20 +17,20 @@ msgstr ""
 msgid "failed to connect to the server via SSE"
 msgstr "failed to connect to the server via SSE"
 
-#: src/api/TransferHandler.ts:138
+#: src/api/TransferHandler.ts:140
 msgid "transfer was cancelled"
 msgstr "transfer was cancelled"
 
-#: src/api/TransferHandler.ts:144
-#: src/api/TransferHandler.ts:157
+#: src/api/TransferHandler.ts:146
+#: src/api/TransferHandler.ts:163
 msgid "something is up with the server"
 msgstr "something is up with the server"
 
-#: src/api/TransferHandler.ts:202
+#: src/api/TransferHandler.ts:210
 msgid "failed to upload project files"
 msgstr "failed to upload project files"
 
-#: src/api/TransferHandler.ts:221
+#: src/api/TransferHandler.ts:229
 msgid "failed to upload the project"
 msgstr "failed to upload the project"
 
@@ -43,79 +43,129 @@ msgstr "drag and drop a file here or click"
 msgid "will accept: {0}"
 msgstr "will accept: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:45
+#: src/components/modals/LocalProjectsManagerModal.tsx:68
 msgid "manage projects"
 msgstr "manage projects"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:52
+#: src/components/modals/LocalProjectsManagerModal.tsx:79
 msgid "projects"
 msgstr "projects"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:63
+#: src/components/modals/LocalProjectsManagerModal.tsx:90
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "you currently have no saved projects.<0/>go create one!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:113
+#: src/components/modals/LocalProjectsManagerModal.tsx:180
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
+msgid "preparing"
+msgstr "preparing"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:182
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
+msgid "uploading the project"
+msgstr "uploading the project"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:184
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
+msgid "uploading project files"
+msgstr "uploading project files"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
+msgid "connecting to the server"
+msgstr "connecting to the server"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
+msgid "transferring"
+msgstr "transferring"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
+msgid "reconnecting to the server"
+msgstr "reconnecting to the server"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
+#: src/pages/TransferWizardPage.tsx:178
+msgid "done!"
+msgstr "done!"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
+msgid "an error occurred"
+msgstr "an error occurred"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:217
 msgid "edit project"
 msgstr "edit project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:122
+#: src/components/modals/LocalProjectsManagerModal.tsx:226
 msgid "delete project"
 msgstr "delete project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:132
+#: src/components/modals/LocalProjectsManagerModal.tsx:236
 msgid "run project"
 msgstr "run project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:153
+#: src/components/modals/LocalProjectsManagerModal.tsx:268
 msgid "yes"
 msgstr "yes"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:160
+#: src/components/modals/LocalProjectsManagerModal.tsx:275
 msgid "no"
 msgstr "no"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:164
+#: src/components/modals/LocalProjectsManagerModal.tsx:279
 msgid "are you sure?"
 msgstr "are you sure?"
 
-#: src/components/modals/SettingsModal.tsx:41
+#: src/components/modals/LocalProjectsManagerModal.tsx:287
+msgid "this transfer produced no files"
+msgstr "this transfer produced no files"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:323
+#: src/components/modals/LocalProjectsManagerModal.tsx:324
+#: src/features/format-editor/nodes/builtin/notifications.tsx:13
+msgid "notifications"
+msgstr "notifications"
+
+#: src/components/modals/SettingsModal.tsx:42
 msgid "settings"
 msgstr "settings"
 
-#: src/components/modals/SettingsModal.tsx:44
+#: src/components/modals/SettingsModal.tsx:45
 msgid "general"
 msgstr "general"
 
-#: src/components/modals/SettingsModal.tsx:45
+#: src/components/modals/SettingsModal.tsx:46
 msgid "language"
 msgstr "language"
 
-#: src/components/modals/SettingsModal.tsx:48
+#: src/components/modals/SettingsModal.tsx:49
 msgid "theme"
 msgstr "theme"
 
-#: src/components/modals/SettingsModal.tsx:52
+#: src/components/modals/SettingsModal.tsx:53
 msgid "editor options"
 msgstr "editor options"
 
-#: src/components/modals/SettingsModal.tsx:54
+#: src/components/modals/SettingsModal.tsx:55
 msgid "show a \"what does it do?\" button near nodes"
 msgstr "show a \"what does it do?\" button near nodes"
 
-#: src/components/modals/SettingsModal.tsx:55
+#: src/components/modals/SettingsModal.tsx:56
 msgid "will open the documentation for the selected node"
 msgstr "will open the documentation for the selected node"
 
-#: src/components/modals/SettingsModal.tsx:65
+#: src/components/modals/SettingsModal.tsx:66
 msgid "developer options"
 msgstr "developer options"
 
-#: src/components/modals/SettingsModal.tsx:67
+#: src/components/modals/SettingsModal.tsx:68
 msgid "allow taking screenshots of nodes"
 msgstr "allow taking screenshots of nodes"
 
-#: src/components/modals/SettingsModal.tsx:68
+#: src/components/modals/SettingsModal.tsx:69
 msgid "used for writing documentation"
 msgstr "used for writing documentation"
 
@@ -160,7 +210,7 @@ msgid "save project..."
 msgstr "save project..."
 
 #: src/features/format-editor/FormatEditor.tsx:307
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:83
 msgid "successfully saved the project"
 msgstr "successfully saved the project"
 
@@ -168,27 +218,27 @@ msgstr "successfully saved the project"
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "failed to save the project (did you mess with the database?)"
 
-#: src/features/format-editor/FormatEditor.tsx:326
+#: src/features/format-editor/FormatEditor.tsx:328
 msgid "save project as..."
 msgstr "save project as..."
 
-#: src/features/format-editor/FormatEditor.tsx:336
+#: src/features/format-editor/FormatEditor.tsx:338
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:342
+#: src/features/format-editor/FormatEditor.tsx:344
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:352
+#: src/features/format-editor/FormatEditor.tsx:354
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:368
+#: src/features/format-editor/FormatEditor.tsx:370
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:398
+#: src/features/format-editor/FormatEditor.tsx:400
 msgid "done"
 msgstr "done"
 
@@ -234,7 +284,7 @@ msgid "please note that <0>all integration-related information will not be expo
 msgstr "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
 
 #: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:67
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:73
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:70
 msgid "cancel"
 msgstr "cancel"
 
@@ -242,19 +292,19 @@ msgstr "cancel"
 msgid "export"
 msgstr "export"
 
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:48
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:45
 msgid "save project"
 msgstr "save project"
 
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:54
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:51
 msgid "project name"
 msgstr "project name"
 
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:62
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:59
 msgid "group (optional)"
 msgstr "group (optional)"
 
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:92
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:89
 msgid "save"
 msgstr "save"
 
@@ -450,9 +500,9 @@ msgstr "locale"
 #: src/features/format-editor/nodes/builtin/strings.tsx:124
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:102
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:76
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:105
 msgid "result"
 msgstr "result"
 
@@ -642,10 +692,6 @@ msgstr "is this number an integer?"
 #: src/features/format-editor/nodes/builtin/math.tsx:55
 msgid "is number whole, no decimal part"
 msgstr "is number whole, no decimal part"
-
-#: src/features/format-editor/nodes/builtin/notifications.tsx:13
-msgid "notifications"
-msgstr "notifications"
 
 #: src/features/format-editor/nodes/builtin/notifications.tsx:18
 msgid "information"
@@ -890,56 +936,27 @@ msgstr "next"
 msgid "failed to check integration authentication status"
 msgstr "failed to check integration authentication status"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:144
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:136
 msgid "download"
 msgstr "download"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
-msgid "uploading the project"
-msgstr "uploading the project"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
-msgid "uploading project files"
-msgstr "uploading project files"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
-msgid "connecting to the server"
-msgstr "connecting to the server"
-
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:215
-msgid "transferring"
-msgstr "transferring"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:217
-msgid "reconnecting to the server"
-msgstr "reconnecting to the server"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:219
-#: src/pages/TransferWizardPage.tsx:178
-msgid "done!"
-msgstr "done!"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:221
-msgid "preparing"
-msgstr "preparing"
-
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:223
 msgid "you were not supposed to see this."
 msgstr "you were not supposed to see this."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:264
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:248
 msgid "view all files"
 msgstr "view all files"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:288
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:266
 msgid "try again"
 msgstr "try again"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:310
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:292
 msgid "return to the homepage"
 msgstr "return to the homepage"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:327
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:309
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "notifications will appear here<0/>(if there are any)"
 
@@ -1046,60 +1063,60 @@ msgstr "is everything correct?"
 msgid "no, go back to file upload"
 msgstr "no, go back to file upload"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:123
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:124
 msgid "yes, proceed"
 msgstr "yes, proceed"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:163
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:164
 msgid "extracting placeholders from the document"
 msgstr "extracting placeholders from the document"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:172
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:173
 msgid "couldn't extract placeholders from the document"
 msgstr "couldn't extract placeholders from the document"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:174
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:175
 msgid "back to file upload"
 msgstr "back to file upload"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
 #: src/integrations/microsoft/microsoft-word/integration.tsx:65
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:61
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:64
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:70
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:71
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
 msgid "text"
 msgstr "text"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:78
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:81
 msgid "list"
 msgstr "list"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
 msgid "items"
 msgstr "items"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:82
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:97
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
 msgid "automatically separate list items"
 msgstr "automatically separate list items"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:98
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:101
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
 msgid "list title"
 msgstr "list title"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:93
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
 msgid "grouped list"
 msgstr "grouped list"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:98
 msgid "groups"
 msgstr "groups"
 

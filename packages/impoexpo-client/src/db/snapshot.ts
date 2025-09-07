@@ -1,6 +1,7 @@
 // this isn't exactly related to the persisted iDB database
 // but idk where to put it elsewhere
 
+import { getNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-database";
 import {
 	EdgeSchema,
 	PersistentGenericNodeDataSchema,
@@ -38,6 +39,9 @@ export const applyProjectSnapshot = async (snapshot: ProjectSnapshot) => {
 			edges: snapshot.editor.edges,
 			genericNodes: snapshot.editor.genericNodes,
 		});
+		useFormatEditorStore
+			.getState()
+			.recoverGenericNodes(snapshot.editor.genericNodes);
 		useFormatEditorStore.getState().updateNodeCount();
 	});
 	useProjectStore.setState({
@@ -51,9 +55,9 @@ export const createProjectSnapshot = async (
 	type: "template" | "complete",
 ): Promise<ProjectSnapshot> => {
 	const formatEditorStore = useFormatEditorStore.getState();
+	await useProjectStore.getState().collectIntegrations();
+	useProjectStore.getState().collectNodes();
 	const projectStore = useProjectStore.getState();
-	if (type === "complete") await projectStore.collectIntegrations();
-	projectStore.collectNodes();
 
 	const current: v.InferInput<typeof ProjectSnapshotSchema> = {
 		type: type,
@@ -72,8 +76,14 @@ export const createProjectSnapshot = async (
 	if (type === "template") {
 		current.project.integrations = {};
 
+		// todo: integration nodes which aren't searchable should be treated
+		// as a separate type of node (probably). hiding them from search isn't a good criteria
 		const integrationNodes = current.project.nodes
-			.filter((n) => getBaseNode(n.type).integration)
+			.filter(
+				(n) =>
+					getBaseNode(n.type).integration &&
+					!(getNodeRenderOptions(n.type).raw.searchable ?? true),
+			)
 			.map((n) => n.id);
 
 		current.editor.nodes = current.editor.nodes.filter(

@@ -12,7 +12,6 @@ import {
 import { useProjectStore } from "@/stores/project";
 import {
 	ProjectSchema,
-	type Project,
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { allIntegrations } from "@/integrations/integrations";
 import type { Edge, Node } from "@xyflow/react";

@@ -123,42 +123,50 @@ export class TransferHandler {
 			false,
 		);
 
-		eventSource.addEventListener("notification", (n) => {
-			try {
-				const notification = parse(
-					ProjectStatusNotificationSchema,
-					JSON.parse(n.data),
-				);
-				this.notifications.push(notification);
-				for (const listener of this.handlers.get("notification") ?? [])
-					listener(notification);
+		eventSource.addEventListener(
+			"notification",
+			(n) => {
+				try {
+					const notification = parse(
+						ProjectStatusNotificationSchema,
+						JSON.parse(n.data),
+					);
+					this.notifications.push(notification);
+					for (const listener of this.handlers.get("notification") ?? [])
+						listener(notification);
 
-				if (notification.type === "error") {
+					if (notification.type === "error") {
+						this.terminate({
+							short: msg`transfer was cancelled`,
+							technical: `received an error notification: "${notification.message}"`,
+						});
+					}
+				} catch (err) {
 					this.terminate({
-						short: msg`transfer was cancelled`,
-						technical: `received an error notification: "${notification.message}"`,
+						short: msg`something is up with the server`,
+						technical: `notification event sent invalid payload: ${err}`,
 					});
 				}
-			} catch (err) {
-				this.terminate({
-					short: msg`something is up with the server`,
-					technical: `notification event sent invalid payload: ${err}`,
-				});
-			}
-		});
+			},
+			false,
+		);
 
-		eventSource.addEventListener("done", (o) => {
-			try {
-				this.outputs = parse(array(ProjectOutputSchema), JSON.parse(o.data));
-				this.updateState(TransferHandlerState.DONE);
-				eventSource.close();
-			} catch (err) {
-				this.terminate({
-					short: msg`something is up with the server`,
-					technical: `done event sent invalid payload: ${err}`,
-				});
-			}
-		});
+		eventSource.addEventListener(
+			"done",
+			(o) => {
+				try {
+					this.outputs = parse(array(ProjectOutputSchema), JSON.parse(o.data));
+					this.updateState(TransferHandlerState.DONE);
+					eventSource.close();
+				} catch (err) {
+					this.terminate({
+						short: msg`something is up with the server`,
+						technical: `done event sent invalid payload: ${err}`,
+					});
+				}
+			},
+			false,
+		);
 	}
 
 	async uploadProjectFiles() {
