@@ -176,7 +176,6 @@ export default function TransferProgressCard() {
 		setTransferringStarted(false);
 		setNotifications([]);
 
-		console.log("----------");
 		const newHandler = new TransferHandler(
 			useProjectStore.getState() as Project,
 		);
@@ -189,8 +188,6 @@ export default function TransferProgressCard() {
 
 		setHandler(newHandler);
 	}, []);
-
-	console.log(TransferHandlerState[handlerState]);
 
 	useEffect(() => {
 		if (!handler) setTimeout(run, 1000);
