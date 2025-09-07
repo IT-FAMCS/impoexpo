@@ -22,15 +22,15 @@ msgid "transfer was cancelled"
 msgstr "transfer was cancelled"
 
 #: src/api/TransferHandler.ts:146
-#: src/api/TransferHandler.ts:163
+#: src/api/TransferHandler.ts:164
 msgid "something is up with the server"
 msgstr "something is up with the server"
 
-#: src/api/TransferHandler.ts:210
+#: src/api/TransferHandler.ts:211
 msgid "failed to upload project files"
 msgstr "failed to upload project files"
 
-#: src/api/TransferHandler.ts:229
+#: src/api/TransferHandler.ts:230
 msgid "failed to upload the project"
 msgstr "failed to upload the project"
 
@@ -43,129 +43,129 @@ msgstr "drag and drop a file here or click"
 msgid "will accept: {0}"
 msgstr "will accept: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:68
+#: src/components/modals/LocalProjectsManagerModal.tsx:66
 msgid "manage projects"
 msgstr "manage projects"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:79
+#: src/components/modals/LocalProjectsManagerModal.tsx:77
 msgid "projects"
 msgstr "projects"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:90
+#: src/components/modals/LocalProjectsManagerModal.tsx:88
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "you currently have no saved projects.<0/>go create one!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:180
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:220
 msgid "preparing"
 msgstr "preparing"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:182
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "uploading the project"
 msgstr "uploading the project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:184
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "uploading project files"
 msgstr "uploading project files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:186
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "connecting to the server"
 msgstr "connecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
 msgid "transferring"
 msgstr "transferring"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
 msgid "reconnecting to the server"
 msgstr "reconnecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
+#: src/components/modals/LocalProjectsManagerModal.tsx:198
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:218
 #: src/pages/TransferWizardPage.tsx:178
 msgid "done!"
 msgstr "done!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/components/modals/LocalProjectsManagerModal.tsx:200
 msgid "an error occurred"
 msgstr "an error occurred"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:217
+#: src/components/modals/LocalProjectsManagerModal.tsx:223
 msgid "edit project"
 msgstr "edit project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:226
+#: src/components/modals/LocalProjectsManagerModal.tsx:232
 msgid "delete project"
 msgstr "delete project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:236
+#: src/components/modals/LocalProjectsManagerModal.tsx:242
 msgid "run project"
 msgstr "run project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:268
+#: src/components/modals/LocalProjectsManagerModal.tsx:287
 msgid "yes"
 msgstr "yes"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:275
+#: src/components/modals/LocalProjectsManagerModal.tsx:294
 msgid "no"
 msgstr "no"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:279
+#: src/components/modals/LocalProjectsManagerModal.tsx:298
 msgid "are you sure?"
 msgstr "are you sure?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:287
+#: src/components/modals/LocalProjectsManagerModal.tsx:306
 msgid "this transfer produced no files"
 msgstr "this transfer produced no files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:323
-#: src/components/modals/LocalProjectsManagerModal.tsx:324
+#: src/components/modals/LocalProjectsManagerModal.tsx:342
+#: src/components/modals/LocalProjectsManagerModal.tsx:343
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "notifications"
 
-#: src/components/modals/SettingsModal.tsx:42
+#: src/components/modals/SettingsModal.tsx:41
 msgid "settings"
 msgstr "settings"
 
-#: src/components/modals/SettingsModal.tsx:45
+#: src/components/modals/SettingsModal.tsx:44
 msgid "general"
 msgstr "general"
 
-#: src/components/modals/SettingsModal.tsx:46
+#: src/components/modals/SettingsModal.tsx:45
 msgid "language"
 msgstr "language"
 
-#: src/components/modals/SettingsModal.tsx:49
+#: src/components/modals/SettingsModal.tsx:48
 msgid "theme"
 msgstr "theme"
 
-#: src/components/modals/SettingsModal.tsx:53
+#: src/components/modals/SettingsModal.tsx:52
 msgid "editor options"
 msgstr "editor options"
 
-#: src/components/modals/SettingsModal.tsx:55
+#: src/components/modals/SettingsModal.tsx:54
 msgid "show a \"what does it do?\" button near nodes"
 msgstr "show a \"what does it do?\" button near nodes"
 
-#: src/components/modals/SettingsModal.tsx:56
+#: src/components/modals/SettingsModal.tsx:55
 msgid "will open the documentation for the selected node"
 msgstr "will open the documentation for the selected node"
 
-#: src/components/modals/SettingsModal.tsx:66
+#: src/components/modals/SettingsModal.tsx:65
 msgid "developer options"
 msgstr "developer options"
 
-#: src/components/modals/SettingsModal.tsx:68
+#: src/components/modals/SettingsModal.tsx:67
 msgid "allow taking screenshots of nodes"
 msgstr "allow taking screenshots of nodes"
 
-#: src/components/modals/SettingsModal.tsx:69
+#: src/components/modals/SettingsModal.tsx:68
 msgid "used for writing documentation"
 msgstr "used for writing documentation"
 
@@ -205,40 +205,40 @@ msgstr "retry"
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:292
+#: src/features/format-editor/FormatEditor.tsx:291
 msgid "save project..."
 msgstr "save project..."
 
-#: src/features/format-editor/FormatEditor.tsx:307
+#: src/features/format-editor/FormatEditor.tsx:306
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:83
 msgid "successfully saved the project"
 msgstr "successfully saved the project"
 
-#: src/features/format-editor/FormatEditor.tsx:314
+#: src/features/format-editor/FormatEditor.tsx:313
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "failed to save the project (did you mess with the database?)"
 
-#: src/features/format-editor/FormatEditor.tsx:328
+#: src/features/format-editor/FormatEditor.tsx:327
 msgid "save project as..."
 msgstr "save project as..."
 
-#: src/features/format-editor/FormatEditor.tsx:338
+#: src/features/format-editor/FormatEditor.tsx:337
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:344
+#: src/features/format-editor/FormatEditor.tsx:343
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:354
+#: src/features/format-editor/FormatEditor.tsx:353
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:370
+#: src/features/format-editor/FormatEditor.tsx:369
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:400
+#: src/features/format-editor/FormatEditor.tsx:399
 msgid "done"
 msgstr "done"
 
@@ -922,41 +922,45 @@ msgstr "create an empty project"
 msgid "import an existing project"
 msgstr "import an existing project"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:176
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:170
+msgid "not outputting anything?"
+msgstr "not outputting anything?"
+
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:192
 msgid "add another"
 msgstr "add another"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:190
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:206
 #: src/integrations/google/GoogleVerifier.tsx:59
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
 msgid "next"
 msgstr "next"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:298
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:314
 msgid "failed to check integration authentication status"
 msgstr "failed to check integration authentication status"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:136
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:135
 msgid "download"
 msgstr "download"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:215
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:222
 msgid "you were not supposed to see this."
 msgstr "you were not supposed to see this."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:248
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:255
 msgid "view all files"
 msgstr "view all files"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:266
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:274
 msgid "try again"
 msgstr "try again"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:292
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:300
 msgid "return to the homepage"
 msgstr "return to the homepage"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:309
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:317
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "notifications will appear here<0/>(if there are any)"
 
@@ -1043,39 +1047,39 @@ msgstr "back to source selection"
 msgid "Google Forms"
 msgstr "Google Forms"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:60
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:59
 msgid "no placeholder were found in the document.<0/>please check the document and try uploading it again."
 msgstr "no placeholder were found in the document.<0/>please check the document and try uploading it again."
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:70
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:69
 msgid "go back to file upload"
 msgstr "go back to file upload"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:78
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:77
 msgid "the following placeholders were found:"
 msgstr "the following placeholders were found:"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:98
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:97
 msgid "is everything correct?"
 msgstr "is everything correct?"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:105
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:104
 msgid "no, go back to file upload"
 msgstr "no, go back to file upload"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:124
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:123
 msgid "yes, proceed"
 msgstr "yes, proceed"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:164
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:163
 msgid "extracting placeholders from the document"
 msgstr "extracting placeholders from the document"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:173
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:172
 msgid "couldn't extract placeholders from the document"
 msgstr "couldn't extract placeholders from the document"
 
-#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:175
+#: src/integrations/microsoft/microsoft-word/MicrosoftWordHydrator.tsx:174
 msgid "back to file upload"
 msgstr "back to file upload"
 
@@ -1125,8 +1129,8 @@ msgid "nowhere"
 msgstr "nowhere"
 
 #: src/integrations/placeholder/integration.tsx:31
-msgid "Nowhere"
-msgstr "Nowhere"
+#~ msgid "Nowhere"
+#~ msgstr "Nowhere"
 
 #: src/pages/TransferWizardPage.tsx:163
 #: src/pages/WelcomePage.tsx:46

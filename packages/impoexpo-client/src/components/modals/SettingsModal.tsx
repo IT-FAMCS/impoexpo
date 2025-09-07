@@ -2,7 +2,6 @@ import {
 	Button,
 	Card,
 	CardBody,
-	Divider,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -36,7 +35,7 @@ export default function SettingsModal() {
 			/>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
-					{(onClose) => (
+					{() => (
 						<>
 							<ModalHeader className="flex flex-col gap-1">
 								<Trans>settings</Trans>

@@ -10,9 +10,7 @@ import {
 	useFormatEditorStore,
 } from "@/features/format-editor/store";
 import { useProjectStore } from "@/stores/project";
-import {
-	ProjectSchema,
-} from "@impoexpo/shared/schemas/project/ProjectSchema";
+import { ProjectSchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { allIntegrations } from "@/integrations/integrations";
 import type { Edge, Node } from "@xyflow/react";
 import * as v from "valibot";

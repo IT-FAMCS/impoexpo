@@ -154,6 +154,7 @@ export class TransferHandler {
 		eventSource.addEventListener(
 			"done",
 			(o) => {
+				if (this.state === TransferHandlerState.TERMINATED) return;
 				try {
 					this.outputs = parse(array(ProjectOutputSchema), JSON.parse(o.data));
 					this.updateState(TransferHandlerState.DONE);

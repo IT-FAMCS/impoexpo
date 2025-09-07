@@ -5,6 +5,7 @@ import {
 	Button,
 	Card,
 	CardBody,
+	Code,
 	Listbox,
 	ListboxItem,
 	Modal,
@@ -34,6 +35,7 @@ import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project
 import { deepCopy } from "deep-copy-ts";
 import DividerWithText from "../external/DividerWithText";
 import clsx from "clsx";
+import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
 
 export default function LocalProjectsManagerModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
@@ -165,7 +167,11 @@ function LocalProjectCard(props: {
 
 		const handler = new TransferHandler(props.project.snapshot.project);
 		handler.addEventListener("state-changed", (state) => {
-			if (state === TransferHandlerState.DONE) setRunning(false);
+			if (
+				state === TransferHandlerState.DONE ||
+				state === TransferHandlerState.TERMINATED
+			)
+				setRunning(false);
 			setHandlerState(state);
 		});
 		handler.start();
@@ -245,6 +251,8 @@ function LocalProjectCard(props: {
 									<Spinner color="white" size="sm" />
 								) : handler?.state === TransferHandlerState.DONE ? (
 									<Icon className="text-white" width={24} icon="mdi:check" />
+								) : handler?.state === TransferHandlerState.TERMINATED ? (
+									<Icon className="text-white" width={24} icon="mdi:close" />
 								) : (
 									<Icon
 										className="text-white"
@@ -255,10 +263,21 @@ function LocalProjectCard(props: {
 							}
 						/>
 					</Tooltip>
-					{running ? (
+					{handler ? (
 						<p className="ml-1 text-foreground-500 text-sm">{stateString}</p>
 					) : null}
 				</div>
+				{handler?.state === TransferHandlerState.TERMINATED ? (
+					<Code color="danger" className="whitespace-normal">
+						<span className="text-lg">
+							<b>
+								{localizableString(handler.terminationReason?.short ?? "", t)}
+							</b>
+						</span>
+						<br />
+						{handler.terminationReason?.technical}
+					</Code>
+				) : null}
 				{deleting && (
 					<Alert
 						color="danger"

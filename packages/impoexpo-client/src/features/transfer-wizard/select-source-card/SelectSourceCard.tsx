@@ -159,13 +159,27 @@ function SourceChecker() {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<Listbox
-				className="border-small rounded-small border-default"
-				selectionMode="none"
-				items={items}
-			>
-				{(props) => <ListboxItem {...props} key={props.key} />}
-			</Listbox>
+			{items.length === 0 ? (
+				<div className="flex flex-col gap-2 justify-center items-center p-2 border-small rounded-small border-default">
+					<Icon
+						width={36}
+						className="text-foreground-500 -mb-2"
+						icon="mdi:emoticon-sad-outline"
+					/>
+					<p className="text-foreground-500 text-center">
+						<Trans>not outputting anything?</Trans>
+					</p>
+				</div>
+			) : (
+				<Listbox
+					className="border-small rounded-small border-default"
+					selectionMode="none"
+					items={items}
+				>
+					{(props) => <ListboxItem {...props} key={props.key} />}
+				</Listbox>
+			)}
+
 			<div className="flex flex-row items-center justify-center gap-2">
 				<Button
 					onPress={() => setState(SourceCardState.SELECT_SOURCE)}

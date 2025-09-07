@@ -81,7 +81,7 @@ function AnimatedGridCell(
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 1, duration: 0.5 }}
-							className={clsx(props.classNames.div, "h-full w-full")}
+							className={clsx(props.classNames.div, "h-full")}
 						>
 							{props.children}
 						</motion.div>
@@ -170,12 +170,13 @@ export default function TransferProgressCard() {
 		}
 	};
 
-	useEffect(() => {
-		if (handler) {
-			setTimeout(() => handler.start(), 1000);
-			return;
-		}
+	const run = useCallback(() => {
+		setHandlerState(TransferHandlerState.IDLE);
+		setFileUploadInformation(undefined);
+		setTransferringStarted(false);
+		setNotifications([]);
 
+		console.log("----------");
 		const newHandler = new TransferHandler(
 			useProjectStore.getState() as Project,
 		);
@@ -184,9 +185,16 @@ export default function TransferProgressCard() {
 		newHandler.addEventListener("notification", () =>
 			setNotifications(newHandler.notifications),
 		);
+		newHandler.start();
 
 		setHandler(newHandler);
-	}, [handler]);
+	}, []);
+
+	console.log(TransferHandlerState[handlerState]);
+
+	useEffect(() => {
+		if (!handler) setTimeout(run, 1000);
+	}, [handler, run]);
 
 	useEffect(() => {
 		if (transferringStarted) return;
@@ -260,6 +268,7 @@ export default function TransferProgressCard() {
 					<Button
 						color="warning"
 						className="w-full h-full text-3xl flex flex-col gap-0"
+						onPress={run}
 					>
 						<Icon className="min-w-16" width={64} icon="mdi:refresh" />
 						<Trans>try again</Trans>
@@ -302,8 +311,8 @@ export default function TransferProgressCard() {
 				corner="bottom-left"
 			>
 				{notifications.length === 0 ? (
-					<div className="flex justify-center items-center w-full h-full">
-						<p className="text-foreground-400 text-2xl text-center">
+					<div className="flex justify-start items-end w-full h-full">
+						<p className="text-foreground-400 text-2xl">
 							<i>
 								<Trans>
 									notifications will appear here
@@ -348,7 +357,7 @@ export default function TransferProgressCard() {
 						<p className="text-5xl">
 							{localizableString(handler.terminationReason.short, t)}
 						</p>
-						<Code color="danger" className="mt-2">
+						<Code color="danger" className="whitespace-normal">
 							{handler.terminationReason.technical}
 						</Code>
 					</>

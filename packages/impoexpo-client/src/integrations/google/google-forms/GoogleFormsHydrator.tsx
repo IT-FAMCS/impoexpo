@@ -48,30 +48,27 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	const { isFetching, isError, data, error } = useQuery({
 		queryKey: ["get-google-form-layout", currentForm?.id],
 		refetchOnWindowFocus: false,
-		queryFn: async () =>
-			getWithSchema(GOOGLE_FORMS_LAYOUT_ROUTE, GoogleFormsLayoutSchema, {
-				headers: await getGoogleAuthHeaders(),
-				query: { id: currentForm?.id ?? "" },
-			}),
-	});
+		queryFn: async () => {
+			if (!currentForm)
+				throw new Error("cannot get layout of a form that's undefined");
 
-	useEffect(() => {
-		if (data && currentForm) {
-			registerGoogleFormNode(currentForm.id, data, true);
-			addUsedForm(currentForm.id, data);
+			const layout = await getWithSchema(
+				GOOGLE_FORMS_LAYOUT_ROUTE,
+				GoogleFormsLayoutSchema,
+				{
+					headers: await getGoogleAuthHeaders(),
+					query: { id: currentForm?.id ?? "" },
+				},
+			);
+
+			registerGoogleFormNode(currentForm.id, layout, true);
+			addUsedForm(currentForm.id, layout);
 
 			setCurrentForm(undefined);
 			setState(GoogleFormsHydratorState.SELECT);
 			props.successCallback();
-		}
-	}, [
-		data,
-		addUsedForm,
-		setState,
-		setCurrentForm,
-		currentForm,
-		props.successCallback,
-	]);
+		},
+	});
 
 	if (isFetching) {
 		return (
