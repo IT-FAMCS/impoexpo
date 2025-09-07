@@ -12,9 +12,6 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
 	ScrollShadow,
 	Spinner,
 	Tooltip,
@@ -42,7 +39,6 @@ export default function LocalProjectsManagerModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
 		id: "LOCAL_PROJECTS_MANAGER_MODAL",
 	});
-	const { t } = useLingui();
 	const [projects, setProjects] = useState<
 		Record<string, LocalProjectsTableEntry[]>
 	>({});
@@ -73,7 +69,7 @@ export default function LocalProjectsManagerModal() {
 				onOpenChange={onOpenChange}
 			>
 				<ModalContent>
-					{(onClose) => (
+					{() => (
 						<>
 							<ModalHeader className="flex flex-col gap-1">
 								<Trans>projects</Trans>
@@ -108,10 +104,14 @@ export default function LocalProjectsManagerModal() {
 														project={p}
 														onDelete={async () => {
 															await removeLocalProject(p.id);
+
+															const group = p.group ?? "";
 															const copy = deepCopy(projects);
-															copy[p.group ?? ""] = copy[p.group ?? ""].filter(
+															copy[group] = copy[group].filter(
 																(op) => op.id !== p.id,
 															);
+															if (copy[group].length === 0) delete copy[group];
+
 															setProjects(copy);
 														}}
 													/>
