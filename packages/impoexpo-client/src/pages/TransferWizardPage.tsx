@@ -174,10 +174,8 @@ export default function TransferWizardPage() {
 							{
 								title: t`transfer`,
 								description: t`where the magic happens...`,
-							},
-							{ title: t`done!` },
+							}
 						]}
-						onStepChange={(idx) => setStage(idx as TransferWizardStage)}
 					/>
 				</CardBody>
 				<CardFooter className="flex flex-row items-center gap-2">

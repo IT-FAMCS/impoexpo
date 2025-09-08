@@ -336,7 +336,7 @@ function LocalProjectCard(props: {
 								animate={{ opacity: 1, y: 0 }}
 								key="outputs-card"
 							>
-								<Listbox items={handler.outputs}>
+								<Listbox selectionMode="none" items={handler.outputs}>
 									{(item) => (
 										<ListboxItem
 											className="ring-2 ring-foreground-100"

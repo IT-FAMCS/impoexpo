@@ -7,7 +7,6 @@ export enum TransferWizardStage {
 	SELECT_SOURCE = 0,
 	FORMAT = 1,
 	TRANSFER = 2,
-	DONE = 3,
 }
 
 export enum FormatEditorWrapperState {
