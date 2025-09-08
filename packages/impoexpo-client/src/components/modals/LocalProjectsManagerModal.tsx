@@ -36,6 +36,7 @@ import { deepCopy } from "deep-copy-ts";
 import DividerWithText from "../external/DividerWithText";
 import clsx from "clsx";
 import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function LocalProjectsManagerModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
@@ -93,7 +94,7 @@ export default function LocalProjectsManagerModal() {
 										</p>
 									</>
 								) : (
-									<ScrollShadow className="w-full max-h-[75vh] no-scrollbar flex flex-col gap-4">
+									<ScrollShadow className="w-full p-1 max-h-[75vh] no-scrollbar flex flex-col gap-4">
 										{Object.entries(projects).map((pair) => (
 											<div key={pair[0]} className="w-full flex flex-col">
 												{pair[0] !== "" && (
@@ -202,7 +203,7 @@ function LocalProjectCard(props: {
 	}, [handlerState, t]);
 
 	return (
-		<Card className={clsx("w-full", props.className)}>
+		<Card shadow="sm" className={clsx("w-full", props.className)}>
 			<CardBody className="py-4 px-4 flex flex-col gap-2">
 				<div className="flex flex-row gap-2 items-center">
 					<Card>
@@ -267,94 +268,131 @@ function LocalProjectCard(props: {
 						<p className="ml-1 text-foreground-500 text-sm">{stateString}</p>
 					) : null}
 				</div>
-				{handler?.state === TransferHandlerState.TERMINATED ? (
-					<Code color="danger" className="whitespace-normal">
-						<span className="text-lg">
-							<b>
-								{localizableString(handler.terminationReason?.short ?? "", t)}
-							</b>
-						</span>
-						<br />
-						{handler.terminationReason?.technical}
-					</Code>
-				) : null}
-				{deleting && (
-					<Alert
-						color="danger"
-						endContent={
-							<div className="flex flex-row gap-2">
-								<Button onPress={props.onDelete} color="danger">
-									<Trans>yes</Trans>
-								</Button>
-								<Button
-									onPress={() => setDeleting(false)}
-									color="success"
-									className="text-white"
-								>
-									<Trans>no</Trans>
-								</Button>
-							</div>
-						}
-						title={<Trans>are you sure?</Trans>}
-					/>
-				)}
-				{handler?.state === TransferHandlerState.DONE ? (
-					handler.outputs.length === 0 ? (
-						<Card>
-							<CardBody>
-								<p className="text-foreground-500 text-center">
-									<Trans>this transfer produced no files</Trans>
-								</p>
-							</CardBody>
-						</Card>
-					) : (
-						<Listbox items={handler.outputs}>
-							{(item) => (
-								<ListboxItem
-									className="ring-2 ring-foreground-100"
-									startContent={<Icon width={24} icon="mdi:file-document" />}
-									endContent={
-										<Button
-											size="sm"
-											color="primary"
-											isIconOnly
-											startContent={<Icon width={18} icon="mdi:download" />}
-											onPress={() => {
-												window.location.href = route(
-													`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${item.identifier}`,
-												).href;
-											}}
-										/>
-									}
-									key={item.identifier}
-									title={item.name}
-									description={prettyBytes(item.size)}
-								/>
-							)}
-						</Listbox>
-					)
-				) : null}
-				{handler?.state === TransferHandlerState.DONE ? (
-					<Accordion itemClasses={{ trigger: "py-0" }} className="px-1">
-						<AccordionItem
-							className="ring-2 ring-foreground-100 rounded-small p-2 px-4 w-full"
-							key="notifications"
-							aria-label={t`notifications`}
-							title={t`notifications`}
+				<AnimatePresence>
+					{handler?.state === TransferHandlerState.TERMINATED ? (
+						<motion.div
+							initial={{ opacity: 0, y: 15 }}
+							animate={{ opacity: 1, y: 0 }}
+							key="termination-explanation"
 						>
-							<ScrollShadow className="max-h-[25vh]">
-								<div className="flex flex-col gap-2">
-									{handler.notifications.map((n, idx) => (
-										// biome-ignore lint/suspicious/noArrayIndexKey: who cares
-										<Alert key={idx} color={convertColor(n.type)}>
-											{n.message}
-										</Alert>
-									))}
-								</div>
-							</ScrollShadow>
-						</AccordionItem>
-					</Accordion>
-				) : null}
+							<Code color="danger" className="whitespace-normal">
+								<span className="text-lg">
+									<b>
+										{localizableString(
+											handler.terminationReason?.short ?? "",
+											t,
+										)}
+									</b>
+								</span>
+								<br />
+								{handler.terminationReason?.technical}
+							</Code>
+						</motion.div>
+					) : null}
+					{deleting && (
+						<motion.div
+							initial={{ opacity: 0, y: 15 }}
+							animate={{ opacity: 1, y: 0 }}
+							key="confirm-deletion"
+						>
+							<Alert
+								color="danger"
+								endContent={
+									<div className="flex flex-row gap-2">
+										<Button onPress={props.onDelete} color="danger">
+											<Trans>yes</Trans>
+										</Button>
+										<Button
+											onPress={() => setDeleting(false)}
+											color="success"
+											className="text-white"
+										>
+											<Trans>no</Trans>
+										</Button>
+									</div>
+								}
+								title={<Trans>are you sure?</Trans>}
+							/>
+						</motion.div>
+					)}
+					{handler?.state === TransferHandlerState.DONE ? (
+						handler.outputs.length === 0 ? (
+							<motion.div
+								initial={{ opacity: 0, y: 15 }}
+								animate={{ opacity: 1, y: 0 }}
+								key="no-outputs-card"
+							>
+								<Card>
+									<CardBody>
+										<p className="text-foreground-500 text-center">
+											<Trans>this transfer produced no files</Trans>
+										</p>
+									</CardBody>
+								</Card>
+							</motion.div>
+						) : (
+							<motion.div
+								initial={{ opacity: 0, y: 15 }}
+								animate={{ opacity: 1, y: 0 }}
+								key="outputs-card"
+							>
+								<Listbox items={handler.outputs}>
+									{(item) => (
+										<ListboxItem
+											className="ring-2 ring-foreground-100"
+											startContent={
+												<Icon width={24} icon="mdi:file-document" />
+											}
+											endContent={
+												<Button
+													size="sm"
+													color="primary"
+													isIconOnly
+													startContent={<Icon width={18} icon="mdi:download" />}
+													onPress={() => {
+														window.location.href = route(
+															`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${item.identifier}`,
+														).href;
+													}}
+												/>
+											}
+											key={item.identifier}
+											title={item.name}
+											description={prettyBytes(item.size)}
+										/>
+									)}
+								</Listbox>
+							</motion.div>
+						)
+					) : null}
+					{handler?.state === TransferHandlerState.DONE ? (
+						<motion.div
+							initial={{ opacity: 0, y: 15 }}
+							animate={{ opacity: 1, y: 0 }}
+							key="notifications-accordion"
+						>
+							<Accordion itemClasses={{ trigger: "py-0" }} className="px-1">
+								<AccordionItem
+									className="ring-2 ring-foreground-100 rounded-small p-2 px-4 w-full"
+									key="notifications"
+									aria-label={t`notifications`}
+									title={t`notifications`}
+								>
+									<ScrollShadow className="max-h-[25vh]">
+										<div className="flex flex-col gap-2">
+											{handler.notifications.map((n, idx) => (
+												// biome-ignore lint/suspicious/noArrayIndexKey: who cares
+												<Alert key={idx} color={convertColor(n.type)}>
+													{n.message}
+												</Alert>
+											))}
+										</div>
+									</ScrollShadow>
+								</AccordionItem>
+							</Accordion>
+						</motion.div>
+					) : null}
+				</AnimatePresence>
 			</CardBody>
 		</Card>
 	);

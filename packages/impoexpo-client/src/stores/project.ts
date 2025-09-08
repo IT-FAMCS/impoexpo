@@ -7,7 +7,7 @@ import type {
 	ProjectIntegration,
 	ProjectNode,
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
-import { create } from "zustand";
+import { createResettable, WIZARD_STORE_CATEGORY } from "./resettable";
 
 export type ProjectStoreInternals = {
 	collectNodes: () => void;
@@ -18,120 +18,119 @@ export type ProjectStoreInternals = {
 	setLocalProjectId: (id: string) => void;
 };
 
-export const useProjectStore = create<Project & ProjectStoreInternals>(
-	(set, get) => ({
-		loaded: false,
-		integrations: {},
-		nodes: [],
-		setLocalProjectId: (localProjectId) => set({ localProjectId }),
+export const useProjectStore = createResettable<
+	Project & ProjectStoreInternals
+>(WIZARD_STORE_CATEGORY)((set, get) => ({
+	loaded: false,
+	integrations: {},
+	nodes: [],
+	setLocalProjectId: (localProjectId) => set({ localProjectId }),
 
-		async collectIntegrations() {
-			const integrations: Record<string, ProjectIntegration> = {};
-			for (const integration of allIntegrations) {
-				if (!integration.getProjectInformation) continue;
-				const integrationInformation =
-					await integration.getProjectInformation();
-				if (
-					integrationInformation &&
-					Object.keys(integrationInformation).length !== 0
-				)
-					integrations[integration.id] = integrationInformation;
-			}
-			set({ integrations });
-		},
+	async collectIntegrations() {
+		const integrations: Record<string, ProjectIntegration> = {};
+		for (const integration of allIntegrations) {
+			if (!integration.getProjectInformation) continue;
+			const integrationInformation = await integration.getProjectInformation();
+			if (
+				integrationInformation &&
+				Object.keys(integrationInformation).length !== 0
+			)
+				integrations[integration.id] = integrationInformation;
+		}
+		set({ integrations });
+	},
 
-		// TODO: right now, the editor state => project state conversion is a
-		// one-way process. technically, not much information is lost, and with
-		// some refactoring the editor state may be fully restored just from the
-		// project state. this might be a good thing to do later
-		collectNodes() {
-			const nodes: ProjectNode[] = [];
-			const clientNodes = useFormatEditorStore.getState().nodes;
-			const clientEdges = useFormatEditorStore.getState().edges;
-			const genericNodes = useFormatEditorStore.getState().genericNodes;
+	// TODO: right now, the editor state => project state conversion is a
+	// one-way process. technically, not much information is lost, and with
+	// some refactoring the editor state may be fully restored just from the
+	// project state. this might be a good thing to do later
+	collectNodes() {
+		const nodes: ProjectNode[] = [];
+		const clientNodes = useFormatEditorStore.getState().nodes;
+		const clientEdges = useFormatEditorStore.getState().edges;
+		const genericNodes = useFormatEditorStore.getState().genericNodes;
 
-			for (const clientNode of clientNodes) {
-				if (!clientNode.type) continue;
-				const type =
-					clientNode.id in genericNodes
-						? genericNodes[clientNode.id].base
-						: clientNode.type;
-				const base = getBaseNode(type);
-				const options = getNodeRenderOptions(type);
+		for (const clientNode of clientNodes) {
+			if (!clientNode.type) continue;
+			const type =
+				clientNode.id in genericNodes
+					? genericNodes[clientNode.id].base
+					: clientNode.type;
+			const base = getBaseNode(type);
+			const options = getNodeRenderOptions(type);
 
-				const node: ProjectNode = {
-					id: clientNode.id,
-					type: type,
-					inputs: {},
-					outputs: {},
-				};
+			const node: ProjectNode = {
+				id: clientNode.id,
+				type: type,
+				inputs: {},
+				outputs: {},
+			};
 
-				if (base.inputSchema) {
-					for (const entry of Object.keys(base.inputSchema?.entries ?? {})) {
-						if (
-							clientNode.data.entries &&
-							entry in (clientNode.data.entries ?? {})
-						) {
-							node.inputs[entry] = clientNode.data.entries[entry];
-							continue;
-						}
-
-						if (options.property(entry)?.mode === "independentOnly") continue;
-
-						const edges = clientEdges.filter(
-							(e) => e.target === clientNode.id && e.targetHandle === entry,
-						);
-						if (edges.length !== 0) {
-							node.inputs[entry] = {
-								type: "dependent",
-								sources: edges.map((e) => ({
-									node: e.source,
-									entry: e.sourceHandle ?? "",
-								})),
-							};
-							continue;
-						}
-
-						console.warn(
-							`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
-						);
+			if (base.inputSchema) {
+				for (const entry of Object.keys(base.inputSchema?.entries ?? {})) {
+					if (
+						clientNode.data.entries &&
+						entry in (clientNode.data.entries ?? {})
+					) {
+						node.inputs[entry] = clientNode.data.entries[entry];
+						continue;
 					}
-				}
 
-				if (base.outputSchema) {
-					for (const entry of Object.keys(base.outputSchema?.entries ?? {})) {
-						if (
-							clientNode.data.entries &&
-							entry in (clientNode.data.entries ?? {})
-						) {
-							node.outputs[entry] = clientNode.data.entries[entry];
-							continue;
-						}
+					if (options.property(entry)?.mode === "independentOnly") continue;
 
-						const edges = clientEdges.filter(
-							(e) => e.source === clientNode.id && e.sourceHandle === entry,
-						);
-						if (edges.length !== 0) {
-							node.outputs[entry] = {
-								type: "dependent",
-								sources: edges.map((e) => ({
-									node: e.target,
-									entry: e.targetHandle ?? "",
-								})),
-							};
-							continue;
-						}
-
-						console.warn(
-							`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
-						);
+					const edges = clientEdges.filter(
+						(e) => e.target === clientNode.id && e.targetHandle === entry,
+					);
+					if (edges.length !== 0) {
+						node.inputs[entry] = {
+							type: "dependent",
+							sources: edges.map((e) => ({
+								node: e.source,
+								entry: e.sourceHandle ?? "",
+							})),
+						};
+						continue;
 					}
-				}
 
-				nodes.push(node);
+					console.warn(
+						`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
+					);
+				}
 			}
 
-			set({ nodes });
-		},
-	}),
-);
+			if (base.outputSchema) {
+				for (const entry of Object.keys(base.outputSchema?.entries ?? {})) {
+					if (
+						clientNode.data.entries &&
+						entry in (clientNode.data.entries ?? {})
+					) {
+						node.outputs[entry] = clientNode.data.entries[entry];
+						continue;
+					}
+
+					const edges = clientEdges.filter(
+						(e) => e.source === clientNode.id && e.sourceHandle === entry,
+					);
+					if (edges.length !== 0) {
+						node.outputs[entry] = {
+							type: "dependent",
+							sources: edges.map((e) => ({
+								node: e.target,
+								entry: e.targetHandle ?? "",
+							})),
+						};
+						continue;
+					}
+
+					console.warn(
+						`couldn't collect nodes for project state: node "${clientNode.id}" (${clientNode.type}) doesn't have any value for the "${entry}" entry`,
+					);
+				}
+			}
+
+			nodes.push(node);
+		}
+
+		set({ nodes });
+	},
+}));

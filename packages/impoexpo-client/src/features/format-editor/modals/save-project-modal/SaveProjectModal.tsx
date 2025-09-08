@@ -5,7 +5,6 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalBody,
-	Alert,
 	ModalFooter,
 	Button,
 	Input,
@@ -28,8 +27,9 @@ export default function SaveProjectModal(props: {
 	const { setLocalProjectId } = useProjectStore();
 
 	useEffect(() => {
-		getExistingGroups().then((gr) => setGroups(gr.map((g) => ({ name: g }))));
-	}, []);
+		if (props.isOpen)
+			getExistingGroups().then((gr) => setGroups(gr.map((g) => ({ name: g }))));
+	}, [props.isOpen]);
 
 	return (
 		<Modal
@@ -59,7 +59,10 @@ export default function SaveProjectModal(props: {
 								label={<Trans>group (optional)</Trans>}
 							>
 								{(item) => (
-									<AutocompleteItem key={item.name}>
+									<AutocompleteItem
+										onPress={() => setGroup(item.name)}
+										key={item.name}
+									>
 										{item.name}
 									</AutocompleteItem>
 								)}
