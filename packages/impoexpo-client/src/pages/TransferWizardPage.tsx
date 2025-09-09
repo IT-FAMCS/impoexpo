@@ -174,7 +174,7 @@ export default function TransferWizardPage() {
 							{
 								title: t`transfer`,
 								description: t`where the magic happens...`,
-							}
+							},
 						]}
 					/>
 				</CardBody>

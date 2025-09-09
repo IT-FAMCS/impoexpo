@@ -22,7 +22,7 @@ import {
 	useUpdateNodeInternals,
 } from "@xyflow/react";
 import type React from "react";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	type DefaultNodeRenderOptions,
@@ -76,7 +76,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		(selector) => selector.editor.showDocumentationButton,
 	);
 	const documentationModalStore = useDocumentationModalStore();
-	const openDocumentationModal = () => {
+	const openDocumentationModal = useCallback(() => {
 		const hash =
 			nodeRenderOptions.raw.documentationHashOverride ?? nodeData.name;
 		const base =
@@ -84,7 +84,12 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 			`/user/nodes/${nodeData.category}`;
 		documentationModalStore.setUrl(docs(`${base}#${hash}`));
 		documentationModalStore.disclosure?.onOpen();
-	};
+	}, [
+		nodeData,
+		nodeRenderOptions,
+		categoryRenderOptions,
+		documentationModalStore,
+	]);
 
 	return (
 		<Card
@@ -93,7 +98,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		>
 			<CardHeader
 				className={clsx(
-					"px-4 relative justify-between",
+					"px-4 relative justify-between gap-2",
 					nodeRenderOptions.raw.header ?? categoryRenderOptions?.header,
 				)}
 			>
