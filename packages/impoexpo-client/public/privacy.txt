@@ -1,5 +1,0 @@
- impoexpo is a "services aggregator". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.
-
-impoexpo **may** access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration. **none** of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.
-
-the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed at https://github.com/IT-FAMCS/impoexpo.
