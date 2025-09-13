@@ -1,6 +1,6 @@
 # privacy policy
 
-impoexpo is an "integration aggregator". it allows you to transfer data between multiple services without the need to do the tedious work manually. this means that you have to login into services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.
+impoexpo is a "services aggregator". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.
 
 impoexpo **may** access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration. **none** of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.
 
