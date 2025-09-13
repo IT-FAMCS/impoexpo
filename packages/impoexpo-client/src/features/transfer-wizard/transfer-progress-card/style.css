@@ -3,6 +3,7 @@
  * Copyright 2015 Daniel Cardoso <@DanielCardoso>
  * Licensed under MIT
  */
+
 .la-ball-grid-pulse,
 .la-ball-grid-pulse > div {
 	position: relative;
@@ -13,11 +14,13 @@
 .la-ball-grid-pulse {
 	display: block;
 	font-size: 0;
-	color: #fff;
-}
-.la-ball-grid-pulse.la-dark {
 	color: #333;
 }
+
+.la-ball-grid-pulse:is(.dark *) {
+	color: #fff;
+}
+
 .la-ball-grid-pulse > div {
 	display: inline-block;
 	float: none;

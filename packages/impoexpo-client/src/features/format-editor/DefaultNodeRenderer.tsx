@@ -75,21 +75,14 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 	const showDocumentationButton = useSettingsStore(
 		(selector) => selector.editor.showDocumentationButton,
 	);
-	const documentationModalStore = useDocumentationModalStore();
 	const openDocumentationModal = useCallback(() => {
 		const hash =
 			nodeRenderOptions.raw.documentationHashOverride ?? nodeData.name;
 		const base =
 			categoryRenderOptions.documentationLink ??
 			`/user/nodes/${nodeData.category}`;
-		documentationModalStore.setUrl(docs(`${base}#${hash}`));
-		documentationModalStore.disclosure?.onOpen();
-	}, [
-		nodeData,
-		nodeRenderOptions,
-		categoryRenderOptions,
-		documentationModalStore,
-	]);
+		useDocumentationModalStore.getState().open?.(docs(`${base}#${hash}`));
+	}, [nodeData, nodeRenderOptions, categoryRenderOptions]);
 
 	return (
 		<Card

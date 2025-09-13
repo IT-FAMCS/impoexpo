@@ -27,7 +27,7 @@ import {
 } from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
 import { useQuery } from "@tanstack/react-query";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -293,14 +293,16 @@ function SourceAuthenticator() {
 
 	const { isFetching, isError, error, data, refetch } = useQuery({
 		queryKey: [`check-authenticated-${currentIntegration}`],
-		queryFn:
-			currentIntegration.checkAuthenticated ?? (() => Promise.resolve(true)),
+		queryFn: async () => {
+			const result = await (
+				currentIntegration.checkAuthenticated ?? (() => Promise.resolve(true))
+			)();
+			if (result) setState(SourceCardState.VERIFY_SOURCE);
+			return result;
+		},
 		refetchOnWindowFocus: false,
+		refetchOnMount: "always",
 	});
-
-	useEffect(() => {
-		if (data === true) setState(SourceCardState.VERIFY_SOURCE);
-	}, [data, setState]);
 
 	return (
 		<div className="flex items-center justify-center w-full">
@@ -312,7 +314,8 @@ function SourceAuthenticator() {
 					title={t`failed to check integration authentication status`}
 				/>
 			)}
-			{data === false &&
+			{!isFetching &&
+				data === false &&
 				(currentIntegration?.authenticator ? (
 					currentIntegration?.authenticator(() =>
 						setState(SourceCardState.VERIFY_SOURCE),

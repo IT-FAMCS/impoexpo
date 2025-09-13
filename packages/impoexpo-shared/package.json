@@ -1,6 +1,6 @@
 {
 	"name": "@impoexpo/shared",
-	"version": "1.0.1-beta",
+	"version": "1.0.2-beta",
 	"private": true,
 	"main": "dist/index.js",
 	"type": "module",

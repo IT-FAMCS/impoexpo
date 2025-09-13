@@ -40,8 +40,8 @@ export default function GoogleVerifier(props: {
 			</Card>
 			<div className="flex flex-row items-center justify-center gap-2">
 				<Button
-					onPress={() => {
-						removeAuthFromDatabase("google");
+					onPress={async () => {
+						await removeAuthFromDatabase("google");
 						props.onReset();
 					}}
 					color="danger"

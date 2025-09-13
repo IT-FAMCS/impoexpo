@@ -361,7 +361,17 @@ export default function TransferProgressCard() {
 				) : (
 					<>
 						<AnimatePresence>
-							{handlerState !== TransferHandlerState.DONE && (
+							<motion.div
+								key="loading-icon"
+								initial={{ opacity: 1 }}
+								exit={{ opacity: 0, display: "none" }}
+								transition={{ ease: [0.83, 0, 0.17, 1], duration: 0.5 }}
+								className="la-ball-grid-pulse la-3x"
+							>
+								<div /> <div /> <div /> <div /> <div /> <div /> <div /> <div />{" "}
+								<div />
+							</motion.div>
+							{/* {handlerState !== TransferHandlerState.DONE && (
 								<motion.div
 									key="loading-icon"
 									initial={{ opacity: 1 }}
@@ -386,7 +396,7 @@ export default function TransferProgressCard() {
 								>
 									<Icon icon="mdi:check" width={96} />
 								</motion.div>
-							)}
+							)} */}
 						</AnimatePresence>
 						<p className="text-5xl">
 							{stringifyState()}
