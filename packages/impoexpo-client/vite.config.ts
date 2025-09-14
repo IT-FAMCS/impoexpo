@@ -47,6 +47,7 @@ export default defineConfig(({ mode }) => {
 				input: {
 					main: resolve(__dirname, "index.html"),
 					wizard: resolve(__dirname, "wizard/index.html"),
+					privacy: resolve(__dirname, "privacy/index.html"),
 				},
 			},
 		},

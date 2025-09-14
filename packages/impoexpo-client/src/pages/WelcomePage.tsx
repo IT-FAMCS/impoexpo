@@ -94,7 +94,7 @@ export default function WelcomePage() {
 				</Modal>
 			</div>
 			<div className="absolute bottom-3">
-				<SwitchesPanel />
+				<SwitchesPanel showPrivacyPolicy />
 			</div>
 		</div>
 	);

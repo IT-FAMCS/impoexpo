@@ -34,6 +34,10 @@ msgstr "не удалось загрузить файлы проекта"
 msgid "failed to upload the project"
 msgstr "не удалось загрузить проект"
 
+#: src/components/buttons/SwitchesPanel.tsx:36
+msgid "privacy policy"
+msgstr "политика конфиденциальности"
+
 #: src/components/modals/FileDropzone.tsx:30
 msgid "drag and drop a file here or click"
 msgstr "перетащите файл сюда или нажмите"
@@ -43,88 +47,87 @@ msgstr "перетащите файл сюда или нажмите"
 msgid "will accept: {0}"
 msgstr "разрешённые форматы: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:66
+#: src/components/modals/LocalProjectsManagerModal.tsx:67
 msgid "manage projects"
 msgstr "панель проектов"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:77
+#: src/components/modals/LocalProjectsManagerModal.tsx:78
 msgid "projects"
 msgstr "проекты"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:88
+#: src/components/modals/LocalProjectsManagerModal.tsx:89
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:186
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:220
+#: src/components/modals/LocalProjectsManagerModal.tsx:187
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:217
 msgid "preparing"
 msgstr "готовимся"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
+#: src/components/modals/LocalProjectsManagerModal.tsx:189
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
 msgid "uploading the project"
 msgstr "загружаем проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
+#: src/components/modals/LocalProjectsManagerModal.tsx:191
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
+#: src/components/modals/LocalProjectsManagerModal.tsx:193
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
+#: src/components/modals/LocalProjectsManagerModal.tsx:195
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
 msgid "transferring"
 msgstr "переносим"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:196
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
+#: src/components/modals/LocalProjectsManagerModal.tsx:197
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:198
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:218
-#: src/pages/TransferWizardPage.tsx:178
+#: src/components/modals/LocalProjectsManagerModal.tsx:199
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:215
 msgid "done!"
 msgstr "готово!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:200
+#: src/components/modals/LocalProjectsManagerModal.tsx:201
 msgid "an error occurred"
 msgstr "произошла ошибка"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:223
+#: src/components/modals/LocalProjectsManagerModal.tsx:224
 msgid "edit project"
 msgstr "редактировать проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:232
+#: src/components/modals/LocalProjectsManagerModal.tsx:233
 msgid "delete project"
 msgstr "удалить проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:242
+#: src/components/modals/LocalProjectsManagerModal.tsx:243
 msgid "run project"
 msgstr "запустить проект (перенос)"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:287
+#: src/components/modals/LocalProjectsManagerModal.tsx:303
 msgid "yes"
 msgstr "да"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:294
+#: src/components/modals/LocalProjectsManagerModal.tsx:310
 msgid "no"
 msgstr "нет"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:298
+#: src/components/modals/LocalProjectsManagerModal.tsx:314
 msgid "are you sure?"
 msgstr "вы уверены?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:306
+#: src/components/modals/LocalProjectsManagerModal.tsx:328
 msgid "this transfer produced no files"
 msgstr "этот перенос не выдал файлов"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:342
-#: src/components/modals/LocalProjectsManagerModal.tsx:343
+#: src/components/modals/LocalProjectsManagerModal.tsx:378
+#: src/components/modals/LocalProjectsManagerModal.tsx:379
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "уведомления"
@@ -201,44 +204,44 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:158
+#: src/features/format-editor/DefaultNodeRenderer.tsx:156
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/FormatEditor.tsx:291
+#: src/features/format-editor/FormatEditor.tsx:285
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:306
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:83
+#: src/features/format-editor/FormatEditor.tsx:300
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:313
+#: src/features/format-editor/FormatEditor.tsx:307
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:327
+#: src/features/format-editor/FormatEditor.tsx:321
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:337
+#: src/features/format-editor/FormatEditor.tsx:331
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:343
+#: src/features/format-editor/FormatEditor.tsx:337
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:353
+#: src/features/format-editor/FormatEditor.tsx:347
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:369
+#: src/features/format-editor/FormatEditor.tsx:363
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:399
+#: src/features/format-editor/FormatEditor.tsx:393
 msgid "done"
 msgstr "далее"
 
@@ -284,7 +287,7 @@ msgid "please note that <0>all integration-related information will not be expo
 msgstr "пожалуйста, учтите, что <0>вся информация, связанная с интеграциями, не будет экспортирована.</0> при импорте проекта вам придётся переподсоединить все узлы из интеграций."
 
 #: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:67
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:70
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:73
 msgid "cancel"
 msgstr "отмена"
 
@@ -304,7 +307,7 @@ msgstr "название проекта"
 msgid "group (optional)"
 msgstr "группа (по желанию)"
 
-#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:89
+#: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:92
 msgid "save"
 msgstr "сохранить"
 
@@ -926,13 +929,13 @@ msgstr "импортировать существующий проект"
 msgid "not outputting anything?"
 msgstr "ничего не выводим?"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:192
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:190
 msgid "add another"
 msgstr "добавить ещё"
 
-#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:206
+#: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:204
 #: src/integrations/google/GoogleVerifier.tsx:59
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:253
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:250
 msgid "next"
 msgstr "далее"
 
@@ -944,23 +947,23 @@ msgstr "не удалось проверить статус авторизаци
 msgid "download"
 msgstr "скачать"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:222
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:219
 msgid "you were not supposed to see this."
 msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:255
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:252
 msgid "view all files"
 msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:274
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:271
 msgid "try again"
 msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:300
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:297
 msgid "return to the homepage"
 msgstr "вернуться на главную страницу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:317
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:314
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "уведомления появятся тут<0/>(если они есть)"
 
@@ -1000,44 +1003,44 @@ msgstr "всё верно?"
 msgid "relogin"
 msgstr "перезайти"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:79
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
 msgid "receiving the form's layout"
 msgstr "получаем макет формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:88
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:85
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "не удалось получить макет формы (и создать для неё узел)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:90
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:128
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
 msgid "back to form selection"
 msgstr "назад к выбору формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:117
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:114
 msgid "checking read permissions for the form"
 msgstr "проверяем наличие прав на чтение формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:126
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:123
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:170
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:167
 msgid "receiving a list of your forms"
 msgstr "получаем список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:179
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:176
 msgid "couldn't receive a list of your forms"
 msgstr "не удалось получить список ваших форм"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:189
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:186
 msgid "select a form:"
 msgstr "выберите форму:"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:201
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:198
 msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
 msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:232
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:229
 msgid "back to source selection"
 msgstr "назад к выбору источника"
 
@@ -1124,13 +1127,21 @@ msgstr "группированный список"
 msgid "groups"
 msgstr "группы"
 
-#: src/integrations/placeholder/integration.tsx:12
+#: src/integrations/placeholder/integration.tsx:10
 msgid "nowhere"
 msgstr "никуда"
 
 #: src/integrations/placeholder/integration.tsx:31
 #~ msgid "Nowhere"
 #~ msgstr "Никуда"
+
+#: src/pages/PrivacyPage.tsx:15
+msgid "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed at<10>https://github.com/IT-FAMCS/impoexpo</10>."
+msgstr "<0>политика конфиденциальности</0><1/><2/>impoexpo — \"агрегатор сервисов\". он позволяет переносить данные между различными сервисами без необходимости делать это вручную. это означает, что вам необходимо логиниться в эти сервисы, обычно через OAuth2, чтобы impoexpo мог выполнять свою функцию.<3/><4/>impoexpo <5>может</5> получать доступ к личным данным по типу изображения вашего профиля, адрес вашей электронной почты, и информации, специфичной к конкретной интеграции, например, доступ к вашим файлам на Google Drive для интеграции Google Forms.<6/><7>никакая</7> информация не хранится на наших серверах; она зашифрована на серверах и хранится на клиенте (вашем браузере), что (мы надеемся) минимизирует риск утечки данных от вредоносного кода, исполняемого на машине пользователя.<8/><9/> разработичики impoexpo не имеют злых побуждений и собирают как можно меньше данных, чтобы impoexpo функционировал. если вы сомневаетесь или не доверяете нам, impoexpo — ПО с открытым исходным кодом, который может быть найден по ссылке<10>https://github.com/IT-FAMCS/impoexpo</10>."
+
+#: src/pages/PrivacyPage.tsx:52
+msgid "back"
+msgstr "назад"
 
 #: src/pages/TransferWizardPage.tsx:163
 #: src/pages/WelcomePage.tsx:46
