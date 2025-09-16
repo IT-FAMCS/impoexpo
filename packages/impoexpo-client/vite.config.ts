@@ -5,6 +5,8 @@ import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import vike from "vike/plugin";
+import tailwindcss from "@tailwindcss/vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getCommitInformation = (type: "shortHash" | "longHash" | "message") => {
@@ -21,7 +23,9 @@ export default defineConfig(({ mode }) => {
 				plugins: [["@lingui/swc-plugin", {}]],
 			}),
 			tsconfigPaths(),
+			tailwindcss(),
 			lingui(),
+			vike(),
 		],
 		define: {
 			"import.meta.env.VITE_APP_HASH": JSON.stringify(
@@ -40,15 +44,6 @@ export default defineConfig(({ mode }) => {
 		esbuild: {
 			supported: {
 				"top-level-await": true,
-			},
-		},
-		build: {
-			rollupOptions: {
-				input: {
-					main: resolve(__dirname, "index.html"),
-					wizard: resolve(__dirname, "wizard/index.html"),
-					privacy: resolve(__dirname, "privacy/index.html"),
-				},
 			},
 		},
 	};

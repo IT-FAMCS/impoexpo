@@ -1,3 +1,4 @@
+@reference "./globals.css";
 .react-flow__node.selectable.selected {
 	@apply ring rounded-xl transition-shadow;
 }

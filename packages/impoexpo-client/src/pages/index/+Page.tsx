@@ -14,11 +14,10 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import { useNavigate } from "react-router";
+import { navigate } from "vike/client/router";
 
-export default function WelcomePage() {
+export default function Index() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-	const navigate = useNavigate();
 
 	return (
 		<div className="flex flex-col items-center justify-center w-screen h-screen gap-2 welcome-page-container">

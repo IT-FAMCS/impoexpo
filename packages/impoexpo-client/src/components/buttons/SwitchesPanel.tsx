@@ -1,13 +1,12 @@
 import { Tooltip, Code, Link, Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import SettingsModal from "../modals/SettingsModal";
-import { useNavigate } from "react-router";
 import { Trans } from "@lingui/react/macro";
+import { navigate } from "vike/client/router";
 
 export default function SwitchesPanel(props: {
 	showPrivacyPolicy?: boolean;
 }) {
-	const navigate = useNavigate();
 	return (
 		<div className="flex flex-row items-center justify-center gap-2">
 			<Tooltip
