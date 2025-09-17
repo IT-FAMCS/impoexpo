@@ -163,9 +163,7 @@ export default function SearchNodesModal(props: {
 	);
 }
 
-function ManualNodeSelector(props: {
-	onClose: () => void;
-}) {
+function ManualNodeSelector(props: { onClose: () => void }) {
 	const BACK_LIST_ITEM_KEY = "back";
 
 	const { categoryRenderOptions } = useRenderableNodesStore();

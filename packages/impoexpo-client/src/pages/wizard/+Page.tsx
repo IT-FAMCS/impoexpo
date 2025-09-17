@@ -21,27 +21,27 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion, useAnimate } from "motion/react";
 import { type ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router";
 import {
 	clearStatesFromDatabase,
 	loadStatesFromDatabase,
 	saveStatesToDatabase,
 } from "@/db/persisted";
 import { useQuery } from "@tanstack/react-query";
-import {
-	importBuiltinNodes,
-	importIntegrationNodes,
-} from "../features/format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
-import TransferProgressCard from "../features/transfer-wizard/transfer-progress-card/TransferProgressCard";
 import SwitchesPanel from "@/components/buttons/SwitchesPanel";
 import { getLocalProject } from "@/db/local-projects";
 import { applyProjectSnapshot } from "@/db/snapshot";
 import { allIntegrations } from "@/integrations/integrations";
 import { useProjectStore } from "@/stores/project";
+import {
+	importBuiltinNodes,
+	importIntegrationNodes,
+} from "@/features/format-editor/nodes/renderable-node-database";
+import TransferProgressCard from "@/features/transfer-wizard/transfer-progress-card/TransferProgressCard";
+import { navigate } from "vike/client/router";
 
 const AnimatedCard = motion.create(Card);
-export default function TransferWizardPage() {
+export default function Wizard() {
 	const importNodesQuery = useQuery({
 		queryKey: ["import-nodes"],
 		queryFn: async () => {
@@ -102,7 +102,6 @@ export default function TransferWizardPage() {
 		console.error(loadPersistentDataQuery.error);
 	}
 
-	const navigate = useNavigate();
 	const { t } = useLingui();
 	const { stage, setStage } = useTransferWizardStore();
 

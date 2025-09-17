@@ -145,21 +145,17 @@ export default function FormatEditor() {
 	);
 
 	const mousePositionRef = useRef<{ x: number; y: number } | undefined>();
-	useHotkeys(
-		"space",
-		() => {
-			if (!isSearchModalOpen) {
-				setNewNodeInformation({
-					position: screenToFlowPosition({
-						x: mousePositionRef.current?.x ?? 0,
-						y: mousePositionRef.current?.y ?? 0,
-					}),
-				});
-				openSearchModal();
-			}
-		},
-		[isSearchModalOpen, setNewNodeInformation, openSearchModal],
-	);
+	useHotkeys("space", () => {
+		if (!isSearchModalOpen) {
+			setNewNodeInformation({
+				position: screenToFlowPosition({
+					x: mousePositionRef.current?.x ?? 0,
+					y: mousePositionRef.current?.y ?? 0,
+				}),
+			});
+			openSearchModal();
+		}
+	}, [isSearchModalOpen, setNewNodeInformation, openSearchModal]);
 
 	useHotkeys("ctrl+z", () => undo(), [undo]);
 	useHotkeys("ctrl+shift+z, ctrl+y", () => redo(), [redo]);

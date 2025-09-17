@@ -2,11 +2,9 @@ import SwitchesPanel from "@/components/buttons/SwitchesPanel";
 import { Button, Card, CardBody, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import { useNavigate } from "react-router";
+import { navigate } from "vike/client/router";
 
-export default function PrivacyPage() {
-	const navigate = useNavigate();
-
+export default function Privacy() {
 	return (
 		<div className="flex flex-col justify-center items-center w-screen h-screen gap-4">
 			<Card>

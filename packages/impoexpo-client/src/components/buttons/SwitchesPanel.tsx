@@ -4,9 +4,7 @@ import SettingsModal from "../modals/SettingsModal";
 import { Trans } from "@lingui/react/macro";
 import { navigate } from "vike/client/router";
 
-export default function SwitchesPanel(props: {
-	showPrivacyPolicy?: boolean;
-}) {
+export default function SwitchesPanel(props: { showPrivacyPolicy?: boolean }) {
 	return (
 		<div className="flex flex-row items-center justify-center gap-2">
 			<Tooltip
