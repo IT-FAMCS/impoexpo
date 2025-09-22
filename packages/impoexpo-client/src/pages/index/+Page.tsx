@@ -16,6 +16,24 @@ import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
 import { navigate } from "vike/client/router";
 
+import motion from "motion";
+import { gsap } from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
+gsap.registerPlugin(SplitText, useGSAP);
+
+/* export default function Index() {
+	const titleRef = useRef<HTMLParagraphElement>(null!);
+	const descriptionRef = useRef<HTMLParagraphElement>(null!);
+
+	return (
+		<div className="w-screen h-screen flex justify-center items-center">
+			<div className="flex-row gap-2"></div>
+		</div>
+	);
+}
+ */
 export default function Index() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
