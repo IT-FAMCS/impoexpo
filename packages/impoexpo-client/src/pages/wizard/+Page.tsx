@@ -141,7 +141,7 @@ export default function Wizard() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4 p-6">
+		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -267,7 +267,7 @@ function FormatEditorWrapper(props: {
 				<AnimatedCard
 					ref={overlayScope}
 					style={{ opacity: 1 }}
-					className="absolute w-full h-full bg-content1 pointer-events-none"
+					className="absolute w-full h-full pointer-events-none bg-content1"
 				/>
 			</AnimatedCard>
 		)

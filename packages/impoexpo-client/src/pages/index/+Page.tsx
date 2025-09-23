@@ -1,40 +1,132 @@
-import SwitchesPanel from "@/components/buttons/SwitchesPanel";
-import LocalProjectsManagerModal from "@/components/modals/LocalProjectsManagerModal";
-import {
-	Button,
-	Card,
-	CardBody,
-	Link,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	useDisclosure,
-} from "@heroui/react";
-import { Icon } from "@iconify/react";
-import { Trans } from "@lingui/react/macro";
-import { navigate } from "vike/client/router";
+import { Trans, useLingui } from "@lingui/react/macro";
 
-import motion from "motion";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { ReactNode, useRef, useState } from "react";
 gsap.registerPlugin(SplitText, useGSAP);
 
-/* export default function Index() {
+type Slogan = {
+	title: ReactNode;
+	description: ReactNode;
+	waitSeconds: number;
+};
+
+const slogans: Slogan[] = [
+	{
+		title: (
+			<Trans>
+				impoexpo is{" "}
+				<span className="italic font-instrument">
+					a data transfer automation tool
+				</span>
+			</Trans>
+		),
+		description: (
+			<Trans>
+				impoexpo allows one to easily transfer data between unrelated services,
+				without the need to copy & paste a million times.
+			</Trans>
+		),
+		waitSeconds: 1,
+	},
+	{
+		title: <Trans>meow</Trans>,
+		description: <Trans>meow</Trans>,
+		waitSeconds: 1,
+	},
+];
+
+export default function Index() {
+	const { t } = useLingui();
 	const titleRef = useRef<HTMLParagraphElement>(null!);
 	const descriptionRef = useRef<HTMLParagraphElement>(null!);
+	const [sloganIndex, setSloganIndex] = useState(0);
+
+	useGSAP(() => {
+		//titleRef.current.innerText = t(slogans[sloganIndex].title);
+		//descriptionRef.current.innerText = t(slogans[sloganIndex].description);
+		queueMicrotask(() => {
+			SplitText.create(titleRef.current, {
+				type: "words",
+				mask: "words",
+				onSplit: (titleSelf) => {
+					return gsap.fromTo(
+						titleSelf.words,
+						{
+							yPercent: 105,
+						},
+						{
+							yPercent: 0,
+							duration: 3 - 0.15 * (titleSelf.words.length - 1),
+							stagger: 0.15,
+							ease: "power4.inOut",
+							onComplete: () => {
+								gsap.to(titleSelf.words, {
+									yPercent: -105,
+									duration: 1,
+									ease: "power4.inOut",
+									delay: slogans[sloganIndex].waitSeconds + 2,
+									onComplete: () =>
+										setSloganIndex(
+											sloganIndex >= slogans.length - 1 ? 0 : sloganIndex + 1,
+										),
+								});
+							},
+						},
+					);
+				},
+			});
+		});
+
+		queueMicrotask(() => {
+			SplitText.create(descriptionRef.current, {
+				type: "lines",
+				mask: "lines",
+				onSplit: (descriptionSelf) => {
+					return gsap.fromTo(
+						descriptionSelf.lines,
+						{
+							yPercent: 105,
+						},
+						{
+							yPercent: 0,
+							duration: 2 - 0.15 * (descriptionSelf.lines.length - 1),
+							delay: 3,
+							stagger: 0.15,
+							ease: "power4.inOut",
+							onComplete: () => {
+								gsap.to(descriptionSelf.lines, {
+									yPercent: -105,
+									duration: 1,
+									ease: "power4.inOut",
+									delay: slogans[sloganIndex].waitSeconds,
+								});
+							},
+						},
+					);
+				},
+			});
+		});
+	}, [sloganIndex]);
 
 	return (
-		<div className="w-screen h-screen flex justify-center items-center">
-			<div className="flex-row gap-2"></div>
+		<div className="flex items-center justify-center w-screen h-screen">
+			<div className="flex flex-row items-center justify-center gap-4 w-[50%]">
+				<div className="flex flex-col gap-4">
+					<p className="text-6xl" ref={titleRef}>
+						{slogans[sloganIndex].title}
+					</p>
+					<p className="text-2xl" ref={descriptionRef}>
+						{slogans[sloganIndex].description}
+					</p>
+				</div>
+			</div>
 		</div>
 	);
 }
- */
-export default function Index() {
+
+/* export default function Index() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
@@ -115,4 +207,4 @@ export default function Index() {
 			</div>
 		</div>
 	);
-}
+} */
