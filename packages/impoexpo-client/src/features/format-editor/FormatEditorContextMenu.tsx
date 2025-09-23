@@ -63,16 +63,15 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 
 	const render = useCallback(async () => {
 		if (!node || !container) return;
+		const wrapper = document.createElement("div");
+		wrapper.style.padding = "10px";
+		container.parentNode?.insertBefore(wrapper, container);
+		wrapper.appendChild(container);
 		try {
-			const wrapper = document.createElement("div");
-			wrapper.style.padding = "10px";
-			container.parentNode?.insertBefore(wrapper, container);
-			wrapper.appendChild(container);
 			const data = await htmlToImage.toBlob(wrapper, {
 				cacheBust: true,
 				pixelRatio: 2,
 			});
-			wrapper.replaceWith(...wrapper.childNodes);
 			return data;
 		} catch (err) {
 			addToast({
@@ -80,6 +79,8 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 				title: <Trans>failed to render node</Trans>,
 				description: <p className="font-mono">{`${err}`}</p>,
 			});
+		} finally {
+			wrapper.replaceWith(...wrapper.childNodes);
 		}
 	}, [container, node]);
 

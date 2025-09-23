@@ -1,18 +1,15 @@
 import { useState } from "react";
-import {
-	type SupportedLocale,
-	supportedLocales,
-} from "@/locales/supported-locales";
+import { type LocaleMetadata, locales } from "@/locales/i18n";
 import useLinguiChange from "./useLinguiChange";
 
 export default function useLocaleInformation() {
 	const { i18n } = useLinguiChange((i18n) =>
 		// biome-ignore lint/style/noNonNullAssertion: only supported locales get loaded into lingui
-		setInfo(supportedLocales.find((l) => l.id === i18n.locale)!),
+		setInfo(locales.find((l) => l.id === i18n.locale)!),
 	);
-	const [info, setInfo] = useState<SupportedLocale>(
+	const [info, setInfo] = useState<LocaleMetadata>(
 		// biome-ignore lint/style/noNonNullAssertion: only supported locales get loaded into lingui
-		supportedLocales.find((l) => l.id === i18n.locale)!,
+		locales.find((l) => l.id === i18n.locale)!,
 	);
 
 	return info;

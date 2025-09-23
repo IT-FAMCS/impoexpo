@@ -1,15 +1,25 @@
-import SwitchesPanel from "@/components/buttons/SwitchesPanel";
-import { Button, Card, CardBody, Link } from "@heroui/react";
-import { Icon } from "@iconify/react";
+import { Card, CardBody, Link } from "@heroui/react";
 import { Trans } from "@lingui/react/macro";
-import { useNavigate } from "react-router";
+import { motion } from "motion/react";
 
-export default function PrivacyPage() {
-	const navigate = useNavigate();
-
+const AnimatedCard = motion.create(Card);
+export default function Privacy() {
 	return (
-		<div className="flex flex-col justify-center items-center w-screen h-screen gap-4">
-			<Card>
+		<div className="flex flex-col justify-center items-center w-full h-full gap-4">
+			<AnimatedCard
+				initial={{
+					opacity: 0,
+					y: 15,
+				}}
+				animate={{
+					opacity: 1,
+					y: 0,
+				}}
+				transition={{
+					duration: 0.25,
+					ease: [0.83, 0, 0.17, 1],
+				}}
+			>
 				<CardBody className="max-w-[30vw]">
 					<p>
 						<Trans>
@@ -43,15 +53,7 @@ export default function PrivacyPage() {
 						</Trans>
 					</p>
 				</CardBody>
-			</Card>
-			<Button
-				onPress={() => navigate("/")}
-				color="primary"
-				startContent={<Icon icon="mdi:arrow-left" />}
-			>
-				<Trans>back</Trans>
-			</Button>
-			<SwitchesPanel />
+			</AnimatedCard>
 		</div>
 	);
 }

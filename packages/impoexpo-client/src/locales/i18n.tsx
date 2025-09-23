@@ -1,6 +1,8 @@
 import { Icon } from "@iconify/react";
 
-export type SupportedLocale = {
+export const DEFAULT_LOCALE = "en";
+
+export type LocaleMetadata = {
 	id: string;
 	fullName: string;
 	localizedName: string;
@@ -8,7 +10,7 @@ export type SupportedLocale = {
 	oramaMetadata?: Record<string, unknown>;
 };
 
-export const supportedLocales: SupportedLocale[] = [
+export const locales: LocaleMetadata[] = [
 	{
 		id: "ru",
 		fullName: "russian",

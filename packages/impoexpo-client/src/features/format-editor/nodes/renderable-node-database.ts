@@ -1,6 +1,6 @@
 import { create as createDatabase, insert, type Orama } from "@orama/orama";
 import { create } from "zustand/react";
-import { supportedLocales } from "@/locales/supported-locales";
+import { locales } from "@/locales/i18n";
 import { persistStoreOnReload } from "@/stores/hot-reload";
 import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import type { MessageDescriptor } from "@lingui/core";
@@ -56,7 +56,7 @@ export const useNodeSearchMetadataStore = create<NodeSearchMetadataStore>(
 	(set) => ({
 		database: undefined,
 		reset: (localeId: string) => {
-			const locale = supportedLocales.find((l) => l.id === localeId);
+			const locale = locales.find((l) => l.id === localeId);
 			if (!locale) return;
 
 			console.log(`(re)creating the search database for locale ${locale.id}`);

@@ -26,7 +26,6 @@ import {
 	removeLocalProject,
 	type LocalProjectsTableEntry,
 } from "@/db/local-projects";
-import { useNavigate } from "react-router";
 import { TransferHandler, TransferHandlerState } from "@/api/TransferHandler";
 import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
 import { route } from "@/api/common";
@@ -37,6 +36,7 @@ import DividerWithText from "../external/DividerWithText";
 import clsx from "clsx";
 import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
 import { AnimatePresence, motion } from "motion/react";
+import { navigate } from "vike/client/router";
 
 export default function LocalProjectsManagerModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
@@ -60,11 +60,13 @@ export default function LocalProjectsManagerModal() {
 	return (
 		<>
 			<Button
+				variant="light"
+				size="sm"
+				className="flex-col gap-1 py-2 text-tiny h-fit"
 				onPress={onOpen}
 				startContent={<Icon width={24} icon="mdi:calendar" />}
-				color="secondary"
 			>
-				<Trans>manage projects</Trans>
+				<Trans>projects</Trans>
 			</Button>
 			<Modal
 				scrollBehavior="inside"
@@ -139,7 +141,6 @@ function LocalProjectCard(props: {
 	className?: string;
 }) {
 	const { t } = useLingui();
-	const navigate = useNavigate();
 	const [deleting, setDeleting] = useState(false);
 	const [running, setRunning] = useState(false);
 

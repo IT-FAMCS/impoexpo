@@ -28,11 +28,15 @@ export default function SettingsModal() {
 	return (
 		<>
 			<Button
-				onPress={onOpen}
+				variant="light"
+				color="default"
 				size="sm"
-				isIconOnly
-				startContent={<Icon width={18} icon="mdi:cog" />}
-			/>
+				className="flex-col gap-1 py-2 text-tiny h-fit"
+				startContent={<Icon width={24} icon="mdi:cog" />}
+				onPress={onOpen}
+			>
+				<Trans>settings</Trans>
+			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					{() => (

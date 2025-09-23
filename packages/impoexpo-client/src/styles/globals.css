@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital@0;1&display=swap");
+@import "tailwindcss";
+
+@plugin './hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
 
 @layer utilities {
 	.no-scrollbar::-webkit-scrollbar {
@@ -14,7 +17,9 @@
 
 :root {
 	font-family: Inter, sans-serif;
-	font-feature-settings: "liga" 1, "calt" 1;
+	font-feature-settings:
+		"liga" 1,
+		"calt" 1;
 	/* fix for Chrome */
 }
 
@@ -28,9 +33,12 @@
 	--bg-size: 25px;
 	--dot-color: #cccccc40;
 
-	background-image: radial-gradient(var(--dot-color) 15%, transparent 10%),
+	background-image:
+		radial-gradient(var(--dot-color) 15%, transparent 10%),
 		radial-gradient(var(--dot-color) 10%, transparent 10%);
-	background-position: 0 0, var(--bg-size) var(--bg-size);
+	background-position:
+		0 0,
+		var(--bg-size) var(--bg-size);
 	background-size: var(--bg-size) var(--bg-size);
 
 	transition: 0.25s ease-in-out;
@@ -38,4 +46,8 @@
 
 :root.dark {
 	--dot-color: #ffffff10;
+}
+
+@theme {
+	--font-pt-serif: "PT Serif", serif;
 }

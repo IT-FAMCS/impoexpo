@@ -16,8 +16,21 @@
 		"@react-aria/utils": "3.28.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
+		"@biomejs/biome": "2.2.4",
 		"concurrently": "^9.1.2",
 		"lefthook": "^1.11.13"
+	},
+	"pnpm": {
+		"overrides": {
+			"@react-aria/utils": "^3.30.1"
+		},
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"@heroui/shared-utils",
+			"@swc/core",
+			"@tailwindcss/oxide",
+			"esbuild",
+			"lefthook"
+		]
 	}
 }

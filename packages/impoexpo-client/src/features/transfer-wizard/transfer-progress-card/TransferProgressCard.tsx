@@ -24,12 +24,12 @@ import prettyBytes from "pretty-bytes";
 
 import useSound from "use-sound";
 import meowSfx from "/sounds/meow.mp3?url";
-import { useNavigate } from "react-router";
 import clsx from "clsx";
 import { route } from "@/api/common";
 import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
 import { clearStatesFromDatabase } from "@/db/persisted";
 import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import { navigate } from "vike/client/router";
 
 const AnimatedCard = motion.create(Card);
 const AnimatedAlert = motion.create(Alert);
@@ -153,7 +153,6 @@ export default function TransferProgressCard() {
 	// biome-ignore lint/style/noNonNullAssertion: initialized asap
 	const [handler, setHandler] = useState<TransferHandler>(null!);
 	const [playMeow] = useSound(meowSfx);
-	const navigate = useNavigate();
 
 	const convertColor = (
 		notificationType: ProjectStatusNotification["type"],
@@ -320,7 +319,7 @@ export default function TransferProgressCard() {
 						</p>
 					</div>
 				) : (
-					<ScrollShadow className="max-h-full flex flex-col gap-2">
+					<ScrollShadow className="flex flex-col gap-2">
 						<AnimatePresence>
 							{Object.entries(notifications).map((p) => (
 								<AnimatedAlert

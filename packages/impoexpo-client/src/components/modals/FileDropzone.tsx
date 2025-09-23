@@ -3,9 +3,7 @@ import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 
-export default function FileDropzone(props: {
-	options: DropzoneOptions;
-}) {
+export default function FileDropzone(props: { options: DropzoneOptions }) {
 	const {
 		getRootProps,
 		getInputProps,

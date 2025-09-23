@@ -8,40 +8,32 @@ import {
 	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
-import {
-	Button,
-	Card,
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Spinner,
-} from "@heroui/react";
+import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
 import { motion, useAnimate } from "motion/react";
 import { type ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router";
 import {
 	clearStatesFromDatabase,
 	loadStatesFromDatabase,
 	saveStatesToDatabase,
 } from "@/db/persisted";
 import { useQuery } from "@tanstack/react-query";
-import {
-	importBuiltinNodes,
-	importIntegrationNodes,
-} from "../features/format-editor/nodes/renderable-node-database";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
-import TransferProgressCard from "../features/transfer-wizard/transfer-progress-card/TransferProgressCard";
-import SwitchesPanel from "@/components/buttons/SwitchesPanel";
 import { getLocalProject } from "@/db/local-projects";
 import { applyProjectSnapshot } from "@/db/snapshot";
 import { allIntegrations } from "@/integrations/integrations";
 import { useProjectStore } from "@/stores/project";
+import {
+	importBuiltinNodes,
+	importIntegrationNodes,
+} from "@/features/format-editor/nodes/renderable-node-database";
+import TransferProgressCard from "@/features/transfer-wizard/transfer-progress-card/TransferProgressCard";
+import { navigate } from "vike/client/router";
 
 const AnimatedCard = motion.create(Card);
-export default function TransferWizardPage() {
+export default function Wizard() {
 	const importNodesQuery = useQuery({
 		queryKey: ["import-nodes"],
 		queryFn: async () => {
@@ -61,8 +53,8 @@ export default function TransferWizardPage() {
 			await Promise.all(
 				Object.values(
 					import.meta.glob([
-						"../integrations/**/integration.ts",
-						"../integrations/**/integration.tsx",
+						"../../integrations/**/integration.ts",
+						"../../integrations/**/integration.tsx",
 					]),
 				).map((v) => v()),
 			);
@@ -102,7 +94,6 @@ export default function TransferWizardPage() {
 		console.error(loadPersistentDataQuery.error);
 	}
 
-	const navigate = useNavigate();
 	const { t } = useLingui();
 	const { stage, setStage } = useTransferWizardStore();
 
@@ -142,7 +133,7 @@ export default function TransferWizardPage() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4 p-6">
+		<div className="flex flex-row items-center justify-start w-full grow-1 overflow-y-hidden gap-4">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -178,9 +169,6 @@ export default function TransferWizardPage() {
 						]}
 					/>
 				</CardBody>
-				<CardFooter className="flex flex-row items-center gap-2">
-					<SwitchesPanel />
-				</CardFooter>
 			</AnimatedCard>
 			<motion.div
 				initial={{ opacity: 0, y: 5 }}
@@ -268,7 +256,7 @@ function FormatEditorWrapper(props: {
 				<AnimatedCard
 					ref={overlayScope}
 					style={{ opacity: 1 }}
-					className="absolute w-full h-full bg-content1 pointer-events-none"
+					className="absolute w-full h-full pointer-events-none bg-content1"
 				/>
 			</AnimatedCard>
 		)
