@@ -144,7 +144,9 @@ export default function FormatEditor() {
 		{ preventDefault: true },
 	);
 
-	const mousePositionRef = useRef<{ x: number; y: number } | undefined>();
+	const mousePositionRef = useRef<{ x: number; y: number } | undefined>(
+		undefined,
+	);
 	useHotkeys("space", () => {
 		if (!isSearchModalOpen) {
 			setNewNodeInformation({

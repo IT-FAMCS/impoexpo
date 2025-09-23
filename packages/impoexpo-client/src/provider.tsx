@@ -7,11 +7,10 @@ import { navigate } from "vike/client/router";
 import "./styles/globals.css";
 import { clientOnly } from "vike-react/clientOnly";
 import { I18nProvider } from "@lingui/react";
-import { i18n } from "@lingui/core";
+import { i18n, Messages } from "@lingui/core";
 import { useEffect } from "react";
 import { useSettingsStore } from "./stores/settings.ts";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
-import { activateLocale } from "./locales/i18n.tsx";
 
 export const Provider = clientOnly(
 	async () => (await import("./provider.tsx")).InternalProvider,
@@ -20,9 +19,19 @@ export const Provider = clientOnly(
 export function InternalProvider({ children }: { children: React.ReactNode }) {
 	useTheme();
 	useEffect(() => {
-		const locale = detect(fromStorage("locale"), fromUrl("locale")) ?? "en";
-		activateLocale(locale);
-		useSettingsStore.getState().load();
+		(async () => {
+			const locale = detect(fromStorage("locale"), fromUrl("locale")) ?? "en";
+			const locales = import.meta.glob("./locales/*.po");
+			for (const key in locales) {
+				const name = key.replace("./locales/", "").replace(".po", "");
+				i18n.load(
+					name,
+					((await locales[key]()) as { messages: Messages }).messages,
+				);
+			}
+			i18n.activate(locale);
+			useSettingsStore.getState().load();
+		})();
 	}, []);
 
 	return (

@@ -8,14 +8,7 @@ import {
 	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
-import {
-	Button,
-	Card,
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Spinner,
-} from "@heroui/react";
+import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -28,7 +21,6 @@ import {
 } from "@/db/persisted";
 import { useQuery } from "@tanstack/react-query";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
-import SwitchesPanel from "@/components/buttons/SwitchesPanel";
 import { getLocalProject } from "@/db/local-projects";
 import { applyProjectSnapshot } from "@/db/snapshot";
 import { allIntegrations } from "@/integrations/integrations";
@@ -61,8 +53,8 @@ export default function Wizard() {
 			await Promise.all(
 				Object.values(
 					import.meta.glob([
-						"../integrations/**/integration.ts",
-						"../integrations/**/integration.tsx",
+						"../../integrations/**/integration.ts",
+						"../../integrations/**/integration.tsx",
 					]),
 				).map((v) => v()),
 			);
@@ -141,7 +133,7 @@ export default function Wizard() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-screen h-screen gap-4">
+		<div className="flex flex-row items-center justify-start w-full grow-1 overflow-y-hidden gap-4">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -177,9 +169,6 @@ export default function Wizard() {
 						]}
 					/>
 				</CardBody>
-				<CardFooter className="flex flex-row items-center gap-2">
-					<SwitchesPanel />
-				</CardFooter>
 			</AnimatedCard>
 			<motion.div
 				initial={{ opacity: 0, y: 5 }}

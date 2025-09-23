@@ -309,7 +309,7 @@ const getSearchModalNodeListItem = (props: {
 				props.onClose();
 			}}
 		>
-			<div className="flex flex-row items-center justify-center gap-1">
+			<div className="flex flex-row items-center gap-1">
 				{localizableString(categoryOptions.name)}{" "}
 				<Icon icon="mdi:arrow-right" />{" "}
 				{renderOptions.raw.title !== undefined

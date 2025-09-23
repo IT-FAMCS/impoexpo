@@ -60,11 +60,13 @@ export default function LocalProjectsManagerModal() {
 	return (
 		<>
 			<Button
+				variant="light"
+				size="sm"
+				className="flex-col gap-1 py-2 text-tiny h-fit"
 				onPress={onOpen}
 				startContent={<Icon width={24} icon="mdi:calendar" />}
-				color="secondary"
 			>
-				<Trans>manage projects</Trans>
+				<Trans>projects</Trans>
 			</Button>
 			<Modal
 				scrollBehavior="inside"

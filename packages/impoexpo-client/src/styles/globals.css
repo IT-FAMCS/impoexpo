@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 
 @plugin './hero.ts';
@@ -49,5 +49,5 @@
 }
 
 @theme {
-	--font-instrument: "Instrument Serif", serif;
+	--font-pt-serif: "PT Serif", serif;
 }

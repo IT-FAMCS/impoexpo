@@ -34,141 +34,148 @@ msgstr "не удалось загрузить файлы проекта"
 msgid "failed to upload the project"
 msgstr "не удалось загрузить проект"
 
-#: src/components/buttons/SwitchesPanel.tsx:36
-msgid "privacy policy"
-msgstr "политика конфиденциальности"
+#: src/components/buttons/BottomPanel.tsx:55
+#: src/pages/wizard/+Page.tsx:172
+msgid "transfer"
+msgstr "перенос"
 
-#: src/components/modals/FileDropzone.tsx:30
+#: src/components/buttons/BottomPanel.tsx:71
+msgid "documentation"
+msgstr "документация"
+
+#: src/components/buttons/BottomPanel.tsx:81
+msgid "legal"
+msgstr "политика"
+
+#: src/components/modals/FileDropzone.tsx:28
 msgid "drag and drop a file here or click"
 msgstr "перетащите файл сюда или нажмите"
 
 #. placeholder {0}: Object.values(props.options.accept) .flatMap((x) => `*${x}`) .join(", ")
-#: src/components/modals/FileDropzone.tsx:36
+#: src/components/modals/FileDropzone.tsx:34
 msgid "will accept: {0}"
 msgstr "разрешённые форматы: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:67
-msgid "manage projects"
-msgstr "панель проектов"
-
-#: src/components/modals/LocalProjectsManagerModal.tsx:78
+#: src/components/modals/LocalProjectsManagerModal.tsx:69
+#: src/components/modals/LocalProjectsManagerModal.tsx:80
 msgid "projects"
 msgstr "проекты"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:89
+#: src/components/modals/LocalProjectsManagerModal.tsx:91
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:187
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:217
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
 msgid "preparing"
 msgstr "готовимся"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:189
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "uploading the project"
 msgstr "загружаем проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:191
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:193
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:195
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "transferring"
 msgstr "переносим"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:197
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:213
+#: src/components/modals/LocalProjectsManagerModal.tsx:198
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:199
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:215
+#: src/components/modals/LocalProjectsManagerModal.tsx:200
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
 msgid "done!"
 msgstr "готово!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:201
+#: src/components/modals/LocalProjectsManagerModal.tsx:202
 msgid "an error occurred"
 msgstr "произошла ошибка"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:224
+#: src/components/modals/LocalProjectsManagerModal.tsx:225
 msgid "edit project"
 msgstr "редактировать проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:233
+#: src/components/modals/LocalProjectsManagerModal.tsx:234
 msgid "delete project"
 msgstr "удалить проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:243
+#: src/components/modals/LocalProjectsManagerModal.tsx:244
 msgid "run project"
 msgstr "запустить проект (перенос)"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:303
+#: src/components/modals/LocalProjectsManagerModal.tsx:304
 msgid "yes"
 msgstr "да"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:310
+#: src/components/modals/LocalProjectsManagerModal.tsx:311
 msgid "no"
 msgstr "нет"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:314
+#: src/components/modals/LocalProjectsManagerModal.tsx:315
 msgid "are you sure?"
 msgstr "вы уверены?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:328
+#: src/components/modals/LocalProjectsManagerModal.tsx:329
 msgid "this transfer produced no files"
 msgstr "этот перенос не выдал файлов"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:378
 #: src/components/modals/LocalProjectsManagerModal.tsx:379
+#: src/components/modals/LocalProjectsManagerModal.tsx:380
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "уведомления"
 
-#: src/components/modals/SettingsModal.tsx:41
+#: src/components/modals/SettingsModal.tsx:38
+#: src/components/modals/SettingsModal.tsx:45
 msgid "settings"
 msgstr "настройки"
 
-#: src/components/modals/SettingsModal.tsx:44
+#: src/components/modals/SettingsModal.tsx:48
 msgid "general"
 msgstr "общие"
 
-#: src/components/modals/SettingsModal.tsx:45
+#: src/components/modals/SettingsModal.tsx:49
 msgid "language"
 msgstr "язык"
 
-#: src/components/modals/SettingsModal.tsx:48
+#: src/components/modals/SettingsModal.tsx:52
 msgid "theme"
 msgstr "тема"
 
-#: src/components/modals/SettingsModal.tsx:52
+#: src/components/modals/SettingsModal.tsx:56
 msgid "editor options"
 msgstr "настройки редактора"
 
-#: src/components/modals/SettingsModal.tsx:54
+#: src/components/modals/SettingsModal.tsx:58
 msgid "show a \"what does it do?\" button near nodes"
 msgstr "показывать кнопку \"что это делает?\" возле узлов"
 
-#: src/components/modals/SettingsModal.tsx:55
+#: src/components/modals/SettingsModal.tsx:59
 msgid "will open the documentation for the selected node"
 msgstr "по нажатию открывает документацию выбранного узла"
 
-#: src/components/modals/SettingsModal.tsx:65
+#: src/components/modals/SettingsModal.tsx:69
 msgid "developer options"
 msgstr "для разработчиков"
 
-#: src/components/modals/SettingsModal.tsx:67
+#: src/components/modals/SettingsModal.tsx:71
 msgid "allow taking screenshots of nodes"
 msgstr "показывать опцию для скриншота узлов"
 
-#: src/components/modals/SettingsModal.tsx:68
+#: src/components/modals/SettingsModal.tsx:72
 msgid "used for writing documentation"
 msgstr "обычно используется для написания документации"
 
@@ -208,69 +215,69 @@ msgstr "попробовать снова"
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/FormatEditor.tsx:285
+#: src/features/format-editor/FormatEditor.tsx:281
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:300
+#: src/features/format-editor/FormatEditor.tsx:296
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:307
+#: src/features/format-editor/FormatEditor.tsx:303
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:321
+#: src/features/format-editor/FormatEditor.tsx:317
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:331
+#: src/features/format-editor/FormatEditor.tsx:327
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:337
+#: src/features/format-editor/FormatEditor.tsx:333
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:347
+#: src/features/format-editor/FormatEditor.tsx:343
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:363
+#: src/features/format-editor/FormatEditor.tsx:359
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:393
+#: src/features/format-editor/FormatEditor.tsx:389
 msgid "done"
 msgstr "далее"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:80
+#: src/features/format-editor/FormatEditorContextMenu.tsx:79
 msgid "failed to render node"
 msgstr "не удалось зарендерить узел"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:94
-#: src/features/format-editor/FormatEditorContextMenu.tsx:111
+#: src/features/format-editor/FormatEditorContextMenu.tsx:95
+#: src/features/format-editor/FormatEditorContextMenu.tsx:112
 msgid "ok"
 msgstr "ок"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:130
+#: src/features/format-editor/FormatEditorContextMenu.tsx:131
 msgid "duplicate"
 msgstr "дублировать"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:142
+#: src/features/format-editor/FormatEditorContextMenu.tsx:143
 msgid "this node cannot be removed as it's not searchable and is tied to an integration."
 msgstr "этот узел не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:150
+#: src/features/format-editor/FormatEditorContextMenu.tsx:151
 msgid "delete"
 msgstr "удалить"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:163
+#: src/features/format-editor/FormatEditorContextMenu.tsx:164
 msgid "render to clipboard"
 msgstr "зарендерить в буфер обмена"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:170
+#: src/features/format-editor/FormatEditorContextMenu.tsx:171
 msgid "render to file"
 msgstr "зарендерить в файл"
 
@@ -315,12 +322,12 @@ msgstr "сохранить"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного узла..."
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:240
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:238
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
 msgid "go back"
 msgstr "вернуться назад"
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:260
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:258
 msgid "the results are filtered based on what node and property you've selected."
 msgstr "результаты отфильтрованы на основании выбранных вами узла и его свойства."
 
@@ -947,23 +954,23 @@ msgstr "не удалось проверить статус авторизаци
 msgid "download"
 msgstr "скачать"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:219
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:218
 msgid "you were not supposed to see this."
 msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:252
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:251
 msgid "view all files"
 msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:271
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:270
 msgid "try again"
 msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:297
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:296
 msgid "return to the homepage"
 msgstr "вернуться на главную страницу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:314
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:313
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "уведомления появятся тут<0/>(если они есть)"
 
@@ -1131,60 +1138,66 @@ msgstr "группы"
 msgid "nowhere"
 msgstr "никуда"
 
-#: src/integrations/placeholder/integration.tsx:31
-#~ msgid "Nowhere"
-#~ msgstr "Никуда"
+#: src/pages/_error/+Page.tsx:16
+msgid "something went wrong. please try again later."
+msgstr "что-то пошло не так. пожалуйста, попробуйте позже."
 
-#: src/pages/PrivacyPage.tsx:15
+#: src/pages/index/+Page.tsx:26
+msgid "<0>impoexpo</0> is a <1>data transfer automation tool</1>"
+msgstr "<0>impoexpo</0> — <1>платформа автоматизации переноса данных</1>"
+
+#: src/pages/index/+Page.tsx:34
+msgid "impoexpo allows one to easily transfer data between unrelated services, without the need to copy & paste a million times."
+msgstr "impoexpo позволяет переносить данные между различными сервисами, избавляя вас от необходимости нажимать \"копировать и вставить\" по несколько миллионов раз."
+
+#: src/pages/index/+Page.tsx:57
+msgid "<0>impoexpo</0> is a <1>node-based editor</1>"
+msgstr "<0>impoexpo</0> — <1>редактор графов</1>"
+
+#: src/pages/index/+Page.tsx:63
+msgid "see how and where your data flows. we provide more than 50 nodes for transforming and filtering data."
+msgstr "наглядно контролируйте как и куда текут ваши данные. мы предоставляем более 50 узлов для преобразования и фильтрации данных."
+
+#: src/pages/index/+Page.tsx:73
+msgid "<0>impoexpo</0> is<1> secure</1><2/><3> (we think)</3>"
+msgstr "<0>impoexpo</0><1> безопасен</1><2/><3> (мы думаем)</3>"
+
+#: src/pages/index/+Page.tsx:84
+msgid "we don't store personal data on our servers, instead we encrypt it and store it client-side. this should (hopefully) prevent any leakage via malicious code execution.<0/>we would love to be proven wrong, though."
+msgstr "мы не храним ваши персональные данные на наших серверах. вместо этого, мы их шифруем и храним у вас в бразуере. это (мы надеемся) предотвратит утечку личных данных при помощи выполнения вредоносного кода.<0/>мы будем рады, если кто-нибудь докажет обратное."
+
+#: src/pages/index/+Page.tsx:97
+msgid "<0>impoexpo</0> is <1>open-source</1>"
+msgstr "<0>impoexpo</0> — <1>ПО с открытым кодом</1>"
+
+#: src/pages/index/+Page.tsx:103
+msgid "the source code for impoexpo is hosted on github and can be found <0>here</0>."
+msgstr "код impoexpo находится на github'е и может быть найден <0>здесь</0>."
+
+#: src/pages/privacy/+Page.tsx:10
 msgid "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed at<10>https://github.com/IT-FAMCS/impoexpo</10>."
 msgstr "<0>политика конфиденциальности</0><1/><2/>impoexpo — \"агрегатор сервисов\". он позволяет переносить данные между различными сервисами без необходимости делать это вручную. это означает, что вам необходимо логиниться в эти сервисы, обычно через OAuth2, чтобы impoexpo мог выполнять свою функцию.<3/><4/>impoexpo <5>может</5> получать доступ к личным данным по типу изображения вашего профиля, адрес вашей электронной почты, и информации, специфичной к конкретной интеграции, например, доступ к вашим файлам на Google Drive для интеграции Google Forms.<6/><7>никакая</7> информация не хранится на наших серверах; она зашифрована на серверах и хранится на клиенте (вашем браузере), что (мы надеемся) минимизирует риск утечки данных от вредоносного кода, исполняемого на машине пользователя.<8/><9/> разработичики impoexpo не имеют злых побуждений и собирают как можно меньше данных, чтобы impoexpo функционировал. если вы сомневаетесь или не доверяете нам, impoexpo — ПО с открытым исходным кодом, который может быть найден по ссылке<10>https://github.com/IT-FAMCS/impoexpo</10>."
 
-#: src/pages/PrivacyPage.tsx:52
-msgid "back"
-msgstr "назад"
-
-#: src/pages/TransferWizardPage.tsx:163
-#: src/pages/WelcomePage.tsx:46
+#: src/pages/wizard/+Page.tsx:160
 msgid "new data transfer"
 msgstr "новый перенос данных"
 
-#: src/pages/TransferWizardPage.tsx:170
+#: src/pages/wizard/+Page.tsx:167
 msgid "select sources"
 msgstr "выбор источников"
 
-#: src/pages/TransferWizardPage.tsx:171
+#: src/pages/wizard/+Page.tsx:168
 msgid "what should we transfer?"
 msgstr "что будем перемещать?"
 
-#: src/pages/TransferWizardPage.tsx:173
+#: src/pages/wizard/+Page.tsx:170
 msgid "formatting"
 msgstr "форматирование"
 
-#: src/pages/TransferWizardPage.tsx:173
+#: src/pages/wizard/+Page.tsx:170
 msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
-#: src/pages/TransferWizardPage.tsx:175
-msgid "transfer"
-msgstr "перенесение"
-
-#: src/pages/TransferWizardPage.tsx:176
+#: src/pages/wizard/+Page.tsx:173
 msgid "where the magic happens..."
 msgstr "где творится магия..."
-
-#: src/pages/WelcomePage.tsx:28
-msgid "welcome to <0>impoexpo</0>!"
-msgstr "добро пожаловать в <0>impoexpo</0>!"
-
-#: src/pages/WelcomePage.tsx:55
-#: src/pages/WelcomePage.tsx:62
-msgid "about the project"
-msgstr "о проекте"
-
-#: src/pages/WelcomePage.tsx:66
-msgid "impoexpo's goal is to simplify the lives of people who regularly work with large amount of data, while also using several services at the same time."
-msgstr "impoexpo стремится упростить жизнь людей, кто часто работает с большим объёмом данных, в то же время используя несколько сервисов."
-
-#: src/pages/WelcomePage.tsx:73
-msgid "impoexpo is open-source and its code can be found <0>here</0>."
-msgstr "impoexpo является открытым ПО, и его код можно найти <0>здесь</0>."

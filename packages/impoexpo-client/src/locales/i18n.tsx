@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import { i18n } from "@lingui/core";
 
 export const DEFAULT_LOCALE = "en";
 
@@ -27,17 +26,3 @@ export const locales: LocaleMetadata[] = [
 		oramaMetadata: await import("@orama/stemmers/english"),
 	},
 ];
-
-export function getCatalogs() {
-	const catalogs: Record<string, unknown> = {};
-	for (const locale of locales)
-		catalogs[locale.id] = import(/* @vite-ignore */ `./${locale.id}.po`);
-	return catalogs;
-}
-
-export async function activateLocale(localeId: string) {
-	if (i18n.locale !== localeId) {
-		const { messages } = await import(/* @vite-ignore */ `./${localeId}.po`);
-		i18n.loadAndActivate({ locale: localeId, messages });
-	}
-}

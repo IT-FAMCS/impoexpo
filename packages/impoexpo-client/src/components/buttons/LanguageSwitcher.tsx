@@ -1,4 +1,4 @@
-import { activateLocale, locales } from "@/locales/i18n";
+import { locales } from "@/locales/i18n";
 import {
 	Button,
 	Dropdown,
@@ -8,8 +8,10 @@ import {
 } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { useEffect, useMemo } from "react";
+import { usePageContext } from "vike-react/usePageContext";
 
 export default function LanguageSwitcher() {
+	const ctx = usePageContext();
 	const { i18n } = useLingui();
 	const localeInformation = useMemo(
 		// biome-ignore lint/style/noNonNullAssertion: pray
@@ -33,7 +35,10 @@ export default function LanguageSwitcher() {
 			>
 				{locales.map((locale) => (
 					<DropdownItem
-						onPress={async () => await activateLocale(locale.id)}
+						onPress={() => {
+							i18n.activate(locale.id);
+							if (ctx.urlPathname === "/") window.location.reload();
+						}}
 						key={locale.id}
 						startContent={locale.icon(18)}
 					>

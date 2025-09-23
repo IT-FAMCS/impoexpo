@@ -319,7 +319,7 @@ export default function TransferProgressCard() {
 						</p>
 					</div>
 				) : (
-					<ScrollShadow className="max-h-full flex flex-col gap-2">
+					<ScrollShadow className="flex flex-col gap-2">
 						<AnimatePresence>
 							{Object.entries(notifications).map((p) => (
 								<AnimatedAlert
