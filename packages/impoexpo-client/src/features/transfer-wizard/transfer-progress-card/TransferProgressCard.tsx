@@ -285,7 +285,7 @@ export default function TransferProgressCard() {
 			>
 				<Button
 					color="primary"
-					className="w-full h-full text-3xl flex flex-col gap-0 text-wrap"
+					className="w-full h-full text-3xl flex flex-col gap-0 whitespace-pre-wrap"
 					onPress={async () => {
 						await clearStatesFromDatabase();
 						resetStores(WIZARD_STORE_CATEGORY);

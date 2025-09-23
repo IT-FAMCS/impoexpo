@@ -968,7 +968,7 @@ msgstr "попробовать снова"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:296
 msgid "return to the homepage"
-msgstr "вернуться на главную страницу"
+msgstr "на главную страницу"
 
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:313
 msgid "notifications will appear here<0/>(if there are any)"
