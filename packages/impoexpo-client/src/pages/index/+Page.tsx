@@ -50,7 +50,7 @@ const slogans: Slogan[] = [
 				/>
 			</div>
 		),
-		waitSeconds: 10,
+		waitSeconds: 5,
 	},
 	{
 		title: (
@@ -68,7 +68,7 @@ const slogans: Slogan[] = [
 			</Trans>
 		),
 		graphic: <img src={NodesImage} alt="an example of a node graph" />,
-		waitSeconds: 10,
+		waitSeconds: 5,
 	},
 	{
 		title: (
@@ -76,7 +76,7 @@ const slogans: Slogan[] = [
 				<b>impoexpo</b> is
 				<span className="italic font-pt-serif tracking-tight"> secure</span>
 				<br />
-				<span className="italic font-pt-serif tracking-tight text-4xl block">
+				<span className="italic font-pt-serif tracking-tight text-3xl mt-4 block">
 					{" "}
 					(we think)
 				</span>
@@ -119,7 +119,7 @@ const slogans: Slogan[] = [
 		graphic: (
 			<img
 				src={GithubImage}
-				className="w-[50%] dark:invert"
+				className="w-[75%] invert dark:invert-0"
 				alt="github logo"
 			/>
 		),
@@ -146,8 +146,9 @@ export default function Index() {
 			);
 
 			SplitText.create(titleRef.current, {
-				type: "words",
+				type: "words,lines",
 				mask: "words",
+				linesClass: "not-first:-mt-4",
 				onSplit: async (titleSelf) => {
 					gsap.set(titleSelf.words, { yPercent: 110 });
 					await imagesLoaded;
@@ -223,14 +224,18 @@ export default function Index() {
 			);
 		};
 
-		queueMicrotask(animate);
+		if (document.fonts.status === "loaded") queueMicrotask(animate);
+		else
+			document.fonts.addEventListener("loadingdone", () =>
+				queueMicrotask(animate),
+			);
 	}, [sloganIndex]);
 
 	return (
 		<div className="flex items-center justify-center w-full h-full">
 			<div className="flex flex-row items-center justify-center gap-10 w-[80%] h-[80%]">
 				<div key={sloganIndex} className="flex flex-col gap-4 flex-1">
-					<p className="text-6xl leading-16" ref={titleRef}>
+					<p className="text-6xl leading-20" ref={titleRef}>
 						{slogans[sloganIndex].title}
 					</p>
 					<p className="text-2xl" ref={descriptionRef}>
@@ -239,7 +244,7 @@ export default function Index() {
 				</div>
 				<div className="flex-1 h-full">
 					<div
-						className="w-full h-full flex justify-center items-center"
+						className="w-full h-full flex justify-center items-center opacity-0"
 						ref={graphicRef}
 					>
 						{slogans[sloganIndex].graphic}

@@ -2,7 +2,9 @@
 	"name": "impoexpo-monorepo",
 	"version": "0.0.0",
 	"private": true,
-	"workspaces": ["packages/*"],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"dev": "concurrently --kill-others --raw --handle-input --names server,client \"pnpm run --filter @impoexpo/server start-live\" \"pnpm run --filter @impoexpo/client dev\"",
 		"preview": "pnpm run --filter @impoexpo/client build && concurrently --kill-others --raw --handle-input \"pnpm run --filter @impoexpo/server start\" \"pnpm run --filter @impoexpo/client preview\"",

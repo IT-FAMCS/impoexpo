@@ -1156,7 +1156,7 @@ msgstr "<0>impoexpo</0> — <1>редактор графов</1>"
 
 #: src/pages/index/+Page.tsx:63
 msgid "see how and where your data flows. we provide more than 50 nodes for transforming and filtering data."
-msgstr "наглядно контролируйте как и куда текут ваши данные. мы предоставляем более 50 узлов для преобразования и фильтрации данных."
+msgstr "наглядно управляйте как и куда текут ваши данные. мы предлагаем более 50 узлов для преобразования и фильтрации данных."
 
 #: src/pages/index/+Page.tsx:73
 msgid "<0>impoexpo</0> is<1> secure</1><2/><3> (we think)</3>"
@@ -1164,11 +1164,11 @@ msgstr "<0>impoexpo</0><1> безопасен</1><2/><3> (мы думаем)</3>
 
 #: src/pages/index/+Page.tsx:84
 msgid "we don't store personal data on our servers, instead we encrypt it and store it client-side. this should (hopefully) prevent any leakage via malicious code execution.<0/>we would love to be proven wrong, though."
-msgstr "мы не храним ваши персональные данные на наших серверах. вместо этого, мы их шифруем и храним у вас в бразуере. это (мы надеемся) предотвратит утечку личных данных при помощи выполнения вредоносного кода.<0/>мы будем рады, если кто-нибудь докажет обратное."
+msgstr "мы не храним ваши персональные данные на наших серверах. вместо этого, мы их шифруем и храним у вас в браузере. мы надеемся, что это предотвратит возможную утечку личных данных из-за выполнения вредоносного кода на машине пользователя.<0/>мы будем рады, если кто-нибудь докажет обратное."
 
 #: src/pages/index/+Page.tsx:97
 msgid "<0>impoexpo</0> is <1>open-source</1>"
-msgstr "<0>impoexpo</0> — <1>ПО с открытым кодом</1>"
+msgstr "<0>impoexpo</0> — <1>ПО с открытым исходным кодом</1>"
 
 #: src/pages/index/+Page.tsx:103
 msgid "the source code for impoexpo is hosted on github and can be found <0>here</0>."
