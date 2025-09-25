@@ -12,11 +12,11 @@ export default function BottomPanel() {
 	return (
 		<Card
 			as="nav"
-			className="w-full h-20 shrink-0 flex justify-center items-center"
+			className="flex items-center justify-center w-full h-20 shrink-0"
 			shadow="sm"
 		>
 			<CardBody className="flex flex-row items-center justify-between h-full px-6 overflow-hidden">
-				<div className="flex flex-row gap-4 items-center">
+				<div className="flex flex-row items-center gap-4">
 					<Button
 						onPress={() => navigate("/")}
 						variant="light"
@@ -34,14 +34,14 @@ export default function BottomPanel() {
 							</Link>
 						}
 					>
-						<Code className="flex flex-row items-center justify-center gap-2">
+						<Code className="flex-row items-center justify-center hidden gap-2 xl:flex">
 							v{import.meta.env.VITE_APP_VERSION}{" "}
 							<Icon icon="mdi:circle" width={4} />
 							{import.meta.env.VITE_APP_HASH}
 						</Code>
 					</Tooltip>
 				</div>
-				<div className="flex flex-row gap-4 items-center">
+				<div className="flex-row items-center hidden gap-4 xl:flex">
 					<Button
 						variant={ctx.urlPathname === "/wizard" ? "flat" : "light"}
 						color={ctx.urlPathname === "/wizard" ? "primary" : "default"}
@@ -56,7 +56,7 @@ export default function BottomPanel() {
 					</Button>
 					<LocalProjectsManagerModal />
 				</div>
-				<div className="flex flex-row gap-4 items-center">
+				<div className="flex-row items-center hidden gap-4 xl:flex">
 					<SettingsModal />
 					<Button
 						variant="light"

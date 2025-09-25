@@ -11,7 +11,7 @@ export default function Layout(props: { children?: React.ReactNode }) {
 	return (
 		<React.StrictMode>
 			<Provider>
-				<div className="flex flex-col justify-between h-screen gap-4 p-5 [&>*]:w-full">
+				<div className="flex flex-col justify-between h-screen gap-4 p-5 box-border [&>*]:w-full">
 					{props.children}
 					<BottomPanel />
 				</div>

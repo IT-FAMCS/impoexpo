@@ -25,7 +25,7 @@ const slogans: Slogan[] = [
 		title: (
 			<Trans>
 				<b>impoexpo</b> is a{" "}
-				<span className="italic font-pt-serif tracking-tight">
+				<span className="italic tracking-tight font-pt-serif">
 					data transfer automation tool
 				</span>
 			</Trans>
@@ -37,7 +37,7 @@ const slogans: Slogan[] = [
 			</Trans>
 		),
 		graphic: (
-			<div className="relative w-full h-full flex justify-center items-center">
+			<div className="relative flex items-center justify-center w-full h-full pt-4 xl:pt-0">
 				<img
 					src={IntegrationsImage}
 					className="absolute"
@@ -56,7 +56,7 @@ const slogans: Slogan[] = [
 		title: (
 			<Trans>
 				<b>impoexpo</b> is a{" "}
-				<span className="italic font-pt-serif tracking-tight">
+				<span className="italic tracking-tight font-pt-serif">
 					node-based editor
 				</span>
 			</Trans>
@@ -67,16 +67,22 @@ const slogans: Slogan[] = [
 				transforming and filtering data.
 			</Trans>
 		),
-		graphic: <img src={NodesImage} alt="an example of a node graph" />,
+		graphic: (
+			<img
+				src={NodesImage}
+				className="w-full h-full"
+				alt="an example of a node graph"
+			/>
+		),
 		waitSeconds: 5,
 	},
 	{
 		title: (
 			<Trans>
 				<b>impoexpo</b> is
-				<span className="italic font-pt-serif tracking-tight"> secure</span>
+				<span className="italic tracking-tight font-pt-serif"> secure</span>
 				<br />
-				<span className="italic font-pt-serif tracking-tight text-3xl mt-4 block">
+				<span className="block mt-4 text-3xl italic tracking-tight font-pt-serif">
 					{" "}
 					(we think)
 				</span>
@@ -91,14 +97,20 @@ const slogans: Slogan[] = [
 				we would love to be proven wrong, though.
 			</Trans>
 		),
-		graphic: <img src={LockImage} className="w-[75%]" alt="lock graphic" />,
+		graphic: (
+			<img
+				src={LockImage}
+				className="w-full h-full scale-75"
+				alt="lock graphic"
+			/>
+		),
 		waitSeconds: 10,
 	},
 	{
 		title: (
 			<Trans>
 				<b>impoexpo</b> is{" "}
-				<span className="italic font-pt-serif tracking-tight">open-source</span>
+				<span className="italic tracking-tight font-pt-serif">open-source</span>
 			</Trans>
 		),
 		description: (
@@ -119,7 +131,7 @@ const slogans: Slogan[] = [
 		graphic: (
 			<img
 				src={GithubImage}
-				className="w-[75%] invert dark:invert-0"
+				className="w-full h-full scale-75 invert dark:invert-0"
 				alt="github logo"
 			/>
 		),
@@ -232,19 +244,22 @@ export default function Index() {
 	}, [sloganIndex]);
 
 	return (
-		<div className="flex items-center justify-center w-full h-full">
-			<div className="flex flex-row items-center justify-center gap-10 w-[80%] h-[80%]">
-				<div key={sloganIndex} className="flex flex-col gap-4 flex-1">
-					<p className="text-6xl leading-20" ref={titleRef}>
+		<div className="flex items-center justify-center w-full h-[calc(100vh_-_8.5rem)]">
+			<div className="flex flex-col-reverse h-full xl:flex-row  items-center justify-center gap-10 xl:w-[80%] xl:h-[80%]">
+				<div key={sloganIndex} className="flex flex-col gap-4 xl:flex-1">
+					<p
+						className="text-4xl leading-14 xl:text-6xl xl:leading-20"
+						ref={titleRef}
+					>
 						{slogans[sloganIndex].title}
 					</p>
-					<p className="text-2xl" ref={descriptionRef}>
+					<p className="text-xl xl:text-2xl" ref={descriptionRef}>
 						{slogans[sloganIndex].description}
 					</p>
 				</div>
-				<div className="flex-1 h-full">
+				<div className="max-h-[50%] xl:max-h-full w-full h-full xl:flex-1 [&_img]:object-contain">
 					<div
-						className="w-full h-full flex justify-center items-center opacity-0"
+						className="flex items-center justify-center w-full h-full opacity-0"
 						ref={graphicRef}
 					>
 						{slogans[sloganIndex].graphic}
