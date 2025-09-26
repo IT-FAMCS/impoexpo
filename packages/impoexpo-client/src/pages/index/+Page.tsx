@@ -50,7 +50,7 @@ const slogans: Slogan[] = [
 				/>
 			</div>
 		),
-		waitSeconds: 5000,
+		waitSeconds: 5,
 	},
 	{
 		title: (
@@ -244,7 +244,7 @@ export default function Index() {
 			<div className="flex flex-col-reverse xl:flex-row h-full items-center justify-evenly xl:justify-center gap-4 xl:gap-10 xl:w-[80%] xl:h-[80%]">
 				<div
 					key={sloganIndex}
-					className="h-full min-h-0 flex flex-col gap-4 xl:flex-1"
+					className="h-full min-h-0 justify-center flex flex-col gap-4 xl:flex-1"
 				>
 					<p
 						className="text-4xl leading-14 xl:text-6xl xl:leading-20"
@@ -252,7 +252,7 @@ export default function Index() {
 					>
 						{slogans[sloganIndex].title}
 					</p>
-					<ScrollShadow className="grow min-h-0">
+					<ScrollShadow className="grow xl:grow-0 min-h-0 scrollbar-hide">
 						<p className="text-xl xl:text-2xl" ref={descriptionRef}>
 							{slogans[sloganIndex].description}
 						</p>
