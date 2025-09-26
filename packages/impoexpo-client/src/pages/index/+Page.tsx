@@ -117,7 +117,7 @@ const slogans: Slogan[] = [
 			<Trans>
 				the source code for impoexpo is hosted on github and can be found{" "}
 				<Link
-					className="text-2xl underline"
+					className="text-xl underline xl:text-2xl"
 					color="foreground"
 					href="https://github.com/IT-FAMCS/impoexpo"
 					isExternal
