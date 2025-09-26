@@ -20,7 +20,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useLingui, Trans } from "@lingui/react/macro";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import {
 	getAllLocalProjects,
 	removeLocalProject,
@@ -38,7 +38,9 @@ import { localizableString } from "@/features/format-editor/nodes/renderable-nod
 import { AnimatePresence, motion } from "motion/react";
 import { navigate } from "vike/client/router";
 
-export default function LocalProjectsManagerModal() {
+export default function LocalProjectsManagerModal(props: {
+	trigger?: (onOpen: () => void) => ReactNode;
+}) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
 		id: "LOCAL_PROJECTS_MANAGER_MODAL",
 	});
@@ -59,15 +61,7 @@ export default function LocalProjectsManagerModal() {
 
 	return (
 		<>
-			<Button
-				variant="light"
-				size="sm"
-				className="flex-col gap-1 py-2 text-tiny h-fit"
-				onPress={onOpen}
-				startContent={<Icon width={24} icon="mdi:calendar" />}
-			>
-				<Trans>projects</Trans>
-			</Button>
+			{props.trigger?.(onOpen)}
 			<Modal
 				scrollBehavior="inside"
 				isOpen={isOpen}
@@ -79,15 +73,15 @@ export default function LocalProjectsManagerModal() {
 							<ModalHeader className="flex flex-col gap-1">
 								<Trans>projects</Trans>
 							</ModalHeader>
-							<ModalBody className="flex flex-col justify-center items-center gap-4">
+							<ModalBody className="flex flex-col items-center justify-center gap-4">
 								{Object.keys(projects).length === 0 ? (
 									<>
 										<Icon
 											width={48}
-											className="text-foreground-500 -mb-2"
+											className="-mb-2 text-foreground-500"
 											icon="mdi:emoticon-sad-outline"
 										/>
-										<p className="text-foreground-500 text-center">
+										<p className="text-center text-foreground-500">
 											<Trans>
 												you currently have no saved projects.
 												<br />
@@ -98,7 +92,7 @@ export default function LocalProjectsManagerModal() {
 								) : (
 									<ScrollShadow className="w-full p-1 max-h-[75vh] no-scrollbar flex flex-col gap-4">
 										{Object.entries(projects).map((pair) => (
-											<div key={pair[0]} className="w-full flex flex-col">
+											<div key={pair[0]} className="flex flex-col w-full">
 												{pair[0] !== "" && (
 													<DividerWithText>{pair[0]}</DividerWithText>
 												)}
@@ -205,18 +199,18 @@ function LocalProjectCard(props: {
 
 	return (
 		<Card shadow="sm" className={clsx("w-full", props.className)}>
-			<CardBody className="py-4 px-4 flex flex-col gap-2">
-				<div className="flex flex-row gap-2 items-center">
+			<CardBody className="flex flex-col gap-2 px-4 py-4">
+				<div className="flex flex-row items-center gap-2">
 					<Card>
 						<CardBody className="p-2">
 							<Icon width={24} icon="mdi:swap-horizontal-bold" />
 						</CardBody>
 					</Card>
 					<div className="flex flex-col gap-2">
-						<p className="text-ellipsis overflow-hidden text-nowrap">
+						<p className="overflow-hidden text-ellipsis text-nowrap">
 							{props.project.name}
 						</p>
-						<p className="text-tiny text-foreground-300 -mt-2">
+						<p className="-mt-2 text-tiny text-foreground-300">
 							id: {props.project.id}
 						</p>
 					</div>
@@ -266,7 +260,7 @@ function LocalProjectCard(props: {
 						/>
 					</Tooltip>
 					{handler ? (
-						<p className="ml-1 text-foreground-500 text-sm">{stateString}</p>
+						<p className="ml-1 text-sm text-foreground-500">{stateString}</p>
 					) : null}
 				</div>
 				<AnimatePresence>
@@ -325,7 +319,7 @@ function LocalProjectCard(props: {
 							>
 								<Card>
 									<CardBody>
-										<p className="text-foreground-500 text-center">
+										<p className="text-center text-foreground-500">
 											<Trans>this transfer produced no files</Trans>
 										</p>
 									</CardBody>
@@ -374,7 +368,7 @@ function LocalProjectCard(props: {
 						>
 							<Accordion itemClasses={{ trigger: "py-0" }} className="px-1">
 								<AccordionItem
-									className="ring-2 ring-foreground-100 rounded-small p-2 px-4 w-full"
+									className="w-full p-2 px-4 ring-2 ring-foreground-100 rounded-small"
 									key="notifications"
 									aria-label={t`notifications`}
 									title={t`notifications`}

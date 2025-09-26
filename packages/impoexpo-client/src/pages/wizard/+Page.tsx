@@ -133,7 +133,7 @@ export default function Wizard() {
 	};
 
 	return (
-		<div className="flex flex-row items-center justify-start w-full min-h-[calc(100vh_-_8.5rem)] gap-4">
+		<div className="flex flex-row items-center justify-start w-full gap-4">
 			<AnimatedCard
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}

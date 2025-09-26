@@ -5,11 +5,11 @@ import { motion } from "motion/react";
 const AnimatedCard = motion.create(Card);
 export default function Privacy() {
 	return (
-		<div className="flex flex-col justify-center items-center w-full h-full gap-4">
+		<div className="flex flex-col items-center justify-center w-full h-full gap-4">
 			<AnimatedCard
 				initial={{
 					opacity: 0,
-					y: 15,
+					y: 10,
 				}}
 				animate={{
 					opacity: 1,
@@ -20,7 +20,7 @@ export default function Privacy() {
 					ease: [0.83, 0, 0.17, 1],
 				}}
 			>
-				<CardBody className="max-w-[30vw]">
+				<CardBody className="xl:max-w-[30vw]">
 					<p>
 						<Trans>
 							<span className="text-2xl font-bold">privacy policy</span>
@@ -45,9 +45,13 @@ export default function Privacy() {
 							<br /> the developers have no malicious intent with your data and
 							collect as little information as possible so that impoexpo can
 							work. if you're unsure or don't trust us, impoexpo is open-source
-							software and it's source code can be accessed at
-							<Link showAnchorIcon href="https://github.com/IT-FAMCS/impoexpo">
-								https://github.com/IT-FAMCS/impoexpo
+							software and it's source code can be accessed{" "}
+							<Link
+								isExternal
+								showAnchorIcon
+								href="https://github.com/IT-FAMCS/impoexpo"
+							>
+								here
 							</Link>
 							.
 						</Trans>

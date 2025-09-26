@@ -34,18 +34,55 @@ msgstr "failed to upload project files"
 msgid "failed to upload the project"
 msgstr "failed to upload the project"
 
-#: src/components/buttons/BottomPanel.tsx:55
-#: src/pages/wizard/+Page.tsx:172
+#: src/components/buttons/BottomPanel.tsx:69
+#: src/components/buttons/BottomPanel.tsx:158
+#: src/pages/wizard/+Page.tsx:166
 msgid "transfer"
 msgstr "transfer"
 
-#: src/components/buttons/BottomPanel.tsx:71
+#: src/components/buttons/BottomPanel.tsx:80
+#: src/components/buttons/BottomPanel.tsx:176
+#: src/components/modals/LocalProjectsManagerModal.tsx:74
+msgid "projects"
+msgstr "projects"
+
+#: src/components/buttons/BottomPanel.tsx:96
+#: src/components/buttons/BottomPanel.tsx:195
+#: src/components/modals/SettingsModal.tsx:38
+msgid "settings"
+msgstr "settings"
+
+#: src/components/buttons/BottomPanel.tsx:110
+#: src/components/buttons/BottomPanel.tsx:214
 msgid "documentation"
 msgstr "documentation"
 
-#: src/components/buttons/BottomPanel.tsx:81
+#: src/components/buttons/BottomPanel.tsx:120
+#: src/components/buttons/BottomPanel.tsx:232
 msgid "legal"
 msgstr "legal"
+
+#: src/components/external/MobileWarningCard.tsx:63
+msgid "it seems like you're viewing impoexpo on a mobile device."
+msgstr "it seems like you're viewing impoexpo on a mobile device."
+
+#: src/components/external/MobileWarningCard.tsx:68
+msgid "this page is currently not optimized for mobile devices (including tablets).<0/>we recommend using impoexpo with a 16:9 monitor."
+msgstr "this page is currently not optimized for mobile devices (including tablets).<0/>we recommend using impoexpo with a 16:9 monitor."
+
+#: src/components/external/MobileWarningCard.tsx:76
+msgid "do you wish to continue?"
+msgstr "do you wish to continue?"
+
+#: src/components/external/MobileWarningCard.tsx:83
+#: src/components/modals/LocalProjectsManagerModal.tsx:298
+msgid "yes"
+msgstr "yes"
+
+#: src/components/external/MobileWarningCard.tsx:86
+#: src/components/modals/LocalProjectsManagerModal.tsx:305
+msgid "no"
+msgstr "no"
 
 #: src/components/modals/FileDropzone.tsx:28
 msgid "drag and drop a file here or click"
@@ -56,126 +93,108 @@ msgstr "drag and drop a file here or click"
 msgid "will accept: {0}"
 msgstr "will accept: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:69
-#: src/components/modals/LocalProjectsManagerModal.tsx:80
-msgid "projects"
-msgstr "projects"
-
-#: src/components/modals/LocalProjectsManagerModal.tsx:91
+#: src/components/modals/LocalProjectsManagerModal.tsx:85
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "you currently have no saved projects.<0/>go create one!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/components/modals/LocalProjectsManagerModal.tsx:182
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
 msgid "preparing"
 msgstr "preparing"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/components/modals/LocalProjectsManagerModal.tsx:184
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "uploading the project"
 msgstr "uploading the project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "uploading project files"
 msgstr "uploading project files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "connecting to the server"
 msgstr "connecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "transferring"
 msgstr "transferring"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:198
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "reconnecting to the server"
 msgstr "reconnecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:200
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
 msgid "done!"
 msgstr "done!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:202
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
 msgid "an error occurred"
 msgstr "an error occurred"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:225
+#: src/components/modals/LocalProjectsManagerModal.tsx:219
 msgid "edit project"
 msgstr "edit project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:234
+#: src/components/modals/LocalProjectsManagerModal.tsx:228
 msgid "delete project"
 msgstr "delete project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:244
+#: src/components/modals/LocalProjectsManagerModal.tsx:238
 msgid "run project"
 msgstr "run project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:304
-msgid "yes"
-msgstr "yes"
-
-#: src/components/modals/LocalProjectsManagerModal.tsx:311
-msgid "no"
-msgstr "no"
-
-#: src/components/modals/LocalProjectsManagerModal.tsx:315
+#: src/components/modals/LocalProjectsManagerModal.tsx:309
 msgid "are you sure?"
 msgstr "are you sure?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:329
+#: src/components/modals/LocalProjectsManagerModal.tsx:323
 msgid "this transfer produced no files"
 msgstr "this transfer produced no files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:379
-#: src/components/modals/LocalProjectsManagerModal.tsx:380
+#: src/components/modals/LocalProjectsManagerModal.tsx:373
+#: src/components/modals/LocalProjectsManagerModal.tsx:374
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "notifications"
 
-#: src/components/modals/SettingsModal.tsx:38
-#: src/components/modals/SettingsModal.tsx:45
-msgid "settings"
-msgstr "settings"
-
-#: src/components/modals/SettingsModal.tsx:48
+#: src/components/modals/SettingsModal.tsx:41
 msgid "general"
 msgstr "general"
 
-#: src/components/modals/SettingsModal.tsx:49
+#: src/components/modals/SettingsModal.tsx:42
 msgid "language"
 msgstr "language"
 
-#: src/components/modals/SettingsModal.tsx:52
+#: src/components/modals/SettingsModal.tsx:45
 msgid "theme"
 msgstr "theme"
 
-#: src/components/modals/SettingsModal.tsx:56
+#: src/components/modals/SettingsModal.tsx:49
 msgid "editor options"
 msgstr "editor options"
 
-#: src/components/modals/SettingsModal.tsx:58
+#: src/components/modals/SettingsModal.tsx:51
 msgid "show a \"what does it do?\" button near nodes"
 msgstr "show a \"what does it do?\" button near nodes"
 
-#: src/components/modals/SettingsModal.tsx:59
+#: src/components/modals/SettingsModal.tsx:52
 msgid "will open the documentation for the selected node"
 msgstr "will open the documentation for the selected node"
 
-#: src/components/modals/SettingsModal.tsx:69
+#: src/components/modals/SettingsModal.tsx:62
 msgid "developer options"
 msgstr "developer options"
 
-#: src/components/modals/SettingsModal.tsx:71
+#: src/components/modals/SettingsModal.tsx:64
 msgid "allow taking screenshots of nodes"
 msgstr "allow taking screenshots of nodes"
 
-#: src/components/modals/SettingsModal.tsx:72
+#: src/components/modals/SettingsModal.tsx:65
 msgid "used for writing documentation"
 msgstr "used for writing documentation"
 
@@ -215,40 +234,40 @@ msgstr "retry"
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:281
+#: src/features/format-editor/FormatEditor.tsx:283
 msgid "save project..."
 msgstr "save project..."
 
-#: src/features/format-editor/FormatEditor.tsx:296
+#: src/features/format-editor/FormatEditor.tsx:298
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "successfully saved the project"
 
-#: src/features/format-editor/FormatEditor.tsx:303
+#: src/features/format-editor/FormatEditor.tsx:305
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "failed to save the project (did you mess with the database?)"
 
-#: src/features/format-editor/FormatEditor.tsx:317
+#: src/features/format-editor/FormatEditor.tsx:319
 msgid "save project as..."
 msgstr "save project as..."
 
-#: src/features/format-editor/FormatEditor.tsx:327
+#: src/features/format-editor/FormatEditor.tsx:329
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:333
+#: src/features/format-editor/FormatEditor.tsx:335
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:343
+#: src/features/format-editor/FormatEditor.tsx:345
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:359
+#: src/features/format-editor/FormatEditor.tsx:361
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:389
+#: src/features/format-editor/FormatEditor.tsx:391
 msgid "done"
 msgstr "done"
 
@@ -1154,50 +1173,50 @@ msgstr "impoexpo allows one to easily transfer data between unrelated services, 
 msgid "<0>impoexpo</0> is a <1>node-based editor</1>"
 msgstr "<0>impoexpo</0> is a <1>node-based editor</1>"
 
-#: src/pages/index/+Page.tsx:63
+#: src/pages/index/+Page.tsx:65
 msgid "see how and where your data flows. we provide more than 50 nodes for transforming and filtering data."
 msgstr "see how and where your data flows. we provide more than 50 nodes for transforming and filtering data."
 
-#: src/pages/index/+Page.tsx:73
+#: src/pages/index/+Page.tsx:81
 msgid "<0>impoexpo</0> is<1> secure</1><2/><3> (we think)</3>"
 msgstr "<0>impoexpo</0> is<1> secure</1><2/><3> (we think)</3>"
 
-#: src/pages/index/+Page.tsx:84
+#: src/pages/index/+Page.tsx:92
 msgid "we don't store personal data on our servers, instead we encrypt it and store it client-side. this should (hopefully) prevent any leakage via malicious code execution.<0/>we would love to be proven wrong, though."
 msgstr "we don't store personal data on our servers, instead we encrypt it and store it client-side. this should (hopefully) prevent any leakage via malicious code execution.<0/>we would love to be proven wrong, though."
 
-#: src/pages/index/+Page.tsx:97
+#: src/pages/index/+Page.tsx:111
 msgid "<0>impoexpo</0> is <1>open-source</1>"
 msgstr "<0>impoexpo</0> is <1>open-source</1>"
 
-#: src/pages/index/+Page.tsx:103
+#: src/pages/index/+Page.tsx:117
 msgid "the source code for impoexpo is hosted on github and can be found <0>here</0>."
 msgstr "the source code for impoexpo is hosted on github and can be found <0>here</0>."
 
-#: src/pages/privacy/+Page.tsx:10
-msgid "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed at<10>https://github.com/IT-FAMCS/impoexpo</10>."
-msgstr "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed at<10>https://github.com/IT-FAMCS/impoexpo</10>."
+#: src/pages/privacy/+Page.tsx:25
+msgid "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed <10>here</10>."
+msgstr "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed <10>here</10>."
 
-#: src/pages/wizard/+Page.tsx:160
+#: src/pages/wizard/+Page.tsx:154
 msgid "new data transfer"
 msgstr "new data transfer"
 
-#: src/pages/wizard/+Page.tsx:167
+#: src/pages/wizard/+Page.tsx:161
 msgid "select sources"
 msgstr "select sources"
 
-#: src/pages/wizard/+Page.tsx:168
+#: src/pages/wizard/+Page.tsx:162
 msgid "what should we transfer?"
 msgstr "what should we transfer?"
 
-#: src/pages/wizard/+Page.tsx:170
+#: src/pages/wizard/+Page.tsx:164
 msgid "formatting"
 msgstr "formatting"
 
-#: src/pages/wizard/+Page.tsx:170
+#: src/pages/wizard/+Page.tsx:164
 msgid "how should we transfer?"
 msgstr "how should we transfer?"
 
-#: src/pages/wizard/+Page.tsx:173
+#: src/pages/wizard/+Page.tsx:167
 msgid "where the magic happens..."
 msgstr "where the magic happens..."

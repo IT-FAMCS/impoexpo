@@ -18,7 +18,9 @@ import ThemeSwitcher from "../buttons/ThemeSwitcher";
 import { useSettingsStore } from "@/stores/settings";
 import DividerWithText from "../external/DividerWithText";
 
-export default function SettingsModal() {
+export default function SettingsModal(props: {
+	trigger?: (onOpen: () => void) => ReactNode;
+}) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure({
 		id: "SETTINGS_MODAL",
 	});
@@ -27,16 +29,7 @@ export default function SettingsModal() {
 
 	return (
 		<>
-			<Button
-				variant="light"
-				color="default"
-				size="sm"
-				className="flex-col gap-1 py-2 text-tiny h-fit"
-				startContent={<Icon width={24} icon="mdi:cog" />}
-				onPress={onOpen}
-			>
-				<Trans>settings</Trans>
-			</Button>
+			{props.trigger?.(onOpen)}
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					{() => (
@@ -103,7 +96,7 @@ function SettingsModalItem(
 ) {
 	return (
 		<Card>
-			<CardBody className="py-2 px-4 gap-4 flex flex-row justify-between items-center">
+			<CardBody className="flex flex-row items-center justify-between gap-4 px-4 py-2">
 				<div>
 					<p>{props.title}</p>
 					<p className="text-sm text-foreground-500">{props.description}</p>
