@@ -9,7 +9,7 @@ export default function Privacy() {
 			<AnimatedCard
 				initial={{
 					opacity: 0,
-					y: 15,
+					y: 10,
 				}}
 				animate={{
 					opacity: 1,
@@ -45,9 +45,13 @@ export default function Privacy() {
 							<br /> the developers have no malicious intent with your data and
 							collect as little information as possible so that impoexpo can
 							work. if you're unsure or don't trust us, impoexpo is open-source
-							software and it's source code can be accessed at
-							<Link showAnchorIcon href="https://github.com/IT-FAMCS/impoexpo">
-								https://github.com/IT-FAMCS/impoexpo
+							software and it's source code can be accessed{" "}
+							<Link
+								isExternal
+								showAnchorIcon
+								href="https://github.com/IT-FAMCS/impoexpo"
+							>
+								here
 							</Link>
 							.
 						</Trans>

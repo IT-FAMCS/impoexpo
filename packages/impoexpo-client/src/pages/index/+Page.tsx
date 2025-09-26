@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { type ReactNode, useRef, useState } from "react";
-import { Link } from "@heroui/react";
+import { Link, ScrollShadow } from "@heroui/react";
 gsap.registerPlugin(SplitText, useGSAP);
 
 import LockImage from "./assets/lock.avif";
@@ -40,17 +40,17 @@ const slogans: Slogan[] = [
 			<div className="relative flex items-center justify-center w-full h-full pt-4 xl:pt-0">
 				<img
 					src={IntegrationsImage}
-					className="absolute"
+					className="absolute h-full"
 					alt="integrations example"
 				/>
 				<img
 					src={IntegrationsArrowsImage}
-					className="absolute dark:invert"
+					className="absolute h-full dark:invert"
 					alt="integrations example"
 				/>
 			</div>
 		),
-		waitSeconds: 5,
+		waitSeconds: 5000,
 	},
 	{
 		title: (
@@ -236,26 +236,27 @@ export default function Index() {
 			);
 		};
 
-		if (document.fonts.status === "loaded") queueMicrotask(animate);
-		else
-			document.fonts.addEventListener("loadingdone", () =>
-				queueMicrotask(animate),
-			);
+		document.fonts.ready.then(() => queueMicrotask(animate));
 	}, [sloganIndex]);
 
 	return (
-		<div className="flex items-center justify-center w-full h-[calc(100vh_-_8.5rem)]">
-			<div className="flex flex-col-reverse h-full xl:flex-row  items-center justify-center gap-10 xl:w-[80%] xl:h-[80%]">
-				<div key={sloganIndex} className="flex flex-col gap-4 xl:flex-1">
+		<div className="flex items-center justify-center w-full">
+			<div className="flex flex-col-reverse xl:flex-row h-full items-center justify-evenly xl:justify-center gap-4 xl:gap-10 xl:w-[80%] xl:h-[80%]">
+				<div
+					key={sloganIndex}
+					className="h-full min-h-0 flex flex-col gap-4 xl:flex-1"
+				>
 					<p
 						className="text-4xl leading-14 xl:text-6xl xl:leading-20"
 						ref={titleRef}
 					>
 						{slogans[sloganIndex].title}
 					</p>
-					<p className="text-xl xl:text-2xl" ref={descriptionRef}>
-						{slogans[sloganIndex].description}
-					</p>
+					<ScrollShadow className="grow min-h-0">
+						<p className="text-xl xl:text-2xl" ref={descriptionRef}>
+							{slogans[sloganIndex].description}
+						</p>
+					</ScrollShadow>
 				</div>
 				<div className="max-h-[50%] xl:max-h-full w-full h-full xl:flex-1 [&_img]:object-contain">
 					<div

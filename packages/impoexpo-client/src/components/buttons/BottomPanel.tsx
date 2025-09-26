@@ -19,7 +19,7 @@ import SettingsModal from "../modals/SettingsModal";
 
 export default function BottomPanel() {
 	const ctx = usePageContext();
-	const { isOpen, onOpen, onOpenChange } = useDisclosure({
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure({
 		id: "BOTTOM_PANEL_MOBILE_MODAL",
 	});
 
@@ -135,7 +135,7 @@ export default function BottomPanel() {
 					onOpenChange={onOpenChange}
 				>
 					<ModalContent>
-						{(onClose) => (
+						{() => (
 							<>
 								<ModalBody className="flex flex-col gap-0 p-2">
 									<Button
@@ -164,10 +164,7 @@ export default function BottomPanel() {
 												color="secondary"
 												size="lg"
 												className="items-center justify-start h-16 gap-6 text-3xl"
-												onPress={() => {
-													onClose();
-													onOpen();
-												}}
+												onPress={onOpen}
 												startContent={
 													<Icon
 														className="scale-150"
@@ -186,10 +183,7 @@ export default function BottomPanel() {
 												variant="light"
 												size="lg"
 												className="items-center justify-start h-16 gap-6 text-3xl"
-												onPress={() => {
-													onClose();
-													onOpen();
-												}}
+												onPress={onOpen}
 												startContent={
 													<Icon
 														className="scale-150"
