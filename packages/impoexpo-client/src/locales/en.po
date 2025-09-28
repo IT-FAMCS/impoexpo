@@ -464,6 +464,7 @@ msgid "throw error if null"
 msgstr "throw error if null"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:57
+#: src/features/format-editor/nodes/builtin/conditional.tsx:93
 msgid "nullable object"
 msgstr "nullable object"
 
@@ -487,6 +488,18 @@ msgstr "must be connected to an iterator node, otherwise will never skip an iter
 msgid "same object"
 msgstr "same object"
 
+#: src/features/format-editor/nodes/builtin/conditional.tsx:89
+msgid "is this object null?"
+msgstr "is this object null?"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:90
+msgid "is null, not null, if exists"
+msgstr "is null, not null, if exists"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:98
+msgid "is null?"
+msgstr "is null?"
+
 #: src/features/format-editor/nodes/builtin/date-time.tsx:15
 msgid "date & time"
 msgstr "date & time"
@@ -504,6 +517,7 @@ msgstr "change country, change locale"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:96
 #: src/features/format-editor/nodes/builtin/date-time.tsx:126
 #: src/features/format-editor/nodes/builtin/date-time.tsx:153
+#: src/features/format-editor/nodes/builtin/date-time.tsx:169
 #: src/features/format-editor/nodes/builtin/literals.tsx:39
 #: src/features/format-editor/nodes/builtin/literals.tsx:42
 msgid "date"
@@ -520,6 +534,7 @@ msgstr "locale"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:116
 #: src/features/format-editor/nodes/builtin/date-time.tsx:145
 #: src/features/format-editor/nodes/builtin/date-time.tsx:159
+#: src/features/format-editor/nodes/builtin/date-time.tsx:173
 #: src/features/format-editor/nodes/builtin/math.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
 #: src/features/format-editor/nodes/builtin/strings.tsx:38
@@ -624,6 +639,27 @@ msgstr "the latest allowed date"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:160
 msgid "dates are compared including the start and end days!"
 msgstr "dates are compared including the start and end days!"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:166
+msgid "string -> date"
+msgstr "string -> date"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:167
+msgid "parse date, string to date"
+msgstr "parse date, string to date"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:174
+msgid "if successful returns the DateTime, null otherwise"
+msgstr "if successful returns the DateTime, null otherwise"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:177
+#: src/features/format-editor/nodes/builtin/notifications.tsx:36
+msgid "error"
+msgstr "error"
+
+#: src/features/format-editor/nodes/builtin/date-time.tsx:178
+msgid "if parsing wasn't successful, this will contain the explanation"
+msgstr "if parsing wasn't successful, this will contain the explanation"
 
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
@@ -735,10 +771,6 @@ msgstr "message"
 #: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
 msgstr "warning"
-
-#: src/features/format-editor/nodes/builtin/notifications.tsx:36
-msgid "error"
-msgstr "error"
 
 #: src/features/format-editor/nodes/builtin/operators.tsx:10
 msgid "operators"

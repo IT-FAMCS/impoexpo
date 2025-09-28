@@ -164,7 +164,7 @@ nodesScope(() => {
 
 	registerWithDefaultRenderer(dateTimeNodes.PARSE_DATETIME_NODE, {
 		title: msg`string -> date`,
-		aliases: msg`parse data, string to date`,
+		aliases: msg`parse date, string to date`,
 		inputs: {
 			date: { title: msg`date` },
 		},
