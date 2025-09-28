@@ -1,12 +1,13 @@
 import * as child from "node:child_process";
 import { lingui } from "@lingui/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vike from "vike/plugin";
 import tailwindcss from "@tailwindcss/vite";
+import sonda from "sonda/vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getCommitInformation = (type: "shortHash" | "longHash" | "message") => {
@@ -25,8 +26,13 @@ export default defineConfig(({ mode }) => {
 			tsconfigPaths(),
 			tailwindcss(),
 			lingui(),
+			sonda(),
+			injectReactScan(),
 			vike(),
 		],
+		build: {
+			sourcemap: true,
+		},
 		define: {
 			"import.meta.env.VITE_APP_HASH": JSON.stringify(
 				getCommitInformation("shortHash"),
@@ -48,3 +54,25 @@ export default defineConfig(({ mode }) => {
 		},
 	};
 });
+
+const injectReactScan = () => {
+	return {
+		name: "inject-react-scan",
+		apply: "serve",
+		transformIndexHtml: (html) => {
+			return {
+				html,
+				tags: [
+					{
+						tag: "script",
+						attrs: {
+							src: "//unpkg.com/react-scan/dist/auto.global.js",
+							crossOrigin: "anonymous",
+						},
+						injectTo: "head-prepend",
+					},
+				],
+			};
+		},
+	} satisfies Plugin;
+};

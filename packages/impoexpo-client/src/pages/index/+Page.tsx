@@ -157,6 +157,9 @@ export default function Index() {
 				}),
 			);
 
+			titleRef.current.style.opacity = "1";
+			descriptionRef.current.style.opacity = "1";
+
 			SplitText.create(titleRef.current, {
 				type: "words,lines",
 				mask: "words",
@@ -247,13 +250,13 @@ export default function Index() {
 					className="h-full min-h-0 justify-center flex flex-col gap-4 xl:flex-1"
 				>
 					<p
-						className="text-4xl leading-14 xl:text-6xl xl:leading-20"
+						className="text-4xl leading-14 xl:text-6xl xl:leading-20 opacity-0"
 						ref={titleRef}
 					>
 						{slogans[sloganIndex].title}
 					</p>
 					<ScrollShadow className="grow xl:grow-0 min-h-0 scrollbar-hide">
-						<p className="text-xl xl:text-2xl" ref={descriptionRef}>
+						<p className="text-xl xl:text-2xl opacity-0" ref={descriptionRef}>
 							{slogans[sloganIndex].description}
 						</p>
 					</ScrollShadow>

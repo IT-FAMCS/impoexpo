@@ -84,4 +84,19 @@ nodesScope(() => {
 			sameObj: { title: msg`same object` },
 		},
 	});
+
+	registerWithDefaultRenderer(conditionalNodes.IS_NULL_NODE, {
+		title: msg`is this object null?`,
+		aliases: msg`is null, not null, if exists`,
+		inputs: {
+			nullableObject: {
+				title: msg`nullable object`,
+			},
+		},
+		outputs: {
+			result: {
+				title: msg`is null?`,
+			},
+		},
+	});
 });

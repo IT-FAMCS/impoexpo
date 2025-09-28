@@ -161,4 +161,22 @@ nodesScope(() => {
 			},
 		},
 	});
+
+	registerWithDefaultRenderer(dateTimeNodes.PARSE_DATETIME_NODE, {
+		title: msg`string -> date`,
+		aliases: msg`parse data, string to date`,
+		inputs: {
+			date: { title: msg`date` },
+		},
+		outputs: {
+			result: {
+				title: msg`result`,
+				description: msg`if successful returns the DateTime, null otherwise`,
+			},
+			error: {
+				title: msg`error`,
+				description: msg`if parsing wasn't successful, this will contain the explanation`,
+			},
+		},
+	});
 });

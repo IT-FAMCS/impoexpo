@@ -4,7 +4,7 @@ import {
 	registerHandler,
 } from "../../node-executor-utils";
 import * as dateTimeNodes from "@impoexpo/shared/nodes/builtin/date-time";
-import { logger } from "../../../logger";
+import { dateTimeFromAny } from "luxon-parser";
 
 registerHandler(dateTimeNodes.SET_DATETIME_LOCALE_NODE, (ctx) => {
 	return { result: ctx.dateTime.setLocale(ctx.locale) };
@@ -31,6 +31,13 @@ registerHandler(dateTimeNodes.DATE_IN_RANGE_NODE, (ctx) => {
 		result:
 			ctx.date >= (ctx.start ?? ctx.date) && ctx.date <= (ctx.end ?? ctx.date),
 	};
+});
+
+registerHandler(dateTimeNodes.PARSE_DATETIME_NODE, (ctx) => {
+	const result = dateTimeFromAny(ctx.date);
+	return result.isValid
+		? { error: null, result }
+		: { error: result.invalidExplanation, result: null };
 });
 
 registerAsyncHandler(dateTimeNodes.GROUP_BY_DATETIME_NODE, async (ctx) => {

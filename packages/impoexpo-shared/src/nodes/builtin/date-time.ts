@@ -108,6 +108,18 @@ export const DATE_IN_RANGE_NODE = new BaseNode({
 	}),
 });
 
+export const PARSE_DATETIME_NODE = new BaseNode({
+	category: "date-time",
+	name: "parse-date",
+	inputSchema: v.object({
+		date: v.union([v.string(), v.number()]),
+	}),
+	outputSchema: v.object({
+		result: v.nullable(dateTime()),
+		error: v.nullable(v.string()),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		SET_DATETIME_LOCALE_NODE,
@@ -116,5 +128,6 @@ nodesScope(() => {
 		GROUP_BY_DATETIME_NODE,
 		CURRENT_DATETIME_NODE,
 		DATE_IN_RANGE_NODE,
+		PARSE_DATETIME_NODE,
 	);
 });

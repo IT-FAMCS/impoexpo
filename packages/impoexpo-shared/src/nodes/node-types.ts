@@ -10,18 +10,23 @@ export type ObjectEntry = v.ObjectEntries[string];
 
 export type NodePropertyOptions<TProperty extends ObjectEntry> =
 	TProperty extends v.OptionalSchema<
-		infer TWrappedSchema extends ObjectEntry,
+		infer TWrappedOptionalSchema extends ObjectEntry,
 		unknown
 	>
-		? NodePropertyOptions<TWrappedSchema>
-		: TProperty extends v.PicklistSchema<infer TOptions, undefined>
-			? TOptions[number]
-			: TProperty extends v.EnumSchema<
-						infer TOptions extends Record<string, string | number>,
-						undefined
-					>
-				? keyof TOptions
-				: never;
+		? NodePropertyOptions<TWrappedOptionalSchema>
+		: TProperty extends v.NullableSchema<
+					infer TWrappedNullableSchema extends ObjectEntry,
+					unknown
+				>
+			? NodePropertyOptions<TWrappedNullableSchema>
+			: TProperty extends v.PicklistSchema<infer TOptions, undefined>
+				? TOptions[number]
+				: TProperty extends v.EnumSchema<
+							infer TOptions extends Record<string, string | number>,
+							undefined
+						>
+					? keyof TOptions
+					: never;
 
 export type BaseNodeEntry = {
 	name: string;
