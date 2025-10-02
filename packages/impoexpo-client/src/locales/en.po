@@ -62,24 +62,24 @@ msgstr "documentation"
 msgid "legal"
 msgstr "legal"
 
-#: src/components/external/MobileWarningCard.tsx:63
+#: src/components/external/MobileWarningCard.tsx:68
 msgid "it seems like you're viewing impoexpo on a mobile device."
 msgstr "it seems like you're viewing impoexpo on a mobile device."
 
-#: src/components/external/MobileWarningCard.tsx:68
+#: src/components/external/MobileWarningCard.tsx:73
 msgid "this page is currently not optimized for mobile devices (including tablets).<0/>we recommend using impoexpo with a 16:9 monitor."
 msgstr "this page is currently not optimized for mobile devices (including tablets).<0/>we recommend using impoexpo with a 16:9 monitor."
 
-#: src/components/external/MobileWarningCard.tsx:76
+#: src/components/external/MobileWarningCard.tsx:81
 msgid "do you wish to continue?"
 msgstr "do you wish to continue?"
 
-#: src/components/external/MobileWarningCard.tsx:83
+#: src/components/external/MobileWarningCard.tsx:88
 #: src/components/modals/LocalProjectsManagerModal.tsx:298
 msgid "yes"
 msgstr "yes"
 
-#: src/components/external/MobileWarningCard.tsx:86
+#: src/components/external/MobileWarningCard.tsx:91
 #: src/components/modals/LocalProjectsManagerModal.tsx:305
 msgid "no"
 msgstr "no"
@@ -1225,9 +1225,13 @@ msgstr "<0>impoexpo</0> is <1>open-source</1>"
 msgid "the source code for impoexpo is hosted on github and can be found <0>here</0>."
 msgstr "the source code for impoexpo is hosted on github and can be found <0>here</0>."
 
+#: src/pages/privacy/+Page.tsx:21
+msgid "common"
+msgstr "common"
+
 #: src/pages/privacy/+Page.tsx:25
-msgid "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed <10>here</10>."
-msgstr "<0>privacy policy</0><1/><2/>impoexpo is a \"services aggregator\". it allows you to transfer data between different services without the need to do the tedious work manually. this means that you have to login into such services (i.e. google), usually over OAuth2, so that impoexpo can perform its function.<3/><4/>impoexpo <5>may</5> access personal information like your profile picture, email address, and integration-specific information like files on your Google Drive for the Google Forms integration.<6/><7>none</7> of this information is stored on our services, however it is encrypted on our servers and stored client-side, which (hopefully) prevents any possible attacks via malicious code executed on the user's machine.<8/><9/> the developers have no malicious intent with your data and collect as little information as possible so that impoexpo can work. if you're unsure or don't trust us, impoexpo is open-source software and it's source code can be accessed <10>here</10>."
+msgid "google"
+msgstr "google"
 
 #: src/pages/wizard/+Page.tsx:154
 msgid "new data transfer"

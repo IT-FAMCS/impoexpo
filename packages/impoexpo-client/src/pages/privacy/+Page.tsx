@@ -1,63 +1,91 @@
-import { Card, CardBody, Link } from "@heroui/react";
-import { Trans } from "@lingui/react/macro";
+import { Card, CardBody, Link, Spinner, Tab, Tabs } from "@heroui/react";
+import { Trans, useLingui } from "@lingui/react/macro";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
+import { useState } from "react";
+import Markdown from "react-markdown";
+import "../../styles/markdown.css";
 
 const AnimatedCard = motion.create(Card);
 export default function Privacy() {
+	const [tab, setTab] = useState("privacy");
+
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-full gap-4">
-			<AnimatedCard
-				initial={{
-					opacity: 0,
-					y: 10,
-				}}
-				animate={{
-					opacity: 1,
-					y: 0,
-				}}
-				transition={{
-					duration: 0.25,
-					ease: [0.83, 0, 0.17, 1],
-				}}
+		<div className="flex flex-col items-center justify-center w-full h-full min-h-0 gap-4">
+			<Tabs
+				selectedKey={tab}
+				onSelectionChange={(k) => setTab(k.toString())}
+				items={[
+					{
+						id: "privacy",
+						label: <Trans>common</Trans>,
+					},
+					{
+						id: "google",
+						label: <Trans>google</Trans>,
+					},
+				]}
 			>
-				<CardBody className="xl:max-w-[30vw]">
-					<p>
-						<Trans>
-							<span className="text-2xl font-bold">privacy policy</span>
-							<br />
-							<br />
-							impoexpo is a "services aggregator". it allows you to transfer
-							data between different services without the need to do the tedious
-							work manually. this means that you have to login into such
-							services (i.e. google), usually over OAuth2, so that impoexpo can
-							perform its function.
-							<br />
-							<br />
-							impoexpo <b>may</b> access personal information like your profile
-							picture, email address, and integration-specific information like
-							files on your Google Drive for the Google Forms integration.
-							<br />
-							<b>none</b> of this information is stored on our services, however
-							it is encrypted on our servers and stored client-side, which
-							(hopefully) prevents any possible attacks via malicious code
-							executed on the user's machine.
-							<br />
-							<br /> the developers have no malicious intent with your data and
-							collect as little information as possible so that impoexpo can
-							work. if you're unsure or don't trust us, impoexpo is open-source
-							software and it's source code can be accessed{" "}
-							<Link
-								isExternal
-								showAnchorIcon
-								href="https://github.com/IT-FAMCS/impoexpo"
-							>
-								here
-							</Link>
-							.
-						</Trans>
-					</p>
-				</CardBody>
-			</AnimatedCard>
+				{(item) => (
+					<Tab className="min-h-0" id={item.id} title={item.label}>
+						<LegalCard id={item.id} />
+					</Tab>
+				)}
+			</Tabs>
 		</div>
+	);
+}
+
+function LegalCard(props: { id: string }) {
+	const { i18n } = useLingui();
+	const { isLoading, isError, data, error } = useQuery({
+		queryKey: ["fetchLegalDocument", props.id, i18n.locale],
+		queryFn: async () => {
+			const response = await fetch(`/legal/${i18n.locale}/${props.id}.md`);
+			if (!response.ok)
+				throw new Error(`failed to fetch legal document (${response.status})`);
+			return await response.text();
+		},
+	});
+
+	return (
+		<AnimatedCard
+			initial={{
+				opacity: 0,
+				y: 10,
+			}}
+			animate={{
+				opacity: 1,
+				y: 0,
+			}}
+			transition={{
+				duration: 0.25,
+				ease: [0.83, 0, 0.17, 1],
+			}}
+			className="max-h-full"
+		>
+			<CardBody className="xl:max-w-[40vw]">
+				{isLoading && <Spinner />}
+				{isError && <>{error}</>}
+				{data && (
+					<div className="markdown">
+						<Markdown
+							components={{
+								a(props) {
+									const { href, children } = props;
+									return (
+										<Link href={href} isExternal showAnchorIcon>
+											{children}
+										</Link>
+									);
+								},
+							}}
+						>
+							{data}
+						</Markdown>
+					</div>
+				)}
+			</CardBody>
+		</AnimatedCard>
 	);
 }

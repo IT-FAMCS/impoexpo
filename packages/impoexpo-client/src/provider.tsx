@@ -11,11 +11,13 @@ import { i18n, Messages } from "@lingui/core";
 import { useEffect } from "react";
 import { useSettingsStore } from "./stores/settings.ts";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
+import useLinguiChange from "./hooks/useLinguiChange.ts";
 
 export const Provider = clientOnly(
 	async () =>
 		({ children }: { children: React.ReactNode }) => {
 			useTheme();
+
 			useEffect(() => {
 				(async () => {
 					const locale =

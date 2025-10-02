@@ -1,3 +1,4 @@
+import useLinguiChange from "@/hooks/useLinguiChange";
 import { Card, CardBody, Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
@@ -39,6 +40,10 @@ export default function MobileWarningCard(props: { children?: ReactNode }) {
 	useEffect(() => {
 		window.addEventListener("resize", () => setIsMobile(detectMobile()));
 	}, []);
+
+	useLinguiChange((i18n) => {
+		document.documentElement.lang = i18n.locale;
+	});
 
 	return (
 		<>

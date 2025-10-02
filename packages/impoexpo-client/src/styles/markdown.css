@@ -1,0 +1,23 @@
+@reference "./globals.css";
+
+/* TODO: surely someone already made styles for this... */
+
+.markdown h1 {
+	@apply text-2xl font-bold my-2;
+}
+
+.markdown h2 {
+	@apply text-xl font-bold my-2;
+}
+
+.markdown a {
+	@apply underline;
+}
+
+.markdown ul {
+	@apply list-disc my-2;
+
+	li {
+		@apply ml-6;
+	}
+}
