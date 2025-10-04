@@ -993,7 +993,6 @@ msgstr "add another"
 
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:204
 #: src/integrations/google/GoogleVerifier.tsx:59
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:250
 msgid "next"
 msgstr "next"
 
@@ -1061,46 +1060,58 @@ msgstr "is this you?"
 msgid "relogin"
 msgstr "relogin"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:71
 msgid "receiving the form's layout"
 msgstr "receiving the form's layout"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:85
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:80
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "failed to receive the form's layout (and create a node for it)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:82
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
 msgid "back to form selection"
 msgstr "back to form selection"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:114
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:109
 msgid "checking read permissions for the form"
 msgstr "checking read permissions for the form"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:123
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:118
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "couldn't verify read permissions for the form (or their lack of)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:167
-msgid "receiving a list of your forms"
-msgstr "receiving a list of your forms"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+msgid "it seems like you've canceled the file dialog."
+msgstr "it seems like you've canceled the file dialog."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:176
-msgid "couldn't receive a list of your forms"
-msgstr "couldn't receive a list of your forms"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:144
+msgid "something went wrong while logging in (check the console)."
+msgstr "something went wrong while logging in (check the console)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:186
-msgid "select a form:"
-msgstr "select a form:"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:150
+msgid "something went wrong with Google's Picker API (check the console)."
+msgstr "something went wrong with Google's Picker API (check the console)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:198
-msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
-msgstr "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:158
+msgid "you have already selected this form before."
+msgstr "you have already selected this form before."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:229
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:172
+msgid "press the button below to select the form.<0/>you may be asked to login again."
+msgstr "press the button below to select the form.<0/>you may be asked to login again."
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:183
 msgid "back to source selection"
 msgstr "back to source selection"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:196
+msgid "select the form..."
+msgstr "select the form..."
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:208
+msgid "Select the form you want to process..."
+msgstr "Select the form you want to process..."
 
 #: src/integrations/google/google-forms/integration.tsx:22
 #: src/integrations/google/google-forms/integration.tsx:71

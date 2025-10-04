@@ -993,7 +993,6 @@ msgstr "добавить ещё"
 
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:204
 #: src/integrations/google/GoogleVerifier.tsx:59
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:250
 msgid "next"
 msgstr "далее"
 
@@ -1061,46 +1060,58 @@ msgstr "всё верно?"
 msgid "relogin"
 msgstr "перезайти"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:76
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:71
 msgid "receiving the form's layout"
 msgstr "получаем макет формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:85
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:80
 msgid "failed to receive the form's layout (and create a node for it)"
 msgstr "не удалось получить макет формы (и создать для неё узел)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:87
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:125
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:82
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:120
 msgid "back to form selection"
 msgstr "назад к выбору формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:114
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:109
 msgid "checking read permissions for the form"
 msgstr "проверяем наличие прав на чтение формы"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:123
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:118
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:167
-msgid "receiving a list of your forms"
-msgstr "получаем список ваших форм"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+msgid "it seems like you've canceled the file dialog."
+msgstr "похоже, что вы закрыли диалог выбора файла."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:176
-msgid "couldn't receive a list of your forms"
-msgstr "не удалось получить список ваших форм"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:144
+msgid "something went wrong while logging in (check the console)."
+msgstr "во время входа что-то пошло не так (проверьте консоль)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:186
-msgid "select a form:"
-msgstr "выберите форму:"
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:150
+msgid "something went wrong with Google's Picker API (check the console)."
+msgstr "что-то не так с Google Picker API (проверьте консоль)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:198
-msgid "you have already selected all forms!<0/>if you've created a new form, or got access to one, click the button below."
-msgstr "вы уже выбрали все формы!<0/>если вы создали новую форму, или получили доступ к форме, нажмите на кнопку ниже."
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:158
+msgid "you have already selected this form before."
+msgstr "вы уже выбрали эту форму ранее."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:229
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:172
+msgid "press the button below to select the form.<0/>you may be asked to login again."
+msgstr "нажмите кнопку ниже чтобы выбрать форму.<0/>возможно, вам придётся повторно войти в аккаунт."
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:183
 msgid "back to source selection"
 msgstr "назад к выбору источника"
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:196
+msgid "select the form..."
+msgstr "выберите форму..."
+
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:208
+msgid "Select the form you want to process..."
+msgstr "Выберите желаемую форму..."
 
 #: src/integrations/google/google-forms/integration.tsx:22
 #: src/integrations/google/google-forms/integration.tsx:71
