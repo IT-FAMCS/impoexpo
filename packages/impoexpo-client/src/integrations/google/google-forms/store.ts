@@ -1,6 +1,5 @@
 import { WIZARD_STORE_CATEGORY, createResettable } from "@/stores/resettable";
 import type { GoogleFormsLayout } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
-import type { ListGoogleForm } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
 
 export enum GoogleFormsHydratorState {
 	SELECT = 0,
@@ -10,11 +9,11 @@ export enum GoogleFormsHydratorState {
 
 export type GoogleFormsHydratorStore = {
 	state: GoogleFormsHydratorState;
-	currentForm?: ListGoogleForm;
+	currentForm?: string;
 	usedForms: Record<string, GoogleFormsLayout>;
 
 	setState: (newState: GoogleFormsHydratorState) => void;
-	setCurrentForm: (form?: ListGoogleForm) => void;
+	setCurrentForm: (form?: string) => void;
 	addUsedForm: (id: string, form: GoogleFormsLayout) => void;
 	hasForm: (id: string) => boolean;
 };
@@ -31,7 +30,6 @@ export const useGoogleFormsHydratorStore =
 				set((st) => ({ ...st, usedForms: { ...st.usedForms, [id]: form } })),
 			setState: (newState: GoogleFormsHydratorState) =>
 				set(() => ({ state: newState })),
-			setCurrentForm: (form?: ListGoogleForm) =>
-				set(() => ({ currentForm: form })),
+			setCurrentForm: (form?: string) => set(() => ({ currentForm: form })),
 		}),
 	);

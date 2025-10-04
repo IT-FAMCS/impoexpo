@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@dagrejs/dagre": "^1.1.5",
+		"@googleworkspace/drive-picker-element": "^0.6.2",
 		"@gsap/react": "^2.1.2",
 		"@heroui/react": "^2.8.4",
 		"@heroui/theme": "^2.4.22",
@@ -79,6 +80,7 @@
 		"@types/dottie": "^2.0.7",
 		"@types/gapi": "^0.0.47",
 		"@types/google.accounts": "^0.0.18",
+		"@types/google.picker": "^0.0.51",
 		"@types/luxon": "^3.7.1",
 		"@types/node": "24.5.0",
 		"@types/react": "19.1.13",

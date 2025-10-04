@@ -54,7 +54,7 @@ registerIntegration({
 				"profile",
 				"https://www.googleapis.com/auth/forms.body.readonly",
 				"https://www.googleapis.com/auth/forms.responses.readonly",
-				"https://www.googleapis.com/auth/drive.readonly",
+				"https://www.googleapis.com/auth/drive.file",
 			]}
 		/>
 	),

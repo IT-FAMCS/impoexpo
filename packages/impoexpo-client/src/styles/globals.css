@@ -51,3 +51,11 @@
 @theme {
 	--font-pt-serif: "PT Serif", serif;
 }
+
+:root.dark .picker-dialog-bg {
+	@apply bg-black;
+}
+
+.picker-dialog {
+	@apply rounded-xl;
+}

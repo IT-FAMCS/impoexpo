@@ -1,32 +1,27 @@
 import { getWithSchema } from "@/api/common";
-import CacheInfoModal from "@/components/network/CacheInfoModal";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
 import {
 	SourceCardState,
 	useSourceCardStore,
 } from "@/features/transfer-wizard/select-source-card/store";
-import {
-	Button,
-	Spinner,
-	Listbox,
-	ListboxItem,
-	ScrollShadow,
-} from "@heroui/react";
+import { Button, Spinner, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { FaultyActionSchema } from "@impoexpo/shared/schemas/generic/FaultyActionSchema";
-import { ListGoogleFormsResponseSchema } from "@impoexpo/shared/schemas/integrations/google/forms/ListGoogleFormsResponseSchema";
 import { GoogleFormsLayoutSchema } from "@impoexpo/shared/schemas/integrations/google/forms/GoogleFormsLayoutSchema";
 import {
 	GOOGLE_FORMS_LAYOUT_ROUTE,
-	GOOGLE_FORMS_LIST_ROUTE,
 	GOOGLE_FORMS_VERIFY_ROUTE,
 } from "@impoexpo/shared/schemas/integrations/google/forms/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getGoogleAuthHeaders } from "../common";
 import { GoogleFormsHydratorState, useGoogleFormsHydratorStore } from "./store";
 import { registerGoogleFormNode } from "./nodes";
+import "@googleworkspace/drive-picker-element";
+import { msg } from "@lingui/core/macro";
+import type { DrivePickerElement } from "@googleworkspace/drive-picker-element";
+import type { MessageDescriptor } from "@lingui/core";
 
 export function GoogleFormsHydrator(props: { callback: () => void }) {
 	const { state } = useGoogleFormsHydratorStore();
@@ -46,7 +41,7 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 	const { currentForm, setCurrentForm, addUsedForm, setState } =
 		useGoogleFormsHydratorStore();
 	const { isFetching, isError, data, error } = useQuery({
-		queryKey: ["get-google-form-layout", currentForm?.id],
+		queryKey: ["get-google-form-layout", currentForm],
 		refetchOnWindowFocus: false,
 		queryFn: async () => {
 			if (!currentForm)
@@ -57,12 +52,12 @@ function GoogleFormsNodeCreator(props: { successCallback: () => void }) {
 				GoogleFormsLayoutSchema,
 				{
 					headers: await getGoogleAuthHeaders(),
-					query: { id: currentForm?.id ?? "" },
+					query: { id: currentForm ?? "" },
 				},
 			);
 
-			registerGoogleFormNode(currentForm.id, layout, true);
-			addUsedForm(currentForm.id, layout);
+			registerGoogleFormNode(currentForm, layout, true);
+			addUsedForm(currentForm, layout);
 
 			setCurrentForm(undefined);
 			setState(GoogleFormsHydratorState.SELECT);
@@ -95,12 +90,12 @@ function GoogleFormsVerifier() {
 	const { t } = useLingui();
 	const { currentForm, setState } = useGoogleFormsHydratorStore();
 	const { isFetching, isError, data, error } = useQuery({
-		queryKey: ["verify-google-form-permissions", currentForm?.id],
+		queryKey: ["verify-google-form-permissions", currentForm],
 		refetchOnWindowFocus: false,
 		queryFn: async () =>
 			getWithSchema(GOOGLE_FORMS_VERIFY_ROUTE, FaultyActionSchema, {
 				headers: await getGoogleAuthHeaders(),
-				query: { id: currentForm?.id ?? "" },
+				query: { id: currentForm ?? "" },
 			}),
 	});
 
@@ -133,125 +128,89 @@ function GoogleFormsSelector() {
 	const { currentForm, hasForm, setCurrentForm, setState } =
 		useGoogleFormsHydratorStore();
 	const { setState: setSourceCardState } = useSourceCardStore();
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
+	const [showPicker, setShowPicker] = useState(false);
+	const [error, setError] = useState<MessageDescriptor>();
+	const pickerRef = useCallback(
+		(node: DrivePickerElement | null) => {
+			if (!node) return;
 
-	const [bypassCache, setBypassCache] = useState<boolean>(false);
-	const {
-		isFetching,
-		isError,
-		isRefetchError,
-		isSuccess,
-		data,
-		error,
-		refetch,
-	} = useQuery({
-		queryKey: ["receive-google-form-info", bypassCache],
-		refetchOnWindowFocus: false,
-		queryFn: async () =>
-			getWithSchema(GOOGLE_FORMS_LIST_ROUTE, ListGoogleFormsResponseSchema, {
-				headers: await getGoogleAuthHeaders(),
-				bypassCache: bypassCache,
-			}),
-	});
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: why is usedForms.has() a dependency??
-	const allFormsSelected = useMemo(
-		() =>
-			data === undefined ? undefined : data.every((form) => hasForm(form.id)),
-		[data],
+			node.addEventListener("picker-canceled", () =>
+				setError(msg`it seems like you've canceled the file dialog.`),
+			);
+			node.addEventListener("picker-oauth-error", (e) => {
+				console.error(`failed to login via the picker api: ${e}`);
+				setError(
+					msg`something went wrong while logging in (check the console).`,
+				);
+			});
+			node.addEventListener("picker-error", (e) => {
+				console.error(`failed to select the form with the picker api: ${e}`);
+				setError(
+					msg`something went wrong with Google's Picker API (check the console).`,
+				);
+			});
+			node.addEventListener("picker-picked", (e) => {
+				const response = e.detail as google.picker.ResponseObject;
+				const documents = response[google.picker.Response.DOCUMENTS];
+				if (!documents || documents.length !== 1) return;
+				if (hasForm(documents[0].id)) {
+					setError(msg`you have already selected this form before.`);
+					return;
+				}
+				setCurrentForm(documents[0].id);
+				setState(GoogleFormsHydratorState.VERIFY);
+			});
+		},
+		[hasForm, setCurrentForm, setState],
 	);
 
-	if (isFetching) {
-		return (
+	return (
+		<>
 			<div className="flex flex-col items-center justify-center gap-2">
-				<Trans>receiving a list of your forms</Trans>
-				<Spinner />
-			</div>
-		);
-	}
-
-	if (isError || isRefetchError) {
-		return (
-			<NetworkErrorCard
-				title={t`couldn't receive a list of your forms`}
-				retry={refetch}
-				error={error}
-			/>
-		);
-	}
-
-	if (isSuccess) {
-		return (
-			<div className="flex flex-col items-center justify-center w-full max-w-lg gap-2">
-				<Trans>select a form:</Trans>
-				<ScrollShadow className="w-full" style={{ maxHeight: "50vh" }}>
-					<Listbox
-						className="border-small rounded-small border-default"
-						disallowEmptySelection
-						selectionMode="single"
-						onSelectionChange={(sel) => {
-							if (sel === "all" || sel.size === 0) return;
-							setCurrentForm(data.find((f) => f.id === Object.values(sel)[0]));
-						}}
-						emptyContent={
-							<p className="text-center">
-								<Trans>
-									you have already selected all forms!
-									<br />
-									if you've created a new form, or got access to one, click the
-									button below.
-								</Trans>
-							</p>
-						}
+				<p className="text-center">
+					<Trans>
+						press the button below to select the form.
+						<br />
+						you may be asked to login again.
+					</Trans>
+				</p>
+				<div className="flex flex-row gap-2">
+					<Button
+						onPress={() => setSourceCardState(SourceCardState.SELECT_SOURCE)}
+						startContent={<Icon icon="mdi:arrow-left" />}
 					>
-						{data.map((form) =>
-							hasForm(form.id) ? null : (
-								<ListboxItem
-									className="p-3"
-									startContent={<Icon icon="simple-icons:googleforms" />}
-									description={form.description}
-									key={form.id}
-								>
-									{form.name}
-								</ListboxItem>
-							),
-						)}
-					</Listbox>
-				</ScrollShadow>
-				<div className="flex flex-row items-center justify-center gap-2">
-					{allFormsSelected && (
-						<Button
-							onPress={() => setSourceCardState(SourceCardState.SELECT_SOURCE)}
-							size="sm"
-							color="primary"
-							startContent={<Icon icon="mdi:arrow-left" />}
-						>
-							<Trans>back to source selection</Trans>
-						</Button>
-					)}
-					<CacheInfoModal
-						className="self-end"
-						onRefresh={() => {
-							setCurrentForm(undefined);
-							if (!bypassCache) setBypassCache(true);
-							else refetch();
+						<Trans>back to source selection</Trans>
+					</Button>
+					<Button
+						onPress={() => {
+							if (showPicker) {
+								setShowPicker(false);
+								queueMicrotask(() => setShowPicker(true));
+							} else setShowPicker(true);
+							setError(undefined);
 						}}
-					/>
-					{currentForm !== undefined && (
-						<Button
-							onPress={() => {
-								if (currentForm !== undefined)
-									setState(GoogleFormsHydratorState.VERIFY);
-							}}
-							size="sm"
-							color="primary"
-							endContent={<Icon icon="mdi:arrow-right" />}
-						>
-							<Trans>next</Trans>
-						</Button>
-					)}
+						color="primary"
+						startContent={<Icon width={18} icon="mdi:launch" />}
+					>
+						<Trans>select the form...</Trans>
+					</Button>
 				</div>
+				{error && <Alert color="danger">{t(error)}</Alert>}
 			</div>
-		);
-	}
+			{showPicker && (
+				<drive-picker
+					ref={pickerRef}
+					client-id={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+					app-id={import.meta.env.VITE_GOOGLE_APP_ID}
+					origin={window.location.origin}
+					multiselect={false}
+					title={t(msg`Select the form you want to process...`)}
+					locale={i18n.locale}
+				>
+					<drive-picker-docs-view view-id="FORMS" />
+				</drive-picker>
+			)}
+		</>
+	);
 }
