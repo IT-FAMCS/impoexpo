@@ -8,7 +8,14 @@ import {
 	useFormatEditorWrapperStore,
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
-import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
+import {
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Code,
+	Spinner,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -42,6 +49,7 @@ export default function Wizard() {
 			initializeNodes();
 			return true;
 		},
+		retry: false,
 		refetchOnWindowFocus: false,
 	});
 	const importNodesSuccessful = importNodesQuery.data;
@@ -176,7 +184,33 @@ export default function Wizard() {
 				transition={{ duration: 0.5 }}
 				className="flex justify-center items-center flex-[3] h-full"
 			>
-				{getStageWidget()}
+				{importNodesQuery.error ? (
+					<Card>
+						<CardBody className="flex flex-col items-center gap-2">
+							<Icon
+								className="text-danger"
+								width={48}
+								icon="mdi:error-outline"
+							/>
+							<p className="text-foreground-500 text-center">
+								<Trans>
+									<span className="font-medium text-xl text-foreground">
+										something went wrong while loading integrations.
+									</span>
+									<br />
+									this is likely not your fault.
+									<br />
+									please check the console and contact the developers.
+								</Trans>
+							</p>
+							<Code color="danger" className="whitespace-normal">
+								{importNodesQuery.error.message}
+							</Code>
+						</CardBody>
+					</Card>
+				) : (
+					getStageWidget()
+				)}
 			</motion.div>
 		</div>
 	);

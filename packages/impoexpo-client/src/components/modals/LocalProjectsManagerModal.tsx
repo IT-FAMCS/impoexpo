@@ -41,7 +41,7 @@ import { navigate } from "vike/client/router";
 export default function LocalProjectsManagerModal(props: {
 	trigger?: (onOpen: () => void) => ReactNode;
 }) {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure({
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure({
 		id: "LOCAL_PROJECTS_MANAGER_MODAL",
 	});
 	const [projects, setProjects] = useState<
@@ -101,6 +101,7 @@ export default function LocalProjectsManagerModal(props: {
 														key={p.id}
 														className="mt-2"
 														project={p}
+														onEdit={onClose}
 														onDelete={async () => {
 															await removeLocalProject(p.id);
 
@@ -132,6 +133,7 @@ export default function LocalProjectsManagerModal(props: {
 function LocalProjectCard(props: {
 	project: LocalProjectsTableEntry;
 	onDelete: () => void;
+	onEdit: () => void;
 	className?: string;
 }) {
 	const { t } = useLingui();
@@ -222,7 +224,10 @@ function LocalProjectCard(props: {
 							size="sm"
 							isIconOnly
 							startContent={<Icon width={18} icon="mdi:pencil" />}
-							onPress={() => navigate(`/wizard?project=${props.project.id}`)}
+							onPress={() => {
+								props.onEdit();
+								navigate(`/wizard?project=${props.project.id}`);
+							}}
 						/>
 					</Tooltip>
 					<Tooltip content={t`delete project`}>

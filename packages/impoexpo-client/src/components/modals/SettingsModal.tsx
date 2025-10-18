@@ -71,6 +71,14 @@ export default function SettingsModal(props: {
 											}
 										/>
 									</SettingsModalItem>
+									<SettingsModalItem title={t`always show types`}>
+										<Switch
+											isSelected={settings.developer.alwaysShowTypes}
+											onValueChange={(v) =>
+												settings.put("developer.alwaysShowTypes", v)
+											}
+										/>
+									</SettingsModalItem>
 								</SettingsModalSection>
 							</ModalBody>
 							<ModalFooter />

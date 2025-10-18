@@ -4,6 +4,7 @@ import { registerBaseNodes } from "../node-database";
 import { binaryNode, unaryNode } from "../common";
 import { BaseNode } from "../node-types";
 import * as v from "valibot";
+import { registerConverter } from "../type-converters";
 
 export const ADD_NODE = binaryNode("math", "add", number);
 export const SUBTRACT_NODE = binaryNode("math", "subtract", number);
@@ -42,4 +43,5 @@ nodesScope(() => {
 		LOG_NODE,
 		IS_INTEGER_NODE,
 	);
+	registerConverter(v.number(), v.string(), (obj) => obj.toString(10));
 });

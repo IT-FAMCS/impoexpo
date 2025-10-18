@@ -21,6 +21,7 @@ import {
 	type MouseEvent as ReactMouseEvent,
 	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -49,6 +50,8 @@ import ExportProjectModal from "./modals/export-project-modal/ExportProjectModal
 import DocumentationModal from "./modals/documentation-modal/DocumentationModal";
 import SaveProjectModal from "./modals/save-project-modal/SaveProjectModal";
 import { updateLocalProject } from "@/db/local-projects";
+import TypeHelperEdge from "./TypeHelperEdge";
+import TypeHelperConnectionLine from "./TypeHelperConnectionLine";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -241,12 +244,21 @@ export default function FormatEditor() {
 		[],
 	);
 
+	const edgeTypes = useMemo(
+		() => ({
+			typehelper: TypeHelperEdge,
+		}),
+		[],
+	);
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeRenderers}
 				edges={edges}
+				edgeTypes={edgeTypes}
+				connectionLineComponent={TypeHelperConnectionLine}
 				proOptions={{ hideAttribution: true }}
 				colorMode={colorMode}
 				deleteKeyCode={["Delete", "Backspace"]}

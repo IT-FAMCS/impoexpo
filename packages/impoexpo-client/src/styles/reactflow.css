@@ -2,3 +2,11 @@
 .react-flow__node.selectable.selected {
 	@apply ring rounded-xl transition-shadow;
 }
+
+.react-flow__edgelabel-renderer {
+	@apply z-[1002];
+}
+
+.react-flow__node.selectable.selected {
+	@apply !z-10;
+}

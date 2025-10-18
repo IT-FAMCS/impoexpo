@@ -2,6 +2,9 @@ import { BaseNode } from "../node-types";
 import { nodesScope } from "../node-database";
 import { registerBaseNodes } from "../node-database";
 import * as v from "valibot";
+import { registerConverter } from "../type-converters";
+import { dateTime } from "../node-utils";
+import { dateTimeFromAny } from "luxon-parser";
 
 export const REPLACE_NODE = new BaseNode({
 	category: "strings",
@@ -63,28 +66,6 @@ export const FORMAT_STRING_NODE = new BaseNode({
 	}),
 });
 
-export const NUMBER_TO_STRING_NODE = new BaseNode({
-	category: "strings",
-	name: "number-to-string",
-	inputSchema: v.object({
-		number: v.number(),
-	}),
-	outputSchema: v.object({
-		string: v.string(),
-	}),
-});
-
-export const STRING_TO_NUMBER_NODE = new BaseNode({
-	category: "strings",
-	name: "string-to-number",
-	inputSchema: v.object({
-		string: v.string(),
-	}),
-	outputSchema: v.object({
-		number: v.nullable(v.number()),
-	}),
-});
-
 export const SPLIT_STRING_NODE = new BaseNode({
 	category: "strings",
 	name: "split-string",
@@ -117,9 +98,20 @@ nodesScope(() => {
 		LENGTH_NODE,
 		JOIN_STRINGS_NODE,
 		FORMAT_STRING_NODE,
-		NUMBER_TO_STRING_NODE,
-		STRING_TO_NUMBER_NODE,
 		SPLIT_STRING_NODE,
 		TRIM_STRING_NODE,
+	);
+	registerConverter(v.string(), v.number(), (obj) => {
+		const num = Number(obj);
+		return Number.isNaN(num) ? null : num;
+	});
+	registerConverter(v.string(), dateTime(), (obj) => {
+		const result = dateTimeFromAny(obj);
+		return result.isValid ? result : null;
+	});
+	registerConverter(
+		v.string(),
+		v.boolean(),
+		(obj) => obj.toLowerCase() === "true",
 	);
 });

@@ -99,7 +99,7 @@ export default function SearchNodesModal(props: {
 					fromEntry.source === "input"
 						? (toNode.outputSchema?.entries ?? {})
 						: (toNode.inputSchema?.entries ?? {}),
-				).some((key) => entriesCompatible(fromEntry, toNode.entry(key)));
+				).some((key) => entriesCompatible(fromEntry, toNode.entry(key), true));
 			});
 		setSearchResults(hits);
 	}, [database, locale, query, props.isOpen, newNodeInformation]);
@@ -200,7 +200,9 @@ function ManualNodeSelector(props: { onClose: () => void }) {
 							fromEntry.source === "input"
 								? (toNode.outputSchema?.entries ?? {})
 								: (toNode.inputSchema?.entries ?? {}),
-						).some((key) => entriesCompatible(fromEntry, toNode.entry(key)));
+						).some((key) =>
+							entriesCompatible(fromEntry, toNode.entry(key), true),
+						);
 					})
 					.map((v) => ({ id: String(`${v.category}-${v.name}`) })),
 				{ id: BACK_LIST_ITEM_KEY },

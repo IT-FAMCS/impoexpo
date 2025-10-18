@@ -1,11 +1,11 @@
 import { Card, CardBody, Link, Spinner, Tab, Tabs } from "@heroui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "motion/react";
 import { useState } from "react";
 import Markdown from "react-markdown";
 import "../../styles/markdown.css";
 
+import { motion } from "motion/react";
 const AnimatedCard = motion.create(Card);
 export default function Privacy() {
 	const [tab, setTab] = useState("privacy");

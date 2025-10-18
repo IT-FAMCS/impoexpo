@@ -20,5 +20,5 @@ export const nodeSchemasCompatible = (
 	const targetEntry = target.entry(connection.targetHandle);
 	if (!sourceEntry || !targetEntry) return false;
 
-	return entriesCompatible(sourceEntry, targetEntry);
+	return entriesCompatible(sourceEntry, targetEntry, true);
 };

@@ -5,6 +5,12 @@ export const ProjectNodeEntrySchema = v.object({
 	sources: v.optional(
 		v.array(v.object({ node: v.string(), entry: v.string() })),
 	),
+	errorBehavior: v.optional(
+		v.object({
+			message: v.string(),
+			skipIterationInsideLoops: v.boolean(),
+		}),
+	),
 	value: v.optional(v.unknown()),
 });
 

@@ -320,9 +320,6 @@ importers:
       luxon:
         specifier: ^3.6.1
         version: 3.7.2
-      luxon-parser:
-        specifier: ^1.0.3
-        version: 1.0.3(luxon@3.7.2)
       migration-files:
         specifier: ^0.4.3
         version: 0.4.3
@@ -396,6 +393,9 @@ importers:
       luxon:
         specifier: ^3.6.1
         version: 3.7.2
+      luxon-parser:
+        specifier: ^1.0.3
+        version: 1.0.3(luxon@3.7.2)
       moize:
         specifier: ^6.1.6
         version: 6.1.6

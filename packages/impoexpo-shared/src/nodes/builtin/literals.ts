@@ -2,6 +2,7 @@ import { nodesScope, registerBaseNodes } from "../node-database";
 import { BaseNode } from "../node-types";
 import * as v from "valibot";
 import { dateTime } from "../node-utils";
+import { registerConverter } from "../type-converters";
 
 export const NUMBER_NODE = new BaseNode({
 	category: "literals",
@@ -49,4 +50,5 @@ export const DATE_TIME_NODE = new BaseNode({
 
 nodesScope(() => {
 	registerBaseNodes(NUMBER_NODE, STRING_NODE, BOOLEAN_NODE, DATE_TIME_NODE);
+	registerConverter(v.boolean(), v.string(), (obj) => (obj ? "true" : "false"));
 });

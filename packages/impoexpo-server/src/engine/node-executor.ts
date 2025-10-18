@@ -18,10 +18,16 @@ import { childLogger } from "../logger";
 import {
 	isArray,
 	isDateTime,
+	isUnionOrEqual,
 	unwrapNodeIfNeeded,
 } from "@impoexpo/shared/nodes/node-utils";
 import clone from "clone";
 import { DateTime } from "luxon";
+import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
+import {
+	createCompleteConverter,
+	schemasConvertible,
+} from "@impoexpo/shared/nodes/type-converters";
 
 export class SkipIterationError extends Error {
 	constructor() {
@@ -276,15 +282,51 @@ export const executeJobNodes = async (job: Job) => {
 										`node "${sourceNode.id}" has a dependent input "${input}" connected to "${source.node}", but it doesn't have an output named "${source.entry}"`,
 									);
 
-								const value = (
+								let value = (
 									actualPreviousData[source.node] as Record<string, unknown>
 								)[source.entry];
-								inputs[input] = isArray(schema)
+								value = isArray(schema)
 									? [
 											...(input in inputs ? (inputs[input] as unknown[]) : []),
 											...(Array.isArray(value) ? value : [value]),
 										]
 									: value;
+								let valueSchema = baseNodes[
+									job.project.nodes.find((n) => n.id === source.node)?.type ??
+										""
+								].entry(source.entry).schema;
+								valueSchema =
+									isArray(schema) && !isArray(valueSchema)
+										? v.array(valueSchema)
+										: valueSchema;
+								if (!isUnionOrEqual(valueSchema, schema)) {
+									if (!schemasConvertible(valueSchema, schema))
+										throw new Error(
+											`node "${sourceNode.id}" has a dependent input "${input}" of type ${schemaToString(valueSchema)} connected to "${source.node}", which isn't convertible to the required ${schemaToString(schema)}`,
+										);
+									const converter = createCompleteConverter(
+										valueSchema,
+										schema,
+									);
+									logger.debug(
+										`converting entry "${source.entry}" of ${source.node} from ${schemaToString(valueSchema)} to ${schemaToString(schema)}`,
+									);
+									inputs[input] = converter.converter(value);
+
+									if (inputs[input] === null) {
+										const message = `failed to convert entry "${source.entry}" of ${source.node} from ${schemaToString(valueSchema)} to ${schemaToString(schema)}`;
+										const targetErrorBehavior = job.project.nodes.find(
+											(n) => n.id === source.node,
+										)?.outputs[source.entry].errorBehavior;
+										logger.warn(message);
+										if (
+											globalIterators.length !== 0 &&
+											(targetErrorBehavior?.skipIterationInsideLoops ?? false)
+										)
+											throw new SkipIterationError();
+										throw new Error(targetErrorBehavior?.message ?? message);
+									}
+								} else inputs[input] = value;
 							}
 							break;
 						}

@@ -80,26 +80,6 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(stringNodes.NUMBER_TO_STRING_NODE, {
-		title: msg`number -> string`,
-		inputs: {
-			number: { title: msg`number` },
-		},
-		outputs: {
-			string: { title: msg`string` },
-		},
-	});
-
-	registerWithDefaultRenderer(stringNodes.STRING_TO_NUMBER_NODE, {
-		title: msg`string -> number`,
-		inputs: {
-			string: { title: msg`string` },
-		},
-		outputs: {
-			number: { title: msg`number` },
-		},
-	});
-
 	registerWithDefaultRenderer(stringNodes.SPLIT_STRING_NODE, {
 		title: msg`split string`,
 		aliases: msg`divide string, explode string`,

@@ -132,7 +132,29 @@ export type FormatEditorStore = {
 
 	getNodeEntryValue: (id: string, entry: string) => unknown;
 	setNodeEntry: (id: string, entry: string, value: unknown) => void;
+	setDependentNodeEntry: (
+		source: string,
+		sourceHandle: string,
+		target: string,
+		targetHandle: string,
+	) => void;
 	removeNodeEntry: (id: string, entry: string) => void;
+
+	getNodeEntryErrorBehavior: (
+		id: string,
+		entry: string,
+	) =>
+		| {
+				message: string;
+				skipIterationInsideLoops: boolean;
+		  }
+		| undefined;
+	setNodeEntryErrorBehavior: (
+		id: string,
+		entry: string,
+		message: string,
+		skipIterationInsideLoops: boolean,
+	) => void;
 
 	attachNewNode: (
 		fromNodeId: string,
@@ -190,10 +212,14 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				set((state) => {
 					state.edges = applyEdgeChanges(changes, state.edges);
 				}),
-			onConnect: (connection) =>
+			onConnect: (connection) => {
 				set((state) => {
-					state.edges = addEdge(connection, state.edges);
-				}),
+					state.edges = addEdge(
+						{ ...connection, type: "typehelper" },
+						state.edges,
+					);
+				});
+			},
 			setNodes: (nodes) => {
 				set({ nodes });
 			},
@@ -283,6 +309,13 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						connectionState.fromHandle.id,
 					);
 					get().removeNodeEntry(
+						connectionState.toNode.id,
+						connectionState.toHandle.id,
+					);
+
+					get().setDependentNodeEntry(
+						connectionState.fromNode.id,
+						connectionState.fromHandle.id,
 						connectionState.toNode.id,
 						connectionState.toHandle.id,
 					);
@@ -479,14 +512,54 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				);
 			},
 
+			setNodeEntryErrorBehavior(id, entry, message, skipIterationInsideLoops) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					state.nodes[nodeIndex].data.entries ??= {};
+					state.nodes[nodeIndex].data.entries[entry] = {
+						...state.nodes[nodeIndex].data.entries[entry],
+						errorBehavior: {
+							message,
+							skipIterationInsideLoops,
+						},
+					};
+				});
+			},
+			getNodeEntryErrorBehavior(id, entry) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
+				if (nodeIndex === -1) return undefined;
+				const entries = get().nodes[nodeIndex].data.entries;
+				if (!entries || !(entry in entries)) return undefined;
+				return entries[entry].errorBehavior;
+			},
+
 			setNodeEntry(id, entry, value) {
 				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
 				if (nodeIndex === -1) return;
 				set((state) => {
 					state.nodes[nodeIndex].data.entries ??= {};
 					state.nodes[nodeIndex].data.entries[entry] = {
+						...state.nodes[nodeIndex].data.entries[entry],
 						type: "independent",
 						value,
+					};
+				});
+			},
+
+			setDependentNodeEntry(source, sourceHandle, target, targetHandle) {
+				const nodeIndex = get().nodes.findIndex((n) => n.id === source);
+				if (nodeIndex === -1) return;
+				set((state) => {
+					state.nodes[nodeIndex].data.entries ??= {};
+					const prev = state.nodes[nodeIndex].data.entries[sourceHandle];
+					state.nodes[nodeIndex].data.entries[sourceHandle] = {
+						...prev,
+						type: "dependent",
+						sources: [
+							...(prev && "sources" in prev ? (prev.sources ?? []) : []),
+							{ node: target, entry: targetHandle },
+						],
 					};
 				});
 			},
@@ -569,6 +642,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 									sourceHandle: fromHandleId,
 									target: id,
 									targetHandle: toEntry.name,
+									type: "typehelper",
 								}
 							: {
 									id: id,
@@ -576,6 +650,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 									sourceHandle: toEntry.name,
 									target: fromNodeId,
 									targetHandle: fromHandleId,
+									type: "typehelper",
 								},
 					);
 					state.removeNodeEntry(fromNodeId, fromHandleId);

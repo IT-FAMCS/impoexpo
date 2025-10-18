@@ -8,6 +8,7 @@ import * as v from "valibot";
 import { schemaToString } from "./schema-string-conversions";
 import { DateTime } from "luxon";
 import moize from "moize";
+import { schemasConvertible } from "./type-converters";
 
 const dateTimeValidator = (input: unknown) => {
 	if (typeof input === "string") return DateTime.fromISO(input).isValid;
@@ -188,7 +189,7 @@ export const findCompatibleEntry = (
 			: Object.keys(toNode.inputSchema?.entries ?? {});
 	for (const key of entries) {
 		const toEntry = toNode.entry(key);
-		if (entriesCompatible(fromEntry, toEntry)) return toEntry;
+		if (entriesCompatible(fromEntry, toEntry, true)) return toEntry;
 	}
 
 	throw new Error(
@@ -196,33 +197,45 @@ export const findCompatibleEntry = (
 	);
 };
 
+const internalIsUnionOrEqual = (
+	source: ObjectEntry,
+	target: ObjectEntry,
+	allowConversions = false,
+): boolean => {
+	if (isArray(source) && isArray(target))
+		return isUnionOrEqual(source.item, target.item, allowConversions);
+	if (
+		(isRecord(source) || isMap(source)) &&
+		(isRecord(target) || isMap(target))
+	)
+		return (
+			isUnionOrEqual(source.key, target.key, allowConversions) &&
+			isUnionOrEqual(source.value, target.value, allowConversions)
+		);
+	if (isUnion(target))
+		return target.options.some((opt) =>
+			isUnionOrEqual(source, opt, allowConversions),
+		);
+	if (allowConversions && schemasConvertible(source, target)) return true;
+	return schemaToString(source) === schemaToString(target);
+};
+export const isUnionOrEqual = moize(internalIsUnionOrEqual, {
+	isDeepEqual: true,
+});
+
 const internalEntriesCompatible = (
 	sourceEntry: BaseNodeEntry,
 	targetEntry: BaseNodeEntry,
+	allowConversions = false,
 ) => {
-	const isUnionOrEqual = (
-		source: ObjectEntry,
-		target: ObjectEntry,
-	): boolean => {
-		if (isArray(source) && isArray(target))
-			return isUnionOrEqual(source.item, target.item);
-		if (
-			(isRecord(source) || isMap(source)) &&
-			(isRecord(target) || isMap(target))
-		)
-			return (
-				isUnionOrEqual(source.key, target.key) &&
-				isUnionOrEqual(source.value, target.value)
-			);
-		if (isUnion(target))
-			return target.options.some((opt) => isUnionOrEqual(source, opt));
-		return schemaToString(source) === schemaToString(target);
-	};
-
 	// allows connecting multiple output of the same type to an array input
 	if (
 		isArray(targetEntry.schema) &&
-		(isUnionOrEqual(sourceEntry.schema, targetEntry.schema.item) ||
+		(isUnionOrEqual(
+			sourceEntry.schema,
+			targetEntry.schema.item,
+			allowConversions,
+		) ||
 			isGeneric(getRootSchema(targetEntry.schema.item)))
 	) {
 		return true;
@@ -256,7 +269,14 @@ const internalEntriesCompatible = (
 		);
 	}
 
-	return isUnionOrEqual(sourceEntry.schema, targetEntry.schema);
+	console.log(
+		`convertible ${schemaToString(sourceEntry.schema)} -> ${schemaToString(targetEntry.schema)}: ${schemasConvertible(sourceEntry.schema, targetEntry.schema)}`,
+	);
+	return isUnionOrEqual(
+		sourceEntry.schema,
+		targetEntry.schema,
+		allowConversions,
+	);
 };
 export const entriesCompatible = moize(internalEntriesCompatible, {
 	isDeepEqual: true,

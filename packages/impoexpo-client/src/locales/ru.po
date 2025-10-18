@@ -1107,7 +1107,7 @@ msgstr "назад к выбору источника"
 
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:196
 msgid "select the form..."
-msgstr "выберите форму..."
+msgstr "выбрать форму..."
 
 #: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:208
 msgid "Select the form you want to process..."

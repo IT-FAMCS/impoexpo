@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vike dev --port 5173",
 		"build": "vike build",
-		"preview": "vike preview",
+		"preview": "vike preview --port 4173",
 		"lint": "biome check"
 	},
 	"dependencies": {
