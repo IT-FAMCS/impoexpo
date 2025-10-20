@@ -36,7 +36,7 @@ msgstr "не удалось загрузить проект"
 
 #: src/components/buttons/BottomPanel.tsx:69
 #: src/components/buttons/BottomPanel.tsx:158
-#: src/pages/wizard/+Page.tsx:166
+#: src/pages/wizard/+Page.tsx:176
 msgid "transfer"
 msgstr "перенос"
 
@@ -75,12 +75,12 @@ msgid "do you wish to continue?"
 msgstr "вы хотите продолжить?"
 
 #: src/components/external/MobileWarningCard.tsx:88
-#: src/components/modals/LocalProjectsManagerModal.tsx:298
+#: src/components/modals/LocalProjectsManagerModal.tsx:303
 msgid "yes"
 msgstr "да"
 
 #: src/components/external/MobileWarningCard.tsx:91
-#: src/components/modals/LocalProjectsManagerModal.tsx:305
+#: src/components/modals/LocalProjectsManagerModal.tsx:310
 msgid "no"
 msgstr "нет"
 
@@ -97,67 +97,67 @@ msgstr "разрешённые форматы: {0}"
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:182
+#: src/components/modals/LocalProjectsManagerModal.tsx:184
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
 msgid "preparing"
 msgstr "готовимся"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:184
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "uploading the project"
 msgstr "загружаем проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:186
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "transferring"
 msgstr "переносим"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
 msgid "done!"
 msgstr "готово!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/components/modals/LocalProjectsManagerModal.tsx:198
 msgid "an error occurred"
 msgstr "произошла ошибка"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:219
+#: src/components/modals/LocalProjectsManagerModal.tsx:221
 msgid "edit project"
 msgstr "редактировать проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:228
+#: src/components/modals/LocalProjectsManagerModal.tsx:233
 msgid "delete project"
 msgstr "удалить проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:238
+#: src/components/modals/LocalProjectsManagerModal.tsx:243
 msgid "run project"
 msgstr "запустить проект (перенос)"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:309
+#: src/components/modals/LocalProjectsManagerModal.tsx:314
 msgid "are you sure?"
 msgstr "вы уверены?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:323
+#: src/components/modals/LocalProjectsManagerModal.tsx:328
 msgid "this transfer produced no files"
 msgstr "этот перенос не выдал файлов"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:373
-#: src/components/modals/LocalProjectsManagerModal.tsx:374
+#: src/components/modals/LocalProjectsManagerModal.tsx:378
+#: src/components/modals/LocalProjectsManagerModal.tsx:379
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "уведомления"
@@ -187,16 +187,28 @@ msgid "will open the documentation for the selected node"
 msgstr "по нажатию открывает документацию выбранного узла"
 
 #: src/components/modals/SettingsModal.tsx:62
+msgid "debug"
+msgstr "отладка"
+
+#: src/components/modals/SettingsModal.tsx:63
+msgid "shows additional information about the editor, useful for debugging"
+msgstr "показывает дополнительную информацию о редакторе (узлы, рёбра)"
+
+#: src/components/modals/SettingsModal.tsx:71
 msgid "developer options"
 msgstr "для разработчиков"
 
-#: src/components/modals/SettingsModal.tsx:64
+#: src/components/modals/SettingsModal.tsx:73
 msgid "allow taking screenshots of nodes"
 msgstr "показывать опцию для скриншота узлов"
 
-#: src/components/modals/SettingsModal.tsx:65
+#: src/components/modals/SettingsModal.tsx:74
 msgid "used for writing documentation"
 msgstr "обычно используется для написания документации"
+
+#: src/components/modals/SettingsModal.tsx:83
+msgid "always show types"
+msgstr "всегда показывать типы"
 
 #: src/components/network/CacheInfoModal.tsx:27
 msgid "the data is stale?"
@@ -230,44 +242,44 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:156
+#: src/features/format-editor/DefaultNodeRenderer.tsx:157
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/FormatEditor.tsx:283
+#: src/features/format-editor/FormatEditor.tsx:296
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:298
+#: src/features/format-editor/FormatEditor.tsx:311
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:305
+#: src/features/format-editor/FormatEditor.tsx:318
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:319
+#: src/features/format-editor/FormatEditor.tsx:332
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:329
+#: src/features/format-editor/FormatEditor.tsx:342
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:335
+#: src/features/format-editor/FormatEditor.tsx:348
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:345
+#: src/features/format-editor/FormatEditor.tsx:358
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:361
+#: src/features/format-editor/FormatEditor.tsx:374
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:391
+#: src/features/format-editor/FormatEditor.tsx:404
 msgid "done"
 msgstr "далее"
 
@@ -299,6 +311,34 @@ msgstr "зарендерить в буфер обмена"
 #: src/features/format-editor/FormatEditorContextMenu.tsx:171
 msgid "render to file"
 msgstr "зарендерить в файл"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:122
+msgid "no conversion exists between these types"
+msgstr "между этими типами нет взаимосвязи"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:128
+msgid "the value will be automatically converted"
+msgstr "значение будет автоматически преобразовано"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:143
+msgid "cannot connect properties of the same node"
+msgstr "нельзя присоединять поля одного и того же узла"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:147
+msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
+msgstr "нельзя присоединять поля одного вида<0/>(входной с входным, выходной с выходным)"
+
+#: src/features/format-editor/TypeHelperEdge.tsx:140
+msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
+msgstr "преобразование между данными типами может выдать ошибку.<0/>нажмите, чтобы отредактировать сообщение об ошибке."
+
+#: src/features/format-editor/TypeHelperEdge.tsx:182
+msgid "enter the error message..."
+msgstr "введите сообщение об ошибке..."
+
+#: src/features/format-editor/TypeHelperEdge.tsx:196
+msgid "inside loops, skip an iteration instead of erroring"
+msgstr "в циклах, пропускать итерацию вместо выдачи ошибки"
 
 #: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:48
 msgid "export project"
@@ -341,12 +381,12 @@ msgstr "сохранить"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного узла..."
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:238
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:240
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
 msgid "go back"
 msgstr "вернуться назад"
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:258
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:260
 msgid "the results are filtered based on what node and property you've selected."
 msgstr "результаты отфильтрованы на основании выбранных вами узла и его свойства."
 
@@ -517,7 +557,6 @@ msgstr "изменить язык, изменить страну"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:96
 #: src/features/format-editor/nodes/builtin/date-time.tsx:126
 #: src/features/format-editor/nodes/builtin/date-time.tsx:153
-#: src/features/format-editor/nodes/builtin/date-time.tsx:169
 #: src/features/format-editor/nodes/builtin/literals.tsx:39
 #: src/features/format-editor/nodes/builtin/literals.tsx:42
 msgid "date"
@@ -534,14 +573,13 @@ msgstr "локаль"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:116
 #: src/features/format-editor/nodes/builtin/date-time.tsx:145
 #: src/features/format-editor/nodes/builtin/date-time.tsx:159
-#: src/features/format-editor/nodes/builtin/date-time.tsx:173
 #: src/features/format-editor/nodes/builtin/math.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
 #: src/features/format-editor/nodes/builtin/strings.tsx:38
 #: src/features/format-editor/nodes/builtin/strings.tsx:48
 #: src/features/format-editor/nodes/builtin/strings.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:79
-#: src/features/format-editor/nodes/builtin/strings.tsx:124
+#: src/features/format-editor/nodes/builtin/strings.tsx:104
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:76
@@ -640,27 +678,6 @@ msgstr "самая поздняя допустимая дата"
 msgid "dates are compared including the start and end days!"
 msgstr "даты сравниваются включая начальные и конечные дни!"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:166
-msgid "string -> date"
-msgstr "строка -> дата"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:167
-msgid "parse date, string to date"
-msgstr "спарсить дату, строка в дату"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:174
-msgid "if successful returns the DateTime, null otherwise"
-msgstr "если перевод успешен, возвращает DateTime, иначе — null"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:177
-#: src/features/format-editor/nodes/builtin/notifications.tsx:36
-msgid "error"
-msgstr "ошибка"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:178
-msgid "if parsing wasn't successful, this will contain the explanation"
-msgstr "если перевод не удался, содержит причину провала"
-
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
 msgstr "литералы"
@@ -668,8 +685,6 @@ msgstr "литералы"
 #: src/features/format-editor/nodes/builtin/literals.tsx:18
 #: src/features/format-editor/nodes/builtin/literals.tsx:21
 #: src/features/format-editor/nodes/builtin/math.tsx:57
-#: src/features/format-editor/nodes/builtin/strings.tsx:86
-#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "number"
 msgstr "число"
 
@@ -678,10 +693,8 @@ msgstr "число"
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:89
-#: src/features/format-editor/nodes/builtin/strings.tsx:96
-#: src/features/format-editor/nodes/builtin/strings.tsx:107
-#: src/features/format-editor/nodes/builtin/strings.tsx:119
+#: src/features/format-editor/nodes/builtin/strings.tsx:87
+#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "string"
 msgstr "строка"
 
@@ -771,6 +784,10 @@ msgstr "сообщение"
 #: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
 msgstr "предупреждение"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:36
+msgid "error"
+msgstr "ошибка"
 
 #: src/features/format-editor/nodes/builtin/operators.tsx:10
 msgid "operators"
@@ -912,42 +929,34 @@ msgid "the order in which nodes are connected matters here!"
 msgstr "порядок, в котором присоединяются узлы, здесь очень важен!"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:84
-msgid "number -> string"
-msgstr "число -> строка"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:94
-msgid "string -> number"
-msgstr "строка -> число"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:104
 msgid "split string"
 msgstr "разбить строку"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:105
+#: src/features/format-editor/nodes/builtin/strings.tsx:85
 msgid "divide string, explode string"
 msgstr "разделить строку, поделить строку на части"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:108
+#: src/features/format-editor/nodes/builtin/strings.tsx:88
 msgid "delimiter"
 msgstr "разделитель"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:111
+#: src/features/format-editor/nodes/builtin/strings.tsx:91
 msgid "parts"
 msgstr "части"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:116
+#: src/features/format-editor/nodes/builtin/strings.tsx:96
 msgid "trim string"
 msgstr "обрезать строку"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:117
+#: src/features/format-editor/nodes/builtin/strings.tsx:97
 msgid "cut string, remove spaces"
 msgstr "удалить пробелы в строке, убрать пробелы"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:120
+#: src/features/format-editor/nodes/builtin/strings.tsx:100
 msgid "trim start?"
 msgstr "обрезать начало?"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:121
+#: src/features/format-editor/nodes/builtin/strings.tsx:101
 msgid "trim end?"
 msgstr "обрезать конец?"
 
@@ -1244,26 +1253,30 @@ msgstr "общее"
 msgid "google"
 msgstr "google"
 
-#: src/pages/wizard/+Page.tsx:154
+#: src/pages/wizard/+Page.tsx:164
 msgid "new data transfer"
 msgstr "новый перенос данных"
 
-#: src/pages/wizard/+Page.tsx:161
+#: src/pages/wizard/+Page.tsx:171
 msgid "select sources"
 msgstr "выбор источников"
 
-#: src/pages/wizard/+Page.tsx:162
+#: src/pages/wizard/+Page.tsx:172
 msgid "what should we transfer?"
 msgstr "что будем перемещать?"
 
-#: src/pages/wizard/+Page.tsx:164
+#: src/pages/wizard/+Page.tsx:174
 msgid "formatting"
 msgstr "форматирование"
 
-#: src/pages/wizard/+Page.tsx:164
+#: src/pages/wizard/+Page.tsx:174
 msgid "how should we transfer?"
 msgstr "как будем перемещать?"
 
-#: src/pages/wizard/+Page.tsx:167
+#: src/pages/wizard/+Page.tsx:177
 msgid "where the magic happens..."
 msgstr "где творится магия..."
+
+#: src/pages/wizard/+Page.tsx:198
+msgid "<0>something went wrong while loading integrations.</0><1/>this is likely not your fault.<2/>please check the console and contact the developers."
+msgstr "<0>во время загрузки интеграций что-то пошло не так.</0><1/>вероятнее всего, вы в этом не виноваты.<2/>проверьте консоль и свяжитесь с разработчиками."

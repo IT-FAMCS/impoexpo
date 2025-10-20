@@ -36,7 +36,7 @@ msgstr "failed to upload the project"
 
 #: src/components/buttons/BottomPanel.tsx:69
 #: src/components/buttons/BottomPanel.tsx:158
-#: src/pages/wizard/+Page.tsx:166
+#: src/pages/wizard/+Page.tsx:176
 msgid "transfer"
 msgstr "transfer"
 
@@ -75,12 +75,12 @@ msgid "do you wish to continue?"
 msgstr "do you wish to continue?"
 
 #: src/components/external/MobileWarningCard.tsx:88
-#: src/components/modals/LocalProjectsManagerModal.tsx:298
+#: src/components/modals/LocalProjectsManagerModal.tsx:303
 msgid "yes"
 msgstr "yes"
 
 #: src/components/external/MobileWarningCard.tsx:91
-#: src/components/modals/LocalProjectsManagerModal.tsx:305
+#: src/components/modals/LocalProjectsManagerModal.tsx:310
 msgid "no"
 msgstr "no"
 
@@ -97,67 +97,67 @@ msgstr "will accept: {0}"
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "you currently have no saved projects.<0/>go create one!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:182
+#: src/components/modals/LocalProjectsManagerModal.tsx:184
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
 msgid "preparing"
 msgstr "preparing"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:184
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "uploading the project"
 msgstr "uploading the project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:186
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "uploading project files"
 msgstr "uploading project files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "connecting to the server"
 msgstr "connecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "transferring"
 msgstr "transferring"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "reconnecting to the server"
 msgstr "reconnecting to the server"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
 #: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
 msgid "done!"
 msgstr "done!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/components/modals/LocalProjectsManagerModal.tsx:198
 msgid "an error occurred"
 msgstr "an error occurred"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:219
+#: src/components/modals/LocalProjectsManagerModal.tsx:221
 msgid "edit project"
 msgstr "edit project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:228
+#: src/components/modals/LocalProjectsManagerModal.tsx:233
 msgid "delete project"
 msgstr "delete project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:238
+#: src/components/modals/LocalProjectsManagerModal.tsx:243
 msgid "run project"
 msgstr "run project"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:309
+#: src/components/modals/LocalProjectsManagerModal.tsx:314
 msgid "are you sure?"
 msgstr "are you sure?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:323
+#: src/components/modals/LocalProjectsManagerModal.tsx:328
 msgid "this transfer produced no files"
 msgstr "this transfer produced no files"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:373
-#: src/components/modals/LocalProjectsManagerModal.tsx:374
+#: src/components/modals/LocalProjectsManagerModal.tsx:378
+#: src/components/modals/LocalProjectsManagerModal.tsx:379
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "notifications"
@@ -187,16 +187,28 @@ msgid "will open the documentation for the selected node"
 msgstr "will open the documentation for the selected node"
 
 #: src/components/modals/SettingsModal.tsx:62
+msgid "debug"
+msgstr "debug"
+
+#: src/components/modals/SettingsModal.tsx:63
+msgid "shows additional information about the editor, useful for debugging"
+msgstr "shows additional information about the editor, useful for debugging"
+
+#: src/components/modals/SettingsModal.tsx:71
 msgid "developer options"
 msgstr "developer options"
 
-#: src/components/modals/SettingsModal.tsx:64
+#: src/components/modals/SettingsModal.tsx:73
 msgid "allow taking screenshots of nodes"
 msgstr "allow taking screenshots of nodes"
 
-#: src/components/modals/SettingsModal.tsx:65
+#: src/components/modals/SettingsModal.tsx:74
 msgid "used for writing documentation"
 msgstr "used for writing documentation"
+
+#: src/components/modals/SettingsModal.tsx:83
+msgid "always show types"
+msgstr "always show types"
 
 #: src/components/network/CacheInfoModal.tsx:27
 msgid "the data is stale?"
@@ -230,44 +242,44 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:156
+#: src/features/format-editor/DefaultNodeRenderer.tsx:157
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:283
+#: src/features/format-editor/FormatEditor.tsx:296
 msgid "save project..."
 msgstr "save project..."
 
-#: src/features/format-editor/FormatEditor.tsx:298
+#: src/features/format-editor/FormatEditor.tsx:311
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "successfully saved the project"
 
-#: src/features/format-editor/FormatEditor.tsx:305
+#: src/features/format-editor/FormatEditor.tsx:318
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "failed to save the project (did you mess with the database?)"
 
-#: src/features/format-editor/FormatEditor.tsx:319
+#: src/features/format-editor/FormatEditor.tsx:332
 msgid "save project as..."
 msgstr "save project as..."
 
-#: src/features/format-editor/FormatEditor.tsx:329
+#: src/features/format-editor/FormatEditor.tsx:342
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:335
+#: src/features/format-editor/FormatEditor.tsx:348
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:345
+#: src/features/format-editor/FormatEditor.tsx:358
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:361
+#: src/features/format-editor/FormatEditor.tsx:374
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:391
+#: src/features/format-editor/FormatEditor.tsx:404
 msgid "done"
 msgstr "done"
 
@@ -299,6 +311,34 @@ msgstr "render to clipboard"
 #: src/features/format-editor/FormatEditorContextMenu.tsx:171
 msgid "render to file"
 msgstr "render to file"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:122
+msgid "no conversion exists between these types"
+msgstr "no conversion exists between these types"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:128
+msgid "the value will be automatically converted"
+msgstr "the value will be automatically converted"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:143
+msgid "cannot connect properties of the same node"
+msgstr "cannot connect properties of the same node"
+
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:147
+msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
+msgstr "cannot connect properties of the same source<0/>(input with input, output with output)"
+
+#: src/features/format-editor/TypeHelperEdge.tsx:140
+msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
+msgstr "the conversion between these types may result in an error.<0/>click the button to edit the error message."
+
+#: src/features/format-editor/TypeHelperEdge.tsx:182
+msgid "enter the error message..."
+msgstr "enter the error message..."
+
+#: src/features/format-editor/TypeHelperEdge.tsx:196
+msgid "inside loops, skip an iteration instead of erroring"
+msgstr "inside loops, skip an iteration instead of erroring"
 
 #: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:48
 msgid "export project"
@@ -341,12 +381,12 @@ msgstr "save"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "enter the name, category or tag of the needed node..."
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:238
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:240
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
 msgid "go back"
 msgstr "go back"
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:258
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:260
 msgid "the results are filtered based on what node and property you've selected."
 msgstr "the results are filtered based on what node and property you've selected."
 
@@ -517,7 +557,6 @@ msgstr "change country, change locale"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:96
 #: src/features/format-editor/nodes/builtin/date-time.tsx:126
 #: src/features/format-editor/nodes/builtin/date-time.tsx:153
-#: src/features/format-editor/nodes/builtin/date-time.tsx:169
 #: src/features/format-editor/nodes/builtin/literals.tsx:39
 #: src/features/format-editor/nodes/builtin/literals.tsx:42
 msgid "date"
@@ -534,14 +573,13 @@ msgstr "locale"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:116
 #: src/features/format-editor/nodes/builtin/date-time.tsx:145
 #: src/features/format-editor/nodes/builtin/date-time.tsx:159
-#: src/features/format-editor/nodes/builtin/date-time.tsx:173
 #: src/features/format-editor/nodes/builtin/math.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:26
 #: src/features/format-editor/nodes/builtin/strings.tsx:38
 #: src/features/format-editor/nodes/builtin/strings.tsx:48
 #: src/features/format-editor/nodes/builtin/strings.tsx:60
 #: src/features/format-editor/nodes/builtin/strings.tsx:79
-#: src/features/format-editor/nodes/builtin/strings.tsx:124
+#: src/features/format-editor/nodes/builtin/strings.tsx:104
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:76
@@ -640,27 +678,6 @@ msgstr "the latest allowed date"
 msgid "dates are compared including the start and end days!"
 msgstr "dates are compared including the start and end days!"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:166
-msgid "string -> date"
-msgstr "string -> date"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:167
-msgid "parse date, string to date"
-msgstr "parse date, string to date"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:174
-msgid "if successful returns the DateTime, null otherwise"
-msgstr "if successful returns the DateTime, null otherwise"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:177
-#: src/features/format-editor/nodes/builtin/notifications.tsx:36
-msgid "error"
-msgstr "error"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:178
-msgid "if parsing wasn't successful, this will contain the explanation"
-msgstr "if parsing wasn't successful, this will contain the explanation"
-
 #: src/features/format-editor/nodes/builtin/literals.tsx:12
 msgid "literals"
 msgstr "literals"
@@ -668,8 +685,6 @@ msgstr "literals"
 #: src/features/format-editor/nodes/builtin/literals.tsx:18
 #: src/features/format-editor/nodes/builtin/literals.tsx:21
 #: src/features/format-editor/nodes/builtin/math.tsx:57
-#: src/features/format-editor/nodes/builtin/strings.tsx:86
-#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "number"
 msgstr "number"
 
@@ -678,10 +693,8 @@ msgstr "number"
 #: src/features/format-editor/nodes/builtin/strings.tsx:21
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
-#: src/features/format-editor/nodes/builtin/strings.tsx:89
-#: src/features/format-editor/nodes/builtin/strings.tsx:96
-#: src/features/format-editor/nodes/builtin/strings.tsx:107
-#: src/features/format-editor/nodes/builtin/strings.tsx:119
+#: src/features/format-editor/nodes/builtin/strings.tsx:87
+#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "string"
 msgstr "string"
 
@@ -771,6 +784,10 @@ msgstr "message"
 #: src/features/format-editor/nodes/builtin/notifications.tsx:27
 msgid "warning"
 msgstr "warning"
+
+#: src/features/format-editor/nodes/builtin/notifications.tsx:36
+msgid "error"
+msgstr "error"
 
 #: src/features/format-editor/nodes/builtin/operators.tsx:10
 msgid "operators"
@@ -912,42 +929,34 @@ msgid "the order in which nodes are connected matters here!"
 msgstr "the order in which nodes are connected matters here!"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:84
-msgid "number -> string"
-msgstr "number -> string"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:94
-msgid "string -> number"
-msgstr "string -> number"
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:104
 msgid "split string"
 msgstr "split string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:105
+#: src/features/format-editor/nodes/builtin/strings.tsx:85
 msgid "divide string, explode string"
 msgstr "divide string, explode string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:108
+#: src/features/format-editor/nodes/builtin/strings.tsx:88
 msgid "delimiter"
 msgstr "delimiter"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:111
+#: src/features/format-editor/nodes/builtin/strings.tsx:91
 msgid "parts"
 msgstr "parts"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:116
+#: src/features/format-editor/nodes/builtin/strings.tsx:96
 msgid "trim string"
 msgstr "trim string"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:117
+#: src/features/format-editor/nodes/builtin/strings.tsx:97
 msgid "cut string, remove spaces"
 msgstr "cut string, remove spaces"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:120
+#: src/features/format-editor/nodes/builtin/strings.tsx:100
 msgid "trim start?"
 msgstr "trim start?"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:121
+#: src/features/format-editor/nodes/builtin/strings.tsx:101
 msgid "trim end?"
 msgstr "trim end?"
 
@@ -1244,26 +1253,30 @@ msgstr "common"
 msgid "google"
 msgstr "google"
 
-#: src/pages/wizard/+Page.tsx:154
+#: src/pages/wizard/+Page.tsx:164
 msgid "new data transfer"
 msgstr "new data transfer"
 
-#: src/pages/wizard/+Page.tsx:161
+#: src/pages/wizard/+Page.tsx:171
 msgid "select sources"
 msgstr "select sources"
 
-#: src/pages/wizard/+Page.tsx:162
+#: src/pages/wizard/+Page.tsx:172
 msgid "what should we transfer?"
 msgstr "what should we transfer?"
 
-#: src/pages/wizard/+Page.tsx:164
+#: src/pages/wizard/+Page.tsx:174
 msgid "formatting"
 msgstr "formatting"
 
-#: src/pages/wizard/+Page.tsx:164
+#: src/pages/wizard/+Page.tsx:174
 msgid "how should we transfer?"
 msgstr "how should we transfer?"
 
-#: src/pages/wizard/+Page.tsx:167
+#: src/pages/wizard/+Page.tsx:177
 msgid "where the magic happens..."
 msgstr "where the magic happens..."
+
+#: src/pages/wizard/+Page.tsx:198
+msgid "<0>something went wrong while loading integrations.</0><1/>this is likely not your fault.<2/>please check the console and contact the developers."
+msgstr "<0>something went wrong while loading integrations.</0><1/>this is likely not your fault.<2/>please check the console and contact the developers."
