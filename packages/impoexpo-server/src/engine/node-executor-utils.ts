@@ -1,13 +1,10 @@
-import type { BaseNode, ObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
 import type * as v from "valibot";
 import type { Job } from "./job-manager";
 import { childLogger } from "../logger";
 import { glob } from "glob";
 import * as path from "node:path";
-import type {
-	Project,
-	ProjectOutput,
-} from "@impoexpo/shared/schemas/project/ProjectSchema";
+import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 
 export const defaultNodeHandlers: Record<
@@ -80,6 +77,13 @@ export const registerAsyncHandler = <
 	handler: (ctx: NodeExecutorContext<TIn>) => Promise<HandlerReturnType<TOut>>,
 ) => genericRegisterAsyncHandler(defaultNodeHandlers, node, handler);
 
+export const unregisterHandler = <
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+>(
+	node: BaseNode<TIn, TOut>,
+) => genericUnregisterHandler(defaultNodeHandlers, node);
+
 export const genericRegisterHandler = <
 	TIn extends v.ObjectEntries,
 	TOut extends v.ObjectEntries,
@@ -124,6 +128,26 @@ export const genericRegisterAsyncHandler = <
 		const result = await handler(ctx as unknown as NodeExecutorContext<TIn>);
 		return result || {};
 	};
+};
+
+export const genericUnregisterHandler = <
+	TIn extends v.ObjectEntries,
+	TOut extends v.ObjectEntries,
+>(
+	registry: Record<
+		string,
+		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+	>,
+	node: BaseNode<TIn, TOut>,
+) => {
+	const id = `${node.category}-${node.name}`;
+	if (!(id in registry)) {
+		childLogger("nodes").warn(
+			`attempted to unregister a handler for node "${id}" which doesn't have a registered handler`,
+		);
+		return;
+	}
+	delete registry[id];
 };
 
 export const registerIntegrationNodeHandlerRegistrar = (

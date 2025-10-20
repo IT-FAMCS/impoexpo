@@ -19,6 +19,13 @@ export const ProjectNodeSchema = v.object({
 	type: v.pipe(v.string(), v.nonEmpty()),
 	inputs: v.record(v.string(), ProjectNodeEntrySchema),
 	outputs: v.record(v.string(), ProjectNodeEntrySchema),
+	generics: v.optional(
+		v.object({
+			base: v.string(),
+			name: v.string(),
+			resolvedTypes: v.record(v.string(), v.nullable(v.string())),
+		}),
+	),
 });
 
 export const ProjectIntegrationSchema = v.object({

@@ -38,6 +38,7 @@ import {
 } from "@/features/format-editor/nodes/renderable-node-database";
 import TransferProgressCard from "@/features/transfer-wizard/transfer-progress-card/TransferProgressCard";
 import { navigate } from "vike/client/router";
+import FormatEditorDebugOverlay from "@/features/format-editor/FormatEditorDebugOverlay";
 
 const AnimatedCard = motion.create(Card);
 export default function Wizard() {
@@ -133,6 +134,7 @@ export default function Wizard() {
 						<ReactFlowProvider>
 							<FormatEditor />
 						</ReactFlowProvider>
+						<FormatEditorDebugOverlay />
 					</FormatEditorWrapper>
 				);
 			case TransferWizardStage.TRANSFER:

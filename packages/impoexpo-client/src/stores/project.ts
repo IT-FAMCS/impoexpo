@@ -52,18 +52,18 @@ export const useProjectStore = createResettable<
 
 		for (const clientNode of clientNodes) {
 			if (!clientNode.type) continue;
-			const type =
-				clientNode.id in genericNodes
-					? genericNodes[clientNode.id].base
-					: clientNode.type;
+			const type = clientNode.type;
 			const base = getBaseNode(type);
 			const options = getNodeRenderOptions(type);
+			const generics =
+				clientNode.id in genericNodes ? genericNodes[clientNode.id] : undefined;
 
 			const node: ProjectNode = {
 				id: clientNode.id,
 				type: type,
 				inputs: {},
 				outputs: {},
+				generics,
 			};
 
 			if (base.inputSchema) {
@@ -71,10 +71,8 @@ export const useProjectStore = createResettable<
 					if (
 						clientNode.data.entries &&
 						entry in (clientNode.data.entries ?? {})
-					) {
+					)
 						node.inputs[entry] = clientNode.data.entries[entry];
-						continue;
-					}
 
 					if (options.property(entry)?.mode === "independentOnly") continue;
 
@@ -83,6 +81,7 @@ export const useProjectStore = createResettable<
 					);
 					if (edges.length !== 0) {
 						node.inputs[entry] = {
+							...(node.inputs[entry] ?? {}),
 							type: "dependent",
 							sources: edges.map((e) => ({
 								node: e.source,
@@ -103,16 +102,15 @@ export const useProjectStore = createResettable<
 					if (
 						clientNode.data.entries &&
 						entry in (clientNode.data.entries ?? {})
-					) {
+					)
 						node.outputs[entry] = clientNode.data.entries[entry];
-						continue;
-					}
 
 					const edges = clientEdges.filter(
 						(e) => e.source === clientNode.id && e.sourceHandle === entry,
 					);
 					if (edges.length !== 0) {
 						node.outputs[entry] = {
+							...node.outputs[entry],
 							type: "dependent",
 							sources: edges.map((e) => ({
 								node: e.target,

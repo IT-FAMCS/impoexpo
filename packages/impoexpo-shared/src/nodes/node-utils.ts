@@ -213,11 +213,15 @@ const internalIsUnionOrEqual = (
 			isUnionOrEqual(source.value, target.value, allowConversions)
 		);
 	if (isUnion(target))
-		return target.options.some((opt) =>
-			isUnionOrEqual(source, opt, allowConversions),
+		return target.options.some((to) =>
+			isUnion(source)
+				? source.options.some((so) => isUnionOrEqual(so, to, allowConversions))
+				: isUnionOrEqual(source, to, allowConversions),
 		);
-	if (allowConversions && schemasConvertible(source, target)) return true;
-	return schemaToString(source) === schemaToString(target);
+	return (
+		schemaToString(source) === schemaToString(target) ||
+		(allowConversions && schemasConvertible(source, target))
+	);
 };
 export const isUnionOrEqual = moize(internalIsUnionOrEqual, {
 	isDeepEqual: true,
@@ -260,6 +264,20 @@ const internalEntriesCompatible = (
 			if (isArray(generic) && isArray(nonGeneric))
 				return compatibleWithGenericEntry(generic.item, nonGeneric.item);
 
+			if (
+				(isRecord(generic) || isMap(generic)) &&
+				!(isRecord(nonGeneric) || isMap(nonGeneric))
+			)
+				return false;
+			if (
+				(isRecord(generic) || isMap(generic)) &&
+				(isRecord(nonGeneric) || isMap(nonGeneric))
+			)
+				return (
+					compatibleWithGenericEntry(generic.key, nonGeneric.key) &&
+					compatibleWithGenericEntry(generic.value, nonGeneric.value)
+				);
+
 			return true;
 		};
 
@@ -269,9 +287,6 @@ const internalEntriesCompatible = (
 		);
 	}
 
-	console.log(
-		`convertible ${schemaToString(sourceEntry.schema)} -> ${schemaToString(targetEntry.schema)}: ${schemasConvertible(sourceEntry.schema, targetEntry.schema)}`,
-	);
 	return isUnionOrEqual(
 		sourceEntry.schema,
 		targetEntry.schema,

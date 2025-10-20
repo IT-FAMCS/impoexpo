@@ -13,6 +13,7 @@ import {
 	type NodeHandlerFunction,
 } from "./node-executor-utils";
 import { projectOutputFilesCache } from "../project/endpoints";
+import type { BaseNode } from "@impoexpo/shared/nodes/node-types";
 
 const logger = childLogger("jobs");
 export const jobs: Record<string, Job> = {};
@@ -25,6 +26,10 @@ export class Job {
 	public customNodes: Record<
 		string,
 		NodeHandlerFunction<v.ObjectEntries, v.ObjectEntries>
+	> = {};
+	public customNodeBases: Record<
+		string,
+		BaseNode<v.ObjectEntries, v.ObjectEntries>
 	> = {};
 
 	public files: Record<string, Buffer> = {};

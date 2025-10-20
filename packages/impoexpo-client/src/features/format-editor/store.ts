@@ -313,13 +313,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						connectionState.toHandle.id,
 					);
 
-					get().setDependentNodeEntry(
-						connectionState.fromNode.id,
-						connectionState.fromHandle.id,
-						connectionState.toNode.id,
-						connectionState.toHandle.id,
-					);
-
 					const affectedNode = fromEntry.generics
 						? connectionState.fromNode
 						: toEntry.generics
@@ -352,8 +345,8 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					if (!newNode) return;
 
 					set((state) => ({
-						nodes: state.nodes.map((n) =>
-							n.id === affectedNode.id ? newNode : n,
+						nodes: Array.from(
+							state.nodes.map((n) => (n.id === affectedNode.id ? newNode : n)),
 						),
 					}));
 				}
@@ -455,14 +448,17 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const newNodes = get().nodes.filter((n) => nodes.indexOf(n) === -1);
 
 				for (const node of nodes) {
-					const data = get().getBaseNodeFromId(node.id);
+					const data = getBaseNode(
+						nodes.find((n) => n.id === node.id)?.type ?? "",
+					);
 					if (!data || !node.type || !isGeneric(data)) continue;
 					if (!newNodes.some((n) => n.type === node.type)) {
 						removeGenericNodeInstance(node.type);
 						unregisterRenderOptions(node.type);
 						unregisterBaseNodes(getBaseNode(node.type));
 						set((state) => {
-							if (node.type) delete state.genericNodes[node.type];
+							if (!node.type) return;
+							delete state.genericNodes[node.id];
 						});
 					}
 				}

@@ -52,6 +52,7 @@ import SaveProjectModal from "./modals/save-project-modal/SaveProjectModal";
 import { updateLocalProject } from "@/db/local-projects";
 import TypeHelperEdge from "./TypeHelperEdge";
 import TypeHelperConnectionLine from "./TypeHelperConnectionLine";
+import FormatEditorDebugOverlay from "./FormatEditorDebugOverlay";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,

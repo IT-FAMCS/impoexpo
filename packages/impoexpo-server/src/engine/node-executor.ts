@@ -10,6 +10,8 @@ import {
 	type NodeExecutorContext,
 	type InputPath,
 	type Iterator,
+	genericRegisterAsyncHandler,
+	genericUnregisterHandler,
 } from "./node-executor-utils";
 import * as v from "valibot";
 import type { ObjectEntries } from "valibot";
@@ -23,11 +25,16 @@ import {
 } from "@impoexpo/shared/nodes/node-utils";
 import clone from "clone";
 import { DateTime } from "luxon";
-import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
+import {
+	schemaFromString,
+	schemaToString,
+} from "@impoexpo/shared/nodes/schema-string-conversions";
 import {
 	createCompleteConverter,
 	schemasConvertible,
 } from "@impoexpo/shared/nodes/type-converters";
+import { deepCopy } from "deep-copy-ts";
+import { BaseNode } from "@impoexpo/shared/nodes/node-types";
 
 export class SkipIterationError extends Error {
 	constructor() {
@@ -35,6 +42,12 @@ export class SkipIterationError extends Error {
 		this.name = "SkipIterationError";
 	}
 }
+
+export const getNodeBase = (type: string, job: Job) => {
+	if (type in baseNodes) return baseNodes[type];
+	if (type in job.customNodeBases) return job.customNodeBases[type];
+	return undefined;
+};
 
 export const getNodeHandler = (
 	type: string,
@@ -55,7 +68,7 @@ export const executeJobNodes = async (job: Job) => {
 
 	const resolveInputPaths = (node: ProjectNode, depth = 1) => {
 		const paths: Record<string, InputPath[]> = {};
-		const base = baseNodes[node.type];
+		const base = getNodeBase(node.type, job);
 		if (!base) {
 			throw new Error(`no node base was found for node type "${node.type}"`);
 		}
@@ -226,7 +239,7 @@ export const executeJobNodes = async (job: Job) => {
 		});
 
 		const resolveInputs = (sourceNode: ProjectNode) => {
-			const base = baseNodes[sourceNode.type];
+			const base = getNodeBase(sourceNode.type, job);
 			if (!base)
 				throw new Error(`no node base found for node type ${sourceNode.type}`);
 
@@ -285,21 +298,13 @@ export const executeJobNodes = async (job: Job) => {
 								let value = (
 									actualPreviousData[source.node] as Record<string, unknown>
 								)[source.entry];
-								value = isArray(schema)
-									? [
-											...(input in inputs ? (inputs[input] as unknown[]) : []),
-											...(Array.isArray(value) ? value : [value]),
-										]
-									: value;
-								let valueSchema = baseNodes[
+
+								const valueSchema = getNodeBase(
 									job.project.nodes.find((n) => n.id === source.node)?.type ??
-										""
-								].entry(source.entry).schema;
-								valueSchema =
-									isArray(schema) && !isArray(valueSchema)
-										? v.array(valueSchema)
-										: valueSchema;
-								if (!isUnionOrEqual(valueSchema, schema)) {
+										"",
+									job,
+								)?.entry(source.entry).schema;
+								if (valueSchema && !isUnionOrEqual(valueSchema, schema)) {
 									if (!schemasConvertible(valueSchema, schema))
 										throw new Error(
 											`node "${sourceNode.id}" has a dependent input "${input}" of type ${schemaToString(valueSchema)} connected to "${source.node}", which isn't convertible to the required ${schemaToString(schema)}`,
@@ -311,9 +316,9 @@ export const executeJobNodes = async (job: Job) => {
 									logger.debug(
 										`converting entry "${source.entry}" of ${source.node} from ${schemaToString(valueSchema)} to ${schemaToString(schema)}`,
 									);
-									inputs[input] = converter.converter(value);
+									value = converter.converter(value);
 
-									if (inputs[input] === null) {
+									if (value === null) {
 										const message = `failed to convert entry "${source.entry}" of ${source.node} from ${schemaToString(valueSchema)} to ${schemaToString(schema)}`;
 										const targetErrorBehavior = job.project.nodes.find(
 											(n) => n.id === source.node,
@@ -326,7 +331,14 @@ export const executeJobNodes = async (job: Job) => {
 											throw new SkipIterationError();
 										throw new Error(targetErrorBehavior?.message ?? message);
 									}
-								} else inputs[input] = value;
+								}
+
+								inputs[input] = isArray(schema)
+									? [
+											...(input in inputs ? (inputs[input] as unknown[]) : []),
+											...(Array.isArray(value) ? value : [value]),
+										]
+									: value;
 							}
 							break;
 						}
@@ -363,7 +375,7 @@ export const executeJobNodes = async (job: Job) => {
 		}
 
 		if (actualDepth === 0) {
-			const base = baseNodes[node.type];
+			const base = getNodeBase(node.type, job);
 			if (!base)
 				throw new Error(`no node base found for node type "${node.type}"`);
 			const handler = getNodeHandler(node.type, job);
@@ -479,16 +491,62 @@ export const executeJobNodes = async (job: Job) => {
 	};
 
 	try {
-		const terminatingNodes = job.project.nodes.filter(
-			(n) =>
-				Object.keys(baseNodes[n.type]?.outputSchema?.entries ?? {}).length ===
-				0,
-		);
+		logger.debug("preprocessing nodes");
+		const genericNodes: Set<string> = new Set();
+		for (const node of job.project.nodes) {
+			if (!node.generics) continue;
+
+			logger.debug(`registering ${node.type} with base ${node.generics.base}`);
+			const base = getNodeBase(node.generics.base, job);
+			if (!base) {
+				logger.warn(
+					`couldn't register generic node ${node.type} because its base ${node.generics.base} was undefined`,
+				);
+				return;
+			}
+			const handler = getNodeHandler(node.generics.base, job);
+			if (!handler) {
+				logger.warn(
+					`couldn't register generic node ${node.type} because its base ${node.generics.base} has no handler`,
+				);
+				return;
+			}
+
+			const copy = deepCopy(base);
+			Object.setPrototypeOf(copy, BaseNode.prototype);
+
+			copy.name = node.generics.name;
+			for (const [type, resolvedWith] of Object.entries(
+				node.generics.resolvedTypes,
+			)) {
+				if (!resolvedWith) continue;
+				copy.resolveGenericType(type, schemaFromString(resolvedWith));
+			}
+
+			job.customNodeBases[`${copy.category}-${copy.name}`] = copy;
+			genericRegisterAsyncHandler(job.customNodes, copy, handler);
+			genericNodes.add(`${copy.category}-${copy.name}`);
+		}
+
+		const terminatingNodes = job.project.nodes
+			.filter(
+				(n) =>
+					Object.keys(getNodeBase(n.type, job)?.outputSchema?.entries ?? {})
+						.length === 0,
+			)
+			.map((n) => ({ node: n, paths: resolveInputPaths(n) }));
 		logger.debug(`running ${terminatingNodes.length} terminating node(s)`);
-		for (const node of terminatingNodes) {
-			const paths = resolveInputPaths(node);
-			logger.debug(`input paths for ${node.id}: %o`, paths);
-			await runNode(node, paths, undefined);
+		for (const info of terminatingNodes) {
+			logger.debug(`input paths for ${info.node.id}: %o`, info.paths);
+			await runNode(info.node, info.paths, undefined);
+		}
+
+		if (genericNodes.size !== 0) {
+			logger.debug("unregistering generic nodes");
+			for (const node of genericNodes) {
+				genericUnregisterHandler(job.customNodes, job.customNodeBases[node]);
+				delete job.customNodeBases[node];
+			}
 		}
 
 		job.complete();

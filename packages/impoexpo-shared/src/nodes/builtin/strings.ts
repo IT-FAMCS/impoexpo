@@ -101,11 +101,11 @@ nodesScope(() => {
 		SPLIT_STRING_NODE,
 		TRIM_STRING_NODE,
 	);
-	registerConverter(v.string(), v.number(), (obj) => {
+	registerConverter(v.string(), v.nullable(v.number()), (obj) => {
 		const num = Number(obj);
 		return Number.isNaN(num) ? null : num;
 	});
-	registerConverter(v.string(), dateTime(), (obj) => {
+	registerConverter(v.string(), v.nullable(dateTime()), (obj) => {
 		const result = dateTimeFromAny(obj);
 		return result.isValid ? result : null;
 	});

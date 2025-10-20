@@ -58,6 +58,15 @@ export default function SettingsModal(props: {
 											}
 										/>
 									</SettingsModalItem>
+									<SettingsModalItem
+										title={t`debug`}
+										description={t`shows additional information about the editor, useful for debugging`}
+									>
+										<Switch
+											isSelected={settings.editor.debug}
+											onValueChange={(v) => settings.put("editor.debug", v)}
+										/>
+									</SettingsModalItem>
 								</SettingsModalSection>
 								<SettingsModalSection title={t`developer options`}>
 									<SettingsModalItem

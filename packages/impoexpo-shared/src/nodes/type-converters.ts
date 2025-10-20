@@ -2,8 +2,11 @@ import type { ObjectEntry } from "./node-types";
 import type * as v from "valibot";
 import {
 	isArray,
+	isCustomType,
+	isGeneric,
 	isMap,
 	isNullable,
+	isOptional,
 	isPipe,
 	isRecord,
 	isUnion,
@@ -15,7 +18,7 @@ import moize from "moize";
 export type TypeConverter<
 	TInSchema extends ObjectEntry,
 	TOutSchema extends ObjectEntry,
-> = (obj: v.InferOutput<TInSchema>) => v.InferOutput<TOutSchema> | null;
+> = (obj: v.InferOutput<TInSchema>) => v.InferOutput<TOutSchema>;
 
 export const typeConverters: {
 	inSchema: ObjectEntry;
@@ -24,17 +27,13 @@ export const typeConverters: {
 	converter: TypeConverter<ObjectEntry, ObjectEntry>;
 }[] = [];
 
-type ExtendsNull<T> = null extends T ? true : false;
-const extendsNull = <T>(): ExtendsNull<T> => true as ExtendsNull<T>;
-
 export const registerConverter = <
 	TInSchema extends ObjectEntry,
 	TOutSchema extends ObjectEntry,
-	TReturn extends v.InferOutput<TOutSchema> | null,
 >(
 	inSchema: TInSchema,
 	outSchema: TOutSchema,
-	converter: (obj: v.InferOutput<TInSchema>) => TReturn,
+	converter: TypeConverter<TInSchema, TOutSchema>,
 ) => {
 	if (schemasConvertible(inSchema, outSchema)) {
 		console.warn(
@@ -44,26 +43,43 @@ export const registerConverter = <
 	}
 	typeConverters.push({
 		inSchema,
-		outSchema,
-		faulty: extendsNull<TReturn>(),
-		converter,
+		outSchema: isNullable(outSchema) ? outSchema.wrapped : outSchema,
+		faulty: isNullable(outSchema),
+		converter: converter as unknown as TypeConverter<ObjectEntry, ObjectEntry>,
 	});
 };
+
+const isWrapped = (
+	schema: ObjectEntry,
+): schema is
+	| v.NullableSchema<ObjectEntry, null>
+	| v.OptionalSchema<ObjectEntry, null> =>
+	isNullable(schema) || isOptional(schema);
 
 const internalSchemasConvertible = (
 	sourceSchema: ObjectEntry,
 	targetSchema: ObjectEntry,
 ): boolean => {
-	if (isPipe(sourceSchema))
+	if (
+		(!isGeneric(sourceSchema) && isGeneric(targetSchema)) ||
+		(isGeneric(sourceSchema) && !isGeneric(targetSchema))
+	)
+		return true;
+
+	if (
+		isPipe(sourceSchema) &&
+		!isCustomType(sourceSchema) &&
+		!isCustomType(targetSchema)
+	)
 		return schemasConvertible(
 			sourceSchema.pipe[0],
 			isPipe(targetSchema) ? targetSchema.pipe[0] : targetSchema,
 		);
 
-	if (isNullable(sourceSchema))
+	if (isWrapped(sourceSchema) || isWrapped(targetSchema))
 		return schemasConvertible(
-			sourceSchema.wrapped,
-			isNullable(targetSchema) ? targetSchema.wrapped : targetSchema,
+			isWrapped(sourceSchema) ? sourceSchema.wrapped : sourceSchema,
+			isWrapped(targetSchema) ? targetSchema.wrapped : targetSchema,
 		);
 
 	if (isUnion(sourceSchema))
@@ -89,6 +105,7 @@ const internalSchemasConvertible = (
 		);
 
 	if (isUnionOrEqual(sourceSchema, targetSchema)) return true;
+
 	return typeConverters.some(
 		(tc) =>
 			isUnionOrEqual(tc.inSchema, sourceSchema) &&
@@ -121,6 +138,7 @@ export const getConverterForSchemas = (
 		throw new Error(
 			`types ${schemaToString(sourceSchema)} and ${schemaToString(targetSchema)} are not convertible!`,
 		);
+
 	return { converter: info.converter, faulty: info.faulty };
 };
 
@@ -141,13 +159,27 @@ const internalCreateCompleteConverter = <
 			`types ${schemaToString(sourceSchema)} and ${schemaToString(targetSchema)} are not convertible!`,
 		);
 
-	if (isNullable(sourceSchema))
+	if (isWrapped(sourceSchema) || isWrapped(targetSchema))
 		return createCompleteConverter(
-			sourceSchema.wrapped,
-			isNullable(targetSchema) ? targetSchema.wrapped : targetSchema,
+			isWrapped(sourceSchema) ? sourceSchema.wrapped : sourceSchema,
+			isWrapped(targetSchema) ? targetSchema.wrapped : targetSchema,
 		);
 
-	if (isPipe(sourceSchema))
+	// TODO
+	if (
+		(!isGeneric(sourceSchema) && isGeneric(targetSchema)) ||
+		(isGeneric(sourceSchema) && !isGeneric(targetSchema))
+	)
+		return {
+			faulty: false,
+			converter: (source: v.InferOutput<TInSchema>) => source,
+		};
+
+	if (
+		isPipe(sourceSchema) &&
+		!isCustomType(sourceSchema) &&
+		!isCustomType(targetSchema)
+	)
 		return createCompleteConverter(
 			sourceSchema.pipe[0],
 			isPipe(targetSchema) ? targetSchema.pipe[0] : targetSchema,
