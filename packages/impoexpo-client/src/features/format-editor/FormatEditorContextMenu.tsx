@@ -11,7 +11,7 @@ import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import type { ProjectNode } from "./nodes/renderable-node-types";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore } from "./stores/store";
 import { useSettingsStore } from "@/stores/settings";
 import * as htmlToImage from "html-to-image";
 

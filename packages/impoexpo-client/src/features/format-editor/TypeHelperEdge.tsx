@@ -1,13 +1,11 @@
-import React, { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
 	BaseEdge,
 	EdgeLabelRenderer,
 	getBezierPath,
-	useConnection,
-	useReactFlow,
 	type EdgeProps,
 } from "@xyflow/react";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore } from "./stores/store";
 import { createCompleteConverter } from "@impoexpo/shared/nodes/type-converters";
 import { motion } from "motion/react";
 import {
@@ -23,9 +21,9 @@ import {
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useShallow } from "zustand/react/shallow";
-import { t } from "@lingui/core/macro";
 import { entriesCompatible } from "@impoexpo/shared/nodes/node-utils";
 import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
+import { getNodeEntry, updateNodeEntryProperty } from "./stores/node-entries";
 const AnimatedCard = motion.create(Card);
 
 export default function TypeHelperEdge({
@@ -51,17 +49,9 @@ export default function TypeHelperEdge({
 		targetY,
 		targetPosition,
 	});
-	const [
-		getBaseNodeFromId,
-		getNodeEntryErrorBehavior,
-		setNodeEntryErrorBehavior,
-		fromNode,
-		toNode,
-	] = useFormatEditorStore(
+	const [getBaseNodeFromId, fromNode, toNode] = useFormatEditorStore(
 		useShallow((selector) => [
 			selector.getBaseNodeFromId,
-			selector.getNodeEntryErrorBehavior,
-			selector.setNodeEntryErrorBehavior,
 			selector.nodes.find((n) => n.id === source),
 			selector.nodes.find((n) => n.id === target),
 		]),
@@ -169,11 +159,17 @@ export default function TypeHelperEdge({
 										autoFocus
 										value={errorMessage}
 										onValueChange={(v) =>
-											setNodeEntryErrorBehavior(
+											updateNodeEntryProperty(
 												source,
 												sourceHandleId ?? "",
-												v,
-												skipIterationInsideLoops,
+												"errorBehavior",
+												{
+													message: v,
+													skipIterationInsideLoops:
+														getNodeEntry(source, sourceHandleId ?? "")
+															?.errorBehavior?.skipIterationInsideLoops ??
+														false,
+												},
 											)
 										}
 										onKeyDown={(ev) => {
@@ -184,11 +180,16 @@ export default function TypeHelperEdge({
 									<Checkbox
 										isSelected={skipIterationInsideLoops}
 										onValueChange={(v) => {
-											setNodeEntryErrorBehavior(
+											updateNodeEntryProperty(
 												source,
 												sourceHandleId ?? "",
-												errorMessage,
-												v,
+												"errorBehavior",
+												{
+													message:
+														getNodeEntry(source, sourceHandleId ?? "")
+															?.errorBehavior?.message ?? "",
+													skipIterationInsideLoops: v,
+												},
 											);
 										}}
 									>

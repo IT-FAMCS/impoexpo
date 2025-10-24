@@ -11,6 +11,7 @@ export const ProjectNodeEntrySchema = v.object({
 			skipIterationInsideLoops: v.boolean(),
 		}),
 	),
+	arrayType: v.optional(v.string()),
 	value: v.optional(v.unknown()),
 });
 

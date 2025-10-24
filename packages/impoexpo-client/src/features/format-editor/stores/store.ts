@@ -44,12 +44,12 @@ import {
 	getNodeRenderOptions,
 	registerWithDefaultRenderer,
 	useRenderableNodesStore,
-} from "./nodes/renderable-node-database";
+} from "../nodes/renderable-node-database";
 import type {
 	DefaultNodeRenderOptions,
 	ProjectNode,
-} from "./nodes/renderable-node-types";
-import { useSearchNodesModalStore } from "./modals/search-nodes-modal/store";
+} from "../nodes/renderable-node-types";
+import { useSearchNodesModalStore } from "../modals/search-nodes-modal/store";
 import { temporal, type TemporalState } from "zundo";
 import { deepEqual } from "fast-equals";
 import { useStore } from "zustand";
@@ -58,6 +58,7 @@ import { schemaFromString } from "@impoexpo/shared/nodes/schema-string-conversio
 import { filterObject } from "@impoexpo/shared/nodes/node-utils";
 import * as v from "valibot";
 import { ProjectNodeEntrySchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import { removeNodeEntry } from "./node-entries";
 
 export const ProjectNodeSchema = v.object({
 	data: v.record(v.string(), v.unknown()),
@@ -130,32 +131,6 @@ export type FormatEditorStore = {
 	) => void;
 	updateNodeCount: () => void;
 
-	getNodeEntryValue: (id: string, entry: string) => unknown;
-	setNodeEntry: (id: string, entry: string, value: unknown) => void;
-	setDependentNodeEntry: (
-		source: string,
-		sourceHandle: string,
-		target: string,
-		targetHandle: string,
-	) => void;
-	removeNodeEntry: (id: string, entry: string) => void;
-
-	getNodeEntryErrorBehavior: (
-		id: string,
-		entry: string,
-	) =>
-		| {
-				message: string;
-				skipIterationInsideLoops: boolean;
-		  }
-		| undefined;
-	setNodeEntryErrorBehavior: (
-		id: string,
-		entry: string,
-		message: string,
-		skipIterationInsideLoops: boolean,
-	) => void;
-
 	attachNewNode: (
 		fromNodeId: string,
 		fromNodeType: string,
@@ -172,6 +147,11 @@ export type FormatEditorStore = {
 	duplicateNode: (id?: string) => void;
 	isNodeRemovable: (id?: string) => boolean;
 
+	resolveGenericNodeIndependent: (
+		node: string,
+		resolvedTypeName: string,
+		resolvedWith: ObjectEntry,
+	) => void;
 	resolveGenericNode: (
 		base: {
 			node: DefaultBaseNode;
@@ -304,11 +284,11 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					const fromEntry = fromNode.entry(connectionState.fromHandle.id);
 					const toEntry = toNode.entry(connectionState.toHandle.id);
 
-					get().removeNodeEntry(
+					removeNodeEntry(
 						connectionState.fromNode.id,
 						connectionState.fromHandle.id,
 					);
-					get().removeNodeEntry(
+					removeNodeEntry(
 						connectionState.toNode.id,
 						connectionState.toHandle.id,
 					);
@@ -508,79 +488,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				);
 			},
 
-			setNodeEntryErrorBehavior(id, entry, message, skipIterationInsideLoops) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					state.nodes[nodeIndex].data.entries ??= {};
-					state.nodes[nodeIndex].data.entries[entry] = {
-						...state.nodes[nodeIndex].data.entries[entry],
-						errorBehavior: {
-							message,
-							skipIterationInsideLoops,
-						},
-					};
-				});
-			},
-			getNodeEntryErrorBehavior(id, entry) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
-				if (nodeIndex === -1) return undefined;
-				const entries = get().nodes[nodeIndex].data.entries;
-				if (!entries || !(entry in entries)) return undefined;
-				return entries[entry].errorBehavior;
-			},
-
-			setNodeEntry(id, entry, value) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					state.nodes[nodeIndex].data.entries ??= {};
-					state.nodes[nodeIndex].data.entries[entry] = {
-						...state.nodes[nodeIndex].data.entries[entry],
-						type: "independent",
-						value,
-					};
-				});
-			},
-
-			setDependentNodeEntry(source, sourceHandle, target, targetHandle) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === source);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					state.nodes[nodeIndex].data.entries ??= {};
-					const prev = state.nodes[nodeIndex].data.entries[sourceHandle];
-					state.nodes[nodeIndex].data.entries[sourceHandle] = {
-						...prev,
-						type: "dependent",
-						sources: [
-							...(prev && "sources" in prev ? (prev.sources ?? []) : []),
-							{ node: target, entry: targetHandle },
-						],
-					};
-				});
-			},
-
-			removeNodeEntry(id, entry) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
-				if (nodeIndex === -1) return;
-				set((state) => {
-					if (
-						!state.nodes[nodeIndex].data.entries ||
-						!(entry in state.nodes[nodeIndex].data.entries)
-					)
-						return;
-					delete state.nodes[nodeIndex].data.entries[entry];
-				});
-			},
-
-			getNodeEntryValue(id, entry) {
-				const nodeIndex = get().nodes.findIndex((n) => n.id === id);
-				if (nodeIndex === -1) return undefined;
-				const entries = get().nodes[nodeIndex].data.entries;
-				if (!entries || !(entry in entries)) return undefined;
-				return entries[entry].value;
-			},
-
 			attachNewNode(
 				fromNodeId,
 				fromNodeType,
@@ -649,7 +556,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 									type: "typehelper",
 								},
 					);
-					state.removeNodeEntry(fromNodeId, fromHandleId);
+					removeNodeEntry(fromNodeId, fromHandleId);
 				});
 			},
 
@@ -747,6 +654,54 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				});
 
 				return { ...node, type: `${copy.category}-${copy.name}` };
+			},
+
+			resolveGenericNodeIndependent(id, resolvedTypeName, resolvedWith) {
+				const node = get().nodes.find((n) => n.id === id);
+				const base = get().getBaseNodeFromId(id);
+				if (!node || !base)
+					throw new Error(
+						`resolveGenericNodeIndependent: no node found with id ${id}`,
+					);
+				const copy = deepCopy(base);
+				Object.setPrototypeOf(copy, BaseNode.prototype);
+
+				console.log(resolvedTypeName, resolvedWith);
+				copy.resolveGenericType(resolvedTypeName, resolvedWith);
+
+				const { addGenericNodeInstance, getTrueGenericNodeBase } =
+					useRenderableNodesStore.getState();
+
+				const trueBase =
+					getTrueGenericNodeBase(`${base.category}-${base.name}`) ?? base;
+				copy.name = `${trueBase.name}-${Object.entries(copy.genericTypes)
+					.map(([key, type]) => type || key)
+					.join("-")}`;
+
+				addGenericNodeInstance(base, copy);
+				set((state) => {
+					// TODO: this is disgusting
+					if (node.id in state.genericNodes)
+						state.genericNodes[getNodeId("GENERIC-DEPENDENCY")] =
+							state.genericNodes[node.id];
+					state.genericNodes[node.id] = {
+						base: `${trueBase.category}-${trueBase.name}`,
+						name: copy.name,
+						resolvedTypes: copy.genericTypes,
+					};
+				});
+				registerBaseNodes(copy);
+				registerWithDefaultRenderer(copy, {
+					...getNodeRenderOptions(`${trueBase.category}-${trueBase.name}`).raw,
+					searchable: false,
+				});
+
+				console.log(copy);
+				set((state) => {
+					const index = state.nodes.findIndex((n) => n.id === id);
+					if (index === -1) return;
+					state.nodes[index].type = `${copy.category}-${copy.name}`;
+				});
 			},
 
 			recoverGenericNodes(nodes) {

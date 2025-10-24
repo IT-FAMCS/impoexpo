@@ -6,10 +6,19 @@ import {
 	Checkbox,
 	DatePicker,
 	Divider,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
 	Input,
 	NumberInput,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 	Select,
 	SelectItem,
+	SharedSelection,
 } from "@heroui/react";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
@@ -22,7 +31,7 @@ import {
 	useUpdateNodeInternals,
 } from "@xyflow/react";
 import type React from "react";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Key, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	type DefaultNodeRenderOptions,
@@ -30,15 +39,18 @@ import {
 } from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { BaseIssue } from "valibot";
+import { getDefault, type BaseIssue } from "valibot";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore } from "./stores/store";
 import clsx from "clsx";
 import {
 	type ValidatorFunction,
 	isPicklist,
 	isEnum,
 	isDateTime,
+	isArray,
+	isGeneric,
+	getGenericName,
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
@@ -50,6 +62,16 @@ import {
 import { useSettingsStore } from "@/stores/settings";
 import { useDocumentationModalStore } from "./modals/documentation-modal/store";
 import { docs } from "@/api/common";
+import {
+	getNodeEntryProperty,
+	setNodeEntryIndependentValue,
+	updateNodeEntryProperty,
+} from "./stores/node-entries";
+import {
+	getDefaultValue,
+	schemaFromString,
+	schemaToString,
+} from "@impoexpo/shared/nodes/schema-string-conversions";
 
 const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 	type,
@@ -173,6 +195,11 @@ const getEntryComponent = <TDefault,>(
 	entry: ObjectEntry,
 	defaultValue?: TDefault,
 	validator?: ValidatorFunction,
+	customCallbacks?: Partial<{
+		generic: (v: unknown) => void;
+		select: (v?: string) => void;
+		date: (v?: string | null) => void;
+	}>,
 ) => {
 	if ("default" in entry) {
 		return getEntryComponent(
@@ -194,6 +221,18 @@ const getEntryComponent = <TDefault,>(
 		);
 	}
 
+	if (isArray(entry)) {
+		return (
+			<NodePropertyArrayInput
+				name={handleName}
+				node={node}
+				renderOptions={renderOptions}
+				innerType={entry.item}
+				property={entry}
+			/>
+		);
+	}
+
 	if (entry.type === "string") {
 		return (
 			<NodePropertyGenericInput
@@ -202,6 +241,7 @@ const getEntryComponent = <TDefault,>(
 				renderOptions={renderOptions}
 				default={(defaultValue as string | undefined) ?? ""}
 				validator={validator}
+				customCallback={customCallbacks?.generic}
 			/>
 		);
 	}
@@ -214,6 +254,7 @@ const getEntryComponent = <TDefault,>(
 				renderOptions={renderOptions}
 				default={(defaultValue as boolean | undefined) ?? false}
 				validator={validator}
+				customCallback={customCallbacks?.generic}
 			/>
 		);
 	}
@@ -226,6 +267,7 @@ const getEntryComponent = <TDefault,>(
 				renderOptions={renderOptions}
 				default={(defaultValue as number | undefined) ?? 0}
 				validator={validator}
+				customCallback={customCallbacks?.generic}
 			/>
 		);
 	}
@@ -238,6 +280,7 @@ const getEntryComponent = <TDefault,>(
 				name={handleName}
 				node={node}
 				renderOptions={renderOptions}
+				customCallback={customCallbacks?.select}
 			/>
 		);
 
@@ -250,6 +293,7 @@ const getEntryComponent = <TDefault,>(
 				name={handleName}
 				node={node}
 				renderOptions={renderOptions}
+				customCallback={customCallbacks?.date}
 			/>
 		);
 	}
@@ -391,41 +435,134 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 	);
 });
 
+function NodePropertyArrayInput(props: {
+	node: string;
+	name: string;
+	renderOptions: DefaultNodeRenderOptions;
+	innerType: ObjectEntry;
+	property: ObjectEntry;
+}) {
+	const { t } = useLingui();
+	const [isArrayTypeDropdownOpen, setArrayTypeDropdownOpen] = useState(false);
+	const [value, setValue] = useState<unknown[]>([]);
+	const resolveGenericNodeIndependent = useFormatEditorStore(
+		useShallow((selector) => selector.resolveGenericNodeIndependent),
+	);
+
+	useEffect(() => {
+		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
+		if (savedValue) setValue(savedValue as unknown[]);
+	}, [props.name, props.node]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: still depends on value!
+	useEffect(() => {
+		setNodeEntryIndependentValue(props.node, props.name, value);
+	}, [props.name, props.node, JSON.stringify(value)]);
+
+	const saveArrayType = useCallback(
+		(key: Key) => {
+			if (!isGeneric(props.innerType)) return;
+			const schema = schemaFromString(key.toString());
+			resolveGenericNodeIndependent(
+				props.node,
+				getGenericName(props.innerType),
+				schema,
+			);
+			setValue([getDefaultValue(schema)]);
+		},
+		[resolveGenericNodeIndependent, props.innerType, props.node],
+	);
+
+	return (
+		<Dropdown
+			isOpen={isArrayTypeDropdownOpen}
+			onOpenChange={(open) => {
+				if (isGeneric(props.innerType)) setArrayTypeDropdownOpen(open);
+			}}
+		>
+			<DropdownTrigger>
+				<Card
+					onPress={
+						value.length === 0
+							? () => {
+									if (!isGeneric(props.innerType))
+										setValue([getDefaultValue(props.innerType)]);
+								}
+							: undefined
+					}
+					className="w-full bg-content2"
+					isPressable={value.length === 0}
+				>
+					<CardBody className="flex flex-col justify-center items-center">
+						{value.length === 0 ? (
+							<Icon className="scale-150" icon="mdi:plus" />
+						) : (
+							<>meow</>
+						)}
+					</CardBody>
+				</Card>
+			</DropdownTrigger>
+			<DropdownMenu onAction={saveArrayType}>
+				<DropdownSection title={t`what do you wish to store?`}>
+					<DropdownItem
+						key="string"
+						startContent={<Icon width={18} icon="mdi:text" />}
+					>
+						<Trans>strings</Trans>
+					</DropdownItem>
+					<DropdownItem
+						key="number"
+						startContent={<Icon width={18} icon="mdi:plus-minus-variant" />}
+					>
+						<Trans>numbers</Trans>
+					</DropdownItem>
+					<DropdownItem
+						key="DateTime"
+						startContent={<Icon width={18} icon="mdi:calendar" />}
+					>
+						<Trans>dates</Trans>
+					</DropdownItem>
+					<DropdownItem
+						key="boolean"
+						startContent={<Icon width={18} icon="mdi:check" />}
+					>
+						<Trans>flags</Trans>
+					</DropdownItem>
+				</DropdownSection>
+			</DropdownMenu>
+		</Dropdown>
+	);
+}
+
 function NodePropertyDatePicker(props: {
 	node: string;
 	name: string;
 	renderOptions: DefaultNodeRenderOptions;
 	default: ZonedDateTime | null;
+	customCallback?: (v?: string | null) => void;
 }) {
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
-		useShallow((state) => ({
-			setNodeEntry: state.setNodeEntry,
-			getNodeEntryValue: state.getNodeEntryValue,
-		})),
-	);
 	const [value, setValue] = useState<ZonedDateTime | null>(props.default);
 
 	useEffect(() => {
-		const savedValue = getNodeEntryValue(props.node, props.name);
+		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
 		if (savedValue) setValue(parseAbsoluteToLocal(savedValue as string));
-	}, [getNodeEntryValue, props.name, props.node]);
+	}, [props.name, props.node]);
 
 	useEffect(() => {
-		setNodeEntry(
-			props.node,
-			props.name,
-			value
-				? DateTime.fromObject(
-						{
-							year: value.year,
-							day: value.day,
-							month: value.month,
-						},
-						{ zone: FixedOffsetZone.utcInstance },
-					).toJSON()
-				: undefined,
-		);
-	}, [props.name, props.node, setNodeEntry, value]);
+		const date = value
+			? DateTime.fromObject(
+					{
+						year: value.year,
+						day: value.day,
+						month: value.month,
+					},
+					{ zone: FixedOffsetZone.utcInstance },
+				).toJSON()
+			: undefined;
+		props.customCallback
+			? props.customCallback(date)
+			: setNodeEntryIndependentValue(props.node, props.name, date);
+	}, [props.customCallback, props.name, props.node, value]);
 
 	return (
 		<DatePicker
@@ -445,6 +582,7 @@ function NodePropertyGenericSelect(props: {
 	name: string;
 	default: string | undefined;
 	entry: ObjectEntry;
+	customCallback?: (v?: string) => void;
 }) {
 	const options = useMemo(
 		() =>
@@ -464,22 +602,18 @@ function NodePropertyGenericSelect(props: {
 		[props.renderOptions, props.name, options],
 	);
 
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
-		useShallow((state) => ({
-			setNodeEntry: state.setNodeEntry,
-			getNodeEntryValue: state.getNodeEntryValue,
-		})),
-	);
 	const [value, setValue] = useState<string | undefined>(props.default);
 
 	useEffect(() => {
-		const savedValue = getNodeEntryValue(props.node, props.name);
+		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
 		if (savedValue) setValue(savedValue as string);
-	}, [getNodeEntryValue, props.name, props.node]);
+	}, [props.name, props.node]);
 
 	useEffect(() => {
-		setNodeEntry(props.node, props.name, value);
-	}, [props.name, props.node, setNodeEntry, value]);
+		props.customCallback
+			? props.customCallback(value)
+			: setNodeEntryIndependentValue(props.node, props.name, value);
+	}, [props.customCallback, props.name, props.node, value]);
 
 	return (
 		<Select
@@ -490,9 +624,11 @@ function NodePropertyGenericSelect(props: {
 			className="nodrag"
 			onSelectionChange={(selection) => {
 				if (selection.currentKey)
-					useFormatEditorStore
-						.getState()
-						.setNodeEntry(props.node, props.name, selection.currentKey);
+					setNodeEntryIndependentValue(
+						props.node,
+						props.name,
+						selection.currentKey,
+					);
 			}}
 			onChange={(ev) => {
 				setValue(ev.target.value);
@@ -519,13 +655,8 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	name: string;
 	default: T;
 	validator?: ValidatorFunction;
+	customCallback?: (v: unknown) => void;
 }) {
-	const { setNodeEntry, getNodeEntryValue } = useFormatEditorStore(
-		useShallow((state) => ({
-			setNodeEntry: state.setNodeEntry,
-			getNodeEntryValue: state.getNodeEntryValue,
-		})),
-	);
 	const [value, setValue] = useState<T | undefined>(props.default);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 	const locale = useLocaleInformation();
@@ -543,13 +674,15 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 	}, [props.validator, value, locale]);
 
 	useEffect(() => {
-		const savedValue = getNodeEntryValue(props.node, props.name);
+		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
 		if (savedValue) setValue(savedValue as T);
-	}, [getNodeEntryValue, props.name, props.node]);
+	}, [props.name, props.node]);
 
 	useEffect(() => {
-		setNodeEntry(props.node, props.name, value);
-	}, [props.name, props.node, setNodeEntry, value]);
+		props.customCallback
+			? props.customCallback(value)
+			: setNodeEntryIndependentValue(props.node, props.name, value);
+	}, [props.customCallback, props.name, props.node, value]);
 
 	if (typeof props.default === "boolean") {
 		return (

@@ -8,7 +8,7 @@ import { msg } from "@lingui/core/macro";
 import { Icon } from "@iconify/react";
 
 nodesScope(() => {
-	registerCategory("array", {
+	registerCategory("arrays", {
 		name: msg`array`,
 		header: "bg-primary-200",
 		icon: (size) => <Icon width={size} icon="mdi:script-text-outline" />,

@@ -7,7 +7,7 @@ import {
 	PersistentGenericNodeDataSchema,
 	ProjectNodeSchema,
 	useFormatEditorStore,
-} from "@/features/format-editor/store";
+} from "@/features/format-editor/stores/store";
 import { useProjectStore } from "@/stores/project";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import { ProjectSchema } from "@impoexpo/shared/schemas/project/ProjectSchema";

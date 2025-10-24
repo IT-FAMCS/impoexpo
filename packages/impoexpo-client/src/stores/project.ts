@@ -1,5 +1,5 @@
 import { getNodeRenderOptions } from "@/features/format-editor/nodes/renderable-node-database";
-import { useFormatEditorStore } from "@/features/format-editor/store";
+import { useFormatEditorStore } from "@/features/format-editor/stores/store";
 import { allIntegrations } from "@/integrations/integrations";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type {

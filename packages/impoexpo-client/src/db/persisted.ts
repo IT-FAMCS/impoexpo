@@ -8,7 +8,7 @@ import { globalDatabase } from "./global-database";
 import {
 	type PersistentGenericNodeData,
 	useFormatEditorStore,
-} from "@/features/format-editor/store";
+} from "@/features/format-editor/stores/store";
 import { useProjectStore } from "@/stores/project";
 import { ProjectSchema } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { allIntegrations } from "@/integrations/integrations";

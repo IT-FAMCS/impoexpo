@@ -16,7 +16,7 @@ import type { ObjectEntries } from "valibot";
 import {
 	getNodeId,
 	useFormatEditorStore,
-} from "@/features/format-editor/store";
+} from "@/features/format-editor/stores/store";
 
 export const registerMicrosoftWordNode = (
 	filename: string,

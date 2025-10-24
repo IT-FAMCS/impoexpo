@@ -5,7 +5,7 @@ import {
 import {
 	getNodeId,
 	useFormatEditorStore,
-} from "@/features/format-editor/store";
+} from "@/features/format-editor/stores/store";
 import { Icon } from "@iconify/react";
 import {
 	nodesScope,

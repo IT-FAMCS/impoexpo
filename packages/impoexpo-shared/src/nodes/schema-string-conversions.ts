@@ -17,8 +17,10 @@ import {
 	dateTime,
 	isDateTime,
 	isMap,
+	isOptional,
 } from "./node-utils";
 import moize from "moize";
+import { DateTime } from "luxon";
 
 const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
 	string: v.string,
@@ -33,6 +35,26 @@ export const registerCustomType = <T extends v.ObjectEntries>(
 ) => {
 	customTypeSchemaConverters[name] = generator;
 	return customType(name, generator());
+};
+
+export const getDefaultValue = (schema: ObjectEntry): unknown => {
+	if (isNullable(schema)) return getDefaultValue(schema.wrapped);
+	if (isOptional(schema)) return v.getDefault(schema);
+	if (isArray(schema)) return [];
+	if (isRecord(schema) || isMap(schema)) return {};
+
+	const type = schemaToString(schema);
+	switch (type) {
+		case "string":
+			return "";
+		case "number":
+			return 0;
+		case "DateTime":
+			return DateTime.now();
+		case "boolean":
+			return false;
+	}
+	return null;
 };
 
 export const internalSchemaFromString = (raw: string): ObjectEntry => {

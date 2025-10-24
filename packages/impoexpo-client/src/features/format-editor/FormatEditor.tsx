@@ -31,7 +31,10 @@ import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import SearchNodesModal from "./modals/search-nodes-modal/SearchNodesModal";
 import { useSearchNodesModalStore } from "./modals/search-nodes-modal/store";
 import { ThemeProps } from "@heroui/use-theme";
-import { useFormatEditorStore, useFormatEditorTemporalStore } from "./store";
+import {
+	useFormatEditorStore,
+	useFormatEditorTemporalStore,
+} from "./stores/store";
 import { Icon } from "@iconify/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Trans } from "@lingui/react/macro";

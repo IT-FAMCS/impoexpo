@@ -1,5 +1,5 @@
 import { useSettingsStore } from "@/stores/settings";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore } from "./stores/store";
 import { useShallow } from "zustand/react/shallow";
 import {
 	JsonView,

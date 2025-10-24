@@ -21,7 +21,7 @@ import {
 import { useSearchNodesModalStore } from "./store";
 import { useNodeSearchMetadataStore } from "../../nodes/renderable-node-database";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
-import { useFormatEditorStore } from "../../store";
+import { useFormatEditorStore } from "../../stores/store";
 import { localizableString } from "../../nodes/renderable-node-types";
 import { entriesCompatible } from "@impoexpo/shared/nodes/node-utils";
 

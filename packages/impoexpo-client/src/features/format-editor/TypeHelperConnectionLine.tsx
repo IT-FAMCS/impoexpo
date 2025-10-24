@@ -7,7 +7,7 @@ import {
 } from "@xyflow/react";
 
 import { getNodeRenderOptions } from "./nodes/renderable-node-database";
-import { useFormatEditorStore } from "./store";
+import { useFormatEditorStore } from "./stores/store";
 import { useMemo } from "react";
 import { schemasConvertible } from "@impoexpo/shared/nodes/type-converters";
 import { Icon } from "@iconify/react";

@@ -14,6 +14,7 @@ import {
 } from "./node-utils";
 import { schemaToString } from "./schema-string-conversions";
 import moize from "moize";
+import { IF_NODE } from "./builtin/conditional";
 
 export type TypeConverter<
 	TInSchema extends ObjectEntry,
@@ -160,10 +161,16 @@ const internalCreateCompleteConverter = <
 		);
 
 	if (isWrapped(sourceSchema) || isWrapped(targetSchema))
-		return createCompleteConverter(
-			isWrapped(sourceSchema) ? sourceSchema.wrapped : sourceSchema,
-			isWrapped(targetSchema) ? targetSchema.wrapped : targetSchema,
-		);
+		return {
+			faulty: isWrapped(sourceSchema) && !isWrapped(targetSchema),
+			converter: (source) => {
+				if (source === null) return null;
+				return createCompleteConverter(
+					isWrapped(sourceSchema) ? sourceSchema.wrapped : sourceSchema,
+					isWrapped(targetSchema) ? targetSchema.wrapped : targetSchema,
+				).converter(source);
+			},
+		};
 
 	// TODO
 	if (
@@ -172,7 +179,7 @@ const internalCreateCompleteConverter = <
 	)
 		return {
 			faulty: false,
-			converter: (source: v.InferOutput<TInSchema>) => source,
+			converter: (source) => source,
 		};
 
 	if (
@@ -194,7 +201,7 @@ const internalCreateCompleteConverter = <
 		if (exactMatch)
 			return {
 				faulty: false,
-				converter: (source: v.InferOutput<TInSchema>) => source,
+				converter: (source) => source,
 			};
 		return createCompleteConverter(
 			// biome-ignore lint/style/noNonNullAssertion: this is checked by schemasConvertible
@@ -210,7 +217,7 @@ const internalCreateCompleteConverter = <
 	if (!isArray(sourceSchema) && isArray(targetSchema))
 		return {
 			faulty: createCompleteConverter(sourceSchema, targetSchema.item).faulty,
-			converter: (source: v.InferOutput<TInSchema>) => [
+			converter: (source) => [
 				createCompleteConverter(sourceSchema, targetSchema.item).converter(
 					source,
 				),
@@ -221,7 +228,7 @@ const internalCreateCompleteConverter = <
 		return {
 			faulty: createCompleteConverter(sourceSchema.item, targetSchema.item)
 				.faulty,
-			converter: (source: v.InferOutput<TInSchema>) =>
+			converter: (source) =>
 				(source as v.InferOutput<TInSchema>[]).map((it) =>
 					createCompleteConverter(
 						sourceSchema.item,
@@ -238,7 +245,7 @@ const internalCreateCompleteConverter = <
 			faulty:
 				createCompleteConverter(sourceSchema.key, targetSchema.key).faulty ||
 				createCompleteConverter(sourceSchema.value, targetSchema.value).faulty,
-			converter: (source: v.InferOutput<TInSchema>) =>
+			converter: (source) =>
 				new Map<
 					v.InferOutput<typeof targetSchema.key>,
 					v.InferOutput<typeof targetSchema.value>
