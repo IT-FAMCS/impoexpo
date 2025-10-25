@@ -13,12 +13,8 @@ import {
 	DropdownTrigger,
 	Input,
 	NumberInput,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
 	Select,
 	SelectItem,
-	SharedSelection,
 } from "@heroui/react";
 import { getBaseNode } from "@impoexpo/shared/nodes/node-database";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
@@ -31,7 +27,16 @@ import {
 	useUpdateNodeInternals,
 } from "@xyflow/react";
 import type React from "react";
-import { Key, memo, useCallback, useEffect, useMemo, useState } from "react";
+import {
+	createContext,
+	type Key,
+	memo,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
 	type DefaultNodeRenderOptions,
@@ -39,7 +44,7 @@ import {
 } from "./nodes/renderable-node-types";
 import "@valibot/i18n/ru";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { getDefault, type BaseIssue } from "valibot";
+import type { BaseIssue } from "valibot";
 import useLocaleInformation from "@/hooks/useLocaleInformation";
 import { useFormatEditorStore } from "./stores/store";
 import clsx from "clsx";
@@ -55,9 +60,8 @@ import {
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
 import { DateTime, FixedOffsetZone } from "luxon";
-import {
-	parseAbsoluteToLocal,
-	type ZonedDateTime,
+import type {
+	ZonedDateTime,
 } from "@internationalized/date";
 import { useSettingsStore } from "@/stores/settings";
 import { useDocumentationModalStore } from "./modals/documentation-modal/store";
@@ -65,13 +69,31 @@ import { docs } from "@/api/common";
 import {
 	getNodeEntryProperty,
 	setNodeEntryIndependentValue,
-	updateNodeEntryProperty,
 } from "./stores/node-entries";
 import {
 	getDefaultValue,
 	schemaFromString,
-	schemaToString,
 } from "@impoexpo/shared/nodes/schema-string-conversions";
+import { Reorder, useDragControls } from "motion/react";
+import { v4 } from "uuid";
+
+const NodeIndependentPropertyContext = createContext<
+	| {
+			node: string;
+			handle: string;
+			schema: ObjectEntry;
+			renderOptions: DefaultNodeRenderOptions;
+
+			default?: unknown;
+			validator?: ValidatorFunction;
+
+			override?: {
+				getter: () => unknown;
+				setter: (v: unknown) => void;
+			};
+	  }
+	| undefined
+>(undefined);
 
 const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 	type,
@@ -188,118 +210,60 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 
 export default DefaultNodeRenderer;
 
-const getEntryComponent = <TDefault,>(
-	renderOptions: DefaultNodeRenderOptions,
-	node: string,
-	handleName: string,
-	entry: ObjectEntry,
-	defaultValue?: TDefault,
-	validator?: ValidatorFunction,
-	customCallbacks?: Partial<{
-		generic: (v: unknown) => void;
-		select: (v?: string) => void;
-		date: (v?: string | null) => void;
-	}>,
-) => {
-	if ("default" in entry) {
-		return getEntryComponent(
-			renderOptions,
-			node,
-			handleName,
-			entry.wrapped,
-			entry.default,
+function NodeIndependentPropertyInput() {
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodeIndependentPropertyInput without NodeEntryRendererContext",
 		);
-	}
-	if ("pipe" in entry && Array.isArray(entry.pipe) && entry.pipe.length > 0) {
-		return getEntryComponent(
-			renderOptions,
-			node,
-			handleName,
-			entry.pipe[0] as ObjectEntry,
-			defaultValue,
-			entry["~run"],
+
+	if ("default" in ctx.schema) {
+		return (
+			<NodeIndependentPropertyContext
+				value={{
+					...ctx,
+					schema: ctx.schema.wrapped,
+					default: ctx.schema.default,
+				}}
+			>
+				<NodeIndependentPropertyInput />
+			</NodeIndependentPropertyContext>
 		);
 	}
 
-	if (isArray(entry)) {
+	if (
+		"pipe" in ctx.schema &&
+		Array.isArray(ctx.schema.pipe) &&
+		ctx.schema.pipe.length > 0
+	) {
 		return (
-			<NodePropertyArrayInput
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				innerType={entry.item}
-				property={entry}
-			/>
+			<NodeIndependentPropertyContext
+				value={{
+					...ctx,
+					schema: ctx.schema.pipe[0],
+					validator: ctx.schema["~run"],
+				}}
+			>
+				<NodeIndependentPropertyInput />
+			</NodeIndependentPropertyContext>
 		);
 	}
 
-	if (entry.type === "string") {
-		return (
-			<NodePropertyGenericInput
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				default={(defaultValue as string | undefined) ?? ""}
-				validator={validator}
-				customCallback={customCallbacks?.generic}
-			/>
-		);
-	}
+	if (isArray(ctx.schema))
+		return <NodePropertyArrayInput innerType={ctx.schema.item} />;
 
-	if (entry.type === "boolean") {
-		return (
-			<NodePropertyGenericInput
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				default={(defaultValue as boolean | undefined) ?? false}
-				validator={validator}
-				customCallback={customCallbacks?.generic}
-			/>
-		);
-	}
+	if (ctx.schema.type === "string") return <NodePropertyGenericInput<string> />;
+	if (ctx.schema.type === "boolean")
+		return <NodePropertyGenericInput<boolean> />;
+	if (ctx.schema.type === "number") return <NodePropertyGenericInput<number> />;
 
-	if (entry.type === "number") {
-		return (
-			<NodePropertyGenericInput
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				default={(defaultValue as number | undefined) ?? 0}
-				validator={validator}
-				customCallback={customCallbacks?.generic}
-			/>
-		);
-	}
+	if (ctx.schema.type === "picklist" || ctx.schema.type === "enum")
+		return <NodePropertyGenericSelect />;
 
-	if (entry.type === "picklist" || entry.type === "enum")
-		return (
-			<NodePropertyGenericSelect
-				default={defaultValue as string | undefined}
-				entry={entry}
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				customCallback={customCallbacks?.select}
-			/>
-		);
-
-	if (isDateTime(entry)) {
-		return (
-			<NodePropertyDatePicker
-				default={
-					defaultValue ? parseAbsoluteToLocal(defaultValue as string) : null
-				}
-				name={handleName}
-				node={node}
-				renderOptions={renderOptions}
-				customCallback={customCallbacks?.date}
-			/>
-		);
-	}
+	if (isDateTime(ctx.schema)) return <NodePropertyDatePicker />;
 
 	return <></>;
-};
+}
 
 export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 	renderOptions: DefaultNodeRenderOptions;
@@ -339,15 +303,15 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 		if ("options" in entry) return true;
 	};
 
-	const entryComponent = useMemo(
-		() =>
-			getEntryComponent(
-				props.renderOptions,
-				props.id,
-				props.name,
-				props.property,
-			),
-		[props.renderOptions, props.id, props.name, props.property],
+	const context = useMemo(
+		() => ({
+			node: props.id,
+			handle: props.name,
+			renderOptions: props.renderOptions,
+			schema: props.property,
+			default: getDefaultValue(props.property),
+		}),
+		[props.id, props.name, props.renderOptions, props.property],
 	);
 
 	return props.input ? (
@@ -387,7 +351,11 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 					)}
 				</div>
 				<div className="flex-grow">
-					{!shouldHideEntryComponent && entryComponent}
+					{!shouldHideEntryComponent && (
+						<NodeIndependentPropertyContext value={context}>
+							<NodeIndependentPropertyInput />
+						</NodeIndependentPropertyContext>
+					)}
 				</div>
 			</div>
 			{(separate === "after" || separate === "both") && <Divider />}
@@ -435,42 +403,125 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 	);
 });
 
-function NodePropertyArrayInput(props: {
-	node: string;
-	name: string;
-	renderOptions: DefaultNodeRenderOptions;
+// sigh
+class WrappedValue {
+	id: string;
+	value: unknown;
+
+	constructor(v: unknown, id?: string) {
+		this.value = v;
+		this.id = id ?? v4();
+	}
+}
+
+function NodePropertyArrayInputItem(props: {
+	value: WrappedValue;
 	innerType: ObjectEntry;
-	property: ObjectEntry;
+	values: WrappedValue[];
+	setValue: (v: WrappedValue[]) => void;
 }) {
+	const controls = useDragControls();
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodePropertyArrayInputItem without a NodeIndependentPropertyContext",
+		);
+	return (
+		<Reorder.Item
+			dragListener={false}
+			dragControls={controls}
+			value={props.value}
+		>
+			<NodeIndependentPropertyContext
+				value={{
+					...ctx,
+					schema: props.innerType,
+					default: getDefaultValue(props.innerType),
+					override: {
+						getter: () => props.value.value,
+						setter: (newValue) => {
+							if (props.value.value === newValue) return;
+							props.setValue(
+								props.values.map((it) =>
+									it.id === props.value.id
+										? new WrappedValue(newValue, props.value.id)
+										: it,
+								),
+							);
+						},
+					},
+				}}
+			>
+				<div className="w-full flex flex-row justify-center items-center gap-1">
+					<div
+						onPointerDown={(e) => controls.start(e)}
+						className="flex justify-center items-center h-full reorder-handle mr-1"
+					>
+						<Icon icon="mdi:drag-horizontal" />
+					</div>
+					<NodeIndependentPropertyInput />
+					<Button
+						onPress={() => {
+							props.setValue(
+								props.values.filter((it) => it.id !== props.value.id),
+							);
+						}}
+						color="danger"
+						variant="light"
+						startContent={<Icon className="scale-125" icon="mdi:delete" />}
+						isIconOnly
+					/>
+				</div>
+			</NodeIndependentPropertyContext>
+		</Reorder.Item>
+	);
+}
+
+function NodePropertyArrayInput(props: { innerType: ObjectEntry }) {
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodePropertyArrayInput without a NodeIndependentPropertyContext",
+		);
 	const { t } = useLingui();
 	const [isArrayTypeDropdownOpen, setArrayTypeDropdownOpen] = useState(false);
-	const [value, setValue] = useState<unknown[]>([]);
+	const [value, setValue] = useState<WrappedValue[]>(
+		(
+			(ctx.override?.getter
+				? ctx.override.getter()
+				: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ??
+					ctx.default ??
+					[])) as unknown[]
+		).map((v) => new WrappedValue(v)),
+	);
+
 	const resolveGenericNodeIndependent = useFormatEditorStore(
 		useShallow((selector) => selector.resolveGenericNodeIndependent),
 	);
 
-	useEffect(() => {
-		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
-		if (savedValue) setValue(savedValue as unknown[]);
-	}, [props.name, props.node]);
-
 	// biome-ignore lint/correctness/useExhaustiveDependencies: still depends on value!
 	useEffect(() => {
-		setNodeEntryIndependentValue(props.node, props.name, value);
-	}, [props.name, props.node, JSON.stringify(value)]);
+		ctx.override?.setter
+			? ctx.override.setter(value.map((v) => v.value))
+			: setNodeEntryIndependentValue(
+					ctx.node,
+					ctx.handle,
+					value.map((v) => v.value),
+				);
+	}, [ctx.override, ctx.handle, ctx.node, JSON.stringify(value)]);
 
 	const saveArrayType = useCallback(
 		(key: Key) => {
 			if (!isGeneric(props.innerType)) return;
 			const schema = schemaFromString(key.toString());
 			resolveGenericNodeIndependent(
-				props.node,
+				ctx.node,
 				getGenericName(props.innerType),
 				schema,
 			);
-			setValue([getDefaultValue(schema)]);
+			setValue([new WrappedValue(getDefaultValue(schema))]);
 		},
-		[resolveGenericNodeIndependent, props.innerType, props.node],
+		[resolveGenericNodeIndependent, props.innerType, ctx.node],
 	);
 
 	return (
@@ -486,18 +537,52 @@ function NodePropertyArrayInput(props: {
 						value.length === 0
 							? () => {
 									if (!isGeneric(props.innerType))
-										setValue([getDefaultValue(props.innerType)]);
+										setValue([
+											new WrappedValue(getDefaultValue(props.innerType)),
+										]);
 								}
 							: undefined
 					}
-					className="w-full bg-content2"
+					className={clsx(
+						"w-full nodrag",
+						value.length === 0 ? "bg-content2" : "bg-content1",
+					)}
 					isPressable={value.length === 0}
 				>
 					<CardBody className="flex flex-col justify-center items-center">
 						{value.length === 0 ? (
 							<Icon className="scale-150" icon="mdi:plus" />
 						) : (
-							<>meow</>
+							<div className="flex flex-col gap-2 w-full">
+								<Reorder.Group
+									axis="y"
+									layotScroll
+									values={value}
+									onReorder={setValue}
+									className="flex flex-col gap-2 overflow-y-scroll scrollbar-hide"
+								>
+									{value.map((item) => (
+										<NodePropertyArrayInputItem
+											key={item.id}
+											value={item}
+											innerType={props.innerType}
+											values={value}
+											setValue={setValue}
+										/>
+									))}
+								</Reorder.Group>
+								<Button
+									className="w-full"
+									startContent={<Icon className="scale-150" icon="mdi:plus" />}
+									isIconOnly
+									onPress={() => {
+										setValue([
+											...value,
+											new WrappedValue(getDefaultValue(props.innerType)),
+										]);
+									}}
+								/>
+							</div>
 						)}
 					</CardBody>
 				</Card>
@@ -534,19 +619,19 @@ function NodePropertyArrayInput(props: {
 	);
 }
 
-function NodePropertyDatePicker(props: {
-	node: string;
-	name: string;
-	renderOptions: DefaultNodeRenderOptions;
-	default: ZonedDateTime | null;
-	customCallback?: (v?: string | null) => void;
-}) {
-	const [value, setValue] = useState<ZonedDateTime | null>(props.default);
-
-	useEffect(() => {
-		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
-		if (savedValue) setValue(parseAbsoluteToLocal(savedValue as string));
-	}, [props.name, props.node]);
+function NodePropertyDatePicker() {
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodePropertyDatePicker without a NodeIndependentPropertyContext",
+		);
+	const [value, setValue] = useState<ZonedDateTime | null>(
+		(ctx.override?.getter
+			? ctx.override.getter()
+			: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ??
+				ctx.default ??
+				null)) as ZonedDateTime | null,
+	);
 
 	useEffect(() => {
 		const date = value
@@ -559,16 +644,16 @@ function NodePropertyDatePicker(props: {
 					{ zone: FixedOffsetZone.utcInstance },
 				).toJSON()
 			: undefined;
-		props.customCallback
-			? props.customCallback(date)
-			: setNodeEntryIndependentValue(props.node, props.name, date);
-	}, [props.customCallback, props.name, props.node, value]);
+		ctx.override?.setter
+			? ctx.override?.setter(date)
+			: setNodeEntryIndependentValue(ctx.node, ctx.handle, date);
+	}, [ctx.override, ctx.handle, ctx.node, value]);
 
 	return (
 		<DatePicker
 			style={{ minWidth: "15rem" }}
 			popoverProps={{ className: "min-w-fit" }}
-			aria-label={props.renderOptions.placeholder(props.name)}
+			aria-label={ctx.renderOptions.placeholder(ctx.handle)}
 			className="nodrag"
 			value={value}
 			onChange={setValue}
@@ -576,57 +661,56 @@ function NodePropertyDatePicker(props: {
 	);
 }
 
-function NodePropertyGenericSelect(props: {
-	renderOptions: DefaultNodeRenderOptions;
-	node: string;
-	name: string;
-	default: string | undefined;
-	entry: ObjectEntry;
-	customCallback?: (v?: string) => void;
-}) {
+function NodePropertyGenericSelect() {
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodePropertyGenericSelect without a NodeIndependentPropertyContext",
+		);
 	const options = useMemo(
 		() =>
-			isPicklist(props.entry)
-				? props.entry.options
-				: isEnum(props.entry)
-					? Object.keys(props.entry.enum)
+			isPicklist(ctx.schema)
+				? ctx.schema.options
+				: isEnum(ctx.schema)
+					? Object.keys(ctx.schema.enum)
 					: [],
-		[props.entry],
+		[ctx.schema],
 	);
 
 	const items = useMemo(
 		() =>
 			options
-				.map((key) => props.renderOptions.options(props.name, key))
+				.map((key) => ctx.renderOptions.options(ctx.handle, key))
 				.filter((i) => i !== undefined),
-		[props.renderOptions, props.name, options],
+		[ctx.renderOptions, ctx.handle, options],
 	);
 
-	const [value, setValue] = useState<string | undefined>(props.default);
+	const [value, setValue] = useState<string | undefined>(
+		(ctx.override?.getter
+			? ctx.override.getter()
+			: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ?? ctx.default)) as
+			| string
+			| undefined,
+	);
 
 	useEffect(() => {
-		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
-		if (savedValue) setValue(savedValue as string);
-	}, [props.name, props.node]);
-
-	useEffect(() => {
-		props.customCallback
-			? props.customCallback(value)
-			: setNodeEntryIndependentValue(props.node, props.name, value);
-	}, [props.customCallback, props.name, props.node, value]);
+		ctx.override?.setter
+			? ctx.override.setter(value)
+			: setNodeEntryIndependentValue(ctx.node, ctx.handle, value);
+	}, [ctx.override, ctx.handle, ctx.node, value]);
 
 	return (
 		<Select
 			style={{ minWidth: "15rem" }}
 			popoverProps={{ className: "min-w-fit" }}
-			aria-label={props.renderOptions.placeholder(props.name)}
-			placeholder={props.renderOptions.placeholder(props.name)}
+			aria-label={ctx.renderOptions.placeholder(ctx.handle)}
+			placeholder={ctx.renderOptions.placeholder(ctx.handle)}
 			className="nodrag"
 			onSelectionChange={(selection) => {
 				if (selection.currentKey)
 					setNodeEntryIndependentValue(
-						props.node,
-						props.name,
+						ctx.node,
+						ctx.handle,
 						selection.currentKey,
 					);
 			}}
@@ -649,45 +733,44 @@ function NodePropertyGenericSelect(props: {
 	);
 }
 
-function NodePropertyGenericInput<T extends string | number | boolean>(props: {
-	renderOptions: DefaultNodeRenderOptions;
-	node: string;
-	name: string;
-	default: T;
-	validator?: ValidatorFunction;
-	customCallback?: (v: unknown) => void;
-}) {
-	const [value, setValue] = useState<T | undefined>(props.default);
+function NodePropertyGenericInput<T extends string | number | boolean>() {
+	const ctx = useContext(NodeIndependentPropertyContext);
+	if (!ctx)
+		throw new Error(
+			"cannot render NodePropertyGenericInput without a NodeIndependentPropertyContext",
+		);
+	const [value, setValue] = useState<T | undefined>(
+		(ctx.override?.getter
+			? ctx.override.getter()
+			: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ?? ctx.default)) as
+			| T
+			| undefined,
+	);
 	const [issues, setIssues] = useState<BaseIssue<unknown>[]>([]);
 	const locale = useLocaleInformation();
 
 	useEffect(() => {
-		if (props.validator === undefined || value === undefined) return;
+		if (ctx.validator === undefined || value === undefined) return;
 
-		const validationResult = props.validator(
+		const validationResult = ctx.validator(
 			{ value: value },
 			{ lang: locale.id },
 		);
 		setIssues(
 			validationResult.issues === undefined ? [] : validationResult.issues,
 		);
-	}, [props.validator, value, locale]);
+	}, [ctx.validator, value, locale]);
 
 	useEffect(() => {
-		const savedValue = getNodeEntryProperty(props.node, props.name, "value");
-		if (savedValue) setValue(savedValue as T);
-	}, [props.name, props.node]);
+		ctx.override?.setter
+			? ctx.override.setter(value)
+			: setNodeEntryIndependentValue(ctx.node, ctx.handle, value);
+	}, [ctx.override, ctx.handle, ctx.node, value]);
 
-	useEffect(() => {
-		props.customCallback
-			? props.customCallback(value)
-			: setNodeEntryIndependentValue(props.node, props.name, value);
-	}, [props.customCallback, props.name, props.node, value]);
-
-	if (typeof props.default === "boolean") {
+	if (typeof ctx.default === "boolean") {
 		return (
 			<Checkbox
-				aria-label={props.renderOptions.placeholder(props.name)}
+				aria-label={ctx.renderOptions.placeholder(ctx.handle)}
 				isSelected={value as boolean | undefined}
 				onValueChange={(selected) =>
 					(setValue as React.Dispatch<boolean>)(selected)
@@ -698,11 +781,11 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 		);
 	}
 
-	if (typeof props.default === "string") {
+	if (typeof ctx.default === "string") {
 		return (
 			<Input
-				aria-label={props.renderOptions.placeholder(props.name)}
-				placeholder={props.renderOptions.placeholder(props.name)}
+				aria-label={ctx.renderOptions.placeholder(ctx.handle)}
+				placeholder={ctx.renderOptions.placeholder(ctx.handle)}
 				value={value as string | undefined}
 				onValueChange={(v: string) => (setValue as React.Dispatch<string>)(v)}
 				errorMessage={() => (
@@ -719,11 +802,11 @@ function NodePropertyGenericInput<T extends string | number | boolean>(props: {
 		);
 	}
 
-	if (typeof props.default === "number") {
+	if (typeof ctx.default === "number") {
 		return (
 			<NumberInput
-				aria-label={props.renderOptions.placeholder(props.name)}
-				placeholder={props.renderOptions.placeholder(props.name)}
+				aria-label={ctx.renderOptions.placeholder(ctx.handle)}
+				placeholder={ctx.renderOptions.placeholder(ctx.handle)}
 				value={value as number | undefined}
 				onValueChange={(v: number) => (setValue as React.Dispatch<number>)(v)}
 				errorMessage={() => (

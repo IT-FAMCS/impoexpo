@@ -54,7 +54,7 @@ export const getDefaultValue = (schema: ObjectEntry): unknown => {
 		case "boolean":
 			return false;
 	}
-	return null;
+	return undefined;
 };
 
 export const internalSchemaFromString = (raw: string): ObjectEntry => {

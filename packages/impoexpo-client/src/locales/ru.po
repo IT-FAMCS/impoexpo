@@ -242,44 +242,66 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:157
+#: src/features/format-editor/DefaultNodeRenderer.tsx:208
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/FormatEditor.tsx:296
+#: src/features/format-editor/DefaultNodeRenderer.tsx:598
+msgid "what do you wish to store?"
+msgstr "что будем хранить?"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:603
+#: src/features/format-editor/nodes/builtin/strings.tsx:13
+#: src/features/format-editor/nodes/builtin/strings.tsx:56
+msgid "strings"
+msgstr "строки"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:609
+msgid "numbers"
+msgstr "числа"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:615
+msgid "dates"
+msgstr "даты"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:621
+msgid "flags"
+msgstr "флаги (правда или ложь)"
+
+#: src/features/format-editor/FormatEditor.tsx:299
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:311
+#: src/features/format-editor/FormatEditor.tsx:314
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:318
+#: src/features/format-editor/FormatEditor.tsx:321
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:332
+#: src/features/format-editor/FormatEditor.tsx:335
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:342
+#: src/features/format-editor/FormatEditor.tsx:345
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:348
+#: src/features/format-editor/FormatEditor.tsx:351
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:358
+#: src/features/format-editor/FormatEditor.tsx:361
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:374
+#: src/features/format-editor/FormatEditor.tsx:377
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:404
+#: src/features/format-editor/FormatEditor.tsx:407
 msgid "done"
 msgstr "далее"
 
@@ -328,15 +350,15 @@ msgstr "нельзя присоединять поля одного и того 
 msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
 msgstr "нельзя присоединять поля одного вида<0/>(входной с входным, выходной с выходным)"
 
-#: src/features/format-editor/TypeHelperEdge.tsx:140
+#: src/features/format-editor/TypeHelperEdge.tsx:130
 msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
 msgstr "преобразование между данными типами может выдать ошибку.<0/>нажмите, чтобы отредактировать сообщение об ошибке."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:182
+#: src/features/format-editor/TypeHelperEdge.tsx:178
 msgid "enter the error message..."
 msgstr "введите сообщение об ошибке..."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:196
+#: src/features/format-editor/TypeHelperEdge.tsx:197
 msgid "inside loops, skip an iteration instead of erroring"
 msgstr "в циклах, пропускать итерацию вместо выдачи ошибки"
 
@@ -857,11 +879,6 @@ msgstr "больше или равно..."
 #: src/features/format-editor/nodes/builtin/operators.tsx:59
 msgid ">="
 msgstr ">="
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:13
-#: src/features/format-editor/nodes/builtin/strings.tsx:56
-msgid "strings"
-msgstr "строки"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:19
 msgid "replace in string"

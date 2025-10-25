@@ -242,44 +242,66 @@ msgstr "you're sending requests too often!<0/>you can try again in:"
 msgid "retry"
 msgstr "retry"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:157
+#: src/features/format-editor/DefaultNodeRenderer.tsx:208
 msgid "this node is an iterator."
 msgstr "this node is an iterator."
 
-#: src/features/format-editor/FormatEditor.tsx:296
+#: src/features/format-editor/DefaultNodeRenderer.tsx:598
+msgid "what do you wish to store?"
+msgstr "what do you wish to store?"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:603
+#: src/features/format-editor/nodes/builtin/strings.tsx:13
+#: src/features/format-editor/nodes/builtin/strings.tsx:56
+msgid "strings"
+msgstr "strings"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:609
+msgid "numbers"
+msgstr "numbers"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:615
+msgid "dates"
+msgstr "dates"
+
+#: src/features/format-editor/DefaultNodeRenderer.tsx:621
+msgid "flags"
+msgstr "flags"
+
+#: src/features/format-editor/FormatEditor.tsx:299
 msgid "save project..."
 msgstr "save project..."
 
-#: src/features/format-editor/FormatEditor.tsx:311
+#: src/features/format-editor/FormatEditor.tsx:314
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "successfully saved the project"
 
-#: src/features/format-editor/FormatEditor.tsx:318
+#: src/features/format-editor/FormatEditor.tsx:321
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "failed to save the project (did you mess with the database?)"
 
-#: src/features/format-editor/FormatEditor.tsx:332
+#: src/features/format-editor/FormatEditor.tsx:335
 msgid "save project as..."
 msgstr "save project as..."
 
-#: src/features/format-editor/FormatEditor.tsx:342
+#: src/features/format-editor/FormatEditor.tsx:345
 msgid "layout nodes"
 msgstr "layout nodes"
 
-#: src/features/format-editor/FormatEditor.tsx:348
+#: src/features/format-editor/FormatEditor.tsx:351
 msgid "export project..."
 msgstr "export project..."
 
-#: src/features/format-editor/FormatEditor.tsx:358
+#: src/features/format-editor/FormatEditor.tsx:361
 msgid "undo"
 msgstr "undo"
 
-#: src/features/format-editor/FormatEditor.tsx:374
+#: src/features/format-editor/FormatEditor.tsx:377
 msgid "redo"
 msgstr "redo"
 
-#: src/features/format-editor/FormatEditor.tsx:404
+#: src/features/format-editor/FormatEditor.tsx:407
 msgid "done"
 msgstr "done"
 
@@ -328,15 +350,15 @@ msgstr "cannot connect properties of the same node"
 msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
 msgstr "cannot connect properties of the same source<0/>(input with input, output with output)"
 
-#: src/features/format-editor/TypeHelperEdge.tsx:140
+#: src/features/format-editor/TypeHelperEdge.tsx:130
 msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
 msgstr "the conversion between these types may result in an error.<0/>click the button to edit the error message."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:182
+#: src/features/format-editor/TypeHelperEdge.tsx:178
 msgid "enter the error message..."
 msgstr "enter the error message..."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:196
+#: src/features/format-editor/TypeHelperEdge.tsx:197
 msgid "inside loops, skip an iteration instead of erroring"
 msgstr "inside loops, skip an iteration instead of erroring"
 
@@ -857,11 +879,6 @@ msgstr "greater or equal to"
 #: src/features/format-editor/nodes/builtin/operators.tsx:59
 msgid ">="
 msgstr ">="
-
-#: src/features/format-editor/nodes/builtin/strings.tsx:13
-#: src/features/format-editor/nodes/builtin/strings.tsx:56
-msgid "strings"
-msgstr "strings"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:19
 msgid "replace in string"
