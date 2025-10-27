@@ -3,7 +3,7 @@ import * as v from "valibot";
 export enum MicrosoftWordPlaceholderType {
 	TEXT = "Text",
 	LIST = "List",
-	GROUPED_LIST = "GroupedList",
+	GROUP = "Group",
 }
 
 export type MicrosoftWordTextPatch = {
@@ -19,7 +19,7 @@ export type MicrosoftWordGroupedListItem = {
 	items: Record<string, MicrosoftWordPatch>;
 };
 export type MicrosoftWordGroupedListPatch = {
-	type: MicrosoftWordPlaceholderType.GROUPED_LIST;
+	type: MicrosoftWordPlaceholderType.GROUP;
 	groups: MicrosoftWordGroupedListItem[];
 };
 export type MicrosoftWordPatch =
@@ -44,7 +44,7 @@ export const MicrosoftWordPatchSchema = v.variant("type", [
 		),
 	}),
 	v.object({
-		type: v.literal(MicrosoftWordPlaceholderType.GROUPED_LIST),
+		type: v.literal(MicrosoftWordPlaceholderType.GROUP),
 		groups: v.array(
 			v.object({
 				title: v.lazy(

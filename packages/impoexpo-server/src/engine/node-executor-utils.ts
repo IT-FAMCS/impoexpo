@@ -44,6 +44,7 @@ export type Iterator = {
 	length: number;
 	items: ResolveEntries<v.ObjectEntries>[];
 	index: number;
+	depth: number;
 };
 
 export type NodeOutput<TOut extends v.ObjectEntries> =

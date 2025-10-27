@@ -99,4 +99,23 @@ nodesScope(() => {
 			},
 		},
 	});
+
+	registerWithDefaultRenderer(conditionalNodes.IF_NULL_NODE, {
+		title: msg`if null...`,
+		aliases: msg`fallback, if null then`,
+		inputs: {
+			nullableObject: {
+				title: msg`nullable object`,
+			},
+			fallback: {
+				title: msg`fallback`,
+			},
+		},
+		outputs: {
+			result: {
+				title: msg`result`,
+				description: msg`always guaranteed to not be null.`,
+			},
+		},
+	});
 });

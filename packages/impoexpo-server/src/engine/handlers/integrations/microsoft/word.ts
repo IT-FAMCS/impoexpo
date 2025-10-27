@@ -1,5 +1,6 @@
 import {
 	genericRegisterAsyncHandler,
+	genericRegisterHandler,
 	type NodeHandlerFunction,
 	registerAsyncHandler,
 	registerHandler,
@@ -12,13 +13,16 @@ import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
 import {
 	type MicrosoftWordPatch,
 	type MicrosoftWordTextPatch,
+	MicrosoftWordGroupedListItem,
 	MicrosoftWordPlaceholderType,
 } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
-import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+//import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
 import { dotnetRuntimeExports } from "../../../../integrations/microsoft/common/runtime";
+import { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import { logger } from "../../../../logger";
 
-registerHandler(word.WORD_TEXT_NODE, (ctx) => {
+/* registerHandler(word.WORD_TEXT_NODE, (ctx) => {
 	return {
 		result: {
 			type: MicrosoftWordPlaceholderType.TEXT as const,
@@ -85,7 +89,7 @@ registerAsyncHandler(word.WORD_GROUPED_LIST_NODE, async (ctx) => {
 			})),
 		},
 	};
-});
+}); */
 
 registerIntegrationNodeHandlerRegistrar(
 	MICROSOFT_WORD_INTEGRATION_ID,
@@ -104,13 +108,124 @@ registerIntegrationNodeHandlerRegistrar(
 
 		const generated: Record<string, boolean> = {};
 		for (const document of integration.data.documents) {
-			const base = word.createWordDocumentBaseNode(
+			const data = word.createWordDocumentBaseNode(
 				document.clientIdentifier,
 				document.layout,
 			);
-			registerBaseNodes(base);
 
-			genericRegisterAsyncHandler(handlers, base, async (ctx) => {
+			for (const [key, placeholder] of Object.entries(data.placeholders)) {
+				registerBaseNodes(placeholder.node);
+				switch (placeholder.layout.type) {
+					case MicrosoftWordPlaceholderType.TEXT:
+						genericRegisterHandler(handlers, placeholder.node, (ctx) => {
+							logger.debug(`${key} TEXT ${JSON.stringify(ctx.text)}`);
+							logger.debug("--------------------------");
+							return {
+								result: {
+									type: MicrosoftWordPlaceholderType.TEXT as const,
+									text: ctx.text,
+								},
+							};
+						});
+						break;
+					case MicrosoftWordPlaceholderType.LIST:
+						genericRegisterAsyncHandler(
+							handlers,
+							placeholder.node,
+							async (ctx) => {
+								const children = placeholder.layout.children.map((c) => c.name);
+
+								const items = await ctx["~reduce"](
+									(acc, cur) => {
+										for (const child of children) {
+											if (!(child in acc)) acc[child] = [];
+											const element = cur[child] as v.InferOutput<
+												typeof WordPatchSchema
+											>;
+											if (!acc[child].includes(element))
+												acc[child].push(element);
+										}
+										return acc;
+									},
+									{} as Record<string, v.InferOutput<typeof WordPatchSchema>[]>,
+								);
+
+								logger.debug(`${key} LIST REDUCER ${JSON.stringify(items)}`);
+								logger.debug("--------------------------");
+
+								if (ctx.automaticSeparators) {
+									// TODO: having this behavior hardcoded is probably
+									// not a good solution. however, implementing this
+									// manually is WAY harder and is out of the scope of
+									// a 1.0 release.
+									const values = Object.values(items).flat();
+									for (let idx = 0; idx < values.length; idx++) {
+										if (
+											values[idx].type === MicrosoftWordPlaceholderType.TEXT
+										) {
+											(values[idx] as MicrosoftWordTextPatch).text +=
+												idx === values.length - 1 ? "." : ";";
+										}
+									}
+								}
+
+								return {
+									result: {
+										type: MicrosoftWordPlaceholderType.LIST as const,
+										items: items,
+									},
+								};
+							},
+						);
+						break;
+					case MicrosoftWordPlaceholderType.GROUP:
+						genericRegisterAsyncHandler(
+							handlers,
+							placeholder.node,
+							async (ctx) => {
+								const children = placeholder.layout.children.map((c) => c.name);
+
+								const groups = await ctx["~reduce"]((acc, cur) => {
+									if (acc.some((g) => g.title.text === cur.__title)) return acc;
+									acc.push({
+										title: {
+											type: MicrosoftWordPlaceholderType.TEXT,
+											text: cur.__title as string,
+										},
+										items: children.reduce(
+											(acc, child) => {
+												acc[child] = cur[child] as v.InferOutput<
+													typeof WordPatchSchema
+												>;
+												return acc;
+											},
+											{} as Record<
+												string,
+												v.InferOutput<typeof WordPatchSchema>
+											>,
+										),
+									});
+
+									return acc;
+								}, [] as MicrosoftWordGroupedListItem[]);
+
+								logger.debug(`${key} GROUP REDUCER ${JSON.stringify(groups)}`);
+								logger.debug("--------------------------");
+
+								return {
+									result: {
+										type: MicrosoftWordPlaceholderType.GROUP as const,
+										groups,
+									},
+								};
+							},
+						);
+						break;
+				}
+			}
+
+			registerBaseNodes(data.document);
+			genericRegisterAsyncHandler(handlers, data.document, async (ctx) => {
 				if (document.clientIdentifier in generated) return;
 
 				const patches: Record<string, MicrosoftWordPatch> = {};
@@ -133,6 +248,7 @@ registerIntegrationNodeHandlerRegistrar(
 				}
 
 				const serializedPatches = JSON.stringify(patches);
+				console.warn(serializedPatches);
 				const buffer = await patchMethod(
 					ctx["~job"].files[document.clientIdentifier],
 					serializedPatches,

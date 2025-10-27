@@ -50,7 +50,7 @@ export const getDefaultValue = (schema: ObjectEntry): unknown => {
 		case "number":
 			return 0;
 		case "DateTime":
-			return DateTime.now();
+			return null;
 		case "boolean":
 			return false;
 	}

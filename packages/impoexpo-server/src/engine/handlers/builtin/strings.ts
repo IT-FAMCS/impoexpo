@@ -33,3 +33,8 @@ registerHandler(stringNodes.TRIM_STRING_NODE, (ctx) => {
 	if (ctx.trimEnd) result = result.trimEnd();
 	return { result };
 });
+
+registerHandler(stringNodes.REGEX_MATCH_NODE, (ctx) => {
+	const match = ctx.string.match(ctx.regex);
+	return { match: match?.[0] ?? null };
+});

@@ -10,3 +10,4 @@ registerHandler(literalNodes.STRING_NODE, (ctx) => ({ string: ctx.value }));
 registerHandler(literalNodes.DATE_TIME_NODE, (ctx) => ({
 	dateTime: ctx.value,
 }));
+registerHandler(literalNodes.ARRAY_NODE, (ctx) => ({ array: ctx.value }));

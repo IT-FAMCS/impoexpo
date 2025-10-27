@@ -177,17 +177,22 @@ export const executeJobNodes = async (job: Job) => {
 				reducer: (acc: T, cur: ObjectEntries) => T,
 				initial: T,
 			) => {
+				logger.info(`REDUCER CALLED ${JSON.stringify(node)}`);
 				if (node.id in reducerCache) return reducerCache[node.id] as T;
 
 				let current = initial;
 				const paths = resolveInputPaths(node);
 
 				const iterators: Iterator[] = [];
+				logger.info(`REDUCER PATHS: ${JSON.stringify(paths)}`)
 				traversePaths(paths, (p) => {
 					const iterator = globalIterators.find((i) => i.node === p.node);
 					if (iterator && !iterators.some((i) => i.node === iterator.node))
 						iterators.push(iterator);
 				});
+				logger.info(
+					`REDUCER ITERATORS(${iterators.length}): ${JSON.stringify(iterators)}`,
+				);
 				if (iterators.length === 0) {
 					await runNode(
 						node,
@@ -459,7 +464,7 @@ export const executeJobNodes = async (job: Job) => {
 					);
 				}
 
-				globalIterators = iterators; // this is used for ~reduce
+				globalIterators.push(...iterators); // this is used for ~reduce
 				for (let idx = 0; idx < iterators[0].length; idx++) {
 					for (const it of iterators) {
 						logger.debug(

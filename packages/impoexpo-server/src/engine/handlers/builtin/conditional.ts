@@ -23,3 +23,13 @@ registerHandler(conditionalNodes.SKIP_ITERATION_IF_NODE, (ctx) => {
 	if (ctx.condition) skip();
 	return { sameObj: ctx.obj };
 });
+
+registerHandler(conditionalNodes.IS_NULL_NODE, (ctx) => {
+	return { result: ctx.nullableObject === null };
+});
+
+registerHandler(conditionalNodes.IF_NULL_NODE, (ctx) => {
+	return {
+		result: ctx.nullableObject === null ? ctx.fallback : ctx.nullableObject,
+	};
+});

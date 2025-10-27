@@ -91,6 +91,18 @@ export const TRIM_STRING_NODE = new BaseNode({
 	}),
 });
 
+export const REGEX_MATCH_NODE = new BaseNode({
+	category: "strings",
+	name: "regex-match",
+	inputSchema: v.object({
+		string: v.string(),
+		regex: v.string(),
+	}),
+	outputSchema: v.object({
+		match: v.nullable(v.string()),
+	}),
+});
+
 nodesScope(() => {
 	registerBaseNodes(
 		REPLACE_NODE,
@@ -100,6 +112,7 @@ nodesScope(() => {
 		FORMAT_STRING_NODE,
 		SPLIT_STRING_NODE,
 		TRIM_STRING_NODE,
+		REGEX_MATCH_NODE,
 	);
 	registerConverter(v.string(), v.nullable(v.number()), (obj) => {
 		const num = Number(obj);

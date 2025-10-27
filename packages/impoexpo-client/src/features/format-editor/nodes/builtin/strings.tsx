@@ -104,4 +104,19 @@ nodesScope(() => {
 			result: { title: msg`result` },
 		},
 	});
+
+	registerWithDefaultRenderer(stringNodes.REGEX_MATCH_NODE, {
+		title: msg`match regex`,
+		aliases: msg`find string, substring, find match`,
+		inputs: {
+			string: { title: msg`string` },
+			regex: { title: msg`regular expression` },
+		},
+		outputs: {
+			match: {
+				title: msg`match`,
+				description: msg`null will be returned if no match was found.`,
+			},
+		},
+	});
 });

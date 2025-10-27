@@ -51,6 +51,18 @@ export const IS_NULL_NODE = new BaseNode({
 	}),
 });
 
+export const IF_NULL_NODE = new BaseNode({
+	category: "conditional",
+	name: "if-null",
+	inputSchema: v.object({
+		nullableObject: v.nullable(generic("T")),
+		fallback: generic("T"),
+	}),
+	outputSchema: v.object({
+		result: generic("T"),
+	}),
+});
+
 export const SKIP_ITERATION_IF_NODE = new BaseNode({
 	category: "conditional",
 	name: "skip-iteration-if",
@@ -70,5 +82,6 @@ nodesScope(() => {
 		THROW_ERROR_IF_NULL_NODE,
 		SKIP_ITERATION_IF_NODE,
 		IS_NULL_NODE,
+		IF_NULL_NODE,
 	);
 });

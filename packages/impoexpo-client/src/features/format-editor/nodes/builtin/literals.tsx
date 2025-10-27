@@ -41,4 +41,11 @@ nodesScope(() => {
 		inputs: { value: { mode: "independentOnly", title: msg`value` } },
 		outputs: { dateTime: { title: msg`date` } },
 	});
+
+	registerWithDefaultRenderer(literalNodes.ARRAY_NODE, {
+		title: msg`array`,
+		icon: (size) => <Icon width={size} icon="mdi:script-text-outline" />,
+		inputs: { value: { mode: "independentOnly", title: msg`value` } },
+		outputs: { array: { title: msg`array` } },
+	});
 });

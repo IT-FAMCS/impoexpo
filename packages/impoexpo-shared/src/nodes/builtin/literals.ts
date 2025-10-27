@@ -1,7 +1,7 @@
 import { nodesScope, registerBaseNodes } from "../node-database";
 import { BaseNode } from "../node-types";
 import * as v from "valibot";
-import { dateTime } from "../node-utils";
+import { dateTime, generic } from "../node-utils";
 import { registerConverter } from "../type-converters";
 
 export const NUMBER_NODE = new BaseNode({
@@ -48,7 +48,24 @@ export const DATE_TIME_NODE = new BaseNode({
 	}),
 });
 
+export const ARRAY_NODE = new BaseNode({
+	category: "literals",
+	name: "array",
+	inputSchema: v.object({
+		value: v.array(generic("T")),
+	}),
+	outputSchema: v.object({
+		array: v.array(generic("T")),
+	}),
+});
+
 nodesScope(() => {
-	registerBaseNodes(NUMBER_NODE, STRING_NODE, BOOLEAN_NODE, DATE_TIME_NODE);
+	registerBaseNodes(
+		NUMBER_NODE,
+		STRING_NODE,
+		BOOLEAN_NODE,
+		DATE_TIME_NODE,
+		ARRAY_NODE,
+	);
 	registerConverter(v.boolean(), v.string(), (obj) => (obj ? "true" : "false"));
 });
