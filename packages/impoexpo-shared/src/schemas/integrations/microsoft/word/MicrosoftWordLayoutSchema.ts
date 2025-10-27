@@ -12,12 +12,11 @@ export type MicrosoftWordTextPatch = {
 };
 export type MicrosoftWordListPatch = {
 	type: MicrosoftWordPlaceholderType.LIST;
-	sublistTitle: MicrosoftWordTextPatch | null;
-	items: MicrosoftWordPatch[];
+	items: Record<string, MicrosoftWordPatch[]>;
 };
 export type MicrosoftWordGroupedListItem = {
 	title: MicrosoftWordTextPatch;
-	items: MicrosoftWordPatch[];
+	items: Record<string, MicrosoftWordPatch>;
 };
 export type MicrosoftWordGroupedListPatch = {
 	type: MicrosoftWordPlaceholderType.GROUPED_LIST;
@@ -35,15 +34,12 @@ export const MicrosoftWordPatchSchema = v.variant("type", [
 	}),
 	v.object({
 		type: v.literal(MicrosoftWordPlaceholderType.LIST),
-		sublistTitle: v.nullable(
-			v.lazy(
-				(): v.GenericSchema<MicrosoftWordTextPatch> =>
-					MicrosoftWordPatchSchema.options["0"],
-			),
-		),
-		items: v.array(
-			v.lazy(
-				(): v.GenericSchema<MicrosoftWordPatch> => MicrosoftWordPatchSchema,
+		items: v.record(
+			v.string(),
+			v.array(
+				v.lazy(
+					(): v.GenericSchema<MicrosoftWordPatch> => MicrosoftWordPatchSchema,
+				),
 			),
 		),
 	}),
@@ -55,7 +51,8 @@ export const MicrosoftWordPatchSchema = v.variant("type", [
 					(): v.GenericSchema<MicrosoftWordTextPatch> =>
 						MicrosoftWordPatchSchema.options["0"],
 				),
-				items: v.array(
+				items: v.record(
+					v.string(),
 					v.lazy(
 						(): v.GenericSchema<MicrosoftWordPatch> => MicrosoftWordPatchSchema,
 					),
@@ -69,6 +66,12 @@ export const MicrosoftWordDocumentPlaceholderSchema = v.object({
 	raw: v.string(),
 	name: v.string(),
 	description: v.nullable(v.string()),
+	children: v.array(
+		v.lazy(
+			(): v.GenericSchema<MicrosoftWordDocumentPlaceholder> =>
+				MicrosoftWordDocumentPlaceholderSchema,
+		),
+	),
 	type: v.enum(MicrosoftWordPlaceholderType),
 });
 
@@ -76,9 +79,14 @@ export const MicrosoftWordDocumentLayoutSchema = v.object({
 	placeholders: v.array(MicrosoftWordDocumentPlaceholderSchema),
 });
 
-export type MicrosoftWordDocumentPlaceholder = v.InferOutput<
-	typeof MicrosoftWordDocumentPlaceholderSchema
->;
+export type MicrosoftWordDocumentPlaceholder = {
+	raw: string;
+	name: string;
+	description: string | null;
+	children: MicrosoftWordDocumentPlaceholder[];
+	type: MicrosoftWordPlaceholderType;
+};
+
 export type MicrosoftWordDocumentLayout = v.InferOutput<
 	typeof MicrosoftWordDocumentLayoutSchema
 >;
