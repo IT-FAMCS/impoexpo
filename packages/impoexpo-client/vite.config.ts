@@ -1,6 +1,6 @@
 import * as child from "node:child_process";
 import { lingui } from "@lingui/vite-plugin";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dirname, resolve } from "node:path";
@@ -21,7 +21,12 @@ export default defineConfig(({ mode }) => {
 	return {
 		plugins: [
 			react({
-				plugins: [["@lingui/swc-plugin", {}]],
+				babel: {
+					plugins: [
+						"@lingui/babel-plugin-lingui-macro",
+						"babel-plugin-react-compiler",
+					],
+				},
 			}),
 			tsconfigPaths(),
 			tailwindcss(),

@@ -8,7 +8,6 @@ import {
 
 import { getNodeRenderOptions } from "./nodes/renderable-node-database";
 import { useFormatEditorStore } from "./stores/store";
-import { useMemo } from "react";
 import { schemasConvertible } from "@impoexpo/shared/nodes/type-converters";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
@@ -34,42 +33,42 @@ export default function TypeHelperConnectionLine() {
 	} = useConnection();
 	const { getBaseNodeFromId } = useFormatEditorStore();
 
-	const fromRenderOptions = useMemo(() => {
+	const fromRenderOptions = (() => {
 		if (!fromNode?.id) return null;
 		const base = getBaseNodeFromId(fromNode.id);
 		if (!base) return null;
 		return getNodeRenderOptions(`${base.category}-${base.name}`);
-	}, [getBaseNodeFromId, fromNode?.id]);
+	})();
 
-	const toRenderOptions = useMemo(() => {
+	const toRenderOptions = (() => {
 		if (!toNode?.id) return null;
 		const base = getBaseNodeFromId(toNode.id);
 		if (!base) return null;
 		return getNodeRenderOptions(`${base.category}-${base.name}`);
-	}, [getBaseNodeFromId, toNode?.id]);
+	})();
 
-	const fromEntry = useMemo(() => {
+	const fromEntry = (() => {
 		if (!fromNode?.id || !fromHandle?.id) return;
 		const base = getBaseNodeFromId(fromNode.id);
 		if (!base) return null;
 		return base.entry(fromHandle.id);
-	}, [getBaseNodeFromId, fromNode?.id, fromHandle?.id]);
+	})();
 
-	const toEntry = useMemo(() => {
+	const toEntry = (() => {
 		if (!toNode?.id || !toHandle?.id) return;
 		const base = getBaseNodeFromId(toNode.id);
 		if (!base) return null;
 		return base.entry(toHandle.id);
-	}, [getBaseNodeFromId, toNode?.id, toHandle?.id]);
+	})();
 
-	const convertible = useMemo(() => {
+	const convertible = () => {
 		if (!fromEntry || !toEntry) return false;
 		return entriesCompatible(
 			fromEntry.source === "output" ? fromEntry : toEntry,
 			toEntry.source === "input" ? toEntry : fromEntry,
 			true,
 		);
-	}, [fromEntry, toEntry]);
+	};
 
 	if (!from || !fromPosition) return;
 	const [path, labelX, labelY, offsetX, offsetY] = getBezierPath({
@@ -91,7 +90,7 @@ export default function TypeHelperConnectionLine() {
 			<EdgeLabelRenderer>
 				{fromEntry && toEntry && (
 					<div
-						className="nodrag nopan flex justify-center items-center absolute w-fit h-fit"
+						className="absolute flex items-center justify-center nodrag nopan w-fit h-fit"
 						style={{
 							transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
 						}}
@@ -107,24 +106,24 @@ export default function TypeHelperConnectionLine() {
 							}}
 							className="max-w-[75%]"
 						>
-							<CardBody className="flex flex-col justify-center items-center overflow-hidden">
+							<CardBody className="flex flex-col items-center justify-center overflow-hidden">
 								{fromEntry.source !== toEntry.source &&
 								fromNode.id !== toNode?.id ? (
 									<>
 										<Icon
 											width={36}
-											icon={convertible ? "mdi:check" : "mdi:close"}
-											className={convertible ? "text-success" : "text-danger"}
+											icon={convertible() ? "mdi:check" : "mdi:close"}
+											className={convertible() ? "text-success" : "text-danger"}
 										></Icon>
 
-										{!convertible && (
-											<p className="text-foreground-500 text-tiny text-center">
+										{!convertible() && (
+											<p className="text-center text-foreground-500 text-tiny">
 												<Trans>no conversion exists between these types</Trans>
 											</p>
 										)}
-										{convertible &&
+										{convertible() &&
 											!isUnionOrEqual(fromEntry.schema, toEntry.schema) && (
-												<p className="text-foreground-500 text-tiny text-center">
+												<p className="text-center text-foreground-500 text-tiny">
 													<Trans>
 														the value will be automatically converted
 													</Trans>
@@ -138,7 +137,7 @@ export default function TypeHelperConnectionLine() {
 											icon={"mdi:close"}
 											className={"text-danger"}
 										></Icon>
-										<p className="text-foreground-500 text-tiny text-center">
+										<p className="text-center text-foreground-500 text-tiny">
 											{fromNode.id === toNode?.id ? (
 												<Trans>
 													cannot connect properties of the same node
@@ -161,7 +160,7 @@ export default function TypeHelperConnectionLine() {
 			<EdgeLabelRenderer>
 				{fromRenderOptions && fromHandle?.id && (
 					<div
-						className="nodrag nopan absolute w-fit h-fit"
+						className="absolute nodrag nopan w-fit h-fit"
 						style={{
 							transform: `translate(-50%, -50%) translate(${from.x}px,${from.y - 25}px)`,
 						}}
@@ -187,7 +186,7 @@ export default function TypeHelperConnectionLine() {
 			<EdgeLabelRenderer>
 				{toRenderOptions && toHandle?.id && fromNode.id !== toNode?.id && (
 					<div
-						className="nodrag nopan absolute w-fit h-fit"
+						className="absolute nodrag nopan w-fit h-fit"
 						style={{
 							transform: `translate(-50%, -50%) translate(${to.x}px,${to.y - 25}px)`,
 						}}

@@ -20,7 +20,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useLingui, Trans } from "@lingui/react/macro";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import {
 	getAllLocalProjects,
 	removeLocalProject,
@@ -160,7 +160,7 @@ function LocalProjectCard(props: {
 		}
 	};
 
-	const run = useCallback(() => {
+	const run = () => {
 		if (running) return;
 
 		const handler = new TransferHandler(props.project.snapshot.project);
@@ -176,9 +176,9 @@ function LocalProjectCard(props: {
 
 		setRunning(true);
 		setHandler(handler);
-	}, [running, props.project]);
+	};
 
-	const stateString = useMemo(() => {
+	const stateString = () => {
 		switch (handlerState) {
 			case TransferHandlerState.IDLE:
 				return t`preparing`;
@@ -197,7 +197,7 @@ function LocalProjectCard(props: {
 			case TransferHandlerState.TERMINATED:
 				return t`an error occurred`;
 		}
-	}, [handlerState, t]);
+	};
 
 	return (
 		<Card shadow="sm" className={clsx("w-full", props.className)}>
@@ -265,7 +265,7 @@ function LocalProjectCard(props: {
 						/>
 					</Tooltip>
 					{handler ? (
-						<p className="ml-1 text-sm text-foreground-500">{stateString}</p>
+						<p className="ml-1 text-sm text-foreground-500">{stateString()}</p>
 					) : null}
 				</div>
 				<AnimatePresence>

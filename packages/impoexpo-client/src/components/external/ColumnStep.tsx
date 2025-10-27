@@ -107,7 +107,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 			onStepChange,
 		);
 
-		const colors = React.useMemo(() => {
+		const colors = () => {
 			let userColor: string;
 			let fgColor: string;
 
@@ -160,15 +160,19 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 				);
 
 			return colorsVars;
-		}, [color, className]);
+		};
 
 		return (
 			<nav
 				aria-label="Progress"
-				className="-my-4 max-w-fit overflow-x-auto py-4"
+				className="py-4 -my-4 overflow-x-auto max-w-fit"
 			>
 				<ol
-					className={cn("flex flex-col flex-nowrap gap-x-3", colors, className)}
+					className={cn(
+						"flex flex-col flex-nowrap gap-x-3",
+						colors(),
+						className,
+					)}
 				>
 					{steps?.map((step, stepIdx) => {
 						const status =
@@ -179,7 +183,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 									: "complete";
 						return (
 							<div key={stepIdx} className="flex flex-col px-4">
-								<li key={stepIdx} className="relative flex w-full items-center">
+								<li key={stepIdx} className="relative flex items-center w-full">
 									<button
 										key={stepIdx}
 										ref={ref}
@@ -194,7 +198,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 										onClick={() => onStepChange?.(stepIdx)}
 										{...props}
 									>
-										<div className="h-ful relative flex flex-col items-center">
+										<div className="relative flex flex-col items-center h-ful">
 											<LazyMotion features={domAnimation}>
 												<m.div animate={status} className="relative">
 													<m.div
@@ -235,7 +239,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 												</m.div>
 											</LazyMotion>
 										</div>
-										<div className="max-w-full flex-1 flex flex-col text-start">
+										<div className="flex flex-col flex-1 max-w-full text-start">
 											<div
 												className={cn(
 													"text-small font-medium text-default-foreground transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-medium",
@@ -264,7 +268,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 								{stepIdx < steps.length - 1 && !hideProgressBars && (
 									<div
 										aria-hidden="true"
-										className="pointer-events-none pl-4 h-10 flex-none items-center"
+										className="items-center flex-none h-10 pl-4 pointer-events-none"
 										style={{
 											// @ts-ignore
 											"--idx": stepIdx,

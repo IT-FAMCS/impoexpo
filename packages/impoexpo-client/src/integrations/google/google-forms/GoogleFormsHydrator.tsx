@@ -14,7 +14,7 @@ import {
 } from "@impoexpo/shared/schemas/integrations/google/forms/static";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getGoogleAuthHeaders } from "../common";
 import { GoogleFormsHydratorState, useGoogleFormsHydratorStore } from "./store";
 import { registerGoogleFormNode } from "./nodes";
@@ -131,39 +131,34 @@ function GoogleFormsSelector() {
 	const { t, i18n } = useLingui();
 	const [showPicker, setShowPicker] = useState(false);
 	const [error, setError] = useState<MessageDescriptor>();
-	const pickerRef = useCallback(
-		(node: DrivePickerElement | null) => {
-			if (!node) return;
+	const pickerRef = (node: DrivePickerElement | null) => {
+		if (!node) return;
 
-			node.addEventListener("picker-canceled", () =>
-				setError(msg`it seems like you've canceled the file dialog.`),
+		node.addEventListener("picker-canceled", () =>
+			setError(msg`it seems like you've canceled the file dialog.`),
+		);
+		node.addEventListener("picker-oauth-error", (e) => {
+			console.error(`failed to login via the picker api: ${e}`);
+			setError(msg`something went wrong while logging in (check the console).`);
+		});
+		node.addEventListener("picker-error", (e) => {
+			console.error(`failed to select the form with the picker api: ${e}`);
+			setError(
+				msg`something went wrong with Google's Picker API (check the console).`,
 			);
-			node.addEventListener("picker-oauth-error", (e) => {
-				console.error(`failed to login via the picker api: ${e}`);
-				setError(
-					msg`something went wrong while logging in (check the console).`,
-				);
-			});
-			node.addEventListener("picker-error", (e) => {
-				console.error(`failed to select the form with the picker api: ${e}`);
-				setError(
-					msg`something went wrong with Google's Picker API (check the console).`,
-				);
-			});
-			node.addEventListener("picker-picked", (e) => {
-				const response = e.detail as google.picker.ResponseObject;
-				const documents = response[google.picker.Response.DOCUMENTS];
-				if (!documents || documents.length !== 1) return;
-				if (hasForm(documents[0].id)) {
-					setError(msg`you have already selected this form before.`);
-					return;
-				}
-				setCurrentForm(documents[0].id);
-				setState(GoogleFormsHydratorState.VERIFY);
-			});
-		},
-		[hasForm, setCurrentForm, setState],
-	);
+		});
+		node.addEventListener("picker-picked", (e) => {
+			const response = e.detail as google.picker.ResponseObject;
+			const documents = response[google.picker.Response.DOCUMENTS];
+			if (!documents || documents.length !== 1) return;
+			if (hasForm(documents[0].id)) {
+				setError(msg`you have already selected this form before.`);
+				return;
+			}
+			setCurrentForm(documents[0].id);
+			setState(GoogleFormsHydratorState.VERIFY);
+		});
+	};
 
 	return (
 		<>

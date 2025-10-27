@@ -16,7 +16,7 @@ export type ActionCardProps = CardProps & {
 
 const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 	({ color, title, icon, description, children, className, ...props }, ref) => {
-		const colors = React.useMemo(() => {
+		const colors = () => {
 			switch (color) {
 				case "primary":
 					return {
@@ -50,13 +50,13 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 						icon: "text-default-500",
 					};
 			}
-		}, [color]);
+		};
 
 		return (
 			<Card
 				ref={ref}
 				isPressable
-				className={cn("border-small p-4", colors?.card, className)}
+				className={cn("border-small p-4", colors()?.card, className)}
 				shadow="sm"
 				{...props}
 			>
@@ -64,7 +64,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
 					<div
 						className={cn(
 							"item-center flex rounded-medium border p-2",
-							colors?.iconWrapper,
+							colors()?.iconWrapper,
 						)}
 					>
 						{icon}

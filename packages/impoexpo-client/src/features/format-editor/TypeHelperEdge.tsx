@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
 	BaseEdge,
 	EdgeLabelRenderer,
@@ -58,26 +58,17 @@ export default function TypeHelperEdge({
 	);
 
 	const [errorMessagePopoverOpen, setErrorMessagePopoverOpen] = useState(false);
-	const sourceEntry = useMemo(
-		() => fromNode?.data.entries?.[sourceHandleId ?? ""],
-		[fromNode, sourceHandleId],
-	);
-	const errorMessage = useMemo(
-		() =>
-			sourceEntry && "errorBehavior" in sourceEntry
-				? (sourceEntry.errorBehavior?.message ?? "")
-				: "",
-		[sourceEntry],
-	);
-	const skipIterationInsideLoops = useMemo(
-		() =>
-			sourceEntry && "errorBehavior" in sourceEntry
-				? (sourceEntry.errorBehavior?.skipIterationInsideLoops ?? false)
-				: false,
-		[sourceEntry],
-	);
+	const sourceEntry = fromNode?.data.entries?.[sourceHandleId ?? ""];
+	const errorMessage =
+		sourceEntry && "errorBehavior" in sourceEntry
+			? (sourceEntry.errorBehavior?.message ?? "")
+			: "";
+	const skipIterationInsideLoops =
+		sourceEntry && "errorBehavior" in sourceEntry
+			? (sourceEntry.errorBehavior?.skipIterationInsideLoops ?? false)
+			: false;
 
-	const converterIsFaulty = useMemo(() => {
+	const converterIsFaulty = () => {
 		if (!sourceHandleId || !targetHandleId) return false;
 		const sourceEntry = getBaseNodeFromId(source)?.entry(sourceHandleId);
 		if (!sourceEntry) return false;
@@ -94,16 +85,16 @@ export default function TypeHelperEdge({
 			console.warn(err);
 			return undefined;
 		}
-	}, [getBaseNodeFromId, source, target, sourceHandleId, targetHandleId]);
+	};
 
 	return (
 		<>
 			<BaseEdge path={edgePath} markerEnd={markerEnd} />
-			{converterIsFaulty !== undefined && (
+			{converterIsFaulty() !== undefined && (
 				<EdgeLabelRenderer>
-					{converterIsFaulty && (
+					{converterIsFaulty() && (
 						<div
-							className="nodrag nopan pointer-events-auto absolute w-fit h-fit"
+							className="absolute pointer-events-auto nodrag nopan w-fit h-fit"
 							style={{
 								transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
 							}}
@@ -154,7 +145,7 @@ export default function TypeHelperEdge({
 										</Tooltip>
 									</AnimatedCard>
 								</PopoverTrigger>
-								<PopoverContent className="flex flex-col p-3 gap-2">
+								<PopoverContent className="flex flex-col gap-2 p-3">
 									<Input
 										autoFocus
 										value={errorMessage}

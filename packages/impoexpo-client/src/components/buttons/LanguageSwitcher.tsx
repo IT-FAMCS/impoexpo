@@ -7,17 +7,14 @@ import {
 	DropdownTrigger,
 } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { usePageContext } from "vike-react/usePageContext";
 
 export default function LanguageSwitcher() {
 	const ctx = usePageContext();
 	const { i18n } = useLingui();
-	const localeInformation = useMemo(
-		// biome-ignore lint/style/noNonNullAssertion: pray
-		() => locales.find((l) => l.id === i18n.locale)!,
-		[i18n.locale],
-	);
+	// biome-ignore lint/style/noNonNullAssertion: pray
+	const localeInformation = locales.find((l) => l.id === i18n.locale)!;
 
 	useEffect(() => localStorage.setItem("locale", i18n.locale), [i18n.locale]);
 

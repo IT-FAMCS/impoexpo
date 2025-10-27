@@ -1,11 +1,5 @@
 import { Alert, Button, Card, Code, ScrollShadow } from "@heroui/react";
-import {
-	type PropsWithChildren,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 import { useProjectStore } from "@/stores/project";
 import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -45,7 +39,7 @@ function AnimatedGridCell(
 		};
 	}>,
 ) {
-	const alignment = useMemo(() => {
+	const alignment = () => {
 		switch (props.corner) {
 			case "bottom-left":
 				return "justify-start items-end";
@@ -56,11 +50,11 @@ function AnimatedGridCell(
 			case "top-right":
 				return "justify-end items-start";
 		}
-	}, [props.corner]);
+	};
 
 	return (
 		<div
-			className={clsx(props.classNames.base, alignment, "flex w-full h-full")}
+			className={clsx(props.classNames.base, alignment(), "flex w-full h-full")}
 		>
 			<AnimatePresence>
 				{props.show && (
@@ -112,11 +106,11 @@ function TransferOutputCard(props: {
 			corner="top-left"
 		>
 			<div className="flex flex-col gap-2">
-				<Icon width={72} icon="mdi:file-document" className="-ml-2 -mb-2" />
+				<Icon width={72} icon="mdi:file-document" className="-mb-2 -ml-2" />
 				<p className="text-4xl overflow-ellipsis line-clamp-2">
 					{props.handler.outputs.at(props.index)?.name ?? ""}
 				</p>
-				<p className="text-foreground-500 text-xl">
+				<p className="text-xl text-foreground-500">
 					{prettyBytes(props.handler.outputs.at(props.index)?.size ?? 0)}
 				</p>
 			</div>
@@ -129,7 +123,7 @@ function TransferOutputCard(props: {
 							`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
 						).href;
 					}}
-					className="flex-grow flex flex-col h-full py-2 gap-0"
+					className="flex flex-col flex-grow h-full gap-0 py-2"
 				>
 					<Icon className="min-w-12" width={48} icon="mdi:download" />
 					<Trans>download</Trans>
@@ -169,7 +163,7 @@ export default function TransferProgressCard() {
 		}
 	};
 
-	const run = useCallback(() => {
+	const run = () => {
 		setHandlerState(TransferHandlerState.IDLE);
 		setFileUploadInformation(undefined);
 		setTransferringStarted(false);
@@ -186,7 +180,7 @@ export default function TransferProgressCard() {
 		newHandler.start();
 
 		setHandler(newHandler);
-	}, []);
+	};
 
 	useEffect(() => {
 		if (!handler) setTimeout(run, 1000);
@@ -198,7 +192,7 @@ export default function TransferProgressCard() {
 			setTransferringStarted(true);
 	}, [transferringStarted, handlerState]);
 
-	const stringifyState = useCallback(() => {
+	const stringifyState = () => {
 		switch (handlerState) {
 			case TransferHandlerState.UPLOADING_PROJECT:
 				return t`uploading the project`;
@@ -217,10 +211,10 @@ export default function TransferProgressCard() {
 			case TransferHandlerState.TERMINATED:
 				return t`you were not supposed to see this.`;
 		}
-	}, [handlerState, t]);
+	};
 
 	return (
-		<Card className="p-4 grid grid-cols-6 grid-rows-5 gap-4 w-full h-full relative">
+		<Card className="relative grid w-full h-full grid-cols-6 grid-rows-5 gap-4 p-4">
 			<AnimatedGridCell
 				classNames={{
 					base: "col-span-2 col-start-3 row-start-5",
@@ -241,7 +235,7 @@ export default function TransferProgressCard() {
 					handler.outputs.length > 4 ? (
 						<Button
 							color="success"
-							className="w-full h-full text-3xl flex flex-col gap-0"
+							className="flex flex-col w-full h-full gap-0 text-3xl"
 						>
 							<Icon
 								className="min-w-16"
@@ -253,7 +247,7 @@ export default function TransferProgressCard() {
 					) : (
 						<Button
 							color="secondary"
-							className="w-full h-full text-3xl flex flex-col gap-0"
+							className="flex flex-col w-full h-full gap-0 text-3xl"
 							isIconOnly
 							onPress={() => playMeow()}
 						>
@@ -263,7 +257,7 @@ export default function TransferProgressCard() {
 				) : (
 					<Button
 						color="warning"
-						className="w-full h-full text-3xl flex flex-col gap-0"
+						className="flex flex-col w-full h-full gap-0 text-3xl"
 						onPress={run}
 					>
 						<Icon className="min-w-16" width={64} icon="mdi:refresh" />
@@ -285,7 +279,7 @@ export default function TransferProgressCard() {
 			>
 				<Button
 					color="primary"
-					className="w-full h-full text-3xl flex flex-col gap-0 whitespace-pre-wrap"
+					className="flex flex-col w-full h-full gap-0 text-3xl whitespace-pre-wrap"
 					onPress={async () => {
 						await clearStatesFromDatabase();
 						resetStores(WIZARD_STORE_CATEGORY);
@@ -307,8 +301,8 @@ export default function TransferProgressCard() {
 				corner="bottom-left"
 			>
 				{notifications.length === 0 ? (
-					<div className="flex justify-start items-end w-full h-full">
-						<p className="text-foreground-400 text-2xl">
+					<div className="flex items-end justify-start w-full h-full">
+						<p className="text-2xl text-foreground-400">
 							<i>
 								<Trans>
 									notifications will appear here
@@ -381,7 +375,7 @@ export default function TransferProgressCard() {
 										delay: 0.5,
 										duration: 0.5,
 									}}
-									className="size-24 -mb-2 -ml-2"
+									className="-mb-2 -ml-2 size-24"
 								>
 									<Icon icon="mdi:check" width={96} />
 								</motion.div>
@@ -403,22 +397,22 @@ export default function TransferProgressCard() {
 			</AnimatedGridCell>
 
 			<TransferOutputCard
-				className="col-span-2 row-span-2 col-start-3 row-start-1"
+				className="col-span-2 col-start-3 row-span-2 row-start-1"
 				handler={handler}
 				index={0}
 			/>
 			<TransferOutputCard
-				className="col-span-2 row-span-2 col-start-5 row-start-1"
+				className="col-span-2 col-start-5 row-span-2 row-start-1"
 				handler={handler}
 				index={1}
 			/>
 			<TransferOutputCard
-				className="col-span-2 row-span-2 col-start-3 row-start-3"
+				className="col-span-2 col-start-3 row-span-2 row-start-3"
 				handler={handler}
 				index={2}
 			/>
 			<TransferOutputCard
-				className="col-span-2 row-span-2 col-start-5 row-start-3"
+				className="col-span-2 col-start-5 row-span-2 row-start-3"
 				handler={handler}
 				index={3}
 			/>

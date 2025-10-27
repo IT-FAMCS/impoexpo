@@ -9,7 +9,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import type { ProjectNode } from "./nodes/renderable-node-types";
 import { useFormatEditorStore } from "./stores/store";
 import { useSettingsStore } from "@/stores/settings";
@@ -51,17 +51,17 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 		};
 	});
 
-	const deleteNodeAction = useCallback(() => {
+	const deleteNodeAction = () => {
 		if (!node || !isNodeRemovable) return;
 		onNodesChange([{ type: "remove", id: node.id }]);
-	}, [node, onNodesChange, isNodeRemovable]);
+	};
 
-	const duplicateNodeAction = useCallback(() => {
+	const duplicateNodeAction = () => {
 		if (!node) return;
 		duplicateNode(node.id);
-	}, [node, duplicateNode]);
+	};
 
-	const render = useCallback(async () => {
+	const render = async () => {
 		if (!node || !container) return;
 		const wrapper = document.createElement("div");
 		wrapper.style.padding = "10px";
@@ -82,9 +82,9 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 		} finally {
 			wrapper.replaceWith(...wrapper.childNodes);
 		}
-	}, [container, node]);
+	};
 
-	const renderToClipboardAction = useCallback(async () => {
+	const renderToClipboardAction = async () => {
 		const data = await render();
 		if (!data) return;
 		await navigator.clipboard.write([
@@ -93,9 +93,9 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 			}),
 		]);
 		addToast({ color: "success", title: <Trans>ok</Trans> });
-	}, [render]);
+	};
 
-	const renderToFileAction = useCallback(async () => {
+	const renderToFileAction = async () => {
 		if (!node) return;
 		const data = await render();
 		if (!data) return;
@@ -110,7 +110,7 @@ const FormatEditorContextMenu = forwardRef((props, ref) => {
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
 		addToast({ color: "success", title: <Trans>ok</Trans> });
-	}, [node, render]);
+	};
 
 	return (
 		<Dropdown isOpen={isOpen} onOpenChange={setIsOpen} placement="right-start">

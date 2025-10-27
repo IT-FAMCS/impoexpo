@@ -27,7 +27,7 @@ import {
 } from "@/features/transfer-wizard/store";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import AnimateChangeInSize from "../../../components/external/AnimateChangeInSize";
 import { useQuery } from "@tanstack/react-query";
 import NetworkErrorCard from "@/components/network/NetworkErrorCard";
@@ -48,7 +48,7 @@ export default function SelectSourceCard() {
 
 	const { t } = useLingui();
 
-	const title = useMemo(() => {
+	const title = () => {
 		switch (state) {
 			case SourceCardState.MAYBE_IMPORT_PROJECT_TEMPLATE:
 				return t`where shall we start?`;
@@ -59,9 +59,9 @@ export default function SelectSourceCard() {
 					? t`what's the read source?`
 					: t`what's the write source?`;
 		}
-	}, [state, integrationType, t]);
+	};
 
-	const renderer = useMemo(() => {
+	const renderer = () => {
 		switch (state) {
 			case SourceCardState.MAYBE_IMPORT_PROJECT_TEMPLATE:
 				return <ProjectTemplateSelector />;
@@ -80,14 +80,14 @@ export default function SelectSourceCard() {
 				setTransitionCardState(FormatEditorWrapperState.IN);
 				return <></>;
 		}
-	}, [state, setStage, setTransitionCardState]);
+	};
 
 	return (
 		<Card className="max-w-[40vw] p-2 min-w-[15vw]">
-			<CardHeader className="justify-center text-large">{title}</CardHeader>
+			<CardHeader className="justify-center text-large">{title()}</CardHeader>
 			<Divider />
 			<AnimateChangeInSize height>
-				<CardBody>{renderer}</CardBody>
+				<CardBody>{renderer()}</CardBody>
 			</AnimateChangeInSize>
 		</Card>
 	);
@@ -134,7 +134,7 @@ function ProjectTemplateSelector() {
 			>
 				<Trans>create an empty project</Trans>
 			</Button>
-			<div className="flex flex-row justify-center items-center gap-2">
+			<div className="flex flex-row items-center justify-center gap-2">
 				<Divider className="w-20" />
 				<Trans>or</Trans>
 				<Divider className="w-20" />
@@ -160,13 +160,13 @@ function SourceChecker() {
 	return (
 		<div className="flex flex-col gap-2">
 			{items.length === 0 ? (
-				<div className="flex flex-col gap-2 justify-center items-center p-2 border-small rounded-small border-default">
+				<div className="flex flex-col items-center justify-center gap-2 p-2 border-small rounded-small border-default">
 					<Icon
 						width={36}
-						className="text-foreground-500 -mb-2"
+						className="-mb-2 text-foreground-500"
 						icon="mdi:emoticon-sad-outline"
 					/>
-					<p className="text-foreground-500 text-center">
+					<p className="text-center text-foreground-500">
 						<Trans>not outputting anything?</Trans>
 					</p>
 				</div>

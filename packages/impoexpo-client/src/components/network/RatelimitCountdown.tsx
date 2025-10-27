@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useCountdown } from "usehooks-ts";
 
 import { Code } from "@heroui/react";
@@ -13,9 +13,9 @@ export default function RatelimitCountdown(props: {
 		intervalMs: 1000,
 	});
 
-	const hh = useMemo(() => Math.floor(count / 3600), [count]);
-	const mm = useMemo(() => Math.floor((count % 3600) / 60), [count]);
-	const ss = useMemo(() => count % 60, [count]);
+	const hh = Math.floor(count / 3600);
+	const mm = Math.floor((count % 3600) / 60);
+	const ss = count % 60;
 
 	useEffect(startCountdown, []);
 	useEffect(() => {

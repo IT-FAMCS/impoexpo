@@ -7,11 +7,10 @@ import { navigate } from "vike/client/router";
 import "./styles/globals.css";
 import { clientOnly } from "vike-react/clientOnly";
 import { I18nProvider } from "@lingui/react";
-import { i18n, Messages } from "@lingui/core";
+import { i18n, type Messages } from "@lingui/core";
 import { useEffect } from "react";
 import { useSettingsStore } from "./stores/settings.ts";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
-import useLinguiChange from "./hooks/useLinguiChange.ts";
 
 export const Provider = clientOnly(
 	async () =>

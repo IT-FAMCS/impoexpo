@@ -30,11 +30,8 @@ import type React from "react";
 import {
 	createContext,
 	type Key,
-	memo,
-	useCallback,
 	useContext,
 	useEffect,
-	useMemo,
 	useState,
 } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -60,9 +57,7 @@ import {
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
 import { DateTime, FixedOffsetZone } from "luxon";
-import type {
-	ZonedDateTime,
-} from "@internationalized/date";
+import type { ZonedDateTime } from "@internationalized/date";
 import { useSettingsStore } from "@/stores/settings";
 import { useDocumentationModalStore } from "./modals/documentation-modal/store";
 import { docs } from "@/api/common";
@@ -95,7 +90,7 @@ const NodeIndependentPropertyContext = createContext<
 	| undefined
 >(undefined);
 
-const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
+export default function DefaultNodeRenderer({
 	type,
 	id,
 }: NodeProps<BuiltInNode>) {
@@ -108,26 +103,23 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 		updateNodeInternals(id);
 	}, [connectionInProgress, id, updateNodeInternals]);
 
-	const nodeData = useMemo(() => getBaseNode(type), [type]);
-	const [nodeRenderOptions, categoryRenderOptions] = useMemo(() => {
-		const store = useRenderableNodesStore.getState();
-		return [
-			store.nodeRenderOptions[type],
-			store.categoryRenderOptions[nodeData.category],
-		];
-	}, [nodeData.category, type]);
+	const nodeData = getBaseNode(type);
+	const [nodeRenderOptions, categoryRenderOptions] = [
+		useRenderableNodesStore.getState().nodeRenderOptions[type],
+		useRenderableNodesStore.getState().categoryRenderOptions[nodeData.category],
+	];
 
 	const showDocumentationButton = useSettingsStore(
 		(selector) => selector.editor.showDocumentationButton,
 	);
-	const openDocumentationModal = useCallback(() => {
+	const openDocumentationModal = () => {
 		const hash =
 			nodeRenderOptions.raw.documentationHashOverride ?? nodeData.name;
 		const base =
 			categoryRenderOptions.documentationLink ??
 			`/user/nodes/${nodeData.category}`;
 		useDocumentationModalStore.getState().open?.(docs(`${base}#${hash}`));
-	}, [nodeData, nodeRenderOptions, categoryRenderOptions]);
+	};
 
 	return (
 		<Card
@@ -140,7 +132,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 					nodeRenderOptions.raw.header ?? categoryRenderOptions?.header,
 				)}
 			>
-				<div className="flex flex-row gap-2 items-center">
+				<div className="flex flex-row items-center gap-2">
 					{nodeRenderOptions.raw.icon?.(16) ??
 						categoryRenderOptions?.icon?.(16)}
 					<p className="overflow-hidden overflow-ellipsis max-w-64">
@@ -157,7 +149,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 						onPress={openDocumentationModal}
 						startContent={
 							<Icon
-								className="opacity-50 group-hover:opacity-100 transition-opacity duration-250"
+								className="transition-opacity opacity-50 group-hover:opacity-100 duration-250"
 								width={18}
 								icon="mdi:help"
 							/>
@@ -167,7 +159,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 				) : null}
 			</CardHeader>
 			<Divider />
-			<CardBody className="flex flex-col py-2 gap-1 overflow-visible">
+			<CardBody className="flex flex-col gap-1 py-2 overflow-visible">
 				{nodeData.inputSchema &&
 					Object.entries(nodeData.inputSchema.entries).map((pair) => (
 						<NodePropertyRenderer
@@ -206,9 +198,7 @@ const DefaultNodeRenderer = memo(function DefaultNodeRenderer({
 			</CardBody>
 		</Card>
 	);
-});
-
-export default DefaultNodeRenderer;
+}
 
 function NodeIndependentPropertyInput() {
 	const ctx = useContext(NodeIndependentPropertyContext);
@@ -265,7 +255,7 @@ function NodeIndependentPropertyInput() {
 	return <></>;
 }
 
-export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
+function NodePropertyRenderer(props: {
 	renderOptions: DefaultNodeRenderOptions;
 	property: ObjectEntry;
 	name: string;
@@ -274,28 +264,24 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 }) {
 	const edges = useFormatEditorStore(useShallow((state) => state.edges));
 
-	const separate = useMemo(
-		() => props.renderOptions.separate(props.name),
-		[props.name, props.renderOptions],
-	);
-
+	const separate = props.renderOptions.separate(props.name);
 	const alwaysShowTypes = useSettingsStore(
 		(selector) => selector.developer.alwaysShowTypes,
 	);
 
-	const shouldHideEntryComponent = useMemo(() => {
+	const shouldHideEntryComponent = () => {
 		if (!props.input) return true;
 		if (props.renderOptions.input(props.name)?.mode === "dependentOnly")
 			return true;
 		return edges.some((edge) => {
 			return edge.target === props.id && edge.targetHandle === props.name;
 		});
-	}, [edges, props.id, props.input, props.name, props.renderOptions.input]);
+	};
 
-	const isIndependent = useMemo(() => {
+	const isIndependent = () => {
 		if (!props.input) return false;
 		return props.renderOptions.input(props.name)?.mode === "independentOnly";
-	}, [props.renderOptions.input, props.input, props.name]);
+	};
 
 	const shouldHideLabel = (entry: ObjectEntry) => {
 		if ("wrapped" in entry && entry.type === "optional")
@@ -303,16 +289,13 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 		if ("options" in entry) return true;
 	};
 
-	const context = useMemo(
-		() => ({
-			node: props.id,
-			handle: props.name,
-			renderOptions: props.renderOptions,
-			schema: props.property,
-			default: getDefaultValue(props.property),
-		}),
-		[props.id, props.name, props.renderOptions, props.property],
-	);
+	const context = {
+		node: props.id,
+		handle: props.name,
+		renderOptions: props.renderOptions,
+		schema: props.property,
+		default: getDefaultValue(props.property),
+	};
 
 	return props.input ? (
 		<>
@@ -320,8 +303,8 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 			<div key={props.name} className="flex flex-row gap-4 py-2 pr-4">
 				<div className="relative flex flex-row items-start gap-4">
 					{props.renderOptions.showLabel(props.name) && (
-						<div className="flex flex-col items-start gap-1 pl-4 pt-1">
-							<p className="max-w-64 text-start leading-none">
+						<div className="flex flex-col items-start gap-1 pt-1 pl-4">
+							<p className="leading-none max-w-64 text-start">
 								{props.renderOptions.title(props.name)}
 								{alwaysShowTypes && (
 									<span className="text-foreground-400 text-tiny">
@@ -335,7 +318,7 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 							</p>
 						</div>
 					)}
-					{!isIndependent && (
+					{!isIndependent() && (
 						<Handle
 							type="target"
 							id={props.name}
@@ -351,7 +334,7 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 					)}
 				</div>
 				<div className="flex-grow">
-					{!shouldHideEntryComponent && (
+					{!shouldHideEntryComponent() && (
 						<NodeIndependentPropertyContext value={context}>
 							<NodeIndependentPropertyInput />
 						</NodeIndependentPropertyContext>
@@ -365,12 +348,12 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 			{(separate === "before" || separate === "both") && <Divider />}
 			<div
 				key={props.name}
-				className="flex flex-row justify-end items-center gap-4 py-2 pl-4"
+				className="flex flex-row items-center justify-end gap-4 py-2 pl-4"
 			>
 				<div className="relative flex flex-row items-start gap-4 w-fit">
 					{!shouldHideLabel(props.property) && (
-						<div className="flex flex-col items-end gap-1 pr-4 pt-1">
-							<p className="max-w-64 text-end leading-none">
+						<div className="flex flex-col items-end gap-1 pt-1 pr-4">
+							<p className="leading-none max-w-64 text-end">
 								{props.renderOptions.title(props.name)}
 								{alwaysShowTypes && (
 									<span className="text-foreground-400 text-tiny">
@@ -401,7 +384,7 @@ export const NodePropertyRenderer = memo(function NodePropertyRenderer(props: {
 			{(separate === "after" || separate === "both") && <Divider />}
 		</>
 	);
-});
+}
 
 // sigh
 class WrappedValue {
@@ -452,10 +435,10 @@ function NodePropertyArrayInputItem(props: {
 					},
 				}}
 			>
-				<div className="w-full flex flex-row justify-center items-center gap-1">
+				<div className="flex flex-row items-center justify-center w-full gap-1">
 					<div
 						onPointerDown={(e) => controls.start(e)}
-						className="flex justify-center items-center h-full reorder-handle mr-1"
+						className="flex items-center justify-center h-full mr-1 reorder-handle"
 					>
 						<Icon icon="mdi:drag-horizontal" />
 					</div>
@@ -510,19 +493,16 @@ function NodePropertyArrayInput(props: { innerType: ObjectEntry }) {
 				);
 	}, [ctx.override, ctx.handle, ctx.node, JSON.stringify(value)]);
 
-	const saveArrayType = useCallback(
-		(key: Key) => {
-			if (!isGeneric(props.innerType)) return;
-			const schema = schemaFromString(key.toString());
-			resolveGenericNodeIndependent(
-				ctx.node,
-				getGenericName(props.innerType),
-				schema,
-			);
-			setValue([new WrappedValue(getDefaultValue(schema))]);
-		},
-		[resolveGenericNodeIndependent, props.innerType, ctx.node],
-	);
+	const saveArrayType = (key: Key) => {
+		if (!isGeneric(props.innerType)) return;
+		const schema = schemaFromString(key.toString());
+		resolveGenericNodeIndependent(
+			ctx.node,
+			getGenericName(props.innerType),
+			schema,
+		);
+		setValue([new WrappedValue(getDefaultValue(schema))]);
+	};
 
 	return (
 		<Dropdown
@@ -549,11 +529,11 @@ function NodePropertyArrayInput(props: { innerType: ObjectEntry }) {
 					)}
 					isPressable={value.length === 0}
 				>
-					<CardBody className="flex flex-col justify-center items-center">
+					<CardBody className="flex flex-col items-center justify-center">
 						{value.length === 0 ? (
 							<Icon className="scale-150" icon="mdi:plus" />
 						) : (
-							<div className="flex flex-col gap-2 w-full">
+							<div className="flex flex-col w-full gap-2">
 								<Reorder.Group
 									axis="y"
 									layotScroll
@@ -667,23 +647,15 @@ function NodePropertyGenericSelect() {
 		throw new Error(
 			"cannot render NodePropertyGenericSelect without a NodeIndependentPropertyContext",
 		);
-	const options = useMemo(
-		() =>
-			isPicklist(ctx.schema)
-				? ctx.schema.options
-				: isEnum(ctx.schema)
-					? Object.keys(ctx.schema.enum)
-					: [],
-		[ctx.schema],
-	);
+	const options = isPicklist(ctx.schema)
+		? ctx.schema.options
+		: isEnum(ctx.schema)
+			? Object.keys(ctx.schema.enum)
+			: [];
 
-	const items = useMemo(
-		() =>
-			options
-				.map((key) => ctx.renderOptions.options(ctx.handle, key))
-				.filter((i) => i !== undefined),
-		[ctx.renderOptions, ctx.handle, options],
-	);
+	const items = options
+		.map((key) => ctx.renderOptions.options(ctx.handle, key))
+		.filter((i) => i !== undefined);
 
 	const [value, setValue] = useState<string | undefined>(
 		(ctx.override?.getter

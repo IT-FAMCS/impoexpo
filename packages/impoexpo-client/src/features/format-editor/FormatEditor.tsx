@@ -5,7 +5,7 @@ import {
 	Controls,
 	type Edge,
 	type FinalConnectionState,
-	type OnSelectionChangeFunc,
+	type OnSelectionChangeParams,
 	Panel,
 	ReactFlow,
 	getOutgoers,
@@ -19,9 +19,7 @@ import "../../styles/reactflow.css";
 import { addToast, Button, Kbd, Tooltip, useDisclosure } from "@heroui/react";
 import {
 	type MouseEvent as ReactMouseEvent,
-	useCallback,
 	useEffect,
-	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -134,12 +132,10 @@ export default function FormatEditor() {
 
 	const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
 	const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
-	const onSelectionChange = useCallback<
-		OnSelectionChangeFunc<ProjectNode, Edge>
-	>((selection) => {
+	const onSelectionChange = (selection: OnSelectionChangeParams) => {
 		setSelectedNodes(selection.nodes.map((n) => n.id));
 		setSelectedEdges(selection.edges.map((e) => e.id));
-	}, []);
+	};
 	useOnSelectionChange<ProjectNode>({ onChange: onSelectionChange });
 
 	useHotkeys(
@@ -184,26 +180,18 @@ export default function FormatEditor() {
 		return () => window.removeEventListener("mousemove", updateMousePosition);
 	}, []);
 
-	const isValidConnection = useCallback(
-		(connection: Connection | Edge) =>
-			nodeSchemasCompatible(connection, nodes) &&
-			!connectionHasCycles(connection, nodes, edges),
-		[nodes, edges],
-	);
+	const isValidConnection = (connection: Connection | Edge) =>
+		nodeSchemasCompatible(connection, nodes) &&
+		!connectionHasCycles(connection, nodes, edges);
 
-	const proxyOnConnectEnd = useCallback(
-		(event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
-			onConnectEnd(
-				event,
-				connectionState,
-				screenToFlowPosition,
-				openSearchModal,
-			);
-		},
-		[onConnectEnd, screenToFlowPosition, openSearchModal],
-	);
+	const proxyOnConnectEnd = (
+		event: MouseEvent | TouchEvent,
+		connectionState: FinalConnectionState,
+	) => {
+		onConnectEnd(event, connectionState, screenToFlowPosition, openSearchModal);
+	};
 
-	const layoutNodes = useCallback(() => {
+	const layoutNodes = () => {
 		const g = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 		g.setGraph({ rankdir: "LR" });
 
@@ -227,7 +215,7 @@ export default function FormatEditor() {
 		);
 
 		fitView();
-	}, [nodes, edges, fitView, setNodes]);
+	};
 
 	useEffect(() => {
 		if (nodesInitialized && !nodesLaidOut.current) {
@@ -236,24 +224,18 @@ export default function FormatEditor() {
 		}
 	}, [nodesInitialized, fitView, layoutNodes]);
 
-	const onNodeContextMenu = useCallback(
-		(ev: ReactMouseEvent, node: ProjectNode) => {
-			ev.preventDefault();
-			contextMenuRef.current.trigger(
-				node,
-				{ x: ev.clientX, y: ev.clientY },
-				(ev.target as HTMLElement).closest(".node") as HTMLDivElement,
-			);
-		},
-		[],
-	);
+	const onNodeContextMenu = (ev: ReactMouseEvent, node: ProjectNode) => {
+		ev.preventDefault();
+		contextMenuRef.current.trigger(
+			node,
+			{ x: ev.clientX, y: ev.clientY },
+			(ev.target as HTMLElement).closest(".node") as HTMLDivElement,
+		);
+	};
 
-	const edgeTypes = useMemo(
-		() => ({
-			typehelper: TypeHelperEdge,
-		}),
-		[],
-	);
+	const edgeTypes = {
+		typehelper: TypeHelperEdge,
+	};
 
 	return (
 		<div ref={containerRef} className="w-full h-full">
