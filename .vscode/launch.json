@@ -13,7 +13,7 @@
 			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["run", "start"],
 
-            "cwd": "${workspaceFolder}/packages/impoexpo-server",
+			"cwd": "${workspaceFolder}/packages/impoexpo-server",
 
 			/*
 			 * Open terminal when debugging starts (Optional)

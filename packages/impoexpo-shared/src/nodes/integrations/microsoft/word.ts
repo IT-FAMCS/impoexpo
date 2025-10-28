@@ -35,6 +35,14 @@ export const WordPatchSchema = v.union([
 	WordGroupedListSchema,
 ]);
 
+export const WordSortMethodSchema = v.picklist([
+	"none",
+	"numbers",
+	"text",
+	"dates",
+]);
+export type WordSortMethod = v.InferOutput<typeof WordSortMethodSchema>;
+
 export const createWordDocumentBaseNode = (
 	identifier: string,
 	layout: MicrosoftWordDocumentLayout,
@@ -105,6 +113,8 @@ export const createWordDocumentBaseNode = (
 					inputSchema: v.object({
 						...items,
 						__automaticSeparators: v.optional(v.boolean(), false),
+						__sortMethod: v.optional(WordSortMethodSchema, "none"),
+						__reverseSort: v.optional(v.boolean(), false),
 					}),
 					outputSchema: v.object({
 						result: type,
@@ -142,6 +152,8 @@ export const createWordDocumentBaseNode = (
 					inputSchema: v.object({
 						...items,
 						__title: v.optional(v.string(), ""),
+						__sortMethod: v.optional(WordSortMethodSchema, "none"),
+						__reverseSort: v.optional(v.boolean(), false),
 					}),
 					outputSchema: v.object({
 						result: type,

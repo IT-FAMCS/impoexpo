@@ -1,4 +1,3 @@
-import * as wordNodes from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import {
 	nodesScope,
 	registerBaseNodes,
@@ -57,11 +56,45 @@ export const registerMicrosoftWordNode = (
 						title: msg`automatically separate list items`,
 						description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
 					},
+					__sortMethod: {
+						separate: "before",
+						title: msg`sort method`,
+						mode: "independentOnly",
+						// @ts-expect-error
+						showLabel: true,
+						options: {
+							none: { key: "none", title: msg`none` },
+							numbers: { key: "numbers", title: msg`radix sort (numbers)` },
+							text: { key: "text", title: msg`lexicographical sort (text)` },
+							dates: { key: "dates", title: msg`chronological sort (dates)` },
+						},
+					},
+					__reverseSort: {
+						title: msg`reverse sort?`,
+						mode: "independentOnly",
+					},
 				};
 				break;
 			case MicrosoftWordPlaceholderType.GROUP:
 				options.inputs = {
 					__title: { title: msg`group title` },
+					__sortMethod: {
+						separate: "before",
+						title: msg`sort method`,
+						mode: "independentOnly",
+						// @ts-expect-error
+						showLabel: true,
+						options: {
+							none: { key: "none", title: msg`none` },
+							numbers: { key: "numbers", title: msg`radix sort (numbers)` },
+							text: { key: "text", title: msg`lexicographical sort (text)` },
+							dates: { key: "dates", title: msg`chronological sort (dates)` },
+						},
+					},
+					__reverseSort: {
+						title: msg`reverse sort?`,
+						mode: "independentOnly",
+					},
 				};
 				break;
 		}

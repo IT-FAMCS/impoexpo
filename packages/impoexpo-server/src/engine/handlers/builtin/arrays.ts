@@ -9,7 +9,7 @@ registerHandler(arrayNodes.ARRAY_LENGTH_NODE, (ctx) => ({
 }));
 
 registerAsyncHandler(arrayNodes.ARRAY_FOREACH_NODE, async (ctx) => {
-	return ctx.array.map((object) => ({ object }));
+	return ctx.array.map((object, index) => ({ object, index }));
 });
 
 registerHandler(arrayNodes.ARRAY_IS_FIRST_NODE, (ctx) => {

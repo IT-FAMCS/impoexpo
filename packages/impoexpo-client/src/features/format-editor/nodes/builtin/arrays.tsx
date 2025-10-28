@@ -33,6 +33,7 @@ nodesScope(() => {
 		},
 		outputs: {
 			object: { title: msg`object` },
+			index: { title: msg`index`, description: msg`starts from 0.` },
 		},
 	});
 

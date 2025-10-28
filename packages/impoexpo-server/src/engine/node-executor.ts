@@ -63,8 +63,7 @@ export const executeJobNodes = async (job: Job) => {
 	logger.level =
 		process.env.VERBOSE_NODE_EXECUTOR === "true" ? "debug" : "info";
 
-	// this will be used for ~reduce
-	let globalIterators: Iterator[] = [];
+	const globalIterators: Iterator[] = [];
 
 	const resolveInputPaths = (node: ProjectNode, depth = 1) => {
 		const paths: Record<string, InputPath[]> = {};
@@ -108,16 +107,18 @@ export const executeJobNodes = async (job: Job) => {
 	};
 
 	const persisted: Record<string, unknown> = {};
-	const persist = <T = unknown>(key: string, initial?: T): (() => T) => {
-		if (!(key in persisted) && !initial)
-			throw new Error(
-				`attempted to create a ~persist() store with key "${key}", but the initial value wasn't provided`,
-			);
-		persisted[key] ??= initial;
-		return () => persisted[key] as T;
-	};
+	const createPersist =
+		(node: ProjectNode) =>
+		<T = unknown>(key: string, initial?: T): (() => T) => {
+			const actualKey = `${node.id}_${key}`;
+			if (!(actualKey in persisted) && !initial)
+				throw new Error(
+					`attempted to create a ~persist() store with key "${actualKey}", but the initial value wasn't provided`,
+				);
+			persisted[actualKey] ??= initial;
+			return () => persisted[actualKey] as T;
+		};
 
-	const reducerCache: Record<string, unknown> = {};
 	const runNode = async (
 		node: ProjectNode,
 		paths: Record<string, InputPath[]>,
@@ -142,97 +143,22 @@ export const executeJobNodes = async (job: Job) => {
 			node: ProjectNode,
 		): NodeExecutorContext<ObjectEntries>["~iterators"] => {
 			return () => {
-				let currentIds = Object.values(resolveInputPaths(node))
-					.flat()
-					.map((p) => p.node);
-				const iterators: Iterator[] = [];
-				traversePaths(paths, (path) => {
-					if (currentIds.includes(path.node) && path.parent) {
-						const it = globalIterators.find(
-							(it) =>
-								Object.values(path.parent ?? {}).some((paths) =>
-									paths.some((path) => it.node === path.node),
-								) && iterators.find((i) => i.node === it.node) === undefined,
-						);
-						if (it) iterators.push(it);
-						else {
-							currentIds = Object.values(path.parent)
-								.flat()
-								.map((p) => p.node);
-						}
-					}
-				});
-				return {
-					iterators: iterators.length === 0 ? undefined : iterators,
-					skip: () => {
-						if (iterators.length !== 0) throw new SkipIterationError();
-					},
-				};
-			};
-		};
-		const createReducer = (
-			node: ProjectNode,
-		): NodeExecutorContext<ObjectEntries>["~reduce"] => {
-			return async <T>(
-				reducer: (acc: T, cur: ObjectEntries) => T,
-				initial: T,
-			) => {
-				logger.info(`REDUCER CALLED ${JSON.stringify(node)}`);
-				if (node.id in reducerCache) return reducerCache[node.id] as T;
-
-				let current = initial;
 				const paths = resolveInputPaths(node);
-
 				const iterators: Iterator[] = [];
-				logger.info(`REDUCER PATHS: ${JSON.stringify(paths)}`)
 				traversePaths(paths, (p) => {
 					const iterator = globalIterators.find((i) => i.node === p.node);
 					if (iterator && !iterators.some((i) => i.node === iterator.node))
 						iterators.push(iterator);
 				});
-				logger.info(
-					`REDUCER ITERATORS(${iterators.length}): ${JSON.stringify(iterators)}`,
-				);
-				if (iterators.length === 0) {
-					await runNode(
-						node,
-						paths,
-						actualDepth - 1,
-						clone(actualPreviousData),
-						async (entries) => {
-							current = reducer(current, entries);
-						},
-					);
-				} else {
-					for (let idx = 0; idx < iterators[0].length; idx++) {
-						// literally everything has to be recalculated from scratch so
-						const cleanData: Record<string, NodeOutput<v.ObjectEntries>> = {};
-						for (const it of iterators) {
-							cleanData[it.node] = it.items[idx];
-							it.index = idx;
-						}
-						try {
-							await runNode(
-								node,
-								paths,
-								undefined,
-								clone(cleanData),
-								async (entries) => {
-									current = reducer(current, entries);
-								},
-							);
-						} catch (err) {
-							if (err instanceof SkipIterationError) {
-								logger.debug(
-									"caught a SkipIterationError (not actually an error) inside a reducer!",
-								);
-							} else throw err;
-						}
-					}
-				}
-
-				reducerCache[node.id] = current;
-				return current;
+				return {
+					iterators: iterators.length === 0 ? undefined : iterators,
+					isFirstIteration: () => !iterators.some((it) => it.index !== 0),
+					isLastIteration: () =>
+						!iterators.some((it) => it.index !== it.length - 1),
+					skip: () => {
+						if (iterators.length !== 0) throw new SkipIterationError();
+					},
+				};
 			};
 		};
 
@@ -371,9 +297,8 @@ export const executeJobNodes = async (job: Job) => {
 			const output = await handler({
 				...resolveInputs(sourceNode),
 				"~job": job,
-				"~reduce": createReducer(sourceNode),
 				"~iterators": createIteratorsGetter(sourceNode),
-				"~persist": persist,
+				"~persist": createPersist(sourceNode),
 			});
 			logger.debug("received: %o", output);
 			pathOutputs[sourceNode.id] = output;
@@ -400,9 +325,8 @@ export const executeJobNodes = async (job: Job) => {
 				await handler({
 					...inputs,
 					"~job": job,
-					"~reduce": createReducer(node),
 					"~iterators": createIteratorsGetter(node),
-					"~persist": persist,
+					"~persist": createPersist(node),
 				});
 			}
 		} else {
@@ -464,7 +388,7 @@ export const executeJobNodes = async (job: Job) => {
 					);
 				}
 
-				globalIterators.push(...iterators); // this is used for ~reduce
+				globalIterators.push(...iterators);
 				for (let idx = 0; idx < iterators[0].length; idx++) {
 					for (const it of iterators) {
 						logger.debug(

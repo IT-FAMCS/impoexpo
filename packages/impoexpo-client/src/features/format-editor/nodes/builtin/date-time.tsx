@@ -119,33 +119,6 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(dateTimeNodes.GROUP_BY_DATETIME_NODE, {
-		title: msg`group by date`,
-		aliases: msg`group by time`,
-		inputs: {
-			date: { title: msg`date` },
-			sortMethod: {
-				title: msg`sorting method`,
-				description: "",
-				showLabel: true,
-				mode: "independentOnly",
-				options: {
-					ascending: {
-						title: msg`in ascending order (from earliest to latest)`,
-					},
-					descending: {
-						title: msg`in descending order (from latest to earliest)`,
-					},
-				},
-			},
-			key: { title: msg`key` },
-			value: { title: msg`value` },
-		},
-		outputs: {
-			result: { title: msg`result` },
-		},
-	});
-
 	registerWithDefaultRenderer(dateTimeNodes.DATE_IN_RANGE_NODE, {
 		title: msg`is the date within a certain range?`,
 		aliases: msg`check date, verify date, date boundaries, is date before, is date after`,

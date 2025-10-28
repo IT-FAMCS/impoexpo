@@ -98,37 +98,37 @@ msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:184
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:216
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "preparing"
 msgstr "готовимся"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:186
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:198
 msgid "uploading the project"
 msgstr "загружаем проект"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:188
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:200
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:190
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:202
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:192
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "transferring"
 msgstr "переносим"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:194
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:196
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "done!"
 msgstr "готово!"
 
@@ -242,66 +242,66 @@ msgstr "вы слишком часто отправляете запросы!<0/
 msgid "retry"
 msgstr "попробовать снова"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:208
+#: src/features/format-editor/DefaultNodeRenderer.tsx:193
 msgid "this node is an iterator."
 msgstr "этот узел — итератор."
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:598
+#: src/features/format-editor/DefaultNodeRenderer.tsx:571
 msgid "what do you wish to store?"
 msgstr "что будем хранить?"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:603
+#: src/features/format-editor/DefaultNodeRenderer.tsx:576
 #: src/features/format-editor/nodes/builtin/strings.tsx:13
 #: src/features/format-editor/nodes/builtin/strings.tsx:56
 msgid "strings"
 msgstr "строки"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:609
+#: src/features/format-editor/DefaultNodeRenderer.tsx:582
 msgid "numbers"
 msgstr "числа"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:615
+#: src/features/format-editor/DefaultNodeRenderer.tsx:588
 msgid "dates"
 msgstr "даты"
 
-#: src/features/format-editor/DefaultNodeRenderer.tsx:621
+#: src/features/format-editor/DefaultNodeRenderer.tsx:594
 msgid "flags"
 msgstr "флаги (правда или ложь)"
 
-#: src/features/format-editor/FormatEditor.tsx:299
+#: src/features/format-editor/FormatEditor.tsx:281
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:314
+#: src/features/format-editor/FormatEditor.tsx:296
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:321
+#: src/features/format-editor/FormatEditor.tsx:303
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:335
+#: src/features/format-editor/FormatEditor.tsx:317
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:345
+#: src/features/format-editor/FormatEditor.tsx:327
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:351
+#: src/features/format-editor/FormatEditor.tsx:333
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:361
+#: src/features/format-editor/FormatEditor.tsx:343
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:377
+#: src/features/format-editor/FormatEditor.tsx:359
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:407
+#: src/features/format-editor/FormatEditor.tsx:389
 msgid "done"
 msgstr "далее"
 
@@ -334,31 +334,31 @@ msgstr "зарендерить в буфер обмена"
 msgid "render to file"
 msgstr "зарендерить в файл"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:122
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:121
 msgid "no conversion exists between these types"
 msgstr "между этими типами нет взаимосвязи"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:128
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:127
 msgid "the value will be automatically converted"
 msgstr "значение будет автоматически преобразовано"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:143
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:142
 msgid "cannot connect properties of the same node"
 msgstr "нельзя присоединять поля одного и того же узла"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:147
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:146
 msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
 msgstr "нельзя присоединять поля одного вида<0/>(входной с входным, выходной с выходным)"
 
-#: src/features/format-editor/TypeHelperEdge.tsx:130
+#: src/features/format-editor/TypeHelperEdge.tsx:121
 msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
 msgstr "преобразование между данными типами может выдать ошибку.<0/>нажмите, чтобы отредактировать сообщение об ошибке."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:178
+#: src/features/format-editor/TypeHelperEdge.tsx:169
 msgid "enter the error message..."
 msgstr "введите сообщение об ошибке..."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:197
+#: src/features/format-editor/TypeHelperEdge.tsx:188
 msgid "inside loops, skip an iteration instead of erroring"
 msgstr "в циклах, пропускать итерацию вместо выдачи ошибки"
 
@@ -415,6 +415,8 @@ msgstr "результаты отфильтрованы на основании 
 #: src/features/format-editor/nodes/builtin/arrays.tsx:12
 #: src/features/format-editor/nodes/builtin/arrays.tsx:21
 #: src/features/format-editor/nodes/builtin/arrays.tsx:32
+#: src/features/format-editor/nodes/builtin/literals.tsx:46
+#: src/features/format-editor/nodes/builtin/literals.tsx:49
 msgid "array"
 msgstr "массив"
 
@@ -439,39 +441,47 @@ msgid "for each item in the array, foreach"
 msgstr "для каждого элемента в массива, для каждого"
 
 #: src/features/format-editor/nodes/builtin/arrays.tsx:35
-#: src/features/format-editor/nodes/builtin/arrays.tsx:44
-#: src/features/format-editor/nodes/builtin/arrays.tsx:61
+#: src/features/format-editor/nodes/builtin/arrays.tsx:45
+#: src/features/format-editor/nodes/builtin/arrays.tsx:62
 #: src/features/format-editor/nodes/builtin/conditional.tsx:66
 #: src/features/format-editor/nodes/builtin/conditional.tsx:81
 msgid "object"
 msgstr "объект"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:40
+#: src/features/format-editor/nodes/builtin/arrays.tsx:36
+msgid "index"
+msgstr "индекс"
+
+#: src/features/format-editor/nodes/builtin/arrays.tsx:36
+msgid "starts from 0."
+msgstr "отсчёт начинается с 0."
+
+#: src/features/format-editor/nodes/builtin/arrays.tsx:41
 msgid "is this the first iteration?"
 msgstr "это первая итерация?"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:41
+#: src/features/format-editor/nodes/builtin/arrays.tsx:42
 msgid "is first entry, is first object"
 msgstr "первый объект, первый элемент"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:45
-#: src/features/format-editor/nodes/builtin/arrays.tsx:62
+#: src/features/format-editor/nodes/builtin/arrays.tsx:46
+#: src/features/format-editor/nodes/builtin/arrays.tsx:63
 msgid "must be connected to an iterator node. otherwise, will always return false."
 msgstr "должен быть присоединён к узлу-итератору. в противном случае будет всегда возвращать \"ложь\"."
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:51
+#: src/features/format-editor/nodes/builtin/arrays.tsx:52
 msgid "first iteration?"
 msgstr "первая итерация?"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:57
+#: src/features/format-editor/nodes/builtin/arrays.tsx:58
 msgid "is this the last iteration?"
 msgstr "это последняя итерация?"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:58
+#: src/features/format-editor/nodes/builtin/arrays.tsx:59
 msgid "is last entry, is last object"
 msgstr "последний объект, последний элемент"
 
-#: src/features/format-editor/nodes/builtin/arrays.tsx:68
+#: src/features/format-editor/nodes/builtin/arrays.tsx:69
 msgid "last iteration?"
 msgstr "последняя итерация?"
 
@@ -497,11 +507,11 @@ msgid "value when false"
 msgstr "значение когда \"ложь\""
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:33
-#: src/features/format-editor/nodes/builtin/date-time.tsx:142
 #: src/features/format-editor/nodes/builtin/literals.tsx:20
 #: src/features/format-editor/nodes/builtin/literals.tsx:27
 #: src/features/format-editor/nodes/builtin/literals.tsx:34
 #: src/features/format-editor/nodes/builtin/literals.tsx:41
+#: src/features/format-editor/nodes/builtin/literals.tsx:48
 msgid "value"
 msgstr "значение"
 
@@ -527,6 +537,7 @@ msgstr "выдать ошибку если null"
 
 #: src/features/format-editor/nodes/builtin/conditional.tsx:57
 #: src/features/format-editor/nodes/builtin/conditional.tsx:93
+#: src/features/format-editor/nodes/builtin/conditional.tsx:108
 msgid "nullable object"
 msgstr "nullable объект"
 
@@ -562,6 +573,41 @@ msgstr "null, объект существует"
 msgid "is null?"
 msgstr "объект — null?"
 
+#: src/features/format-editor/nodes/builtin/conditional.tsx:104
+msgid "if null..."
+msgstr "если null..."
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:105
+msgid "fallback, if null then"
+msgstr "если null тогда, если null вернуть, если нет"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:111
+msgid "fallback"
+msgstr "резерв"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:116
+#: src/features/format-editor/nodes/builtin/date-time.tsx:70
+#: src/features/format-editor/nodes/builtin/date-time.tsx:88
+#: src/features/format-editor/nodes/builtin/date-time.tsx:107
+#: src/features/format-editor/nodes/builtin/date-time.tsx:116
+#: src/features/format-editor/nodes/builtin/date-time.tsx:132
+#: src/features/format-editor/nodes/builtin/math.tsx:60
+#: src/features/format-editor/nodes/builtin/strings.tsx:26
+#: src/features/format-editor/nodes/builtin/strings.tsx:38
+#: src/features/format-editor/nodes/builtin/strings.tsx:48
+#: src/features/format-editor/nodes/builtin/strings.tsx:60
+#: src/features/format-editor/nodes/builtin/strings.tsx:79
+#: src/features/format-editor/nodes/builtin/strings.tsx:107
+#: src/features/format-editor/nodes/common.tsx:32
+#: src/features/format-editor/nodes/common.tsx:56
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:43
+msgid "result"
+msgstr "результат"
+
+#: src/features/format-editor/nodes/builtin/conditional.tsx:117
+msgid "always guaranteed to not be null."
+msgstr "гарантировано не будет null."
+
 #: src/features/format-editor/nodes/builtin/date-time.tsx:15
 msgid "date & time"
 msgstr "дата и время"
@@ -578,7 +624,6 @@ msgstr "изменить язык, изменить страну"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:78
 #: src/features/format-editor/nodes/builtin/date-time.tsx:96
 #: src/features/format-editor/nodes/builtin/date-time.tsx:126
-#: src/features/format-editor/nodes/builtin/date-time.tsx:153
 #: src/features/format-editor/nodes/builtin/literals.tsx:39
 #: src/features/format-editor/nodes/builtin/literals.tsx:42
 msgid "date"
@@ -588,27 +633,6 @@ msgstr "дата"
 #: src/features/format-editor/nodes/builtin/date-time.tsx:66
 msgid "locale"
 msgstr "локаль"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:70
-#: src/features/format-editor/nodes/builtin/date-time.tsx:88
-#: src/features/format-editor/nodes/builtin/date-time.tsx:107
-#: src/features/format-editor/nodes/builtin/date-time.tsx:116
-#: src/features/format-editor/nodes/builtin/date-time.tsx:145
-#: src/features/format-editor/nodes/builtin/date-time.tsx:159
-#: src/features/format-editor/nodes/builtin/math.tsx:60
-#: src/features/format-editor/nodes/builtin/strings.tsx:26
-#: src/features/format-editor/nodes/builtin/strings.tsx:38
-#: src/features/format-editor/nodes/builtin/strings.tsx:48
-#: src/features/format-editor/nodes/builtin/strings.tsx:60
-#: src/features/format-editor/nodes/builtin/strings.tsx:79
-#: src/features/format-editor/nodes/builtin/strings.tsx:104
-#: src/features/format-editor/nodes/common.tsx:32
-#: src/features/format-editor/nodes/common.tsx:56
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:76
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:105
-msgid "result"
-msgstr "результат"
 
 #: src/features/format-editor/nodes/builtin/date-time.tsx:75
 msgid "set time zone"
@@ -649,54 +673,30 @@ msgid "only use this node to get the current date, not the precise time!"
 msgstr "используйте этот узел только для даты, а не точного времени!"
 
 #: src/features/format-editor/nodes/builtin/date-time.tsx:123
-msgid "group by date"
-msgstr "группировать по дате"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:124
-msgid "group by time"
-msgstr "группировать по времени"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:128
-msgid "sorting method"
-msgstr "метод сортировки"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:134
-msgid "in ascending order (from earliest to latest)"
-msgstr "в возрастающем порядке (от самой ранней к самой поздней)"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:137
-msgid "in descending order (from latest to earliest)"
-msgstr "в убывающем порядке (от самой поздней к самой ранней)"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:141
-msgid "key"
-msgstr "ключ"
-
-#: src/features/format-editor/nodes/builtin/date-time.tsx:150
 msgid "is the date within a certain range?"
 msgstr "находится ли дата в диапазоне?"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:151
+#: src/features/format-editor/nodes/builtin/date-time.tsx:124
 msgid "check date, verify date, date boundaries, is date before, is date after"
 msgstr "проверить дату, границы даты, дата до, дата после"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:154
+#: src/features/format-editor/nodes/builtin/date-time.tsx:127
 msgid "start"
 msgstr "начало"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:154
+#: src/features/format-editor/nodes/builtin/date-time.tsx:127
 msgid "the earliest allowed date"
 msgstr "самая ранняя допустимая дата"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:155
+#: src/features/format-editor/nodes/builtin/date-time.tsx:128
 msgid "end"
 msgstr "конец"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:155
+#: src/features/format-editor/nodes/builtin/date-time.tsx:128
 msgid "the latest allowed date"
 msgstr "самая поздняя допустимая дата"
 
-#: src/features/format-editor/nodes/builtin/date-time.tsx:160
+#: src/features/format-editor/nodes/builtin/date-time.tsx:133
 msgid "dates are compared including the start and end days!"
 msgstr "даты сравниваются включая начальные и конечные дни!"
 
@@ -716,7 +716,8 @@ msgstr "число"
 #: src/features/format-editor/nodes/builtin/strings.tsx:34
 #: src/features/format-editor/nodes/builtin/strings.tsx:45
 #: src/features/format-editor/nodes/builtin/strings.tsx:87
-#: src/features/format-editor/nodes/builtin/strings.tsx:99
+#: src/features/format-editor/nodes/builtin/strings.tsx:102
+#: src/features/format-editor/nodes/builtin/strings.tsx:115
 msgid "string"
 msgstr "строка"
 
@@ -886,8 +887,9 @@ msgstr "заменить в строке"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:22
 #: src/features/format-editor/nodes/builtin/strings.tsx:35
-msgid "pattern"
-msgstr "образец"
+#: src/features/format-editor/nodes/builtin/strings.tsx:116
+msgid "regular expression"
+msgstr "регулярное выражение"
 
 #: src/features/format-editor/nodes/builtin/strings.tsx:23
 msgid "replacement"
@@ -953,29 +955,49 @@ msgstr "разбить строку"
 msgid "divide string, explode string"
 msgstr "разделить строку, поделить строку на части"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:88
+#: src/features/format-editor/nodes/builtin/strings.tsx:89
 msgid "delimiter"
 msgstr "разделитель"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:91
+#: src/features/format-editor/nodes/builtin/strings.tsx:90
+msgid "(regular expression)"
+msgstr "(регулярное выражение)"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:94
 msgid "parts"
 msgstr "части"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:96
+#: src/features/format-editor/nodes/builtin/strings.tsx:99
 msgid "trim string"
 msgstr "обрезать строку"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:97
+#: src/features/format-editor/nodes/builtin/strings.tsx:100
 msgid "cut string, remove spaces"
 msgstr "удалить пробелы в строке, убрать пробелы"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:100
+#: src/features/format-editor/nodes/builtin/strings.tsx:103
 msgid "trim start?"
 msgstr "обрезать начало?"
 
-#: src/features/format-editor/nodes/builtin/strings.tsx:101
+#: src/features/format-editor/nodes/builtin/strings.tsx:104
 msgid "trim end?"
 msgstr "обрезать конец?"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:112
+msgid "find in string"
+msgstr "найти в строке"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:113
+msgid "match string, substring, find match"
+msgstr "найти подстроку, найти совпадения"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:120
+msgid "match"
+msgstr "совпадение"
+
+#: src/features/format-editor/nodes/builtin/strings.tsx:121
+msgid "null will be returned if no match was found."
+msgstr "если совпадений нет - null"
 
 #: src/features/format-editor/nodes/common.tsx:53
 msgid "input"
@@ -1026,27 +1048,27 @@ msgstr "далее"
 msgid "failed to check integration authentication status"
 msgstr "не удалось проверить статус авторизации интеграции"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:135
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:129
 msgid "download"
 msgstr "скачать"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:218
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "you were not supposed to see this."
 msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:251
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:245
 msgid "view all files"
 msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:270
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:264
 msgid "try again"
 msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:296
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:290
 msgid "return to the homepage"
 msgstr "на главную страницу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:313
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:307
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "уведомления появятся тут<0/>(если они есть)"
 
@@ -1107,35 +1129,35 @@ msgstr "проверяем наличие прав на чтение формы"
 msgid "couldn't verify read permissions for the form (or their lack of)"
 msgstr "не удалось проверить наличие прав на чтение формы (или их нет)"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:139
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:138
 msgid "it seems like you've canceled the file dialog."
 msgstr "похоже, что вы закрыли диалог выбора файла."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:144
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:142
 msgid "something went wrong while logging in (check the console)."
 msgstr "во время входа что-то пошло не так (проверьте консоль)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:150
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:147
 msgid "something went wrong with Google's Picker API (check the console)."
 msgstr "что-то не так с Google Picker API (проверьте консоль)."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:158
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:155
 msgid "you have already selected this form before."
 msgstr "вы уже выбрали эту форму ранее."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:172
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:167
 msgid "press the button below to select the form.<0/>you may be asked to login again."
 msgstr "нажмите кнопку ниже чтобы выбрать форму.<0/>возможно, вам придётся повторно войти в аккаунт."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:183
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:178
 msgid "back to source selection"
 msgstr "назад к выбору источника"
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:196
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:191
 msgid "select the form..."
 msgstr "выбрать форму..."
 
-#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:208
+#: src/integrations/google/google-forms/GoogleFormsHydrator.tsx:203
 msgid "Select the form you want to process..."
 msgstr "Выберите желаемую форму..."
 
@@ -1183,44 +1205,55 @@ msgstr "вернуться к загрузке файла"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
 #: src/integrations/microsoft/microsoft-word/integration.tsx:65
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:64
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:191
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:71
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:50
 msgid "text"
 msgstr "текст"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:81
-msgid "list"
-msgstr "список"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
-msgid "items"
-msgstr "элементы"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:85
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:100
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:56
 msgid "automatically separate list items"
 msgstr "автоматически разделять элементы списка"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:86
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:101
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:57
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "автоматически добавлять точку с запятой (;) к концу каждого элемента списка, кроме последнего, к которому будет добавлена точка (.)"
 
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:61
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
+msgid "sort method"
+msgstr "метод сортировки"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:66
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:88
-msgid "list title"
-msgstr "заголовок списка"
+msgid "none"
+msgstr "нет"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:96
-msgid "grouped list"
-msgstr "группированный список"
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:67
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:89
+msgid "radix sort (numbers)"
+msgstr "поразрядная сортировка (числа)"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:98
-msgid "groups"
-msgstr "группы"
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
+msgid "lexicographical sort (text)"
+msgstr "лексикографическая сортировка (текст)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:69
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
+msgid "chronological sort (dates)"
+msgstr "хронологическая сортировка (даты)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
+msgid "reverse sort?"
+msgstr "в обратном порядке?"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
+msgid "group title"
+msgstr "заголовок группы"
 
 #: src/integrations/placeholder/integration.tsx:10
 msgid "nowhere"

@@ -1,7 +1,10 @@
 import { Alert, Button, Card, Code, ScrollShadow } from "@heroui/react";
 import { type PropsWithChildren, useEffect, useState } from "react";
 import { useProjectStore } from "@/stores/project";
-import type { Project } from "@impoexpo/shared/schemas/project/ProjectSchema";
+import type {
+	Project,
+	ProjectOutput,
+} from "@impoexpo/shared/schemas/project/ProjectSchema";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "motion/react";
@@ -88,36 +91,31 @@ function AnimatedGridCell(
 
 function TransferOutputCard(props: {
 	className?: string;
-	handler?: TransferHandler;
+	outputs: ProjectOutput[];
 	index: number;
 }) {
-	if (!props.handler) return <></>;
-
 	return (
 		<AnimatedGridCell
 			classNames={{
 				base: props.className,
 				div: "p-4 flex flex-col justify-between",
 			}}
-			show={
-				props.handler.state === TransferHandlerState.DONE &&
-				props.handler.outputs.length > props.index
-			}
+			show={props.outputs.length > props.index}
 			corner="top-left"
 		>
 			<div className="flex flex-col gap-2">
 				<Icon width={72} icon="mdi:file-document" className="-mb-2 -ml-2" />
 				<p className="text-4xl overflow-ellipsis line-clamp-2">
-					{props.handler.outputs.at(props.index)?.name ?? ""}
+					{props.outputs.at(props.index)?.name ?? ""}
 				</p>
 				<p className="text-xl text-foreground-500">
-					{prettyBytes(props.handler.outputs.at(props.index)?.size ?? 0)}
+					{prettyBytes(props.outputs.at(props.index)?.size ?? 0)}
 				</p>
 			</div>
 			<div className="flex flex-row gap-2 h-max">
 				<Button
 					onPress={() => {
-						const output = props.handler?.outputs.at(props.index);
+						const output = props.outputs.at(props.index);
 						if (!output) return;
 						window.location.href = route(
 							`${RETRIEVE_PROJECT_OUTPUT_ROUTE}/${output.identifier}`,
@@ -138,6 +136,7 @@ export default function TransferProgressCard() {
 	const [handlerState, setHandlerState] = useState<TransferHandlerState>(
 		TransferHandlerState.IDLE,
 	);
+	const [outputs, setOutputs] = useState<ProjectOutput[]>([]);
 	const [notifications, setNotifications] = useState<
 		ProjectStatusNotification[]
 	>([]);
@@ -172,7 +171,10 @@ export default function TransferProgressCard() {
 		const newHandler = new TransferHandler(
 			useProjectStore.getState() as Project,
 		);
-		newHandler.addEventListener("state-changed", setHandlerState);
+		newHandler.addEventListener("state-changed", (state) => {
+			setHandlerState(state);
+			if (state === TransferHandlerState.DONE) setOutputs(newHandler.outputs);
+		});
 		newHandler.addEventListener("file-uploaded", setFileUploadInformation);
 		newHandler.addEventListener("notification", () =>
 			setNotifications(newHandler.notifications),
@@ -396,26 +398,30 @@ export default function TransferProgressCard() {
 				)}
 			</AnimatedGridCell>
 
-			<TransferOutputCard
-				className="col-span-2 col-start-3 row-span-2 row-start-1"
-				handler={handler}
-				index={0}
-			/>
-			<TransferOutputCard
-				className="col-span-2 col-start-5 row-span-2 row-start-1"
-				handler={handler}
-				index={1}
-			/>
-			<TransferOutputCard
-				className="col-span-2 col-start-3 row-span-2 row-start-3"
-				handler={handler}
-				index={2}
-			/>
-			<TransferOutputCard
-				className="col-span-2 col-start-5 row-span-2 row-start-3"
-				handler={handler}
-				index={3}
-			/>
+			{handlerState === TransferHandlerState.DONE && (
+				<>
+					<TransferOutputCard
+						className="col-span-2 col-start-3 row-span-2 row-start-1"
+						outputs={outputs}
+						index={0}
+					/>
+					<TransferOutputCard
+						className="col-span-2 col-start-5 row-span-2 row-start-1"
+						outputs={outputs}
+						index={1}
+					/>
+					<TransferOutputCard
+						className="col-span-2 col-start-3 row-span-2 row-start-3"
+						outputs={outputs}
+						index={2}
+					/>
+					<TransferOutputCard
+						className="col-span-2 col-start-5 row-span-2 row-start-3"
+						outputs={outputs}
+						index={3}
+					/>
+				</>
+			)}
 
 			{handlerState === TransferHandlerState.DONE && (
 				<Confetti

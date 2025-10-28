@@ -145,6 +145,9 @@ importers:
       luxon:
         specifier: ^3.7.2
         version: 3.7.2
+      luxon-parser:
+        specifier: ^1.0.3
+        version: 1.0.3(luxon@3.7.2)
       motion:
         specifier: ^12.23.13
         version: 12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -332,6 +335,9 @@ importers:
       luxon:
         specifier: ^3.6.1
         version: 3.7.2
+      luxon-parser:
+        specifier: ^1.0.3
+        version: 1.0.3(luxon@3.7.2)
       migration-files:
         specifier: ^0.4.3
         version: 0.4.3

@@ -22,12 +22,10 @@ export const integrationNodeHandlerRegistrars: Record<
 export type NodeExecutorContext<TIn extends v.ObjectEntries> = {
 	"~job": Job;
 	"~persist": <T>(key: string, initial?: T) => () => T;
-	"~reduce": <T>(
-		reducer: (acc: T, cur: ResolveEntries<TIn>) => T,
-		initial: T,
-	) => Promise<T>;
 	"~iterators": () => {
 		iterators: Iterator[] | undefined;
+		isLastIteration: () => boolean;
+		isFirstIteration: () => boolean;
 		skip: () => void;
 	};
 } & ResolveEntries<TIn>;
@@ -44,7 +42,6 @@ export type Iterator = {
 	length: number;
 	items: ResolveEntries<v.ObjectEntries>[];
 	index: number;
-	depth: number;
 };
 
 export type NodeOutput<TOut extends v.ObjectEntries> =

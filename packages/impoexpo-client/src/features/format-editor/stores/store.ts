@@ -666,7 +666,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 				const copy = deepCopy(base);
 				Object.setPrototypeOf(copy, BaseNode.prototype);
 
-				console.log(resolvedTypeName, resolvedWith);
 				copy.resolveGenericType(resolvedTypeName, resolvedWith);
 
 				const { addGenericNodeInstance, getTrueGenericNodeBase } =
@@ -696,7 +695,6 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 					searchable: false,
 				});
 
-				console.log(copy);
 				set((state) => {
 					const index = state.nodes.findIndex((n) => n.id === id);
 					if (index === -1) return;

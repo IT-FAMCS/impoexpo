@@ -1,8 +1,5 @@
 import { DateTime } from "luxon";
-import {
-	registerAsyncHandler,
-	registerHandler,
-} from "../../node-executor-utils";
+import { registerHandler } from "../../node-executor-utils";
 import * as dateTimeNodes from "@impoexpo/shared/nodes/builtin/date-time";
 
 registerHandler(dateTimeNodes.SET_DATETIME_LOCALE_NODE, (ctx) => {
@@ -30,25 +27,4 @@ registerHandler(dateTimeNodes.DATE_IN_RANGE_NODE, (ctx) => {
 		result:
 			ctx.date >= (ctx.start ?? ctx.date) && ctx.date <= (ctx.end ?? ctx.date),
 	};
-});
-
-registerAsyncHandler(dateTimeNodes.GROUP_BY_DATETIME_NODE, async (ctx) => {
-	const groups = await ctx["~reduce"]<Map<number, [unknown, unknown[]]>>(
-		(acc, cur) => {
-			const group = acc.get(cur.date.toUnixInteger());
-			acc.set(
-				cur.date.toUnixInteger(),
-				group ? [group[0], [...group[1], cur.value]] : [cur.key, [cur.value]],
-			);
-			return acc;
-		},
-		new Map(),
-	);
-
-	const sortedGroups = Array.from(groups.entries())
-		.sort((a, b) => (a[0] > b[0] ? 1 : b[0] > a[0] ? -1 : 0))
-		.map((g) => g[1]);
-	if (ctx.sortMethod === "descending") sortedGroups.reverse();
-
-	return { result: new Map(sortedGroups) };
 });

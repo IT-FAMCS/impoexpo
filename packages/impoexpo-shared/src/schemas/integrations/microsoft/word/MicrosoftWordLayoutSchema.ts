@@ -14,23 +14,25 @@ export type MicrosoftWordListPatch = {
 	type: MicrosoftWordPlaceholderType.LIST;
 	items: Record<string, MicrosoftWordPatch[]>;
 };
-export type MicrosoftWordGroupedListItem = {
+export type MicrosoftWordGroupItem = {
 	title: MicrosoftWordTextPatch;
 	items: Record<string, MicrosoftWordPatch>;
 };
-export type MicrosoftWordGroupedListPatch = {
+export type MicrosoftWordGroupPatch = {
 	type: MicrosoftWordPlaceholderType.GROUP;
-	groups: MicrosoftWordGroupedListItem[];
+	groups: MicrosoftWordGroupItem[];
 };
-export type MicrosoftWordPatch =
+export type MicrosoftWordPatch = (
 	| MicrosoftWordTextPatch
 	| MicrosoftWordListPatch
-	| MicrosoftWordGroupedListPatch;
+	| MicrosoftWordGroupPatch
+) & { __meta: unknown };
 
 export const MicrosoftWordPatchSchema = v.variant("type", [
 	v.object({
 		type: v.literal(MicrosoftWordPlaceholderType.TEXT),
 		text: v.string(),
+		__meta: v.unknown(),
 	}),
 	v.object({
 		type: v.literal(MicrosoftWordPlaceholderType.LIST),
@@ -42,6 +44,7 @@ export const MicrosoftWordPatchSchema = v.variant("type", [
 				),
 			),
 		),
+		__meta: v.unknown(),
 	}),
 	v.object({
 		type: v.literal(MicrosoftWordPlaceholderType.GROUP),
@@ -59,6 +62,7 @@ export const MicrosoftWordPatchSchema = v.variant("type", [
 				),
 			}),
 		),
+		__meta: v.unknown(),
 	}),
 ]);
 

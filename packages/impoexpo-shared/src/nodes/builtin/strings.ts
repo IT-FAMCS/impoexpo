@@ -11,7 +11,7 @@ export const REPLACE_NODE = new BaseNode({
 	name: "replace",
 	inputSchema: v.object({
 		string: v.string(),
-		pattern: v.string(),
+		regex: v.string(),
 		replacement: v.string(),
 	}),
 	outputSchema: v.object({
@@ -24,7 +24,7 @@ export const CONTAINS_NODE = new BaseNode({
 	name: "contains",
 	inputSchema: v.object({
 		string: v.string(),
-		pattern: v.string(),
+		regex: v.string(),
 	}),
 	outputSchema: v.object({
 		result: v.boolean(),
@@ -71,7 +71,7 @@ export const SPLIT_STRING_NODE = new BaseNode({
 	name: "split-string",
 	inputSchema: v.object({
 		string: v.string(),
-		delimiter: v.string(),
+		regex: v.string(),
 	}),
 	outputSchema: v.object({
 		parts: v.array(v.string()),
@@ -91,7 +91,7 @@ export const TRIM_STRING_NODE = new BaseNode({
 	}),
 });
 
-export const REGEX_MATCH_NODE = new BaseNode({
+export const FIND_NODE = new BaseNode({
 	category: "strings",
 	name: "regex-match",
 	inputSchema: v.object({
@@ -112,7 +112,7 @@ nodesScope(() => {
 		FORMAT_STRING_NODE,
 		SPLIT_STRING_NODE,
 		TRIM_STRING_NODE,
-		REGEX_MATCH_NODE,
+		FIND_NODE,
 	);
 	registerConverter(v.string(), v.nullable(v.number()), (obj) => {
 		const num = Number(obj);

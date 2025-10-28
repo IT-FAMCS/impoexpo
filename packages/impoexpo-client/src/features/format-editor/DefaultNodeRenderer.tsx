@@ -57,7 +57,10 @@ import {
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
 import { DateTime, FixedOffsetZone } from "luxon";
-import type { ZonedDateTime } from "@internationalized/date";
+import {
+	parseZonedDateTime,
+	type ZonedDateTime,
+} from "@internationalized/date";
 import { useSettingsStore } from "@/stores/settings";
 import { useDocumentationModalStore } from "./modals/documentation-modal/store";
 import { docs } from "@/api/common";
@@ -71,6 +74,7 @@ import {
 } from "@impoexpo/shared/nodes/schema-string-conversions";
 import { Reorder, useDragControls } from "motion/react";
 import { v4 } from "uuid";
+import { dateTimeFromAny } from "luxon-parser";
 
 const NodeIndependentPropertyContext = createContext<
 	| {
@@ -605,12 +609,20 @@ function NodePropertyDatePicker() {
 		throw new Error(
 			"cannot render NodePropertyDatePicker without a NodeIndependentPropertyContext",
 		);
+
+	const rawValue = ctx.override?.getter
+		? ctx.override.getter()
+		: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ??
+			ctx.default ??
+			null);
 	const [value, setValue] = useState<ZonedDateTime | null>(
-		(ctx.override?.getter
-			? ctx.override.getter()
-			: (getNodeEntryProperty(ctx.node, ctx.handle, "value") ??
-				ctx.default ??
-				null)) as ZonedDateTime | null,
+		rawValue
+			? parseZonedDateTime(
+					dateTimeFromAny(rawValue).toISO({
+						extendedZone: true,
+					}) ?? "",
+				)
+			: null,
 	);
 
 	useEffect(() => {

@@ -19,7 +19,7 @@ nodesScope(() => {
 		title: msg`replace in string`,
 		inputs: {
 			string: { title: msg`string` },
-			pattern: { title: msg`pattern` },
+			regex: { title: msg`regular expression` },
 			replacement: { title: msg`replacement` },
 		},
 		outputs: {
@@ -32,7 +32,7 @@ nodesScope(() => {
 		aliases: msg`search in string, find in string`,
 		inputs: {
 			string: { title: msg`string` },
-			pattern: { title: msg`pattern` },
+			regex: { title: msg`regular expression` },
 		},
 		outputs: {
 			result: { title: msg`result` },
@@ -85,7 +85,10 @@ nodesScope(() => {
 		aliases: msg`divide string, explode string`,
 		inputs: {
 			string: { title: msg`string` },
-			delimiter: { title: msg`delimiter` },
+			regex: {
+				title: msg`delimiter`,
+				description: msg`(regular expression)`,
+			},
 		},
 		outputs: {
 			parts: { title: msg`parts` },
@@ -105,9 +108,9 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(stringNodes.REGEX_MATCH_NODE, {
-		title: msg`match regex`,
-		aliases: msg`find string, substring, find match`,
+	registerWithDefaultRenderer(stringNodes.FIND_NODE, {
+		title: msg`find in string`,
+		aliases: msg`match string, substring, find match`,
 		inputs: {
 			string: { title: msg`string` },
 			regex: { title: msg`regular expression` },

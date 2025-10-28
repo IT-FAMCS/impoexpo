@@ -22,6 +22,7 @@ export const ARRAY_FOREACH_NODE = new BaseNode({
 	}),
 	outputSchema: v.object({
 		object: generic("T"),
+		index: v.number(),
 	}),
 	iterable: true,
 });
