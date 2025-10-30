@@ -50,24 +50,6 @@ nodesScope(() => {
 		},
 	});
 
-	registerWithDefaultRenderer(conditionalNodes.THROW_ERROR_IF_NULL_NODE, {
-		title: msg`throw error if null`,
-		inputs: {
-			nullableObject: {
-				title: msg`nullable object`,
-			},
-			errorMessage: {
-				title: msg`error message`,
-				mode: "independentOnly",
-			},
-		},
-		outputs: {
-			object: {
-				title: msg`object`,
-			},
-		},
-	});
-
 	registerWithDefaultRenderer(conditionalNodes.SKIP_ITERATION_IF_NODE, {
 		title: msg`skip iteration, if...`,
 		aliases: msg`skip, ignore`,

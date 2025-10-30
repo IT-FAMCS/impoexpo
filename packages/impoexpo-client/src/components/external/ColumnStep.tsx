@@ -8,6 +8,7 @@ import { useControlledState } from "@react-stately/utils";
 import { LazyMotion, domAnimation, m } from "motion/react";
 
 import React from "react";
+import clsx from "clsx";
 
 export type ColumnStepProps = {
 	title?: React.ReactNode;
@@ -57,6 +58,8 @@ export interface ColumnStepsProps
 	 * Callback function when the step index changes.
 	 */
 	onStepChange?: (stepIndex: number) => void;
+
+	collapse?: boolean;
 }
 
 function CheckIcon(props: ComponentProps<"svg">) {
@@ -97,11 +100,12 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 			hideProgressBars = false,
 			stepClassName,
 			className,
+			collapse,
 			...props
 		},
 		ref,
 	) => {
-		const [currentStep, setCurrentStep] = useControlledState(
+		const [currentStep] = useControlledState(
 			currentStepProp,
 			defaultStep,
 			onStepChange,
@@ -182,7 +186,13 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 									? "inactive"
 									: "complete";
 						return (
-							<div key={stepIdx} className="flex flex-col px-4">
+							<div
+								key={stepIdx}
+								className={clsx(
+									"flex flex-col",
+									collapse ? "px-0 justify-center items-center" : "px-4",
+								)}
+							>
 								<li key={stepIdx} className="relative flex items-center w-full">
 									<button
 										key={stepIdx}
@@ -198,7 +208,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 										onClick={() => onStepChange?.(stepIdx)}
 										{...props}
 									>
-										<div className="relative flex flex-col items-center h-ful">
+										<div className="relative flex flex-col items-center h-full">
 											<LazyMotion features={domAnimation}>
 												<m.div animate={status} className="relative">
 													<m.div
@@ -239,36 +249,43 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 												</m.div>
 											</LazyMotion>
 										</div>
-										<div className="flex flex-col flex-1 max-w-full text-start">
-											<div
-												className={cn(
-													"text-small font-medium text-default-foreground transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-medium",
-													{
-														"text-default-500": status === "inactive",
-													},
+										{!collapse && (
+											<div className="flex flex-col text-start flex-1 max-w-full">
+												{!collapse && (
+													<div
+														className={cn(
+															"text-small font-medium text-default-foreground transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-medium",
+															{
+																"text-default-500": status === "inactive",
+															},
+														)}
+													>
+														{step.title}
+													</div>
 												)}
-											>
-												{step.title}
+												{!collapse && step.description !== undefined && (
+													<div
+														className={cn(
+															"text-tiny text-default-500 transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-small",
+															{
+																"text-default-500": status === "inactive",
+															},
+														)}
+													>
+														{step.description}
+													</div>
+												)}
 											</div>
-											{step.description !== undefined && (
-												<div
-													className={cn(
-														"text-tiny text-default-500 transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-small",
-														{
-															"text-default-500": status === "inactive",
-														},
-													)}
-												>
-													{step.description}
-												</div>
-											)}
-										</div>
+										)}
 									</button>
 								</li>
 								{stepIdx < steps.length - 1 && !hideProgressBars && (
 									<div
 										aria-hidden="true"
-										className="items-center flex-none h-10 pl-4 pointer-events-none"
+										className={clsx(
+											"items-center flex-none h-10 pointer-events-none",
+											collapse ? "pl-0" : "pl-4",
+										)}
 										style={{
 											// @ts-ignore
 											"--idx": stepIdx,

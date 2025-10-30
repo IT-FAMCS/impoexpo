@@ -11,13 +11,6 @@ registerHandler(conditionalNodes.REPEAT_NODE, (ctx) => {
 	}));
 });
 
-registerHandler(conditionalNodes.THROW_ERROR_IF_NULL_NODE, (ctx) => {
-	if (ctx.nullableObject === null || ctx.nullableObject === undefined) {
-		throw new Error(ctx.errorMessage);
-	}
-	return { object: ctx.nullableObject };
-});
-
 registerHandler(conditionalNodes.SKIP_ITERATION_IF_NODE, (ctx) => {
 	const { skip } = ctx["~iterators"]();
 	if (ctx.condition) skip();

@@ -9,12 +9,14 @@ import {
 	useTransferWizardStore,
 } from "@/features/transfer-wizard/store";
 import {
+	addToast,
 	Button,
 	Card,
 	CardBody,
 	CardHeader,
 	Code,
 	Spinner,
+	Tooltip,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -39,6 +41,7 @@ import {
 import TransferProgressCard from "@/features/transfer-wizard/transfer-progress-card/TransferProgressCard";
 import { navigate } from "vike/client/router";
 import FormatEditorDebugOverlay from "@/features/format-editor/FormatEditorDebugOverlay";
+import clsx from "clsx";
 
 const AnimatedCard = motion.create(Card);
 export default function Wizard() {
@@ -54,7 +57,8 @@ export default function Wizard() {
 		refetchOnWindowFocus: false,
 	});
 	const importNodesSuccessful = importNodesQuery.data;
-	if (importNodesQuery.error) console.error(importNodesQuery.error);
+	if (importNodesQuery.error)
+		console.error("failed to load nodes", importNodesQuery.error);
 
 	const loadPersistentDataQuery = useQuery({
 		queryKey: ["load-persistent-data"],
@@ -100,11 +104,22 @@ export default function Wizard() {
 	});
 
 	if (loadPersistentDataQuery.isError) {
-		console.error(loadPersistentDataQuery.error);
+		console.error(
+			"failed to load persistent data",
+			loadPersistentDataQuery.error,
+		);
+		addToast({
+			color: "danger",
+			title: <Trans>failed to load data from storage</Trans>,
+			description: (
+				<p className="font-mono">{loadPersistentDataQuery.error.message}</p>
+			),
+		});
 	}
 
 	const { t } = useLingui();
-	const { stage, setStage } = useTransferWizardStore();
+	const { stage, setStage, collapseSidebar, setCollapseSidebar } =
+		useTransferWizardStore();
 
 	useEffect(() => {
 		window.addEventListener("beforeunload", saveStatesToDatabase);
@@ -148,9 +163,14 @@ export default function Wizard() {
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}
-				className="h-full flex-[1] p-2"
+				className={clsx("h-full p-2", collapseSidebar ? "shrink" : "flex-[1]")}
 			>
-				<CardHeader className="flex flex-row gap-3 pl-4 font-medium text-large">
+				<CardHeader
+					className={clsx(
+						"flex flex-row gap-3 font-medium text-large",
+						collapseSidebar ? "justify-center" : "justify-start",
+					)}
+				>
 					<Button
 						onPress={async () => {
 							await clearStatesFromDatabase();
@@ -161,11 +181,12 @@ export default function Wizard() {
 						isIconOnly
 						startContent={<Icon icon="mdi:arrow-left" />}
 					/>
-					<Trans>new data transfer</Trans>
+					{!collapseSidebar && <Trans>new data transfer</Trans>}
 				</CardHeader>
-				<CardBody>
+				<CardBody className="flex flex-col justify-between">
 					<ColumnSteps
 						currentStep={stage}
+						collapse={collapseSidebar}
 						steps={[
 							{
 								title: t`select sources`,
@@ -178,6 +199,34 @@ export default function Wizard() {
 							},
 						]}
 					/>
+					<div
+						className={clsx(
+							"flex flex-row",
+							collapseSidebar ? "justify-center" : "justify-start",
+						)}
+					>
+						<Tooltip
+							content={
+								collapseSidebar ? t`expand sidebar` : t`collapse sidebar`
+							}
+						>
+							<Button
+								onPress={() => setCollapseSidebar(!collapseSidebar)}
+								className="aspect-square"
+								size="sm"
+								isIconOnly
+								startContent={
+									<Icon
+										icon={
+											collapseSidebar
+												? "mdi:arrow-collapse-right"
+												: "mdi:arrow-collapse-left"
+										}
+									/>
+								}
+							/>
+						</Tooltip>
+					</div>
 				</CardBody>
 			</AnimatedCard>
 			<motion.div

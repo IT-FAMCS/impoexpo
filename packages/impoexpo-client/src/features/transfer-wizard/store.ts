@@ -19,6 +19,8 @@ export enum FormatEditorWrapperState {
 export type TransferWizardStore = {
 	stage: TransferWizardStage;
 	setStage: (newStage: TransferWizardStage) => void;
+	collapseSidebar: boolean;
+	setCollapseSidebar: (newCollapseSidebar: boolean) => void;
 };
 
 export type FormatEditorWrapperStore = {
@@ -30,7 +32,10 @@ export const useTransferWizardStore = createResettable<TransferWizardStore>(
 	WIZARD_STORE_CATEGORY,
 )((set) => ({
 	stage: TransferWizardStage.SELECT_SOURCE,
-	setStage: (newStage: TransferWizardStage) => set({ stage: newStage }),
+	setStage: (newStage) => set({ stage: newStage }),
+	collapseSidebar: false,
+	setCollapseSidebar: (newCollapseSidebar) =>
+		set({ collapseSidebar: newCollapseSidebar }),
 }));
 
 export const useFormatEditorWrapperStore =

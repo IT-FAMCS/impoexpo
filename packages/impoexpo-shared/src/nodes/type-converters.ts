@@ -14,7 +14,6 @@ import {
 } from "./node-utils";
 import { schemaToString } from "./schema-string-conversions";
 import moize from "moize";
-import { IF_NODE } from "./builtin/conditional";
 
 export type TypeConverter<
 	TInSchema extends ObjectEntry,

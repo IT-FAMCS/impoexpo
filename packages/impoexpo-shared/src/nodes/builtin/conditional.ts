@@ -28,18 +28,6 @@ export const REPEAT_NODE = new BaseNode({
 	iterable: true,
 });
 
-export const THROW_ERROR_IF_NULL_NODE = new BaseNode({
-	category: "conditional",
-	name: "throw-error-if-null",
-	inputSchema: v.object({
-		nullableObject: v.nullable(generic("T")),
-		errorMessage: v.pipe(v.string(), v.nonEmpty()),
-	}),
-	outputSchema: v.object({
-		object: generic("T"),
-	}),
-});
-
 export const IS_NULL_NODE = new BaseNode({
 	category: "conditional",
 	name: "is-null",
@@ -79,7 +67,6 @@ nodesScope(() => {
 	registerBaseNodes(
 		IF_NODE,
 		REPEAT_NODE,
-		THROW_ERROR_IF_NULL_NODE,
 		SKIP_ITERATION_IF_NODE,
 		IS_NULL_NODE,
 		IF_NULL_NODE,
