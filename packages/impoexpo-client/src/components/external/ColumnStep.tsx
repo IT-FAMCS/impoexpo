@@ -169,7 +169,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 		return (
 			<nav
 				aria-label="Progress"
-				className="py-4 -my-4 overflow-x-auto max-w-fit"
+				className="py-4 -my-4 overflow-x-auto max-w-full"
 			>
 				<ol
 					className={cn(
