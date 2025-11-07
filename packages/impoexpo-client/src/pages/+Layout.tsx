@@ -8,6 +8,21 @@ import { Trans } from "@lingui/react/macro";
 import { Icon } from "@iconify/react";
 import { navigate } from "vike/client/router";
 
+export default function Layout(props: { children?: React.ReactNode }) {
+	return (
+		<React.StrictMode>
+			<Provider>
+				<ErrorBoundary FallbackComponent={CustomErrorBoundary}>
+					<div className="flex flex-col justify-between h-[100dvh] [&>*]:first:h-[calc(100dvh_-_8.5rem)] gap-4 p-5 box-border [&>*]:w-full">
+						<MobileWarningCard>{props.children}</MobileWarningCard>
+						<BottomPanel />
+					</div>
+				</ErrorBoundary>
+			</Provider>
+		</React.StrictMode>
+	);
+}
+
 function CustomErrorBoundary({ error }: FallbackProps) {
 	return (
 		<div className="flex flex-col justify-center items-center w-[100dvw] h-[100dvh] gap-2">
@@ -67,20 +82,5 @@ function CustomErrorBoundary({ error }: FallbackProps) {
 				</Button>
 			</div>
 		</div>
-	);
-}
-
-export default function Layout(props: { children?: React.ReactNode }) {
-	return (
-		<React.StrictMode>
-			<Provider>
-				<ErrorBoundary FallbackComponent={CustomErrorBoundary}>
-					<div className="flex flex-col justify-between h-[100dvh] [&>*]:first:h-[calc(100dvh_-_8.5rem)] gap-4 p-5 box-border [&>*]:w-full">
-						<MobileWarningCard>{props.children}</MobileWarningCard>
-						<BottomPanel />
-					</div>
-				</ErrorBoundary>
-			</Provider>
-		</React.StrictMode>
 	);
 }

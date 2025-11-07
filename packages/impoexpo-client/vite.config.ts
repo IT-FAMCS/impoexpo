@@ -3,7 +3,7 @@ import { lingui } from "@lingui/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import vike from "vike/plugin";
 import tailwindcss from "@tailwindcss/vite";

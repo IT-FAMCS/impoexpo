@@ -11,6 +11,7 @@ import { i18n, type Messages } from "@lingui/core";
 import { useEffect } from "react";
 import { useSettingsStore } from "./stores/settings.ts";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
+import { getUserLocale } from "get-user-locale";
 
 export const Provider = clientOnly(
 	async () =>
@@ -35,7 +36,10 @@ export const Provider = clientOnly(
 			}, []);
 
 			return (
-				<HeroUIProvider navigate={(href) => navigate(href)}>
+				<HeroUIProvider
+					locale={getUserLocale()}
+					navigate={(href) => navigate(href)}
+				>
 					<I18nProvider i18n={i18n}>
 						<ToastProvider />
 						<QueryClientProvider client={queryClient}>

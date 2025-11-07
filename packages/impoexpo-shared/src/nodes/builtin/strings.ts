@@ -59,7 +59,7 @@ export const FORMAT_STRING_NODE = new BaseNode({
 	name: "format",
 	inputSchema: v.object({
 		template: v.string(),
-		args: v.array(v.union([v.string(), v.number(), v.boolean()])),
+		args: v.array(v.string()),
 	}),
 	outputSchema: v.object({
 		result: v.string(),

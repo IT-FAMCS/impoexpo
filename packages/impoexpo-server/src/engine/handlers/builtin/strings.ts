@@ -11,7 +11,7 @@ registerHandler(stringNodes.JOIN_STRINGS_NODE, (ctx) => ({
 
 registerHandler(stringNodes.FORMAT_STRING_NODE, (ctx) => ({
 	result: ctx.template.replace(/{(\d+)}/g, (match, idx) =>
-		typeof ctx.args[idx] !== "undefined" ? `${ctx.args[idx]}` : match,
+		typeof ctx.args[idx] !== "undefined" ? ctx.args[idx] : match,
 	),
 }));
 

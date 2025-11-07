@@ -627,14 +627,13 @@ function NodePropertyDatePicker() {
 
 	useEffect(() => {
 		const date = value
-			? DateTime.fromObject(
-					{
-						year: value.year,
-						day: value.day,
-						month: value.month,
-					},
-					{ zone: FixedOffsetZone.utcInstance },
-				).toJSON()
+			? DateTime.fromObject({
+					year: value.year,
+					day: value.day,
+					month: value.month,
+				})
+					.setZone(value.timeZone)
+					.toJSON()
 			: undefined;
 		ctx.override?.setter
 			? ctx.override?.setter(date)
@@ -648,7 +647,10 @@ function NodePropertyDatePicker() {
 			aria-label={ctx.renderOptions.placeholder(ctx.handle)}
 			className="nodrag"
 			value={value}
+			granularity="second"
 			onChange={setValue}
+			showMonthAndYearPickers
+			hideTimeZone
 		/>
 	);
 }

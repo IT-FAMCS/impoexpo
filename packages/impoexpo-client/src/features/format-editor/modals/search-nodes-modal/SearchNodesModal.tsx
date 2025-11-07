@@ -214,7 +214,15 @@ function ManualNodeSelector(props: { onClose: () => void }) {
 			{selectedCategory === undefined ? (
 				<Listbox
 					className="w-full"
-					items={Object.entries(categoryRenderOptions)}
+					items={Object.entries(categoryRenderOptions).filter(([k]) =>
+						Object.values(
+							useRenderableNodesStore.getState().nodeRenderOptions,
+						).some(
+							(v) =>
+								v.node.category === k &&
+								(v.raw.searchable === undefined || v.raw.searchable),
+						),
+					)}
 				>
 					{([k, v]) => (
 						<ListboxItem

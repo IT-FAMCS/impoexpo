@@ -27,7 +27,6 @@ import { getNodeEntry, updateNodeEntryProperty } from "./stores/node-entries";
 const AnimatedCard = motion.create(Card);
 
 export default function TypeHelperEdge({
-	id,
 	sourceX,
 	sourceY,
 	targetX,
@@ -49,7 +48,7 @@ export default function TypeHelperEdge({
 		targetY,
 		targetPosition,
 	});
-	const [getBaseNodeFromId, fromNode, toNode] = useFormatEditorStore(
+	const [getBaseNodeFromId, fromNode] = useFormatEditorStore(
 		useShallow((selector) => [
 			selector.getBaseNodeFromId,
 			selector.nodes.find((n) => n.id === source),
@@ -114,6 +113,7 @@ export default function TypeHelperEdge({
 											opacity: 1,
 											y: 0,
 										}}
+										className="rounded-xl"
 									>
 										<Tooltip
 											content={
@@ -127,9 +127,9 @@ export default function TypeHelperEdge({
 												</p>
 											}
 										>
-											<CardBody className="p-2">
+											<CardBody className="p-1.5">
 												<Icon
-													width={24}
+													width={20}
 													className={
 														errorMessage !== "" || skipIterationInsideLoops
 															? "text-default"
