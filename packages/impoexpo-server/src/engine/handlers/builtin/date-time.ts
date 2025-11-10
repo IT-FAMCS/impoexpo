@@ -18,7 +18,7 @@ registerHandler(dateTimeNodes.FORMAT_DATETIME_AUTO_NODE, (ctx) => {
 	};
 });
 
-registerHandler(dateTimeNodes.CURRENT_DATETIME_NODE, (ctx) => ({
+registerHandler(dateTimeNodes.CURRENT_DATETIME_NODE, (_ctx) => ({
 	result: DateTime.now(),
 }));
 

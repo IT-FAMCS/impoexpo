@@ -25,7 +25,7 @@ export type MicrosoftWordHydratorStore = {
 
 export const useMicrosoftWordHydratorStore =
 	createResettable<MicrosoftWordHydratorStore>(WIZARD_STORE_CATEGORY)(
-		(set, get) => ({
+		(set, _get) => ({
 			state: MicrosoftWordHydratorState.UPLOAD,
 			setState: (ns) => set({ state: ns }),
 

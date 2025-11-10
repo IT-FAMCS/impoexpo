@@ -13,7 +13,7 @@ interface AnimateChangeInSizeProps {
 // width is broken and will probably forever be broken
 export default function AnimateChangeInSize(props: AnimateChangeInSizeProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const [width, setWidth] = useState<number | "auto">("auto");
+	const [_width, setWidth] = useState<number | "auto">("auto");
 	const [height, setHeight] = useState<number | "auto">("auto");
 
 	useEffect(() => {

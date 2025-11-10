@@ -13,24 +13,24 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/api/TransferHandler.ts:117
+#: src/api/TransferHandler.ts:129
 msgid "failed to connect to the server via SSE"
 msgstr "не удалось подключиться к серверу через SSE"
 
-#: src/api/TransferHandler.ts:140
+#: src/api/TransferHandler.ts:152
 msgid "transfer was cancelled"
 msgstr "перенос был отменён"
 
-#: src/api/TransferHandler.ts:146
-#: src/api/TransferHandler.ts:164
+#: src/api/TransferHandler.ts:158
+#: src/api/TransferHandler.ts:177
 msgid "something is up with the server"
 msgstr "что-то не так с сервером"
 
-#: src/api/TransferHandler.ts:211
+#: src/api/TransferHandler.ts:224
 msgid "failed to upload project files"
 msgstr "не удалось загрузить файлы проекта"
 
-#: src/api/TransferHandler.ts:230
+#: src/api/TransferHandler.ts:243
 msgid "failed to upload the project"
 msgstr "не удалось загрузить проект"
 
@@ -42,13 +42,13 @@ msgstr "перенос"
 
 #: src/components/buttons/BottomPanel.tsx:80
 #: src/components/buttons/BottomPanel.tsx:176
-#: src/components/modals/LocalProjectsManagerModal.tsx:74
+#: src/components/modals/LocalProjectsManagerModal.tsx:76
 msgid "projects"
 msgstr "проекты"
 
 #: src/components/buttons/BottomPanel.tsx:96
 #: src/components/buttons/BottomPanel.tsx:195
-#: src/components/modals/SettingsModal.tsx:38
+#: src/components/modals/SettingsModal.tsx:36
 msgid "settings"
 msgstr "настройки"
 
@@ -62,25 +62,25 @@ msgstr "документация"
 msgid "legal"
 msgstr "политика"
 
-#: src/components/external/MobileWarningCard.tsx:68
+#: src/components/external/MobileWarningCard.tsx:67
 msgid "it seems like you're viewing impoexpo on a mobile device."
 msgstr "похоже, что вы используете impoexpo на мобильном устройстве."
 
-#: src/components/external/MobileWarningCard.tsx:73
+#: src/components/external/MobileWarningCard.tsx:72
 msgid "this page is currently not optimized for mobile devices (including tablets).<0/>we recommend using impoexpo with a 16:9 monitor."
 msgstr "на данный момент эта страница не оптимизирована под мобильные устройства (включая планшеты).<0/>мы рекомендуем использовать impoexpo с монитором 16:9."
 
-#: src/components/external/MobileWarningCard.tsx:81
+#: src/components/external/MobileWarningCard.tsx:80
 msgid "do you wish to continue?"
 msgstr "вы хотите продолжить?"
 
-#: src/components/external/MobileWarningCard.tsx:88
-#: src/components/modals/LocalProjectsManagerModal.tsx:303
+#: src/components/external/MobileWarningCard.tsx:87
+#: src/components/modals/LocalProjectsManagerModal.tsx:305
 msgid "yes"
 msgstr "да"
 
-#: src/components/external/MobileWarningCard.tsx:91
-#: src/components/modals/LocalProjectsManagerModal.tsx:310
+#: src/components/external/MobileWarningCard.tsx:90
+#: src/components/modals/LocalProjectsManagerModal.tsx:312
 msgid "no"
 msgstr "нет"
 
@@ -93,120 +93,121 @@ msgstr "перетащите файл сюда или нажмите"
 msgid "will accept: {0}"
 msgstr "разрешённые форматы: {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:85
+#: src/components/modals/LocalProjectsManagerModal.tsx:87
 msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:184
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
+#: src/components/modals/LocalProjectsManagerModal.tsx:186
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
 msgid "preparing"
 msgstr "готовимся"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:186
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:200
+#: src/components/modals/LocalProjectsManagerModal.tsx:188
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:197
 msgid "uploading the project"
 msgstr "загружаем проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:188
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:202
+#: src/components/modals/LocalProjectsManagerModal.tsx:190
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:199
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:190
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
+#: src/components/modals/LocalProjectsManagerModal.tsx:192
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:192
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
+#: src/components/modals/LocalProjectsManagerModal.tsx:194
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
 msgid "transferring"
 msgstr "переносим"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:194
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
+#: src/components/modals/LocalProjectsManagerModal.tsx:196
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:196
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
-msgid "done!"
-msgstr "готово!"
-
+#. placeholder {0}: handler?.timeTaken(i18n.locale)
 #: src/components/modals/LocalProjectsManagerModal.tsx:198
-msgid "an error occurred"
-msgstr "произошла ошибка"
+msgid "done! took {0}"
+msgstr "готово! заняло {0}"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:221
+#. placeholder {0}: handler?.timeTaken(i18n.locale)
+#: src/components/modals/LocalProjectsManagerModal.tsx:200
+msgid "an error occurred. took {0}"
+msgstr "произошла ошибка. заняло {0}"
+
+#: src/components/modals/LocalProjectsManagerModal.tsx:223
 msgid "edit project"
 msgstr "редактировать проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:233
+#: src/components/modals/LocalProjectsManagerModal.tsx:235
 msgid "delete project"
 msgstr "удалить проект"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:243
+#: src/components/modals/LocalProjectsManagerModal.tsx:245
 msgid "run project"
 msgstr "запустить проект (перенос)"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:314
+#: src/components/modals/LocalProjectsManagerModal.tsx:316
 msgid "are you sure?"
 msgstr "вы уверены?"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:328
+#: src/components/modals/LocalProjectsManagerModal.tsx:330
 msgid "this transfer produced no files"
 msgstr "этот перенос не выдал файлов"
 
-#: src/components/modals/LocalProjectsManagerModal.tsx:378
-#: src/components/modals/LocalProjectsManagerModal.tsx:379
+#: src/components/modals/LocalProjectsManagerModal.tsx:383
+#: src/components/modals/LocalProjectsManagerModal.tsx:384
 #: src/features/format-editor/nodes/builtin/notifications.tsx:13
 msgid "notifications"
 msgstr "уведомления"
 
-#: src/components/modals/SettingsModal.tsx:41
+#: src/components/modals/SettingsModal.tsx:39
 msgid "general"
 msgstr "общие"
 
-#: src/components/modals/SettingsModal.tsx:42
+#: src/components/modals/SettingsModal.tsx:40
 msgid "language"
 msgstr "язык"
 
-#: src/components/modals/SettingsModal.tsx:45
+#: src/components/modals/SettingsModal.tsx:43
 msgid "theme"
 msgstr "тема"
 
-#: src/components/modals/SettingsModal.tsx:49
+#: src/components/modals/SettingsModal.tsx:47
 msgid "editor options"
 msgstr "настройки редактора"
 
-#: src/components/modals/SettingsModal.tsx:51
+#: src/components/modals/SettingsModal.tsx:49
 msgid "show a \"what does it do?\" button near nodes"
 msgstr "показывать кнопку \"что это делает?\" возле узлов"
 
-#: src/components/modals/SettingsModal.tsx:52
+#: src/components/modals/SettingsModal.tsx:50
 msgid "will open the documentation for the selected node"
 msgstr "по нажатию открывает документацию выбранного узла"
 
-#: src/components/modals/SettingsModal.tsx:62
+#: src/components/modals/SettingsModal.tsx:60
 msgid "debug"
 msgstr "отладка"
 
-#: src/components/modals/SettingsModal.tsx:63
+#: src/components/modals/SettingsModal.tsx:61
 msgid "shows additional information about the editor, useful for debugging"
 msgstr "показывает дополнительную информацию о редакторе (узлы, рёбра)"
 
-#: src/components/modals/SettingsModal.tsx:71
+#: src/components/modals/SettingsModal.tsx:69
 msgid "developer options"
 msgstr "для разработчиков"
 
-#: src/components/modals/SettingsModal.tsx:73
+#: src/components/modals/SettingsModal.tsx:71
 msgid "allow taking screenshots of nodes"
 msgstr "показывать опцию для скриншота узлов"
 
-#: src/components/modals/SettingsModal.tsx:74
+#: src/components/modals/SettingsModal.tsx:72
 msgid "used for writing documentation"
 msgstr "обычно используется для написания документации"
 
-#: src/components/modals/SettingsModal.tsx:83
+#: src/components/modals/SettingsModal.tsx:81
 msgid "always show types"
 msgstr "всегда показывать типы"
 
@@ -268,119 +269,119 @@ msgstr "даты"
 msgid "flags"
 msgstr "флаги (правда или ложь)"
 
-#: src/features/format-editor/FormatEditor.tsx:281
+#: src/features/format-editor/FormatEditor.tsx:280
 msgid "save project..."
 msgstr "сохранить проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:296
+#: src/features/format-editor/FormatEditor.tsx:295
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:86
 msgid "successfully saved the project"
 msgstr "проект успешно сохранён"
 
-#: src/features/format-editor/FormatEditor.tsx:303
+#: src/features/format-editor/FormatEditor.tsx:302
 msgid "failed to save the project (did you mess with the database?)"
 msgstr "не удалось сохранить проект (вы трогали базу данных?)"
 
-#: src/features/format-editor/FormatEditor.tsx:317
+#: src/features/format-editor/FormatEditor.tsx:316
 msgid "save project as..."
 msgstr "сохранить проект как..."
 
-#: src/features/format-editor/FormatEditor.tsx:327
+#: src/features/format-editor/FormatEditor.tsx:326
 msgid "layout nodes"
 msgstr "упорядочить узлы"
 
-#: src/features/format-editor/FormatEditor.tsx:333
+#: src/features/format-editor/FormatEditor.tsx:332
 msgid "export project..."
 msgstr "экспортировать проект..."
 
-#: src/features/format-editor/FormatEditor.tsx:343
+#: src/features/format-editor/FormatEditor.tsx:342
 msgid "undo"
 msgstr "отменить"
 
-#: src/features/format-editor/FormatEditor.tsx:359
+#: src/features/format-editor/FormatEditor.tsx:358
 msgid "redo"
 msgstr "повторить"
 
-#: src/features/format-editor/FormatEditor.tsx:389
+#: src/features/format-editor/FormatEditor.tsx:388
 msgid "done"
 msgstr "далее"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:79
+#: src/features/format-editor/FormatEditorContextMenu.tsx:78
 msgid "failed to render node"
 msgstr "не удалось зарендерить узел"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:95
-#: src/features/format-editor/FormatEditorContextMenu.tsx:112
-#: src/pages/+Layout.tsx:44
+#: src/features/format-editor/FormatEditorContextMenu.tsx:94
+#: src/features/format-editor/FormatEditorContextMenu.tsx:111
+#: src/pages/+Layout.tsx:59
 msgid "ok"
 msgstr "ок"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:131
+#: src/features/format-editor/FormatEditorContextMenu.tsx:130
 msgid "duplicate"
 msgstr "дублировать"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:143
+#: src/features/format-editor/FormatEditorContextMenu.tsx:142
 msgid "this node cannot be removed as it's not searchable and is tied to an integration."
 msgstr "этот узел не может быть удалён, т.к. он привязан к интеграции и не может быть найден через диалог поиска."
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:151
+#: src/features/format-editor/FormatEditorContextMenu.tsx:150
 msgid "delete"
 msgstr "удалить"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:164
+#: src/features/format-editor/FormatEditorContextMenu.tsx:163
 msgid "render to clipboard"
 msgstr "зарендерить в буфер обмена"
 
-#: src/features/format-editor/FormatEditorContextMenu.tsx:171
+#: src/features/format-editor/FormatEditorContextMenu.tsx:170
 msgid "render to file"
 msgstr "зарендерить в файл"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:121
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:111
 msgid "no conversion exists between these types"
 msgstr "между этими типами нет взаимосвязи"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:127
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:117
 msgid "the value will be automatically converted"
 msgstr "значение будет автоматически преобразовано"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:142
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:132
 msgid "cannot connect properties of the same node"
 msgstr "нельзя присоединять поля одного и того же узла"
 
-#: src/features/format-editor/TypeHelperConnectionLine.tsx:146
+#: src/features/format-editor/TypeHelperConnectionLine.tsx:136
 msgid "cannot connect properties of the same source<0/>(input with input, output with output)"
 msgstr "нельзя присоединять поля одного вида<0/>(входной с входным, выходной с выходным)"
 
-#: src/features/format-editor/TypeHelperEdge.tsx:121
+#: src/features/format-editor/TypeHelperEdge.tsx:119
 msgid "the conversion between these types may result in an error.<0/>click the button to edit the error message."
 msgstr "преобразование между данными типами может выдать ошибку.<0/>нажмите, чтобы отредактировать сообщение об ошибке."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:169
+#: src/features/format-editor/TypeHelperEdge.tsx:167
 msgid "enter the error message..."
 msgstr "введите сообщение об ошибке..."
 
-#: src/features/format-editor/TypeHelperEdge.tsx:188
+#: src/features/format-editor/TypeHelperEdge.tsx:186
 msgid "inside loops, skip an iteration instead of erroring"
 msgstr "в циклах, пропускать итерацию вместо выдачи ошибки"
 
-#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:48
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:44
 msgid "export project"
 msgstr "экспорт проекта"
 
-#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:51
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:47
 msgid "are you sure you want to export this project?"
 msgstr "вы уверены, что хотите экспортировать этот проект?"
 
-#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:54
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:50
 msgid "please note that <0>all integration-related information will not be exported.</0> this means that, when importing the project, you'll have to reattach all integration nodes again."
 msgstr "пожалуйста, учтите, что <0>вся информация, связанная с интеграциями, не будет экспортирована.</0> при импорте проекта вам придётся переподсоединить все узлы из интеграций."
 
-#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:67
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:63
 #: src/features/format-editor/modals/save-project-modal/SaveProjectModal.tsx:73
 msgid "cancel"
 msgstr "отмена"
 
-#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:70
+#: src/features/format-editor/modals/export-project-modal/ExportProjectModal.tsx:66
 msgid "export"
 msgstr "экспортировать"
 
@@ -404,12 +405,12 @@ msgstr "сохранить"
 msgid "enter the name, category or tag of the needed node..."
 msgstr "введите название, категорию или тег нужного узла..."
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:240
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:248
 #: src/features/transfer-wizard/select-source-card/SelectSourceCard.tsx:126
 msgid "go back"
 msgstr "вернуться назад"
 
-#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:260
+#: src/features/format-editor/modals/search-nodes-modal/SearchNodesModal.tsx:268
 msgid "the results are filtered based on what node and property you've selected."
 msgstr "результаты отфильтрованы на основании выбранных вами узла и его свойства."
 
@@ -1039,30 +1040,39 @@ msgstr "далее"
 msgid "failed to check integration authentication status"
 msgstr "не удалось проверить статус авторизации интеграции"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:127
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:124
 msgid "download"
 msgstr "скачать"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:214
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
+msgid "done!"
+msgstr "готово!"
+
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
 msgid "you were not supposed to see this."
 msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:247
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:244
 msgid "view all files"
 msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:266
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:263
 msgid "try again"
 msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:292
-#: src/pages/+Layout.tsx:66
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:289
+#: src/pages/+Layout.tsx:81
 msgid "return to the homepage"
 msgstr "на главную страницу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:309
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:306
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "уведомления появятся тут<0/>(если они есть)"
+
+#. placeholder {0}: handler.timeTaken(i18n.locale)
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:401
+msgid "took {0}"
+msgstr "заняло {0}"
 
 #: src/integrations/google/GoogleAuthenticator.tsx:48
 msgid "not all permissions have been provided!"
@@ -1251,19 +1261,19 @@ msgstr "заголовок группы"
 msgid "nowhere"
 msgstr "никуда"
 
-#: src/pages/+Layout.tsx:17
+#: src/pages/+Layout.tsx:32
 msgid "something went <0>terribly</0> wrong..."
 msgstr "что-то пошло <0>очень</0> не по плану..."
 
-#: src/pages/+Layout.tsx:22
+#: src/pages/+Layout.tsx:37
 msgid "if you can, please <0>contact the developers!</0>"
 msgstr "если у вас есть возможность, пожалуйста, <0>свяжитесь с разработчиками!</0>"
 
-#: src/pages/+Layout.tsx:49
+#: src/pages/+Layout.tsx:64
 msgid "failed to copy error message to clipboard"
 msgstr "не удалось скопировать сообщений об ошибке в буфер обмена"
 
-#: src/pages/+Layout.tsx:56
+#: src/pages/+Layout.tsx:71
 msgid "copy error message"
 msgstr "копировать сообщение об ошибке"
 
@@ -1303,11 +1313,11 @@ msgstr "<0>impoexpo</0> — <1>ПО с открытым исходным код�
 msgid "the source code for impoexpo is hosted on github and can be found <0>here</0>."
 msgstr "код impoexpo находится на github'е и может быть найден <0>здесь</0>."
 
-#: src/pages/privacy/+Page.tsx:21
+#: src/pages/privacy/+Page.tsx:20
 msgid "common"
 msgstr "общее"
 
-#: src/pages/privacy/+Page.tsx:25
+#: src/pages/privacy/+Page.tsx:24
 msgid "google"
 msgstr "google"
 

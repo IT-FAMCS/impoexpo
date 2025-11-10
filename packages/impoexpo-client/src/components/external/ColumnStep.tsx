@@ -287,7 +287,7 @@ const ColumnSteps = React.forwardRef<HTMLButtonElement, ColumnStepsProps>(
 											collapse ? "pl-0" : "pl-4",
 										)}
 										style={{
-											// @ts-ignore
+											// @ts-expect-error
 											"--idx": stepIdx,
 										}}
 									>

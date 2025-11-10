@@ -40,7 +40,7 @@ registerIntegrationNodeHandlerRegistrar(
 			const base = createGoogleFormsBaseNode(id, layout);
 			registerBaseNodes(base);
 
-			genericRegisterAsyncHandler(handlers, base, async (ctx) => {
+			genericRegisterAsyncHandler(handlers, base, async (_ctx) => {
 				const auth = extractGoogleAuth(integration.auth.tokens);
 				const client = getGoogleClient();
 				client.setCredentials({
@@ -129,6 +129,7 @@ registerIntegrationNodeHandlerRegistrar(
 									if (!textAnswers) continue;
 									outputs[item.id] = Number.parseInt(
 										textAnswers[0].value ?? "",
+										10,
 									);
 									break;
 								case GoogleFormsQuestionType.TEXT:

@@ -56,7 +56,7 @@ import {
 } from "@impoexpo/shared/nodes/node-utils";
 import { useRenderableNodesStore } from "./nodes/renderable-node-database";
 import { Icon } from "@iconify/react";
-import { DateTime, FixedOffsetZone } from "luxon";
+import { DateTime } from "luxon";
 import {
 	parseZonedDateTime,
 	type ZonedDateTime,

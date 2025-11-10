@@ -1,6 +1,5 @@
-import type { Express } from "express";
 import { query, validationResult } from "express-validator";
-import { childLogger, logger } from "../../logger";
+import { childLogger } from "../../logger";
 import { google } from "googleapis";
 import {
 	getGoogleClient,

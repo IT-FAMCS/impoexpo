@@ -63,7 +63,7 @@ export class Job {
 				} satisfies ProjectStatusNotification,
 				"notification",
 			);
-		} catch (err) {
+		} catch (_err) {
 			childLogger(`jobs/${this.id}`).warn(
 				"failed to send event to the SSE client, perhaps they disconnected abruptly?",
 			);

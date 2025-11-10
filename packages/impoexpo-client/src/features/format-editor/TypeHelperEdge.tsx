@@ -7,9 +7,7 @@ import {
 } from "@xyflow/react";
 import { useFormatEditorStore } from "./stores/store";
 import { createCompleteConverter } from "@impoexpo/shared/nodes/type-converters";
-import { motion } from "motion/react";
 import {
-	Card,
 	CardBody,
 	Checkbox,
 	Input,
@@ -24,7 +22,7 @@ import { useShallow } from "zustand/react/shallow";
 import { entriesCompatible } from "@impoexpo/shared/nodes/node-utils";
 import { schemaToString } from "@impoexpo/shared/nodes/schema-string-conversions";
 import { getNodeEntry, updateNodeEntryProperty } from "./stores/node-entries";
-const AnimatedCard = motion.create(Card);
+import { AnimatedCard } from "@/styles/motion";
 
 export default function TypeHelperEdge({
 	sourceX,

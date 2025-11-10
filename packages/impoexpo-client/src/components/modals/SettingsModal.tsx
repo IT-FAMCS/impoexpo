@@ -1,5 +1,4 @@
 import {
-	Button,
 	Card,
 	CardBody,
 	Modal,
@@ -10,7 +9,6 @@ import {
 	Switch,
 	useDisclosure,
 } from "@heroui/react";
-import { Icon } from "@iconify/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import type { PropsWithChildren, ReactNode } from "react";
 import LanguageSwitcher from "../buttons/LanguageSwitcher";

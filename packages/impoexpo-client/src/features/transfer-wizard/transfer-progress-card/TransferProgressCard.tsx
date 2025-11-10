@@ -1,35 +1,32 @@
-import { Alert, Button, Card, Code, ScrollShadow } from "@heroui/react";
-import { type PropsWithChildren, useEffect, useState } from "react";
-import { useProjectStore } from "@/stores/project";
-import type {
-	Project,
-	ProjectOutput,
-} from "@impoexpo/shared/schemas/project/ProjectSchema";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { Icon } from "@iconify/react";
-import { AnimatePresence, motion } from "motion/react";
-import Confetti from "react-confetti-boom";
+import { route } from "@/api/common";
 import {
 	type FileUploadStatusChange,
 	TransferHandler,
 	TransferHandlerState,
 } from "@/api/TransferHandler";
-import "./style.css";
-import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
-import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
-import prettyBytes from "pretty-bytes";
-
-import useSound from "use-sound";
-import meowSfx from "/sounds/meow.mp3?url";
-import clsx from "clsx";
-import { route } from "@/api/common";
-import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
 import { clearStatesFromDatabase } from "@/db/persisted";
+import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
+import { useProjectStore } from "@/stores/project";
 import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import { AnimatedAlert, AnimatedCard } from "@/styles/motion";
+import { Button, Card, Code, ScrollShadow } from "@heroui/react";
+import { Icon } from "@iconify/react";
+import type {
+	Project,
+	ProjectOutput,
+} from "@impoexpo/shared/schemas/project/ProjectSchema";
+import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
+import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
+import { Trans, useLingui } from "@lingui/react/macro";
+import clsx from "clsx";
+import { AnimatePresence, motion } from "motion/react";
+import prettyBytes from "pretty-bytes";
+import { type PropsWithChildren, useEffect, useState } from "react";
+import Confetti from "react-confetti-boom";
+import useSound from "use-sound";
 import { navigate } from "vike/client/router";
-
-const AnimatedCard = motion.create(Card);
-const AnimatedAlert = motion.create(Alert);
+import "./style.css";
+import meowSfx from "/sounds/meow.mp3?url";
 
 function AnimatedGridCell(
 	props: PropsWithChildren<{
@@ -132,7 +129,7 @@ function TransferOutputCard(props: {
 }
 
 export default function TransferProgressCard() {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const [handlerState, setHandlerState] = useState<TransferHandlerState>(
 		TransferHandlerState.IDLE,
 	);
@@ -383,7 +380,12 @@ export default function TransferProgressCard() {
 								</motion.div>
 							)}
 						</AnimatePresence>
-						<p className="text-5xl">
+						<p
+							className={clsx(
+								handler.stopTime !== 0 ? "leading-0" : "",
+								"text-5xl",
+							)}
+						>
 							{stringifyState()}
 							{handlerState === TransferHandlerState.UPLOADING_PROJECT_FILES &&
 								fileUploadInformation && (
@@ -393,6 +395,12 @@ export default function TransferProgressCard() {
 										{fileUploadInformation.total})
 									</span>
 								)}
+							{handler.stopTime !== 0 && (
+								<span className="text-xl text-foreground-500">
+									<br />
+									<Trans>took {handler.timeTaken(i18n.locale)}</Trans>
+								</span>
+							)}
 						</p>
 					</>
 				)}

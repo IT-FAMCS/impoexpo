@@ -1,19 +1,15 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { createProjectSnapshot } from "@/db/snapshot";
 import {
 	Alert,
 	Button,
-	Divider,
-	Input,
-	Listbox,
-	ListboxItem,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
 } from "@heroui/react";
-import { createProjectSnapshot } from "@/db/snapshot";
 import { Icon } from "@iconify/react";
+import { Trans } from "@lingui/react/macro";
 
 export default function ExportProjectModal(props: {
 	isOpen: boolean;

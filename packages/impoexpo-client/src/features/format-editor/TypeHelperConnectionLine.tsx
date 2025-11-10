@@ -1,23 +1,14 @@
-import { Card, CardBody, Code } from "@heroui/react";
-import {
-	ConnectionLineComponentProps,
-	EdgeLabelRenderer,
-	getBezierPath,
-	useConnection,
-} from "@xyflow/react";
-
-import { getNodeRenderOptions } from "./nodes/renderable-node-database";
-import { useFormatEditorStore } from "./stores/store";
-import { schemasConvertible } from "@impoexpo/shared/nodes/type-converters";
+import { AnimatedCard } from "@/styles/motion";
+import { CardBody, Code } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { Trans } from "@lingui/react/macro";
 import {
 	entriesCompatible,
-	isGeneric,
 	isUnionOrEqual,
 } from "@impoexpo/shared/nodes/node-utils";
-import { motion } from "motion/react";
-const AnimatedCard = motion.create(Card);
+import { Trans } from "@lingui/react/macro";
+import { EdgeLabelRenderer, getBezierPath, useConnection } from "@xyflow/react";
+import { getNodeRenderOptions } from "./nodes/renderable-node-database";
+import { useFormatEditorStore } from "./stores/store";
 
 export default function TypeHelperConnectionLine() {
 	const {
@@ -29,7 +20,6 @@ export default function TypeHelperConnectionLine() {
 		fromNode,
 		toHandle,
 		toNode,
-		isValid,
 	} = useConnection();
 	const { getBaseNodeFromId } = useFormatEditorStore();
 
@@ -71,7 +61,7 @@ export default function TypeHelperConnectionLine() {
 	};
 
 	if (!from || !fromPosition) return;
-	const [path, labelX, labelY, offsetX, offsetY] = getBezierPath({
+	const [path, labelX, labelY, _offsetX, _offsetY] = getBezierPath({
 		sourceX: from.x,
 		sourceY: from.y,
 		sourcePosition: fromPosition,

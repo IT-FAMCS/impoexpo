@@ -5,7 +5,6 @@ import {
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
-	Tooltip,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
@@ -23,7 +22,7 @@ export type FormatEditorContextMenuRef = {
 	) => void;
 	isOpen: () => boolean;
 };
-const FormatEditorContextMenu = forwardRef((props, ref) => {
+const FormatEditorContextMenu = forwardRef((_props, ref) => {
 	const { onNodesChange, duplicateNode, isNodeRemovable } =
 		useFormatEditorStore();
 	const settings = useSettingsStore();

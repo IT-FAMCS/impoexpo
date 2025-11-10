@@ -6,7 +6,7 @@ import { type Duration, parseDuration } from "./helpers/unit-converter";
 export const defaultCache = apicache.options({
 	respectCacheControl: true,
 }).middleware;
-export const cacheOnlyIfSuccessful = (req: Request, res: Response) =>
+export const cacheOnlyIfSuccessful = (_req: Request, res: Response) =>
 	res.statusCode === 200;
 
 export const defaultRatelimiter = (
@@ -20,10 +20,10 @@ export const defaultRatelimiter = (
 		standardHeaders: true,
 		legacyHeaders: false,
 		skipFailedRequests: options?.skipFailedRequests ?? true,
-		skip: (req, res) =>
+		skip: (req, _res) =>
 			"cache-control" in req.headers &&
 			req.headers["cache-control"] !== "no-cache", // do not count cached requests into the ratelimit
-		handler: (req, res, next, options) => {
+		handler: (_req, res, _next, options) => {
 			res
 				.status(options.statusCode)
 				.set("Access-Control-Expose-Headers", [

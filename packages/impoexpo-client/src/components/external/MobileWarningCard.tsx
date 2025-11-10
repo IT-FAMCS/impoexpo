@@ -1,8 +1,8 @@
 import useLinguiChange from "@/hooks/useLinguiChange";
-import { Card, CardBody, Button } from "@heroui/react";
+import { AnimatedCard } from "@/styles/motion";
+import { Button, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Trans } from "@lingui/react/macro";
-import { motion } from "motion/react";
 import { type ReactNode, useEffect, useState } from "react";
 import { usePageContext } from "vike-react/usePageContext";
 import { navigate } from "vike/client/router";
@@ -29,7 +29,6 @@ const detectMobile = () => {
 	return false;
 };
 
-const AnimatedCard = motion.create(Card);
 export default function MobileWarningCard(props: { children?: ReactNode }) {
 	const ctx = usePageContext();
 	const pageSupportsMobile = (ctx.data as { supportsMobile: boolean })

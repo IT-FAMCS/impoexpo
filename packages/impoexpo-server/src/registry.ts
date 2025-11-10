@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { glob } from "glob";
 import path from "node:path";
-import { childLogger, logger } from "./logger";
+import { childLogger } from "./logger";
 
 export type ServerIntegrationInitSuccess = {
 	success: true;

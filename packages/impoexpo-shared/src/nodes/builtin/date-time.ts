@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { BaseNode } from "../node-types";
 import { nodesScope, registerBaseNodes } from "../node-database";
-import { dateTime, generic } from "../node-utils";
+import { dateTime } from "../node-utils";
 import ISO6391 from "iso-639-1";
 import { DateTime } from "luxon";
 

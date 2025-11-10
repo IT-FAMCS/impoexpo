@@ -19,7 +19,7 @@ registerIntegration({
 	id: MICROSOFT_WORD_INTEGRATION_ID,
 	dependencies: ["microsoft-shared"],
 	async registerEndpoints(app) {
-		const logger = childLogger("integrations/microsoft/word");
+		const _logger = childLogger("integrations/microsoft/word");
 		app.post(
 			MICROSOFT_WORD_LAYOUT_ROUTE,
 			defaultRatelimiter("1 hour", 15),
@@ -36,7 +36,7 @@ registerIntegration({
 
 				try {
 					const extractMethod =
-						// @ts-ignore
+						// @ts-expect-error
 						dotnetRuntimeExports.SimpleOfficePatchers.Patchers.WordPatcher
 							.ExtractPlaceholders;
 					if (!extractMethod) {

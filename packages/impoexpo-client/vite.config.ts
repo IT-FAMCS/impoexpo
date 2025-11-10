@@ -1,13 +1,13 @@
-import * as child from "node:child_process";
 import { lingui } from "@lingui/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig, loadEnv, type Plugin } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import * as child from "node:child_process";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import vike from "vike/plugin";
-import tailwindcss from "@tailwindcss/vite";
 import sonda from "sonda/vite";
+import vike from "vike/plugin";
+import { defineConfig, loadEnv, type Plugin } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getCommitInformation = (type: "shortHash" | "longHash" | "message") => {

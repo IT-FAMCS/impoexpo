@@ -1,6 +1,6 @@
-import type { Express, Request, Response } from "express";
+import type { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
-import { childLogger, logger } from "../../logger";
+import { childLogger } from "../../logger";
 import { google } from "googleapis";
 
 import type {
@@ -23,11 +23,7 @@ import {
 	getAuthenticatedGoogleClient,
 	requireGoogleAuth,
 } from "./common/middlewares";
-import {
-	defaultCache,
-	cacheOnlyIfSuccessful,
-	defaultRatelimiter,
-} from "../../common";
+import { defaultRatelimiter } from "../../common";
 import { registerIntegration } from "../../registry";
 
 registerIntegration({

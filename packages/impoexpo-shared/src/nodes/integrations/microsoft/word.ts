@@ -1,18 +1,15 @@
 import { BaseNode, type ObjectEntry } from "../../node-types";
-import { nodesScope } from "../../node-database";
-import { registerBaseNodes } from "../../node-database";
 import * as v from "valibot";
 import { registerCustomType } from "../../schema-string-conversions";
 import {
 	type MicrosoftWordDocumentLayout,
-	MicrosoftWordDocumentPlaceholder,
-	MicrosoftWordDocumentPlaceholderSchema,
+	type MicrosoftWordDocumentPlaceholder,
 	MicrosoftWordPatchSchema,
 	MicrosoftWordPlaceholderType,
 } from "../../../schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
 import {
-	customType,
-	DefaultBaseNode,
+	type customType,
+	type DefaultBaseNode,
 	getCustomTypeName,
 } from "../../node-utils";
 

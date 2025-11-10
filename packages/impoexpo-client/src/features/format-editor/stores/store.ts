@@ -213,7 +213,7 @@ export const useFormatEditorStore = createResettable<FormatEditorStore>(
 						const maxCount = Math.max(
 							...nodes
 								.filter((n) => n.type === node.type)
-								.map((n) => Number.parseInt(n.id.split("-").at(-1) ?? "0")),
+								.map((n) => Number.parseInt(n.id.split("-").at(-1) ?? "0", 10)),
 						);
 						nodeCount[node.type] = maxCount;
 					}

@@ -20,7 +20,6 @@ import {
 	isOptional,
 } from "./node-utils";
 import moize from "moize";
-import { DateTime } from "luxon";
 
 const defaultSchemaConverters: Record<string, () => ObjectEntry> = {
 	string: v.string,
@@ -89,7 +88,7 @@ export const internalSchemaFromString = (raw: string): ObjectEntry => {
 		return customType(str, customTypeSchemaConverters[str]());
 
 	// generic custom type
-	const genericRegexMatches = /([\w\-\$@#]+)<(.*)>/.exec(str);
+	const genericRegexMatches = /([\w\-$@#]+)<(.*)>/.exec(str);
 	if (genericRegexMatches) {
 		let schema = internalSchemaFromString(genericRegexMatches[1]);
 		const resolvers = genericRegexMatches[2].split(",");

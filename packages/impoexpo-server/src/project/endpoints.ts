@@ -21,8 +21,11 @@ import TTLCache from "@isaacs/ttlcache";
 
 // TODO: a defaults.json file would be nice!
 export const projectOutputFilesCache = new TTLCache<string, File>({
-	max: Number.parseInt(process.env.IN_MEMORY_PROJECT_OUTPUTS_MAX ?? "100"), // 100 entries by default
-	ttl: Number.parseInt(process.env.IN_MEMORY_PROJECT_OUTPUTS_TTL ?? "60000"), // a minute by default
+	max: Number.parseInt(process.env.IN_MEMORY_PROJECT_OUTPUTS_MAX ?? "100", 10), // 100 entries by default
+	ttl: Number.parseInt(
+		process.env.IN_MEMORY_PROJECT_OUTPUTS_TTL ?? "60000",
+		10,
+	), // a minute by default
 });
 
 export const registerProjectEndpoints = (app: Express) => {

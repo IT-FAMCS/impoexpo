@@ -1,9 +1,18 @@
+import { route } from "@/api/common";
+import { TransferHandler, TransferHandlerState } from "@/api/TransferHandler";
+import {
+	getAllLocalProjects,
+	type LocalProjectsTableEntry,
+	removeLocalProject,
+} from "@/db/local-projects";
+import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
 import {
 	Accordion,
 	AccordionItem,
 	Alert,
 	Button,
 	Card,
+	card,
 	CardBody,
 	Code,
 	Listbox,
@@ -19,24 +28,16 @@ import {
 	useDisclosure,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useLingui, Trans } from "@lingui/react/macro";
-import { type ReactNode, useEffect, useState } from "react";
-import {
-	getAllLocalProjects,
-	removeLocalProject,
-	type LocalProjectsTableEntry,
-} from "@/db/local-projects";
-import { TransferHandler, TransferHandlerState } from "@/api/TransferHandler";
-import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
-import { route } from "@/api/common";
-import prettyBytes from "pretty-bytes";
 import type { ProjectStatusNotification } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
-import { deepCopy } from "deep-copy-ts";
-import DividerWithText from "../external/DividerWithText";
+import { RETRIEVE_PROJECT_OUTPUT_ROUTE } from "@impoexpo/shared/schemas/project/static";
+import { Trans, useLingui } from "@lingui/react/macro";
 import clsx from "clsx";
-import { localizableString } from "@/features/format-editor/nodes/renderable-node-types";
+import { deepCopy } from "deep-copy-ts";
 import { AnimatePresence, motion } from "motion/react";
+import prettyBytes from "pretty-bytes";
+import { type ReactNode, useEffect, useState } from "react";
 import { navigate } from "vike/client/router";
+import DividerWithText from "../external/DividerWithText";
 
 export default function LocalProjectsManagerModal(props: {
 	trigger?: (onOpen: () => void) => ReactNode;
@@ -48,6 +49,7 @@ export default function LocalProjectsManagerModal(props: {
 		Record<string, LocalProjectsTableEntry[]>
 	>({});
 	useEffect(() => {
+		if (!isOpen) return;
 		getAllLocalProjects().then((ungroupedProjects) => {
 			const groupedProjects: Record<string, LocalProjectsTableEntry[]> = {};
 			for (const project of ungroupedProjects) {
@@ -57,7 +59,7 @@ export default function LocalProjectsManagerModal(props: {
 			}
 			setProjects(groupedProjects);
 		});
-	}, []);
+	}, [isOpen]);
 
 	return (
 		<>
@@ -136,7 +138,7 @@ function LocalProjectCard(props: {
 	onEdit: () => void;
 	className?: string;
 }) {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const [deleting, setDeleting] = useState(false);
 	const [running, setRunning] = useState(false);
 
@@ -193,9 +195,9 @@ function LocalProjectCard(props: {
 			case TransferHandlerState.RECONNECTING:
 				return t`reconnecting to the server`;
 			case TransferHandlerState.DONE:
-				return t`done!`;
+				return t`done! took ${handler?.timeTaken(i18n.locale)}`;
 			case TransferHandlerState.TERMINATED:
-				return t`an error occurred`;
+				return t`an error occurred. took ${handler?.timeTaken(i18n.locale)}`;
 		}
 	};
 
@@ -203,7 +205,7 @@ function LocalProjectCard(props: {
 		<Card shadow="sm" className={clsx("w-full", props.className)}>
 			<CardBody className="flex flex-col gap-2 px-4 py-4">
 				<div className="flex flex-row items-center gap-2">
-					<Card>
+					<Card shadow="sm">
 						<CardBody className="p-2">
 							<Icon width={24} icon="mdi:swap-horizontal-bold" />
 						</CardBody>
@@ -322,7 +324,7 @@ function LocalProjectCard(props: {
 								animate={{ opacity: 1, y: 0 }}
 								key="no-outputs-card"
 							>
-								<Card>
+								<Card shadow="sm">
 									<CardBody>
 										<p className="text-center text-foreground-500">
 											<Trans>this transfer produced no files</Trans>
@@ -371,9 +373,12 @@ function LocalProjectCard(props: {
 							animate={{ opacity: 1, y: 0 }}
 							key="notifications-accordion"
 						>
-							<Accordion itemClasses={{ trigger: "py-0" }} className="px-1">
+							<Accordion
+								itemClasses={{ trigger: "py-1" }}
+								className={card({ shadow: "sm" }).base()}
+							>
 								<AccordionItem
-									className="w-full p-2 px-4 ring-2 ring-foreground-100 rounded-small"
+									className="w-full p-2 px-4 rounded-small"
 									key="notifications"
 									aria-label={t`notifications`}
 									title={t`notifications`}

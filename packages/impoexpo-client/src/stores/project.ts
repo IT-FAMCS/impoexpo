@@ -20,7 +20,7 @@ export type ProjectStoreInternals = {
 
 export const useProjectStore = createResettable<
 	Project & ProjectStoreInternals
->(WIZARD_STORE_CATEGORY)((set, get) => ({
+>(WIZARD_STORE_CATEGORY)((set, _get) => ({
 	loaded: false,
 	integrations: {},
 	nodes: [],

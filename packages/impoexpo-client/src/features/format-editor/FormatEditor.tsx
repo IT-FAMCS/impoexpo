@@ -53,7 +53,6 @@ import SaveProjectModal from "./modals/save-project-modal/SaveProjectModal";
 import { updateLocalProject } from "@/db/local-projects";
 import TypeHelperEdge from "./TypeHelperEdge";
 import TypeHelperConnectionLine from "./TypeHelperConnectionLine";
-import FormatEditorDebugOverlay from "./FormatEditorDebugOverlay";
 
 const connectionHasCycles = (
 	connection: Connection | Edge,
@@ -131,7 +130,7 @@ export default function FormatEditor() {
 	const contextMenuRef = useRef<FormatEditorContextMenuRef>(null!);
 
 	const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
-	const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+	const [_selectedEdges, setSelectedEdges] = useState<string[]>([]);
 	const onSelectionChange = (selection: OnSelectionChangeParams) => {
 		setSelectedNodes(selection.nodes.map((n) => n.id));
 		setSelectedEdges(selection.edges.map((e) => e.id));

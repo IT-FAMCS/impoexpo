@@ -10,7 +10,7 @@
 		"preview": "pnpm run --filter @impoexpo/client build && concurrently --kill-others --raw --handle-input \"pnpm run --filter @impoexpo/server start\" \"pnpm run --filter @impoexpo/client preview\"",
 		"update-git-hooks": "pnpm lefthook install",
 		"init": "pnpm install && pnpm run update-git-hooks",
-		"format": "biome format . --write --config-path ./packages/impoexpo-shared/biome.json"
+		"format": "biome format . --write"
 	},
 	"resolutions": {
 		"@react-aria/i18n": "3.10.2",

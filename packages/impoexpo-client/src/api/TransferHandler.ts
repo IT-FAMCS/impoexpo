@@ -1,23 +1,24 @@
+import { getFile } from "@/db/files";
 import {
-	ProjectOutputSchema,
 	type Project,
 	type ProjectOutput,
+	ProjectOutputSchema,
 } from "@impoexpo/shared/schemas/project/ProjectSchema";
 import {
-	ProjectStatusNotificationSchema,
 	type ProjectStatusNotification,
+	ProjectStatusNotificationSchema,
 } from "@impoexpo/shared/schemas/project/ProjectStatusSchemas";
-import type { MessageDescriptor } from "@lingui/core";
-import { postForm, postWithSchemaAndResult, route } from "./common";
 import {
 	CREATE_PROJECT_ROUTE,
 	PROJECT_TRANSFER_STATUS_ROUTE,
 	UPLOAD_PROJECT_FILE_ROUTE,
 } from "@impoexpo/shared/schemas/project/static";
 import { UploadProjectResponseSchema } from "@impoexpo/shared/schemas/project/UploadProjectResponseSchema";
+import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
-import { getFile } from "@/db/files";
+import { Duration } from "luxon";
 import { array, parse } from "valibot";
+import { postForm, postWithSchemaAndResult, route } from "./common";
 
 export enum TransferHandlerState {
 	IDLE = 0,
@@ -56,6 +57,16 @@ export class TransferHandler {
 	public job: string;
 	public terminationReason?: TerminationReason;
 
+	public startTime: number = 0;
+	public stopTime: number = 0;
+	public timeTaken(locale?: string) {
+		return Duration.fromMillis(this.stopTime - this.startTime, {
+			locale,
+		})
+			.shiftToAll()
+			.toHuman({ unitDisplay: "short", showZeros: false });
+	}
+
 	// biome-ignore lint/suspicious/noExplicitAny: unknown can't be used here for whatever reason
 	handlers: Map<keyof TransferHandlerEvents, Array<(obj: any) => void>> =
 		new Map();
@@ -77,6 +88,7 @@ export class TransferHandler {
 
 	public start() {
 		(async () => {
+			this.startTime = Date.now();
 			await this.uploadProject();
 			await this.uploadProjectFiles();
 			await this.transfer();
@@ -157,6 +169,7 @@ export class TransferHandler {
 				if (this.state === TransferHandlerState.TERMINATED) return;
 				try {
 					this.outputs = parse(array(ProjectOutputSchema), JSON.parse(o.data));
+					this.stopTime = Date.now();
 					this.updateState(TransferHandlerState.DONE);
 					eventSource.close();
 				} catch (err) {
@@ -241,6 +254,7 @@ export class TransferHandler {
 
 	terminate(reason: TerminationReason) {
 		this.terminationReason = reason;
+		this.stopTime = Date.now();
 		this.updateState(TransferHandlerState.TERMINATED);
 	}
 }

@@ -15,6 +15,7 @@ export class RatelimitHitError extends Error {
 		this.resetSeconds = Number.parseInt(
 			// biome-ignore lint/style/noNonNullAssertion: already checked before
 			response.headers.get("Ratelimit-Reset")!,
+			10,
 		);
 
 		if (response.headers.has("RateLimit-Policy")) {
@@ -26,8 +27,8 @@ export class RatelimitHitError extends Error {
 				throw new Error(
 					"RatelimitHitError found an unexpected amount of variables in the RateLimit-Policy header",
 				);
-			this.policyLimit = Number.parseInt(split[0]);
-			this.policySeconds = Number.parseInt(split[1]);
+			this.policyLimit = Number.parseInt(split[0], 10);
+			this.policySeconds = Number.parseInt(split[1], 10);
 		}
 	}
 }

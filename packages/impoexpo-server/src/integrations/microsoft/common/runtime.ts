@@ -7,10 +7,10 @@ export const initializeDotnetRuntime = async () => {
 	);
 	childLogger("integrations/microsoft/shared").flush();
 
-	// @ts-ignore
+	// @ts-expect-error
 	const { dotnet } = await import("../_framework/dotnet.js");
 
-	// @ts-ignore
+	// @ts-expect-error
 	const { getAssemblyExports, getConfig } = await dotnet
 		.withDiagnosticTracing(false)
 		.create();

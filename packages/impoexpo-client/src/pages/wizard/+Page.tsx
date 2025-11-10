@@ -1,13 +1,3 @@
-import ColumnSteps from "@/components/external/ColumnStep";
-import SelectSourceCard from "@/features/transfer-wizard/select-source-card/SelectSourceCard";
-import FormatEditor from "@/features/format-editor/FormatEditor";
-import { WIZARD_STORE_CATEGORY, resetStores } from "@/stores/resettable";
-import {
-	FormatEditorWrapperState,
-	TransferWizardStage,
-	useFormatEditorWrapperStore,
-	useTransferWizardStore,
-} from "@/features/transfer-wizard/store";
 import {
 	addToast,
 	Button,
@@ -19,31 +9,41 @@ import {
 	Tooltip,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { useQuery } from "@tanstack/react-query";
 import { ReactFlowProvider } from "@xyflow/react";
+import clsx from "clsx";
 import { motion, useAnimate } from "motion/react";
 import { type ReactNode, useEffect } from "react";
+import { navigate } from "vike/client/router";
+import ColumnSteps from "@/components/external/ColumnStep";
+import { getLocalProject } from "@/db/local-projects";
 import {
 	clearStatesFromDatabase,
 	loadStatesFromDatabase,
 	saveStatesToDatabase,
 } from "@/db/persisted";
-import { useQuery } from "@tanstack/react-query";
-import { initializeNodes } from "@impoexpo/shared/nodes/node-database";
-import { getLocalProject } from "@/db/local-projects";
 import { applyProjectSnapshot } from "@/db/snapshot";
-import { allIntegrations } from "@/integrations/integrations";
-import { useProjectStore } from "@/stores/project";
+import FormatEditor from "@/features/format-editor/FormatEditor";
+import FormatEditorDebugOverlay from "@/features/format-editor/FormatEditorDebugOverlay";
 import {
 	importBuiltinNodes,
 	importIntegrationNodes,
 } from "@/features/format-editor/nodes/renderable-node-database";
+import SelectSourceCard from "@/features/transfer-wizard/select-source-card/SelectSourceCard";
+import {
+	FormatEditorWrapperState,
+	TransferWizardStage,
+	useFormatEditorWrapperStore,
+	useTransferWizardStore,
+} from "@/features/transfer-wizard/store";
 import TransferProgressCard from "@/features/transfer-wizard/transfer-progress-card/TransferProgressCard";
-import { navigate } from "vike/client/router";
-import FormatEditorDebugOverlay from "@/features/format-editor/FormatEditorDebugOverlay";
-import clsx from "clsx";
+import { allIntegrations } from "@/integrations/integrations";
+import { useProjectStore } from "@/stores/project";
+import { resetStores, WIZARD_STORE_CATEGORY } from "@/stores/resettable";
+import { AnimatedCard } from "@/styles/motion";
 
-const AnimatedCard = motion.create(Card);
 export default function Wizard() {
 	const importNodesQuery = useQuery({
 		queryKey: ["import-nodes"],
@@ -314,8 +314,6 @@ function FormatEditorWrapper(props: {
 					{ opacity: 1 },
 					{
 						delay: 0.25,
-						ease: [0.83, 0, 0.17, 1],
-						duration: 0.5,
 						onComplete: props.endCallback,
 					},
 				);
