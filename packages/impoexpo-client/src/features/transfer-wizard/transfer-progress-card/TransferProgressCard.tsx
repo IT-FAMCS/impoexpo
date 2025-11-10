@@ -140,8 +140,9 @@ export default function TransferProgressCard() {
 	const [transferringStarted, setTransferringStarted] = useState(false);
 	const [fileUploadInformation, setFileUploadInformation] =
 		useState<FileUploadStatusChange>();
-	// biome-ignore lint/style/noNonNullAssertion: initialized asap
-	const [handler, setHandler] = useState<TransferHandler>(null!);
+	const [handler, setHandler] = useState<TransferHandler | undefined>(
+		undefined,
+	);
 	const [playMeow] = useSound(meowSfx);
 
 	const convertColor = (
@@ -219,7 +220,7 @@ export default function TransferProgressCard() {
 					base: "col-span-2 col-start-3 row-start-5",
 					card:
 						handlerState === TransferHandlerState.DONE
-							? handler.outputs.length > 4
+							? (handler?.outputs.length ?? 0) > 4
 								? "bg-success"
 								: "bg-secondary"
 							: "bg-warning",
@@ -231,7 +232,7 @@ export default function TransferProgressCard() {
 				}
 			>
 				{handlerState === TransferHandlerState.DONE ? (
-					handler.outputs.length > 4 ? (
+					(handler?.outputs.length ?? 0) > 4 ? (
 						<Button
 							color="success"
 							className="flex flex-col w-full h-full gap-0 text-3xl"
@@ -340,7 +341,7 @@ export default function TransferProgressCard() {
 				corner="bottom-left"
 			>
 				{handlerState === TransferHandlerState.TERMINATED &&
-				handler.terminationReason ? (
+				handler?.terminationReason ? (
 					<>
 						<Icon width={96} className="-mb-2 -ml-2" icon="mdi:error-outline" />
 						<p className="text-5xl">
@@ -382,7 +383,7 @@ export default function TransferProgressCard() {
 						</AnimatePresence>
 						<p
 							className={clsx(
-								handler.stopTime !== 0 ? "leading-0" : "",
+								handler?.stopTime !== 0 ? "leading-0" : "",
 								"text-5xl",
 							)}
 						>
@@ -395,10 +396,10 @@ export default function TransferProgressCard() {
 										{fileUploadInformation.total})
 									</span>
 								)}
-							{handler.stopTime !== 0 && (
+							{handler?.stopTime !== 0 && (
 								<span className="text-xl text-foreground-500">
 									<br />
-									<Trans>took {handler.timeTaken(i18n.locale)}</Trans>
+									<Trans>took {handler?.timeTaken(i18n.locale)}</Trans>
 								</span>
 							)}
 						</p>
