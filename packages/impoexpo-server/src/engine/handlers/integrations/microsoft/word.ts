@@ -1,30 +1,63 @@
+// todo: barely understandable code. try to bring back ~reduce()?
+import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
+import {
+	type MicrosoftWordGroupPatch,
+	type MicrosoftWordListPatch,
+	type MicrosoftWordPatch,
+	MicrosoftWordPlaceholderType,
+	type MicrosoftWordTextPatch,
+} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
+import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
+import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
+import type { DateTime } from "luxon";
+import { dateTimeFromAny } from "luxon-parser";
+import * as v from "valibot";
+import type { WordSorter } from "../../../../../../impoexpo-shared/src/nodes/integrations/microsoft/word";
+import { dotnetRuntimeExports } from "../../../../integrations/microsoft/common/runtime";
 import {
 	genericRegisterAsyncHandler,
 	genericRegisterHandler,
 	type NodeHandlerFunction,
+	registerHandler,
 	registerIntegrationNodeHandlerRegistrar,
 } from "../../../node-executor-utils";
-import * as v from "valibot";
-import * as word from "@impoexpo/shared/nodes/integrations/microsoft/word";
-import { MicrosoftWordProjectIntegrationSchema } from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordProjectIntegrationSchema";
-import { registerBaseNodes } from "@impoexpo/shared/nodes/node-database";
-import {
-	type MicrosoftWordPatch,
-	type MicrosoftWordTextPatch,
-	type MicrosoftWordGroupPatch,
-	type MicrosoftWordListPatch,
-	MicrosoftWordPlaceholderType,
-} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
-import { MICROSOFT_WORD_INTEGRATION_ID } from "@impoexpo/shared/schemas/integrations/microsoft/word/static";
-import { dotnetRuntimeExports } from "../../../../integrations/microsoft/common/runtime";
-import type { WordPatchSchema } from "@impoexpo/shared/nodes/integrations/microsoft/word";
-import { dateTimeFromAny } from "luxon-parser";
 
 type PatchMeta = {
 	automaticSeparators: boolean;
-	sortMethod: word.WordSortMethod;
-	reverseSort: boolean;
+	sorter?: WordSorter;
 };
+
+registerHandler(word.WORD_TEXT_SORTER_NODE, (ctx) => {
+	return {
+		sorter: {
+			method: "text" as const,
+			reverse: ctx.reverse,
+			keys: [ctx.keys],
+		},
+	};
+});
+
+registerHandler(word.WORD_NUMBERS_SORTER_NODE, (ctx) => {
+	return {
+		sorter: {
+			method: "numbers" as const,
+			reverse: ctx.reverse,
+			keys: [ctx.keys],
+		},
+	};
+});
+
+registerHandler(word.WORD_DATES_SORTER_NODE, (ctx) => {
+	return {
+		sorter: {
+			method: "dates" as const,
+			reverse: ctx.reverse,
+			keys: [ctx.keys],
+		},
+	};
+});
 
 registerIntegrationNodeHandlerRegistrar(
 	MICROSOFT_WORD_INTEGRATION_ID,
@@ -85,8 +118,7 @@ registerIntegrationNodeHandlerRegistrar(
 										type: MicrosoftWordPlaceholderType.LIST as const,
 										items: items,
 										__meta: {
-											sortMethod: ctx.__sortMethod as word.WordSortMethod,
-											reverseSort: ctx.__reverseSort as boolean,
+											sorter: ctx.__sorter as WordSorter | undefined,
 											automaticSeparators: ctx.__automaticSeparators as boolean,
 										} satisfies PatchMeta,
 									},
@@ -127,8 +159,7 @@ registerIntegrationNodeHandlerRegistrar(
 										type: MicrosoftWordPlaceholderType.GROUP as const,
 										groups,
 										__meta: {
-											sortMethod: ctx.__sortMethod as word.WordSortMethod,
-											reverseSort: ctx.__reverseSort as boolean,
+											sorter: ctx.__sorter as WordSorter | undefined,
 											automaticSeparators: false,
 										} satisfies PatchMeta,
 									},
@@ -146,6 +177,17 @@ registerIntegrationNodeHandlerRegistrar(
 					"patches",
 					{},
 				)();
+
+				const m = (v: unknown) => v as PatchMeta;
+				const mergeSorters = (left?: WordSorter, right?: WordSorter) => {
+					if (!left && !right) return undefined;
+					if (!left) return right;
+					if (!right) return left;
+					return {
+						...right,
+						keys: [...left.keys, ...right.keys],
+					} satisfies WordSorter;
+				};
 
 				// right is the newer one
 				const merge = (
@@ -169,7 +211,13 @@ registerIntegrationNodeHandlerRegistrar(
 							return {
 								type: MicrosoftWordPlaceholderType.LIST as const,
 								items: items,
-								__meta: right.__meta,
+								__meta: {
+									...m(right.__meta),
+									sorter: mergeSorters(
+										m(left.__meta).sorter,
+										m(right.__meta).sorter,
+									),
+								} satisfies PatchMeta,
 							};
 						}
 						case MicrosoftWordPlaceholderType.GROUP: {
@@ -181,6 +229,21 @@ registerIntegrationNodeHandlerRegistrar(
 								);
 								if (index === -1) groups.push(group);
 								else {
+									right.__meta = {
+										automaticSeparators: m(right.__meta).automaticSeparators,
+										sorter: m(right.__meta).sorter
+											? {
+													...m(right.__meta).sorter!,
+													keys: m(right.__meta).sorter!.keys.filter(
+														(_, idx) =>
+															idx !==
+															rightGroup.groups.findIndex(
+																(g) => g.title.text === group.title.text,
+															),
+													),
+												}
+											: undefined,
+									} satisfies PatchMeta;
 									const items = groups[index].items;
 									for (const [key, value] of Object.entries(items))
 										items[key] = merge(value, group.items[key]);
@@ -190,7 +253,13 @@ registerIntegrationNodeHandlerRegistrar(
 							return {
 								type: MicrosoftWordPlaceholderType.GROUP as const,
 								groups: groups,
-								__meta: right.__meta,
+								__meta: {
+									...m(right.__meta),
+									sorter: mergeSorters(
+										m(left.__meta).sorter,
+										m(right.__meta).sorter,
+									),
+								},
 							};
 						}
 					}
@@ -214,39 +283,76 @@ registerIntegrationNodeHandlerRegistrar(
 				if (iterators.isLastIteration()) {
 					// postprocess
 					const sort = (patch: MicrosoftWordPatch) => {
-						const getSorter = (
-							method: word.WordSortMethod,
-							reverse: boolean,
+						const createSorter = (
+							sorter: WordSorter,
+							values: string[],
+							aIndex: number,
+							bIndex: number,
 						) => {
-							switch (method) {
-								case "text":
-									return (a: string, b: string) =>
-										(reverse ? b > a : a > b) ? 1 : -1;
-								case "none":
-									return () => 0;
-								case "numbers":
-									return (a: string, b: string) => {
-										const aNum = Number.parseInt(a, 10);
-										const bNum = Number.parseInt(b, 10);
-										if (Number.isNaN(aNum) || Number.isNaN(bNum)) return 0;
-										return (reverse ? bNum : aNum) - (reverse ? aNum : bNum);
-									};
-								case "dates":
-									return (a: string, b: string) => {
-										const aDate = dateTimeFromAny(a);
-										const bDate = dateTimeFromAny(b);
-										if (!aDate.isValid || !bDate.isValid) return 0;
-										return (
-											(reverse ? bDate : aDate).toMillis() -
-											(reverse ? aDate : bDate).toMillis()
+							if (values.length !== sorter.keys.length)
+								throw new Error(
+									`WordSorter's length does not match the length of values passed to patch: ${sorter.keys.length} =/= ${values.length}`,
+								);
+							const aKeys = sorter.keys[aIndex];
+							const bKeys = sorter.keys[bIndex];
+
+							const compareText = (a: string, b: string) =>
+								a === b ? 0 : (sorter.reverse ? b > a : a > b) ? 1 : -1;
+							const compareNumbers = (a: number, b: number) =>
+								(sorter.reverse ? b : a) - (sorter.reverse ? a : b);
+							const compareDates = (a: DateTime, b: DateTime) =>
+								(sorter.reverse ? b : a).toMillis() -
+								(sorter.reverse ? a : b).toMillis();
+
+							switch (sorter.method) {
+								case "text": {
+									for (let i = 0; i < aKeys.length; i++) {
+										const comparison = compareText(
+											aKeys[i] as string,
+											bKeys[i] as string,
 										);
-									};
+										if (comparison !== 0) return comparison;
+									}
+									return compareText(values[aIndex], values[bIndex]);
+								}
+								case "numbers": {
+									for (let i = 0; i < aKeys.length; i++) {
+										const comparison = compareNumbers(
+											aKeys[i] as number,
+											bKeys[i] as number,
+										);
+										if (comparison !== 0) return comparison;
+									}
+									const aNum = Number.parseInt(values[aIndex], 10);
+									const bNum = Number.parseInt(values[bIndex], 10);
+									const comparison =
+										Number.isNaN(aNum) || Number.isNaN(bNum)
+											? compareText(values[aIndex], values[bIndex])
+											: compareNumbers(aNum, bNum);
+									return comparison;
+								}
+								case "dates": {
+									for (let i = 0; i < aKeys.length; i++) {
+										const comparison = compareDates(
+											aKeys[i] as DateTime,
+											bKeys[i] as DateTime,
+										);
+										if (comparison !== 0) return comparison;
+									}
+									const aDate = dateTimeFromAny(values[aIndex]);
+									const bDate = dateTimeFromAny(values[bIndex]);
+									const comparison =
+										!aDate.isValid || !bDate.isValid
+											? compareText(values[aIndex], values[bIndex])
+											: compareDates(aDate, bDate);
+									return comparison;
+								}
 							}
 						};
 
 						if (patch.type === MicrosoftWordPlaceholderType.TEXT) return;
-						const meta = patch.__meta as PatchMeta;
-						if (meta.sortMethod === "none") return;
+						const sorter = (patch.__meta as PatchMeta).sorter;
+						if (!sorter) return;
 						switch (patch.type) {
 							case MicrosoftWordPlaceholderType.LIST: {
 								// only sort text patches
@@ -258,25 +364,31 @@ registerIntegrationNodeHandlerRegistrar(
 													(p) => p.type !== MicrosoftWordPlaceholderType.TEXT,
 												),
 										)
-										.map(([k, v]) => [
-											k,
-											v.sort((a, b) =>
-												getSorter(meta.sortMethod, meta.reverseSort)(
-													(a as MicrosoftWordTextPatch).text,
-													(b as MicrosoftWordTextPatch).text,
-												),
-											),
-										]),
+										.map(([k, v]) => {
+											const vStrings = v.map(
+												(p) => (p as MicrosoftWordTextPatch).text,
+											);
+											return [
+												k,
+												v
+													.map((p, idx) => ({ patch: p, index: idx }))
+													.sort((a, b) =>
+														createSorter(sorter, vStrings, a.index, b.index),
+													)
+													.map((obj) => obj.patch),
+											];
+										}),
 								);
 								return;
 							}
 							case MicrosoftWordPlaceholderType.GROUP: {
-								patch.groups = patch.groups.sort((a, b) =>
-									getSorter(meta.sortMethod, meta.reverseSort)(
-										a.title.text,
-										b.title.text,
-									),
-								);
+								const groupStrings = patch.groups.map((g) => g.title.text);
+								patch.groups = patch.groups
+									.map((g, idx) => ({ group: g, index: idx }))
+									.sort((a, b) =>
+										createSorter(sorter, groupStrings, a.index, b.index),
+									)
+									.map((obj) => obj.group);
 								return;
 							}
 						}

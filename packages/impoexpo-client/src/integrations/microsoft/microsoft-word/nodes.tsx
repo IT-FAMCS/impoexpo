@@ -1,28 +1,29 @@
 import {
-	nodesScope,
-	registerBaseNodes,
-} from "@impoexpo/shared/nodes/node-database";
-import { msg } from "@lingui/core/macro";
-import { Icon } from "@iconify/react";
-import {
 	registerCategory,
 	registerWithDefaultRenderer,
 } from "@/features/format-editor/nodes/renderable-node-database";
-import {
-	type MicrosoftWordDocumentLayout,
-	MicrosoftWordPlaceholderType,
-} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
-import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
 import type {
 	NodePropertyMetadata,
 	RawNodeRenderOptions,
 } from "@/features/format-editor/nodes/renderable-node-types";
-import type { ObjectEntries } from "valibot";
 import {
 	getNodeId,
 	useFormatEditorStore,
 } from "@/features/format-editor/stores/store";
+import { Icon } from "@iconify/react";
+import * as wordNodes from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import { createWordDocumentBaseNode } from "@impoexpo/shared/nodes/integrations/microsoft/word";
+import {
+	nodesScope,
+	registerBaseNodes,
+} from "@impoexpo/shared/nodes/node-database";
 import type { ObjectEntry } from "@impoexpo/shared/nodes/node-types";
+import {
+	type MicrosoftWordDocumentLayout,
+	MicrosoftWordPlaceholderType,
+} from "@impoexpo/shared/schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
+import { msg } from "@lingui/core/macro";
+import type { ObjectEntries } from "valibot";
 
 export const registerMicrosoftWordNode = (
 	filename: string,
@@ -56,45 +57,13 @@ export const registerMicrosoftWordNode = (
 						title: msg`automatically separate list items`,
 						description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
 					},
-					__sortMethod: {
-						separate: "before",
-						title: msg`sort method`,
-						mode: "independentOnly",
-						// @ts-expect-error
-						showLabel: true,
-						options: {
-							none: { key: "none", title: msg`none` },
-							numbers: { key: "numbers", title: msg`radix sort (numbers)` },
-							text: { key: "text", title: msg`lexicographical sort (text)` },
-							dates: { key: "dates", title: msg`chronological sort (dates)` },
-						},
-					},
-					__reverseSort: {
-						title: msg`reverse sort?`,
-						mode: "independentOnly",
-					},
+					__sorter: { title: msg`sorter` },
 				};
 				break;
 			case MicrosoftWordPlaceholderType.GROUP:
 				options.inputs = {
 					__title: { title: msg`group title` },
-					__sortMethod: {
-						separate: "before",
-						title: msg`sort method`,
-						mode: "independentOnly",
-						// @ts-expect-error
-						showLabel: true,
-						options: {
-							none: { key: "none", title: msg`none` },
-							numbers: { key: "numbers", title: msg`radix sort (numbers)` },
-							text: { key: "text", title: msg`lexicographical sort (text)` },
-							dates: { key: "dates", title: msg`chronological sort (dates)` },
-						},
-					},
-					__reverseSort: {
-						title: msg`reverse sort?`,
-						mode: "independentOnly",
-					},
+					__sorter: { title: msg`sorter` },
 				};
 				break;
 		}
@@ -165,25 +134,6 @@ export const registerMicrosoftWordNode = (
 			}
 		});
 	}
-
-	/* const options: RawNodeRenderOptions<ObjectEntries, ObjectEntries> = {
-		searchable: false,
-		title: filename,
-		header: "bg-primary-200",
-		icon: (size) => <Icon width={size} icon="mdi:microsoft-word" />,
-		documentationHashOverride: "document",
-		inputs: {},
-	};
-
-
-	registerBaseNodes(base);
-	registerWithDefaultRenderer(base, options);
-
-	if (addNode) {
-		useFormatEditorStore.setState((state) => ({
-			nodes: state.nodes.concat(),
-		}));
-	} */
 };
 
 nodesScope(() => {
@@ -194,42 +144,48 @@ nodesScope(() => {
 		documentationLink: "/user/integrations/microsoft-word",
 	});
 
-	/* registerWithDefaultRenderer(wordNodes.WORD_TEXT_NODE, {
-		title: msg`text`,
+	registerWithDefaultRenderer(wordNodes.WORD_TEXT_SORTER_NODE, {
+		title: msg`sorter (text)`,
+		aliases: msg`sort by text, sort, sorter by text`,
 		inputs: {
-			text: { title: msg`text` },
+			keys: {
+				title: msg`comparison keys`,
+				description: msg`if empty, will compare the values themselves. otherwise, sorts by the specified keys first.`,
+			},
+			reverse: { title: msg`reverse?` },
 		},
 		outputs: {
-			result: { title: msg`result` },
+			sorter: { title: msg`sorter` },
 		},
 	});
 
-	registerWithDefaultRenderer(wordNodes.WORD_LIST_NODE, {
-		title: msg`list`,
+	registerWithDefaultRenderer(wordNodes.WORD_NUMBERS_SORTER_NODE, {
+		title: msg`sorter (numbers)`,
+		aliases: msg`sort by value, sort, sorter by value, sort by number`,
 		inputs: {
-			items: { title: msg`items` },
-			automaticSeparators: {
-				title: msg`automatically separate list items`,
-				description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
+			keys: {
+				title: msg`comparison keys`,
+				description: msg`if empty, will compare the values themselves. otherwise, sorts by the specified keys first.`,
 			},
-			sublistTitle: { title: msg`list title` },
+			reverse: { title: msg`reverse?` },
 		},
 		outputs: {
-			result: { title: msg`result` },
+			sorter: { title: msg`sorter` },
 		},
 	});
 
-	registerWithDefaultRenderer(wordNodes.WORD_GROUPED_LIST_NODE, {
-		title: msg`grouped list`,
+	registerWithDefaultRenderer(wordNodes.WORD_DATES_SORTER_NODE, {
+		title: msg`sorter (dates)`,
+		aliases: msg`sort by date, sort, sorter by date`,
 		inputs: {
-			groups: { title: msg`groups` },
-			automaticSeparators: {
-				title: msg`automatically separate list items`,
-				description: msg`automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead.`,
+			keys: {
+				title: msg`comparison keys`,
+				description: msg`if empty, will compare the values themselves. otherwise, sorts by the specified keys first.`,
 			},
+			reverse: { title: msg`reverse?` },
 		},
 		outputs: {
-			result: { title: msg`result` },
+			sorter: { title: msg`sorter` },
 		},
-	}); */
+	});
 });

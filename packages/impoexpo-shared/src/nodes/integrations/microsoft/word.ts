@@ -1,17 +1,19 @@
-import { BaseNode, type ObjectEntry } from "../../node-types";
 import * as v from "valibot";
-import { registerCustomType } from "../../schema-string-conversions";
 import {
 	type MicrosoftWordDocumentLayout,
 	type MicrosoftWordDocumentPlaceholder,
 	MicrosoftWordPatchSchema,
 	MicrosoftWordPlaceholderType,
 } from "../../../schemas/integrations/microsoft/word/MicrosoftWordLayoutSchema";
+import { nodesScope, registerBaseNodes } from "../../node-database";
+import { BaseNode, type ObjectEntry } from "../../node-types";
 import {
 	type customType,
+	dateTime,
 	type DefaultBaseNode,
 	getCustomTypeName,
 } from "../../node-utils";
+import { registerCustomType } from "../../schema-string-conversions";
 
 export const WordTextSchema = registerCustomType(
 	"WordText",
@@ -32,13 +34,59 @@ export const WordPatchSchema = v.union([
 	WordGroupedListSchema,
 ]);
 
-export const WordSortMethodSchema = v.picklist([
-	"none",
-	"numbers",
-	"text",
-	"dates",
-]);
-export type WordSortMethod = v.InferOutput<typeof WordSortMethodSchema>;
+export const WordSorterSchema = registerCustomType("WordSorter", () => ({
+	method: v.picklist(["numbers", "text", "dates"]),
+	keys: v.array(v.array(v.unknown())),
+	reverse: v.optional(v.boolean(), false),
+}));
+export type WordSorter = v.InferOutput<typeof WordSorterSchema>;
+
+export const WORD_TEXT_SORTER_NODE = new BaseNode({
+	category: "microsoft-word",
+	name: "sorter-text",
+	integration: true,
+	inputSchema: v.object({
+		reverse: v.optional(v.boolean(), false),
+		keys: v.array(v.string()),
+	}),
+	outputSchema: v.object({
+		sorter: WordSorterSchema,
+	}),
+});
+
+export const WORD_NUMBERS_SORTER_NODE = new BaseNode({
+	category: "microsoft-word",
+	name: "sorter-numbers",
+	integration: true,
+	inputSchema: v.object({
+		reverse: v.optional(v.boolean(), false),
+		keys: v.array(v.number()),
+	}),
+	outputSchema: v.object({
+		sorter: WordSorterSchema,
+	}),
+});
+
+export const WORD_DATES_SORTER_NODE = new BaseNode({
+	category: "microsoft-word",
+	name: "sorter-dates",
+	integration: true,
+	inputSchema: v.object({
+		reverse: v.optional(v.boolean(), false),
+		keys: v.array(dateTime()),
+	}),
+	outputSchema: v.object({
+		sorter: WordSorterSchema,
+	}),
+});
+
+nodesScope(() => {
+	registerBaseNodes(
+		WORD_TEXT_SORTER_NODE,
+		WORD_NUMBERS_SORTER_NODE,
+		WORD_DATES_SORTER_NODE,
+	);
+});
 
 export const createWordDocumentBaseNode = (
 	identifier: string,
@@ -109,9 +157,8 @@ export const createWordDocumentBaseNode = (
 					integration: true,
 					inputSchema: v.object({
 						...items,
+						__sorter: v.optional(WordSorterSchema),
 						__automaticSeparators: v.optional(v.boolean(), false),
-						__sortMethod: v.optional(WordSortMethodSchema, "none"),
-						__reverseSort: v.optional(v.boolean(), false),
 					}),
 					outputSchema: v.object({
 						result: type,
@@ -148,9 +195,8 @@ export const createWordDocumentBaseNode = (
 					integration: true,
 					inputSchema: v.object({
 						...items,
+						__sorter: v.optional(WordSorterSchema),
 						__title: v.optional(v.string(), ""),
-						__sortMethod: v.optional(WordSortMethodSchema, "none"),
-						__reverseSort: v.optional(v.boolean(), false),
 					}),
 					outputSchema: v.object({
 						result: type,
