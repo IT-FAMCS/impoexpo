@@ -18,6 +18,7 @@ import {
 import multer from "multer";
 const upload = multer();
 import TTLCache from "@isaacs/ttlcache";
+import contentDisposition from "content-disposition";
 
 // TODO: a defaults.json file would be nice!
 export const projectOutputFilesCache = new TTLCache<string, File>({
@@ -76,7 +77,7 @@ export const registerProjectEndpoints = (app: Express) => {
 			return;
 		}
 
-		res.set("Content-Disposition", `attachment; filename=${file.name}`);
+		res.set("Content-Disposition", contentDisposition(file.name));
 		res.set("Content-Type", file.type);
 		res.end(await file.bytes());
 	});
