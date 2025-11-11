@@ -98,32 +98,32 @@ msgid "you currently have no saved projects.<0/>go create one!"
 msgstr "на данный момент у вас нет сохранённых проектов.<0/>пойдите создайте!"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:186
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:209
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:210
 msgid "preparing"
 msgstr "готовимся"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:188
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:197
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:198
 msgid "uploading the project"
 msgstr "загружаем проект"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:190
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:199
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:200
 msgid "uploading project files"
 msgstr "выкладываем файлы проекта"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:192
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:201
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:202
 msgid "connecting to the server"
 msgstr "подключаемся к серверу"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:194
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:203
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:204
 msgid "transferring"
 msgstr "переносим"
 
 #: src/components/modals/LocalProjectsManagerModal.tsx:196
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:205
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:206
 msgid "reconnecting to the server"
 msgstr "пробуем переподключиться к серверу"
 
@@ -592,7 +592,7 @@ msgstr "резерв"
 #: src/features/format-editor/nodes/builtin/strings.tsx:107
 #: src/features/format-editor/nodes/common.tsx:32
 #: src/features/format-editor/nodes/common.tsx:56
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:43
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:44
 msgid "result"
 msgstr "результат"
 
@@ -1044,33 +1044,33 @@ msgstr "не удалось проверить статус авторизаци
 msgid "download"
 msgstr "скачать"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:207
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:208
 msgid "done!"
 msgstr "готово!"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:211
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:212
 msgid "you were not supposed to see this."
 msgstr "вы не должны были это увидеть."
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:244
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:245
 msgid "view all files"
 msgstr "посмотреть все файлы"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:263
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:264
 msgid "try again"
 msgstr "попробовать снова"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:289
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:290
 #: src/pages/+Layout.tsx:81
 msgid "return to the homepage"
 msgstr "на главную страницу"
 
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:306
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:307
 msgid "notifications will appear here<0/>(if there are any)"
 msgstr "уведомления появятся тут<0/>(если они есть)"
 
-#. placeholder {0}: handler.timeTaken(i18n.locale)
-#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:401
+#. placeholder {0}: handler?.timeTaken(i18n.locale)
+#: src/features/transfer-wizard/transfer-progress-card/TransferProgressCard.tsx:402
 msgid "took {0}"
 msgstr "заняло {0}"
 
@@ -1207,55 +1207,75 @@ msgstr "вернуться к загрузке файла"
 
 #: src/integrations/microsoft/microsoft-word/integration.tsx:17
 #: src/integrations/microsoft/microsoft-word/integration.tsx:65
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:191
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:141
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:50
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:51
 msgid "text"
 msgstr "текст"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:56
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:57
 msgid "automatically separate list items"
 msgstr "автоматически разделять элементы списка"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:57
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:58
 msgid "automatically add a semicolon (;) to every list item except for the last one, which will have a dot (.) added instead."
 msgstr "автоматически добавлять точку с запятой (;) к концу каждого элемента списка, кроме последнего, к которому будет добавлена точка (.)"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:61
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:83
-msgid "sort method"
-msgstr "метод сортировки"
-
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:60
 #: src/integrations/microsoft/microsoft-word/nodes.tsx:66
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:88
-msgid "none"
-msgstr "нет"
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:158
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:173
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:188
+msgid "sorter"
+msgstr "сортировщик"
 
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:67
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:89
-msgid "radix sort (numbers)"
-msgstr "поразрядная сортировка (числа)"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:68
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:90
-msgid "lexicographical sort (text)"
-msgstr "лексикографическая сортировка (текст)"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:69
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:91
-msgid "chronological sort (dates)"
-msgstr "хронологическая сортировка (даты)"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:73
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:95
-msgid "reverse sort?"
-msgstr "в обратном порядке?"
-
-#: src/integrations/microsoft/microsoft-word/nodes.tsx:80
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:65
 msgid "group title"
 msgstr "заголовок группы"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:148
+msgid "sorter (text)"
+msgstr "сортировщик (текст)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:149
+msgid "sort by text, sort, sorter by text"
+msgstr "сортировать текст, сортировать лексикографически"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:152
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:167
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:182
+msgid "comparison keys"
+msgstr "критерии сортировки"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:153
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:168
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:183
+msgid "if empty, will compare the values themselves. otherwise, sorts by the specified keys first."
+msgstr "если не указаны, будет сортировать по самим значениям, иначе сначала сортирует по критериям."
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:155
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:170
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:185
+msgid "reverse?"
+msgstr "в обратном порядке?"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:163
+msgid "sorter (numbers)"
+msgstr "сортировщик (числа)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:164
+msgid "sort by value, sort, sorter by value, sort by number"
+msgstr "сортировать по значению, сортировать по числу"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:178
+msgid "sorter (dates)"
+msgstr "сортировщик (даты)"
+
+#: src/integrations/microsoft/microsoft-word/nodes.tsx:179
+msgid "sort by date, sort, sorter by date"
+msgstr "сортировать хронологически, сортировать по дате"
 
 #: src/integrations/placeholder/integration.tsx:10
 msgid "nowhere"
