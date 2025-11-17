@@ -163,7 +163,10 @@ export default function Wizard() {
 				initial={{ opacity: 0, y: 5 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}
-				className={clsx("h-full p-2", collapseSidebar ? "shrink" : "flex-[1]")}
+				className={clsx(
+					"h-full p-2 green:hidden",
+					collapseSidebar ? "shrink" : "flex-[1]",
+				)}
 			>
 				<CardHeader
 					className={clsx(
@@ -334,6 +337,7 @@ function FormatEditorWrapper(props: {
 			<AnimatedCard
 				style={{ width: "0px", height: "0px" }}
 				ref={containerScope}
+				className="green:rounded-none"
 			>
 				{state !== FormatEditorWrapperState.IN && props.children}
 				<AnimatedCard

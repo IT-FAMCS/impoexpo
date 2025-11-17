@@ -13,7 +13,7 @@ export default function Layout(props: { children?: React.ReactNode }) {
 		<React.StrictMode>
 			<Provider>
 				<ErrorBoundary FallbackComponent={CustomErrorBoundary}>
-					<div className="flex flex-col justify-between h-[100dvh] [&>*]:first:h-[calc(100dvh_-_8.5rem)] gap-4 p-5 box-border [&>*]:w-full">
+					<div className="flex flex-col justify-between h-[100dvh] green:[&>*]:first:h-[100dvh] [&>*]:first:h-[calc(100dvh_-_8.5rem)] gap-4 p-5 green:p-0 green:gap-0 box-border [&>*]:w-full">
 						<MobileWarningCard>{props.children}</MobileWarningCard>
 						<BottomPanel />
 					</div>

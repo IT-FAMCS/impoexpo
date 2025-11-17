@@ -12,10 +12,17 @@ import { useEffect } from "react";
 import { useSettingsStore } from "./stores/settings.ts";
 import { detect, fromStorage, fromUrl } from "@lingui/detect-locale";
 import { getUserLocale } from "get-user-locale";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export const Provider = clientOnly(
 	async () =>
 		({ children }: { children: React.ReactNode }) => {
+			useHotkeys("shift+1", () => {
+				const root = document.documentElement;
+				if (root.classList.contains("green")) root.classList.remove("green");
+				else root.classList.add("green");
+			});
+
 			useTheme();
 
 			useEffect(() => {
@@ -33,6 +40,10 @@ export const Provider = clientOnly(
 					i18n.activate(locale);
 					useSettingsStore.getState().load();
 				})();
+
+				document
+					.getElementById("react-scan-root")
+					?.classList.add("green:hidden");
 			}, []);
 
 			return (

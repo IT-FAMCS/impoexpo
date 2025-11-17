@@ -258,10 +258,11 @@ export default function FormatEditor() {
 				onEdgesDelete={onEdgesDelete}
 				onNodeContextMenu={onNodeContextMenu}
 				isValidConnection={isValidConnection}
+				className="green:!bg-[#00ff00]"
 			>
-				<Controls />
-				<Background size={2} />
-				<Panel position="top-left">
+				<Controls className="green:!hidden" />
+				<Background className="green:hidden" size={2} />
+				<Panel className="green:hidden" position="top-left">
 					<div className="flex flex-row gap-2">
 						<NestedDropdown
 							trigger={
@@ -369,7 +370,7 @@ export default function FormatEditor() {
 						</Tooltip>
 					</div>
 				</Panel>
-				<Panel position="bottom-right">
+				<Panel className="green:hidden" position="bottom-right">
 					<div className="flex flex-row gap-2">
 						<Button
 							size="lg"

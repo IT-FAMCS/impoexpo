@@ -26,7 +26,7 @@ export default function BottomPanel() {
 	return (
 		<Card
 			as="nav"
-			className="flex items-center justify-center w-full h-20 shrink-0"
+			className="green:hidden flex items-center justify-center w-full h-20 shrink-0"
 			shadow="sm"
 		>
 			<CardBody className="flex flex-row items-center justify-between h-full px-6 overflow-hidden">
