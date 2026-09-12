@@ -49,6 +49,11 @@
 	--dot-color: #ffffff10;
 }
 
+:root.green {
+	background-color: #00ff00;
+	--dot-color: transparent;
+}
+
 @theme {
 	--font-pt-serif: "PT Serif", serif;
 }

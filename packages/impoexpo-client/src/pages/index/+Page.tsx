@@ -1,17 +1,17 @@
+import { useGSAP } from "@gsap/react";
+import { Link, ScrollShadow } from "@heroui/react";
 import { Trans } from "@lingui/react/macro";
-
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
-import { useGSAP } from "@gsap/react";
 import { type ReactNode, useRef, useState } from "react";
-import { Link, ScrollShadow } from "@heroui/react";
+
 gsap.registerPlugin(SplitText, useGSAP);
 
-import LockImage from "./assets/lock.avif";
 import GithubImage from "./assets/github.avif";
-import NodesImage from "./assets/nodes.avif";
-import IntegrationsImage from "./assets/integrations.avif";
 import IntegrationsArrowsImage from "./assets/integrations-arrows.avif";
+import IntegrationsImage from "./assets/integrations.avif";
+import LockImage from "./assets/lock.avif";
+import NodesImage from "./assets/nodes.avif";
 
 type Slogan = {
 	title: ReactNode;
@@ -243,7 +243,7 @@ export default function Index() {
 	}, [sloganIndex]);
 
 	return (
-		<div className="flex items-center justify-center w-full">
+		<div className="flex items-center justify-center w-full green:hidden">
 			<div className="flex flex-col-reverse xl:flex-row h-full items-center justify-evenly xl:justify-center gap-4 xl:gap-10 xl:w-[80%] xl:h-[80%]">
 				<div
 					key={sloganIndex}

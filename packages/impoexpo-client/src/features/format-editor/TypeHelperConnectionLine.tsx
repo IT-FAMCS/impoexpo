@@ -1,5 +1,5 @@
 import { AnimatedCard } from "@/styles/motion";
-import { CardBody, Code } from "@heroui/react";
+import { CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import {
 	entriesCompatible,
@@ -147,7 +147,7 @@ export default function TypeHelperConnectionLine() {
 					</div>
 				)}
 			</EdgeLabelRenderer>
-			<EdgeLabelRenderer>
+			{/* 			<EdgeLabelRenderer>
 				{fromRenderOptions && fromHandle?.id && (
 					<div
 						className="absolute nodrag nopan w-fit h-fit"
@@ -171,9 +171,9 @@ export default function TypeHelperConnectionLine() {
 						</AnimatedCard>
 					</div>
 				)}
-			</EdgeLabelRenderer>
+			</EdgeLabelRenderer> */}
 
-			<EdgeLabelRenderer>
+			{/* <EdgeLabelRenderer>
 				{toRenderOptions && toHandle?.id && fromNode.id !== toNode?.id && (
 					<div
 						className="absolute nodrag nopan w-fit h-fit"
@@ -197,7 +197,7 @@ export default function TypeHelperConnectionLine() {
 						</AnimatedCard>
 					</div>
 				)}
-			</EdgeLabelRenderer>
+			</EdgeLabelRenderer> */}
 		</>
 	);
 }

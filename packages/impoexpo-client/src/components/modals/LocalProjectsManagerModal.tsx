@@ -68,6 +68,7 @@ export default function LocalProjectsManagerModal(props: {
 				scrollBehavior="inside"
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}
+				classNames={{ backdrop: "green:hidden" }}
 			>
 				<ModalContent>
 					{() => (
