@@ -1,8 +1,6 @@
 packages:
   - packages/*
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - '@heroui/shared-utils'
-  - '@swc/core'
-  - esbuild
-  - lefthook
+allowBuilds:
+  '@heroui/shared-utils': true
+  esbuild: true
+  lefthook: true

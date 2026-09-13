@@ -1,15 +1,16 @@
-import { lingui } from "@lingui/vite-plugin";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import * as child from "node:child_process";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
+import babel from "@rolldown/plugin-babel";
+import tailwindcss from "@tailwindcss/vite";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import sonda from "sonda/vite";
 import vike from "vike/plugin";
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const getCommitInformation = (type: "shortHash" | "longHash" | "message") => {
 	const format = type === "message" ? "%s" : type === "shortHash" ? "%h" : "%H";
 	return child.execSync(`git log -1 --pretty=${format}`).toString().trim();
@@ -20,17 +21,13 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [
-			react({
-				babel: {
-					plugins: [
-						"@lingui/babel-plugin-lingui-macro",
-						"babel-plugin-react-compiler",
-					],
-				},
+			react(),
+			lingui(),
+			babel({
+				presets: [reactCompilerPreset(), linguiTransformerBabelPreset()],
 			}),
 			tsconfigPaths(),
 			tailwindcss(),
-			lingui(),
 			sonda(),
 			injectReactScan(),
 			vike(),
@@ -43,7 +40,7 @@ export default defineConfig(({ mode }) => {
 				getCommitInformation("shortHash"),
 			),
 			"import.meta.env.VITE_APP_LAST_COMMIT_LINK": JSON.stringify(
-				`${process.env.VITE_GIT_BASE}/${getCommitInformation("longHash")}`,
+				`${process.env.VITE_GIT_BASE}/commit/${getCommitInformation("longHash")}`,
 			),
 			"import.meta.env.VITE_APP_LAST_COMMIT_MESSAGE": JSON.stringify(
 				getCommitInformation("message"),

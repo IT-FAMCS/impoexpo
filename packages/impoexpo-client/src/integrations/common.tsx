@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export function DefaultIntegrationAuthenticator(props: {
 	callback: () => void;
 }) {
-	useEffect(props.callback, []);
+	useEffect(() => props.callback(), [props]);
 	return <></>;
 }
 

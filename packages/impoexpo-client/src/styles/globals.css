@@ -1,8 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 
-@plugin './hero.ts';
-@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
 @layer utilities {
