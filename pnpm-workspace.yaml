@@ -1,6 +1,5 @@
 packages:
-  - packages/*
+  - "apps/*"
+  - "integrations/*/*"
 allowBuilds:
-  '@heroui/shared-utils': true
   esbuild: true
-  lefthook: true

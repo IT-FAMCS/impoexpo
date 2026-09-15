@@ -1,0 +1,14 @@
+{
+	"name": "@impoexpo/backend",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"watch": "tsx watch src/index.ts",
+		"start": "tsx src/index.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^26.5.1",
+		"tsx": "^4.23.13",
+		"typescript": "^7.0.2"
+	}
+}
