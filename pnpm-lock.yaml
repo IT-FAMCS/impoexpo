@@ -246,6 +246,32 @@ importers:
         specifier: ^8.0.3
         version: 8.3.0(@types/node@22.20.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)
 
+  integrations/base:
+    dependencies:
+      '@impoexpo/integrations-api':
+        specifier: workspace:^
+        version: link:../../packages/integrations-api
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/integrations-api:
+    dependencies:
+      valibot:
+        specifier: ^1.5.0
+        version: 1.5.0(typescript@7.0.2)
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/shared-utils:
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
 packages:
 
   '@adobe/react-spectrum-ui@1.2.1':
@@ -3929,6 +3955,10 @@ snapshots:
   valibot@1.5.0(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
+
+  valibot@1.5.0(typescript@7.0.2):
+    optionalDependencies:
+      typescript: 7.0.2
 
   vary@1.1.2: {}
 

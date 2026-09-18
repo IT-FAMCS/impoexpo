@@ -1,0 +1,12 @@
+{
+	"name": "@impoexpo-integration/base",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {},
+	"dependencies": {
+		"@impoexpo/integrations-api": "workspace:^"
+	},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"name": "@impoexpo/integrations-api",
+	"version": "1.0.0",
+	"type": "module",
+	"exports": {
+		"./core/*": {
+			"types": "./src/core/*.ts",
+			"default": "./src/core/*.ts"
+		},
+		"./client/*": {
+			"types": "./src/client/*.ts",
+			"default": "./src/client/*.ts"
+		},
+		"./server/*": {
+			"types": "./src/server/*.ts",
+			"default": "./src/server/*.ts"
+		}
+	},
+	"scripts": {},
+	"dependencies": {
+		"valibot": "^1.5.0"
+	},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	}
+}

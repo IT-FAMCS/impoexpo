@@ -1,0 +1,15 @@
+{
+	"name": "@impoexpo/shared-utils",
+	"version": "1.0.0",
+	"type": "module",
+	"exports": {
+		"./*": {
+			"types": "./src/*.ts",
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	}
+}
